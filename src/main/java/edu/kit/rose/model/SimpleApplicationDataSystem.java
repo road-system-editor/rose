@@ -4,6 +4,7 @@ import edu.kit.rose.infrastructure.Box;
 import edu.kit.rose.infrastructure.UnitObserver;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.model.plausibility.criteria.CriteriaManager;
+import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterion;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 
 import java.nio.file.Path;
@@ -86,6 +87,16 @@ class SimpleApplicationDataSystem implements ApplicationDataSystem {
 
     @Override
     public void notifyChange(CriteriaManager unit) {
+
+    }
+
+    @Override
+    public void notifyAddition(PlausibilityCriterion unit) {
+
+    }
+
+    @Override
+    public void notifyRemoval(PlausibilityCriterion unit) {
 
     }
 }

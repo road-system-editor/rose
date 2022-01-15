@@ -31,7 +31,6 @@ class EditableAttributeFactory {
                 return new StringAttribute((AttributeAccessor<String>) attribute, controller);
             case SLOPE:
                 return new FractionalAttribute((AttributeAccessor<Double>) attribute, controller);
-            case DIRECTION:
             case CONURBATION:
                 return new SelectableAttribute<>((AttributeAccessor<Boolean>) attribute, controller, List.of(true, false));
             case MAX_SPEED:

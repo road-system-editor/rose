@@ -10,10 +10,10 @@ import java.util.Collection;
  */
 public enum OperatorType {
 
-    DEFAULT(false, DataType.INTEGER, DataType.FRACTIONAL, DataType.STRING, DataType.DIRECTION, DataType.BOOLEAN),
+    DEFAULT(false, DataType.INTEGER, DataType.FRACTIONAL, DataType.STRING, DataType.BOOLEAN),
     LESS_THAN(true, DataType.INTEGER, DataType.FRACTIONAL),
-    EQUALS(false, DataType.INTEGER, DataType.FRACTIONAL, DataType.BOOLEAN, DataType.DIRECTION, DataType.BOOLEAN),
-    NOT_EQUALS(false, DataType.INTEGER, DataType.FRACTIONAL, DataType.BOOLEAN, DataType.DIRECTION, DataType.BOOLEAN),
+    EQUALS(false, DataType.INTEGER, DataType.FRACTIONAL, DataType.BOOLEAN, DataType.BOOLEAN),
+    NOT_EQUALS(false, DataType.INTEGER, DataType.FRACTIONAL, DataType.BOOLEAN, DataType.BOOLEAN),
     OR(false, DataType.BOOLEAN),
     NOR(false, DataType.BOOLEAN);
 

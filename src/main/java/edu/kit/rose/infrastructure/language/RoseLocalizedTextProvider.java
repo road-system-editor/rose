@@ -11,9 +11,11 @@ import java.util.function.Consumer;
  * @implNote This class uses resource bundles for translations.
  */
 public class RoseLocalizedTextProvider implements LocalizedTextProvider, LanguageSelector {
+    private Language language;
 
     @Override
     public void setSelectedLanguage(Language language) {
+        this.language = language;
     }
 
     @Override
@@ -23,7 +25,7 @@ public class RoseLocalizedTextProvider implements LocalizedTextProvider, Languag
 
     @Override
     public Language getSelectedLanguage() {
-        return null;
+        return this.language;
     }
 
     @Override

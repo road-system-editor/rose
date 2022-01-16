@@ -6,6 +6,7 @@ stages:
 
 build:
   stage: build
+  needs: []
   script: gradle --build-cache assemble
   cache:
     key: "$CI_COMMIT_REF_NAME"
@@ -16,6 +17,7 @@ build:
 
 test:
   stage: test
+  needs: ["build"]
   script: gradle test
   cache:
     key: "$CI_COMMIT_REF_NAME"
@@ -29,6 +31,7 @@ test:
 
 checkstyle:
   stage: test
+  needs: []
   script: gradle checkstyleMain checkstyleTest
   cache:
     key: "$CI_COMMIT_REF_NAME"

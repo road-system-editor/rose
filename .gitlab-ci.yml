@@ -26,6 +26,7 @@ test:
       - build
       - .gradle
   artifacts:
+    when: always
     paths:
       - build/reports/tests/test/
 
@@ -40,6 +41,7 @@ checkstyle:
       - build
       - .gradle
   artifacts:
+    when: always
     paths:
       - build/reports/checkstyle/
   allow_failure: true

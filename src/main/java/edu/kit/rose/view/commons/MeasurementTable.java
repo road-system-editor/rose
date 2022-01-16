@@ -3,13 +3,17 @@ package edu.kit.rose.view.commons;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.model.roadsystem.TimeSliceSetting;
 import edu.kit.rose.model.roadsystem.elements.Segment;
-import edu.kit.rose.model.roadsystem.measurements.Measurement;
 import edu.kit.rose.model.roadsystem.measurements.MeasurementType;
+import java.util.Collection;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableView;
 
-import java.util.Collection;
-
+/**
+ * A measurement table displays measurements of a given measurement type, for a given set of
+ * {@link Segment}s.
+ *
+ * @param <T> the data type of the measurement to display.
+ */
 public class MeasurementTable<T> extends FXMLContainer {
   @FXML
   private TableView<?> table;

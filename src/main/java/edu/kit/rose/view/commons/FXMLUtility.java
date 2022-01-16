@@ -1,21 +1,21 @@
 package edu.kit.rose.view.commons;
 
-import javafx.fxml.FXMLLoader;
-
 import java.io.IOException;
 import java.net.URL;
+import javafx.fxml.FXMLLoader;
 
 /**
  * Utility class that helps with loading FXML components.
  */
 public final class FXMLUtility {
   /**
-   * Loads the JavaFX nodes from the given the FXML file ({@code fxmlUrl}) into the given {@code root} object and injects the given {@code controller}.
+   * Loads the JavaFX nodes from the given the FXML file ({@code fxmlUrl}) into the given
+   * {@code root} object and injects the given {@code controller}.
    *
-   * @param root
-   * @param controller
-   * @param fxmlUrl
-   * @param <T>
+   * @param root the root object to attach the contents of the fxml file to.
+   * @param controller the JavaFX controller for the loaded components.
+   * @param fxmlUrl the url of the fxml resource.
+   * @param <T> the type of the root element in the fxml file.
    * @return the loaded object hierarchy.
    */
   public static <T> T loadFXML(Object root, Object controller, URL fxmlUrl) {

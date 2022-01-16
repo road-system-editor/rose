@@ -1,7 +1,5 @@
 package edu.kit.rose.view;
 
-import java.nio.file.Path;
-
 import edu.kit.rose.controller.ControllerFactory;
 import edu.kit.rose.controller.navigation.Navigator;
 import edu.kit.rose.controller.navigation.WindowType;
@@ -11,6 +9,7 @@ import edu.kit.rose.model.Project;
 import edu.kit.rose.view.window.CriteriaWindow;
 import edu.kit.rose.view.window.MainWindow;
 import edu.kit.rose.view.window.MeasurementsWindow;
+import java.nio.file.Path;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -21,8 +20,7 @@ import javafx.stage.Stage;
  * initializing and connecting the {@link edu.kit.rose.controller} and
  * {@link edu.kit.rose.model} packages.
  */
-public class RoseApplication extends Application
-    implements Navigator { // also uses edu.kit.rose.model.ModelFactory
+public class RoseApplication extends Application implements Navigator {
   /**
    * Contains the main window instance of the application.
    */
@@ -62,15 +60,6 @@ public class RoseApplication extends Application
   }
 
   /**
-   * This is the entry point method that will be run when this application is started.
-   *
-   * @param args an array of command line arguments provided by the caller.
-   */
-  public static void main(String[] args) {
-    launch(args);
-  }
-
-  /**
    * Entry point template method for the JavaFX application,
    * <a href=https://openjfx.io/javadoc/17/javafx.graphics/javafx/application/Application.html#start(javafx.stage.Stage)}>inherited from Application</a>.
    */
@@ -87,5 +76,14 @@ public class RoseApplication extends Application
   @Override
   public Path showFileDialog() {
     return null;
+  }
+
+  /**
+   * This is the entry point method that will be run when this application is started.
+   *
+   * @param args an array of command line arguments provided by the caller.
+   */
+  public static void main(String[] args) {
+    launch(args);
   }
 }

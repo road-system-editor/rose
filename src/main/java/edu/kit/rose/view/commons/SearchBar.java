@@ -8,10 +8,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
 /**
- * A search bar is a text input component whose input is used to filter the content of another component.
+ * A search bar is a text input component whose input is used to filter the content of another
+ * component.
  */
-public class SearchBar extends FXMLContainer
-    implements UnitObservable<String> { // also uses StackPane and css?
+public class SearchBar extends FXMLContainer implements UnitObservable<String> {
   @FXML
   private TextField searchTextField;
 

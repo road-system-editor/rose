@@ -16,10 +16,27 @@ build:
 
 test:
   stage: test
-  script: gradle check
+  script: gradle test
   cache:
     key: "$CI_COMMIT_REF_NAME"
-    policy: push
+    policy: pull
     paths:
       - build
       - .gradle
+  artifacts:
+    paths:
+      - build/reports/tests/test/
+
+checkstyle:
+  stage: test
+  script: gradle checkstyleMain checkstyleTest
+  cache:
+    key: "$CI_COMMIT_REF_NAME"
+    policy: pull
+    paths:
+      - build
+      - .gradle
+  artifacts:
+    paths:
+      - build/reports/checkstyle/
+  allow_failure: true

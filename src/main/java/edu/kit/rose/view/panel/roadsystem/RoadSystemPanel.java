@@ -25,112 +25,116 @@ import java.util.List;
  *
  * @implNote Uses SetObserver as anonymous class to subscribe to selection events from RoadsystemController
  */
-public class RoadSystemPanel extends FXMLContainer implements DualSetObserver<Element, Connection, RoadSystem> {
-    private ApplicationController applicationController;
-    private RoadSystemController roadSystemController;
-    private AttributeController attributeController;
-    private MeasurementController measurementController;
+public class RoadSystemPanel extends FXMLContainer
+    implements DualSetObserver<Element, Connection, RoadSystem> {
+  private ApplicationController applicationController;
+  private RoadSystemController roadSystemController;
+  private AttributeController attributeController;
+  private MeasurementController measurementController;
 
-    /**
-     * The project that contains all project specific data.
-     */
-    private Project project;
-
-
-
-    /**
-     * The navigator view that displays functionality for navigation on the road system panel.
-     */
-    @FXML
-    private NavigatorView navigator;
-
-    @FXML
-    private ChangeButtonPanel changeButtonPanel;
-
-    @FXML
-    private ZoomableScrollPane zoomContainer;
-
-    @FXML
-    private Grid editorGridSurface;
-
-    private List<SegmentView<? extends Segment>> segmentViews;
+  /**
+   * The project that contains all project specific data.
+   */
+  private Project project;
 
 
+  /**
+   * The navigator view that displays functionality for navigation on the road system panel.
+   */
+  @FXML
+  private NavigatorView navigator;
 
-    /**
-     * requires {@link #setProject(Project)} + {@link #setApplicationController(ApplicationController)} + {@link #setRoadSystemController(RoadSystemController)} + {@link #setAttributeController(AttributeController)} + {@link #setMeasurementController(MeasurementController)}
-     */
-    public RoadSystemPanel() {
-        super("road_system_panel.fxml");
-    }
+  @FXML
+  private ChangeButtonPanel changeButtonPanel;
 
-    /**
-     * Sets theSets project.
-     * @param project project to assign to the roadsystem panel
-     */
-    public void setProject(Project project) {
-        this.project = project;
-    }
+  @FXML
+  private ZoomableScrollPane zoomContainer;
 
-    /**
-     * Sets the application controller.
-     * @param applicationController application controller instance
-     */
-    public void setApplicationController(ApplicationController applicationController) {
-        this.applicationController = applicationController;
-    }
+  @FXML
+  private Grid editorGridSurface;
 
-    /**
-     * Sets the roadSystemController controller.
-     * @param roadSystemController roadSystemController instance
-     */
-    public void setRoadSystemController(RoadSystemController roadSystemController) {
-        this.roadSystemController = roadSystemController;
-    }
+  private List<SegmentView<? extends Segment>> segmentViews;
 
-    /**
-     * Sets the attributeController controller.
-     * @param attributeController attributeController instance
-     */
-    public void setAttributeController(AttributeController attributeController) {
-        this.attributeController = attributeController;
-    }
 
-    /**
-     * Sets the measurementController controller.
-     * @param measurementController measurementController instance
-     */
-    public void setMeasurementController(MeasurementController measurementController) {
-        this.measurementController = measurementController;
-    }
+  /**
+   * requires {@link #setProject(Project)} + {@link #setApplicationController(ApplicationController)} + {@link #setRoadSystemController(RoadSystemController)} + {@link #setAttributeController(AttributeController)} + {@link #setMeasurementController(MeasurementController)}
+   */
+  public RoadSystemPanel() {
+    super("road_system_panel.fxml");
+  }
 
-    @Override
-    protected void updateTranslatableStrings(Language lang) {
+  /**
+   * Sets theSets project.
+   *
+   * @param project project to assign to the roadsystem panel
+   */
+  public void setProject(Project project) {
+    this.project = project;
+  }
 
-    }
+  /**
+   * Sets the application controller.
+   *
+   * @param applicationController application controller instance
+   */
+  public void setApplicationController(ApplicationController applicationController) {
+    this.applicationController = applicationController;
+  }
 
-    @Override
-    public void notifyAdditionSecond(Connection unit) {
+  /**
+   * Sets the roadSystemController controller.
+   *
+   * @param roadSystemController roadSystemController instance
+   */
+  public void setRoadSystemController(RoadSystemController roadSystemController) {
+    this.roadSystemController = roadSystemController;
+  }
 
-    }
+  /**
+   * Sets the attributeController controller.
+   *
+   * @param attributeController attributeController instance
+   */
+  public void setAttributeController(AttributeController attributeController) {
+    this.attributeController = attributeController;
+  }
 
-    @Override
-    public void notifyRemovalSecond(Connection unit) {
+  /**
+   * Sets the measurementController controller.
+   *
+   * @param measurementController measurementController instance
+   */
+  public void setMeasurementController(MeasurementController measurementController) {
+    this.measurementController = measurementController;
+  }
 
-    }
+  @Override
+  protected void updateTranslatableStrings(Language lang) {
 
-    @Override
-    public void notifyAddition(Element unit) {
+  }
 
-    }
+  @Override
+  public void notifyAdditionSecond(Connection unit) {
 
-    @Override
-    public void notifyRemoval(Element unit) {
+  }
 
-    }
+  @Override
+  public void notifyRemovalSecond(Connection unit) {
 
-    @Override
-    public void notifyChange(RoadSystem unit) {
+  }
 
-    }
+  @Override
+  public void notifyAddition(Element unit) {
+
+  }
+
+  @Override
+  public void notifyRemoval(Element unit) {
+
+  }
+
+  @Override
+  public void notifyChange(RoadSystem unit) {
+
+  }
 }

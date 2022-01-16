@@ -7,17 +7,18 @@ import edu.kit.rose.model.roadsystem.TimeSliceSetting;
  */
 class HeavyTrafficProportion extends Measurement<Double> {
 
-    /**
-     * Constructor.
-     * The TimeSliceSetting provides the number of timeSlices as well as their length.
-     * @param timeSliceSetting the TimeSliceSetting to use.
-     */
-    public HeavyTrafficProportion(TimeSliceSetting timeSliceSetting) {
-        super(timeSliceSetting);
-    }
+  /**
+   * Constructor.
+   * The TimeSliceSetting provides the number of timeSlices as well as their length.
+   *
+   * @param timeSliceSetting the TimeSliceSetting to use.
+   */
+  public HeavyTrafficProportion(TimeSliceSetting timeSliceSetting) {
+    super(timeSliceSetting);
+  }
 
-    @Override
-    public void notifySubscribers() {
+  @Override
+  public void notifySubscribers() {
 
-    }
+  }
 }

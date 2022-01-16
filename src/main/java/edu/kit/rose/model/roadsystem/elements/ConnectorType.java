@@ -5,8 +5,8 @@ package edu.kit.rose.model.roadsystem.elements;
  * {@link edu.kit.rose.model.roadsystem.elements.Segment}.
  */
 public enum ConnectorType {
-    ENTRY,
-    EXIT,
-    RAMP_ENTRY,
-    RAMP_EXIT
+  ENTRY,
+  EXIT,
+  RAMP_ENTRY,
+  RAMP_EXIT
 }

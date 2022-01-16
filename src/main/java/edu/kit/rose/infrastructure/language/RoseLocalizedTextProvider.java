@@ -13,33 +13,33 @@ import java.util.function.Consumer;
  * @implNote This class uses resource bundles for translations.
  */
 public class RoseLocalizedTextProvider implements LocalizedTextProvider, LanguageSelector {
-    private final List<Consumer<Language>> subscribers = new LinkedList<>();
-    private Language language;
+  private final List<Consumer<Language>> subscribers = new LinkedList<>();
+  private Language language;
 
-    @Override
-    public void setSelectedLanguage(Language language) {
-        this.language = language;
+  @Override
+  public String getLocalizedText(String key) {
+    return null;
+  }
 
-        subscribers.forEach(subscriber -> subscriber.accept(language));
-    }
+  @Override
+  public Language getSelectedLanguage() {
+    return this.language;
+  }
 
-    @Override
-    public String getLocalizedText(String key) {
-        return null;
-    }
+  @Override
+  public void setSelectedLanguage(Language language) {
+    this.language = language;
 
-    @Override
-    public Language getSelectedLanguage() {
-        return this.language;
-    }
+    subscribers.forEach(subscriber -> subscriber.accept(language));
+  }
 
-    @Override
-    public void subscribeToOnLanguageChanged(Consumer<Language> subscription) {
-        this.subscribers.add(subscription);
-    }
+  @Override
+  public void subscribeToOnLanguageChanged(Consumer<Language> subscription) {
+    this.subscribers.add(subscription);
+  }
 
-    @Override
-    public void unsubscribeFromOnLanguageChanged(Consumer<Language> subscription) {
-        this.subscribers.remove(subscription);
-    }
+  @Override
+  public void unsubscribeFromOnLanguageChanged(Consumer<Language> subscription) {
+    this.subscribers.remove(subscription);
+  }
 }

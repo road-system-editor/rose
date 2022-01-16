@@ -11,16 +11,19 @@ import java.util.Collection;
  */
 public class MoveableConnector extends Connector {
 
-    /**
-     * Constructor.
-     * @param type the {@link ConnectorType} for this SimpleConnector.
-     * @param position the {@link Position} that this SimpleConnector is supposed to be at.
-     * @param accessors The {@link AttributeAccessor}s that this SimpleConnector is supposed to have.
-     */
-    MoveableConnector(ConnectorType type, Position position, Collection<AttributeAccessor<?>> accessors) {
-        super(type, position, accessors);
-    }
+  /**
+   * Constructor.
+   *
+   * @param type      the {@link ConnectorType} for this SimpleConnector.
+   * @param position  the {@link Position} that this SimpleConnector is supposed to be at.
+   * @param accessors The {@link AttributeAccessor}s that this SimpleConnector is supposed to have.
+   */
+  MoveableConnector(ConnectorType type, Position position,
+                    Collection<AttributeAccessor<?>> accessors) {
+    super(type, position, accessors);
+  }
 
-    @Override
-    public void move(Movement movement){}
+  @Override
+  public void move(Movement movement) {
+  }
 }

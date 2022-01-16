@@ -16,25 +16,26 @@ import java.util.Collection;
  * The bulk edit panel allows the user to edit attributes of multiple segments simultaneously.
  */
 public class BulkEditPanel extends FXMLContainer {
-    @FXML
-    private Label label;
-    @FXML
-    private AttributePanel attributePanel;
+  @FXML
+  private Label label;
+  @FXML
+  private AttributePanel attributePanel;
 
-    /**
-     * Creates a new bulk edit panel for a given collection of elements.
-     */
-    public BulkEditPanel(LocalizedTextProvider translator, RoadSystem roadSystem, AttributeController controller, Collection<Element> elements) {
-        super("bulk_edit_panel.fxml");
+  /**
+   * Creates a new bulk edit panel for a given collection of elements.
+   */
+  public BulkEditPanel(LocalizedTextProvider translator, RoadSystem roadSystem,
+                       AttributeController controller, Collection<Element> elements) {
+    super("bulk_edit_panel.fxml");
 
-        setTranslator(translator);
-        attributePanel.setTranslator(translator);
-        attributePanel.setController(controller);
-        attributePanel.setAttributes(roadSystem.getSharedAttributeAccessors(elements));
-    }
+    setTranslator(translator);
+    attributePanel.setTranslator(translator);
+    attributePanel.setController(controller);
+    attributePanel.setAttributes(roadSystem.getSharedAttributeAccessors(elements));
+  }
 
-    @Override
-    protected void updateTranslatableStrings(Language newLang) {
+  @Override
+  protected void updateTranslatableStrings(Language newLang) {
 
-    }
+  }
 }

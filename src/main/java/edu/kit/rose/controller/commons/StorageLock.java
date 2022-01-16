@@ -8,19 +8,20 @@ package edu.kit.rose.controller.commons;
  */
 public interface StorageLock {
 
-    /**
-     * Aquires the storage lock for the caller.
-     */
-    void aquireStorageLock();
+  /**
+   * Aquires the storage lock for the caller.
+   */
+  void aquireStorageLock();
 
-    /**
-     * Checks if the storage lock is aquired.
-     * @return true if the storage lock is aquired, false else
-     */
-    boolean isStorageLockAquired();
+  /**
+   * Checks if the storage lock is aquired.
+   *
+   * @return true if the storage lock is aquired, false else
+   */
+  boolean isStorageLockAquired();
 
-    /**
-     * Releases the storage lock if the caller has already aquired it.
-     */
-    void releaseStorageLock();
+  /**
+   * Releases the storage lock if the caller has already aquired it.
+   */
+  void releaseStorageLock();
 }

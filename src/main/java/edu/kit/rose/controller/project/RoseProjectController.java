@@ -9,38 +9,38 @@ import edu.kit.rose.model.Project;
 /**
  * Provides functionality to save, load and
  * export a project.
- *
  */
 public class RoseProjectController extends Controller implements ProjectController {
 
-    /**
-     * Creates a new {@link RoseProjectController}.
-     *
-     * @param changeCommandBuffer the buffer for change commands
-     * @param storageLock the coordinator for controller actions
-     * @param project the model facade for project data
-     */
-    protected RoseProjectController(ChangeCommandBuffer changeCommandBuffer, StorageLock storageLock, Project project) {
-        super(changeCommandBuffer, storageLock);
-    }
+  /**
+   * Creates a new {@link RoseProjectController}.
+   *
+   * @param changeCommandBuffer the buffer for change commands
+   * @param storageLock         the coordinator for controller actions
+   * @param project             the model facade for project data
+   */
+  protected RoseProjectController(ChangeCommandBuffer changeCommandBuffer, StorageLock storageLock,
+                                  Project project) {
+    super(changeCommandBuffer, storageLock);
+  }
 
-    @Override
-    public void export(ExportFormat targetFormat) {
+  @Override
+  public void export(ExportFormat targetFormat) {
 
-    }
+  }
 
-    @Override
-    public void save() {
+  @Override
+  public void save() {
 
-    }
+  }
 
-    @Override
-    public void subscribeToProjectIOAction(Runnable onBegin, Runnable onDone) {
+  @Override
+  public void subscribeToProjectIOAction(Runnable onBegin, Runnable onDone) {
 
-    }
+  }
 
-    @Override
-    public void unsubscribeFromProjectIOAction(Runnable onBegin, Runnable onEnd) {
+  @Override
+  public void unsubscribeFromProjectIOAction(Runnable onBegin, Runnable onEnd) {
 
-    }
+  }
 }

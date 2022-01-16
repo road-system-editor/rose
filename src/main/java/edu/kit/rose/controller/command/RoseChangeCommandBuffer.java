@@ -9,23 +9,23 @@ package edu.kit.rose.controller.command;
  * @author ROSE Team
  */
 public class RoseChangeCommandBuffer implements ChangeCommandBuffer {
-    @Override
-    public void undo() {
+  @Override
+  public void undo() {
 
-    }
+  }
 
-    @Override
-    public void redo() {
+  @Override
+  public void redo() {
 
-    }
+  }
 
-    @Override
-    public void addCommand(ChangeCommand changeCommand) {
+  @Override
+  public void addCommand(ChangeCommand changeCommand) {
 
-    }
+  }
 
-    @Override
-    public void clear() {
+  @Override
+  public void clear() {
 
-    }
+  }
 }

@@ -11,63 +11,63 @@ import edu.kit.rose.model.roadsystem.measurements.Measurement;
  */
 public class Entrance extends RampSegment {
 
-    @Override
-    public SortedBox<AttributeAccessor<?>> getAttributeAccessors() {
-        return null;
-    }
+  @Override
+  public SortedBox<AttributeAccessor<?>> getAttributeAccessors() {
+    return null;
+  }
 
-    @Override
-    public String getName() {
-        return null;
-    }
+  @Override
+  public String getName() {
+    return null;
+  }
 
-    @Override
-    public boolean isContainer() {
-        return false;
-    }
+  @Override
+  public boolean isContainer() {
+    return false;
+  }
 
-    @Override
-    public SegmentType getSegmentType() {
-        return null;
-    }
+  @Override
+  public SegmentType getSegmentType() {
+    return null;
+  }
 
-    @Override
-    public SortedBox<Measurement<?>> getMeasurements() {
-        return null;
-    }
+  @Override
+  public SortedBox<Measurement<?>> getMeasurements() {
+    return null;
+  }
 
-    @Override
-    public Box<Connector> getConnectors() {
-        return null;
-    }
+  @Override
+  public Box<Connector> getConnectors() {
+    return null;
+  }
 
-    @Override
-    public Position getCenter() {
-        return null;
-    }
+  @Override
+  public Position getCenter() {
+    return null;
+  }
 
-    @Override
-    public void move(Movement movement) {
+  @Override
+  public void move(Movement movement) {
 
-    }
+  }
 
-    @Override
-    public int compareTo(Segment o) {
-        return 0;
-    }
+  @Override
+  public int compareTo(Segment o) {
+    return 0;
+  }
 
-    @Override
-    public void notifySubscribers() {
+  @Override
+  public void notifySubscribers() {
 
-    }
+  }
 
-    @Override
-    public void addSubscriber(UnitObserver<Element> observer) {
+  @Override
+  public void addSubscriber(UnitObserver<Element> observer) {
 
-    }
+  }
 
-    @Override
-    public void removeSubscriber(UnitObserver<Element> observer) {
+  @Override
+  public void removeSubscriber(UnitObserver<Element> observer) {
 
-    }
+  }
 }

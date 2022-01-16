@@ -10,32 +10,30 @@ import java.util.Collection;
  */
 public enum OperatorType {
 
-    DEFAULT(false, DataType.INTEGER, DataType.FRACTIONAL, DataType.STRING, DataType.BOOLEAN),
-    LESS_THAN(true, DataType.INTEGER, DataType.FRACTIONAL),
-    EQUALS(false, DataType.INTEGER, DataType.FRACTIONAL, DataType.BOOLEAN, DataType.BOOLEAN),
-    NOT_EQUALS(false, DataType.INTEGER, DataType.FRACTIONAL, DataType.BOOLEAN, DataType.BOOLEAN),
-    OR(false, DataType.BOOLEAN),
-    NOR(false, DataType.BOOLEAN);
+  DEFAULT(false, DataType.INTEGER, DataType.FRACTIONAL, DataType.STRING, DataType.BOOLEAN),
+  LESS_THAN(true, DataType.INTEGER, DataType.FRACTIONAL),
+  EQUALS(false, DataType.INTEGER, DataType.FRACTIONAL, DataType.BOOLEAN, DataType.BOOLEAN),
+  NOT_EQUALS(false, DataType.INTEGER, DataType.FRACTIONAL, DataType.BOOLEAN, DataType.BOOLEAN),
+  OR(false, DataType.BOOLEAN),
+  NOR(false, DataType.BOOLEAN);
 
-    boolean hasDiscrepancy;
-    DataType[] compatibleDataTypes;
+  boolean hasDiscrepancy;
+  DataType[] compatibleDataTypes;
 
-    OperatorType(boolean hasDiscrepancy, DataType... types) {
-    }
+  OperatorType(boolean hasDiscrepancy, DataType... types) {
+  }
 
-    /**
-     *
-     * @return All {@link DataType}s that are compatible with this OperatorType.
-     */
-    Collection<DataType> getCompatible() {
-        return null;
-    }
+  /**
+   * @return All {@link DataType}s that are compatible with this OperatorType.
+   */
+  Collection<DataType> getCompatible() {
+    return null;
+  }
 
-    /**
-     *
-     * @return if the OperatorType can be used with a discrepancy.
-     */
-    public boolean hasDiscrepancy() {
-        return hasDiscrepancy;
-    }
+  /**
+   * @return if the OperatorType can be used with a discrepancy.
+   */
+  public boolean hasDiscrepancy() {
+    return hasDiscrepancy;
+  }
 }

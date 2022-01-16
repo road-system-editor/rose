@@ -9,33 +9,33 @@ import edu.kit.rose.model.roadsystem.measurements.Measurement;
 /**
  * Provides the functionality to set measurement values
  * and the settings which belong to them.
- *
  */
 public class RoseMeasurementController extends Controller implements MeasurementController {
 
-    /**
-     * Creates a new {@link RoseMeasurementController}.
-     *
-     * @param changeCommandBuffer the buffer for change commands
-     * @param storageLock the coordinator for controller actions
-     * @param project the model facade for project data
-     */
-    public RoseMeasurementController(ChangeCommandBuffer changeCommandBuffer, StorageLock storageLock, Project project) {
-        super(changeCommandBuffer, storageLock);
-    }
+  /**
+   * Creates a new {@link RoseMeasurementController}.
+   *
+   * @param changeCommandBuffer the buffer for change commands
+   * @param storageLock         the coordinator for controller actions
+   * @param project             the model facade for project data
+   */
+  public RoseMeasurementController(ChangeCommandBuffer changeCommandBuffer, StorageLock storageLock,
+                                   Project project) {
+    super(changeCommandBuffer, storageLock);
+  }
 
-    @Override
-    public <T> void setMeasurementValue(Measurement<T> measurement, T value, int targetSlot) {
+  @Override
+  public <T> void setMeasurementValue(Measurement<T> measurement, T value, int targetSlot) {
 
-    }
+  }
 
-    @Override
-    public void setIntervalLength(int intervalLength) {
+  @Override
+  public void setIntervalLength(int intervalLength) {
 
-    }
+  }
 
-    @Override
-    public void setIntervalCount(int intervalCount) {
+  @Override
+  public void setIntervalCount(int intervalCount) {
 
-    }
+  }
 }

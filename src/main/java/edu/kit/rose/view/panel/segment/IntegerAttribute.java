@@ -8,23 +8,23 @@ import javafx.scene.Node;
  * This is the {@link EditableAttribute} implementation for the {@link edu.kit.rose.model.roadsystem.DataType} {@code INTEGER}.
  */
 class IntegerAttribute extends EditableAttribute<Integer> {
-    /**
-     * Creates a new integer attribute editor for the given {@code attribute}.
-     *
-     * @param attribute
-     * @param controller
-     */
-    IntegerAttribute(AttributeAccessor<Integer> attribute, AttributeController controller) {
-        super(attribute, controller);
-    }
+  /**
+   * Creates a new integer attribute editor for the given {@code attribute}.
+   *
+   * @param attribute
+   * @param controller
+   */
+  IntegerAttribute(AttributeAccessor<Integer> attribute, AttributeController controller) {
+    super(attribute, controller);
+  }
 
-    @Override
-    protected Node createInputField() {
-        return null;
-    }
+  @Override
+  protected Node createInputField() {
+    return null;
+  }
 
-    @Override
-    public void notifyChange(AttributeAccessor<Integer> unit) {
+  @Override
+  public void notifyChange(AttributeAccessor<Integer> unit) {
 
-    }
+  }
 }

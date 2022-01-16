@@ -6,15 +6,17 @@ package edu.kit.rose.infrastructure.language;
  */
 public interface LanguageSelector {
 
-    /**
-     * Returns the currently selected language.
-     * @return currently selected language
-     */
-    Language getSelectedLanguage();
+  /**
+   * Returns the currently selected language.
+   *
+   * @return currently selected language
+   */
+  Language getSelectedLanguage();
 
-    /**
-     * Sets the selected language.
-     * @param language language to be selected
-     */
-    void setSelectedLanguage(Language language);
+  /**
+   * Sets the selected language.
+   *
+   * @param language language to be selected
+   */
+  void setSelectedLanguage(Language language);
 }

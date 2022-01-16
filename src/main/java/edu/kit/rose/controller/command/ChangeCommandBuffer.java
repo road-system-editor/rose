@@ -7,25 +7,25 @@ package edu.kit.rose.controller.command;
  */
 public interface ChangeCommandBuffer {
 
-    /**
-     * Unexecutes/Undoes the newest {@link ChangeCommand} that has not been undone.
-     */
-    void undo();
+  /**
+   * Unexecutes/Undoes the newest {@link ChangeCommand} that has not been undone.
+   */
+  void undo();
 
-    /**
-     * Rexecutes/Redoes the last undone {@link ChangeCommand}.
-     */
-    void redo();
+  /**
+   * Rexecutes/Redoes the last undone {@link ChangeCommand}.
+   */
+  void redo();
 
-    /**
-     * Adds a new {@link ChangeCommand}.
-     *
-     * @param changeCommand the command to be added
-     */
-    void addCommand(ChangeCommand changeCommand);
+  /**
+   * Adds a new {@link ChangeCommand}.
+   *
+   * @param changeCommand the command to be added
+   */
+  void addCommand(ChangeCommand changeCommand);
 
-    /**
-     * Deletes all {@link ChangeCommand}s in the {@link ChangeCommandBuffer}
-     */
-    void clear();
+  /**
+   * Deletes all {@link ChangeCommand}s in the {@link ChangeCommandBuffer}
+   */
+  void clear();
 }

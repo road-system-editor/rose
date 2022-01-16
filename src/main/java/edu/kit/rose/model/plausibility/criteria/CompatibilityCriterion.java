@@ -15,113 +15,114 @@ import edu.kit.rose.model.roadsystem.elements.SegmentType;
  */
 public class CompatibilityCriterion implements PlausibilityCriterion {
 
-    /**
-     * Constructor.
-     * @param roadSystem The Roadsystem this Criterion applied to.
-     */
-    CompatibilityCriterion(RoadSystem roadSystem) {
+  /**
+   * Constructor.
+   *
+   * @param roadSystem The Roadsystem this Criterion applied to.
+   */
+  CompatibilityCriterion(RoadSystem roadSystem) {
 
-    }
+  }
 
-    /**
-     * @return the AttributeType that this Criterion is checking.
-     */
-    public AttributeType getAttributeType() {
-        return null;
-    }
+  /**
+   * @return the AttributeType that this Criterion is checking.
+   */
+  public AttributeType getAttributeType() {
+    return null;
+  }
 
-    /**
-     * @param attributeType  the AttributeType that this Criterion is suppossed to check.
-     */
-    public void setAttributeType(AttributeType attributeType) {
+  /**
+   * @param attributeType the AttributeType that this Criterion is suppossed to check.
+   */
+  public void setAttributeType(AttributeType attributeType) {
 
-    }
+  }
 
-    /**
-     * @return the type of Operator this Criterion is using.
-     */
-    public OperatorType getOperatorType() {
-        return null;
-    }
+  /**
+   * @return the type of Operator this Criterion is using.
+   */
+  public OperatorType getOperatorType() {
+    return null;
+  }
 
-    /**
-     *
-     * @param operatorType the Type of Operator this Criterion is supposed to use.
-     */
-    public void setOperatorType(OperatorType operatorType) {
+  /**
+   * @param operatorType the Type of Operator this Criterion is supposed to use.
+   */
+  public void setOperatorType(OperatorType operatorType) {
 
-    }
+  }
 
-    /**
-     * Gives a {@link SortedBox} of {@link OperatorType}s that contains all Types that are compatible with this criterion.
-     * (This is depending on the AttributeType this criterion has)
-     * @return containing all {@link OperatorType}s that are compatible with this criterion.
-     */
-    public SortedBox<OperatorType> getCompatibleOperatorTypes() {
-        return null;
-    }
+  /**
+   * Gives a {@link SortedBox} of {@link OperatorType}s that contains all Types that are compatible with this criterion.
+   * (This is depending on the AttributeType this criterion has)
+   *
+   * @return containing all {@link OperatorType}s that are compatible with this criterion.
+   */
+  public SortedBox<OperatorType> getCompatibleOperatorTypes() {
+    return null;
+  }
 
-    /**
-     * @return the legal discrepancy numeric values can have to be accepted by this criterion.
-     */
-    public double getLegalDiscrepancy() {
-        return 0;
-    }
+  /**
+   * @return the legal discrepancy numeric values can have to be accepted by this criterion.
+   */
+  public double getLegalDiscrepancy() {
+    return 0;
+  }
 
-    /**
-     * @param discrepancy the legal discrepancy numeric values are supposed to have to be accepted by this criterion.
-     */
-    public void setLegalDiscrepancy(double discrepancy) {
+  /**
+   * @param discrepancy the legal discrepancy numeric values are supposed to have to be accepted by this criterion.
+   */
+  public void setLegalDiscrepancy(double discrepancy) {
 
-    }
+  }
 
-    @Override
-    public String getName() {
-        return null;
-    }
+  @Override
+  public String getName() {
+    return null;
+  }
 
-    @Override
-    public void setName(String name) {
+  @Override
+  public void setName(String name) {
 
-    }
+  }
 
-    @Override
-    public Box<SegmentType> getSegmentTypes() {
-        return null;
-    }
+  @Override
+  public Box<SegmentType> getSegmentTypes() {
+    return null;
+  }
 
-    @Override
-    public PlausibilityCriterionType getType() {
-        return null;
-    }
+  @Override
+  public PlausibilityCriterionType getType() {
+    return null;
+  }
 
-    @Override
-    public void addSegmentType(SegmentType type) {
+  @Override
+  public void addSegmentType(SegmentType type) {
 
-    }
+  }
 
-    @Override
-    public void removeSegmentType(SegmentType type) {
+  @Override
+  public void removeSegmentType(SegmentType type) {
 
-    }
+  }
 
-    @Override
-    public void notifyChange(Segment unit) {
+  @Override
+  public void notifyChange(Segment unit) {
 
-    }
+  }
 
-    @Override
-    public void addSubscriber(SetObserver<SegmentType, PlausibilityCriterion> observer) {
+  @Override
+  public void addSubscriber(SetObserver<SegmentType, PlausibilityCriterion> observer) {
 
-    }
+  }
 
-    @Override
-    public void removeSubscriber(SetObserver<SegmentType, PlausibilityCriterion> observer) {
+  @Override
+  public void removeSubscriber(SetObserver<SegmentType, PlausibilityCriterion> observer) {
 
-    }
+  }
 
-    @Override
-    public void notifySubscribers() {
+  @Override
+  public void notifySubscribers() {
 
-    }
+  }
 }

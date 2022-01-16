@@ -7,8 +7,8 @@ import java.io.File;
  * This Format allows the Project to be reopened a Program supporting the YAML-Format.
  */
 class YAMLExportStrategy extends ExportStrategy {
-    @Override
-    void exportToFile(File file) {
+  @Override
+  void exportToFile(File file) {
 
-    }
+  }
 }

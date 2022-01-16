@@ -10,35 +10,37 @@ import edu.kit.rose.model.ApplicationDataSystem;
 public class RoseApplicationController extends Controller implements ApplicationController {
 
 
-    /**
-     * Creates a new {@link RoseApplicationController}.
-     *
-     * @param changeCommandBuffer the buffer for change commands
-     * @param storageLock the coordinator for controller actions
-     * @param languageSelector class that configures the applications language
-     * @param applicationDataSystem the model facade for application data
-     */
-    public RoseApplicationController(ChangeCommandBuffer changeCommandBuffer, StorageLock storageLock, LanguageSelector languageSelector, ApplicationDataSystem applicationDataSystem) {
-        super(changeCommandBuffer, storageLock);
-    }
+  /**
+   * Creates a new {@link RoseApplicationController}.
+   *
+   * @param changeCommandBuffer   the buffer for change commands
+   * @param storageLock           the coordinator for controller actions
+   * @param languageSelector      class that configures the applications language
+   * @param applicationDataSystem the model facade for application data
+   */
+  public RoseApplicationController(ChangeCommandBuffer changeCommandBuffer, StorageLock storageLock,
+                                   LanguageSelector languageSelector,
+                                   ApplicationDataSystem applicationDataSystem) {
+    super(changeCommandBuffer, storageLock);
+  }
 
-    @Override
-    public void setLanguage(Language language) {
+  @Override
+  public void setLanguage(Language language) {
 
-    }
+  }
 
-    @Override
-    public void showHelp() {
+  @Override
+  public void showHelp() {
 
-    }
+  }
 
-    @Override
-    public void undo() {
+  @Override
+  public void undo() {
 
-    }
+  }
 
-    @Override
-    public void redo() {
+  @Override
+  public void redo() {
 
-    }
+  }
 }

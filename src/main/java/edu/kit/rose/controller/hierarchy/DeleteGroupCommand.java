@@ -10,23 +10,23 @@ import edu.kit.rose.model.roadsystem.elements.Group;
  */
 public class DeleteGroupCommand implements ChangeCommand {
 
-    /**
-     * Creates a {@link DeleteGroupCommand} that deletes the given group.
-     *
-     * @param project the model facade to execute the {@link DeleteGroupCommand} on
-     * @param group the group to be deleted
-     */
-    public DeleteGroupCommand(Project project, Group group) {
+  /**
+   * Creates a {@link DeleteGroupCommand} that deletes the given group.
+   *
+   * @param project the model facade to execute the {@link DeleteGroupCommand} on
+   * @param group   the group to be deleted
+   */
+  public DeleteGroupCommand(Project project, Group group) {
 
-    }
+  }
 
-    @Override
-    public void execute() {
+  @Override
+  public void execute() {
 
-    }
+  }
 
-    @Override
-    public void unexecute() {
+  @Override
+  public void unexecute() {
 
-    }
+  }
 }

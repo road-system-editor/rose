@@ -11,62 +11,66 @@ import java.util.Collection;
  */
 public class Connector implements UnitObservable<Connector> {
 
-    /**
-     * Constructor.
-     * @param type the {@link ConnectorType} for this SimpleConnector.
-     * @param position the {@link Position} that this SimpleConnector is supposed to be at.
-     * @param accessors The {@link AttributeAccessor}s that this SimpleConnector is supposed to have.
-     */
-    Connector(ConnectorType type, Position position, Collection<AttributeAccessor<?>> accessors) {
+  /**
+   * Constructor.
+   *
+   * @param type      the {@link ConnectorType} for this SimpleConnector.
+   * @param position  the {@link Position} that this SimpleConnector is supposed to be at.
+   * @param accessors The {@link AttributeAccessor}s that this SimpleConnector is supposed to have.
+   */
+  Connector(ConnectorType type, Position position, Collection<AttributeAccessor<?>> accessors) {
 
-    }
-    @Override
-    public void addSubscriber(UnitObserver<Connector> observer) {
+  }
 
-    }
+  @Override
+  public void addSubscriber(UnitObserver<Connector> observer) {
 
-    @Override
-    public void removeSubscriber(UnitObserver<Connector> observer) {
+  }
 
-    }
+  @Override
+  public void removeSubscriber(UnitObserver<Connector> observer) {
 
-    /**
-     * Returns the {@link Position} of the connector.
-     * @return the {@link Position} of the connector.
-     */
-    public Position getPosition() {
-        return null;
-    }
+  }
 
-    /**
-     * Gives the {@link AttributeAccessor}s to the Attributes that are specific for this Connector.
-     * The referenced Attributes are part of the Segment this Connector is part of, though only the accessors for
-     * the connector specific attributes will get returned. i.e. the lane count accessor returned by this method will
-     * give access to the lane count attribute of the end point of the segment represented by this connector.
-     * @return a {@link SortedBox} containing the specific {@link AttributeAccessor}s of this Connector.
-     */
-    public SortedBox<AttributeAccessor<?>> getAttributeAccessors() {
-        return null;
-    }
+  /**
+   * Returns the {@link Position} of the connector.
+   *
+   * @return the {@link Position} of the connector.
+   */
+  public Position getPosition() {
+    return null;
+  }
 
-    /**
-     *
-     * @return the Type of Connector this is.
-     */
-    public ConnectorType getType() {
-        return null;
-    }
+  /**
+   * Gives the {@link AttributeAccessor}s to the Attributes that are specific for this Connector.
+   * The referenced Attributes are part of the Segment this Connector is part of, though only the accessors for
+   * the connector specific attributes will get returned. i.e. the lane count accessor returned by this method will
+   * give access to the lane count attribute of the end point of the segment represented by this connector.
+   *
+   * @return a {@link SortedBox} containing the specific {@link AttributeAccessor}s of this Connector.
+   */
+  public SortedBox<AttributeAccessor<?>> getAttributeAccessors() {
+    return null;
+  }
 
-    @Override
-    public void notifySubscribers() {
+  /**
+   * @return the Type of Connector this is.
+   */
+  public ConnectorType getType() {
+    return null;
+  }
 
-    }
+  @Override
+  public void notifySubscribers() {
 
-    /**
-     * Moves Connector.
-     * @param movement the movement that is to be applied.
-     */
-    void move(Movement movement) {
+  }
 
-    }
+  /**
+   * Moves Connector.
+   *
+   * @param movement the movement that is to be applied.
+   */
+  void move(Movement movement) {
+
+  }
 }

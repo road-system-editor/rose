@@ -11,22 +11,20 @@ import edu.kit.rose.model.plausibility.violation.ViolationManager;
  */
 public interface PlausibilitySystem {
 
-    /**
-     *
-     * @return the ViolationManager this PlausibilitySystem uses.
-     */
-    ViolationManager getViolationManager();
+  /**
+   * @return the ViolationManager this PlausibilitySystem uses.
+   */
+  ViolationManager getViolationManager();
 
-    /**
-     *
-     * @return the CriteriaManager this PlausibilitySystem uses.
-     */
-    CriteriaManager getCriteriaManager();
+  /**
+   * @return the CriteriaManager this PlausibilitySystem uses.
+   */
+  CriteriaManager getCriteriaManager();
 
-    /**
-     * Checks all {@link edu.kit.rose.model.plausibility.criteria.PlausibilityCriterion} in the {@link CriteriaManager}.
-     * This is only supposed to be used when importing a new {@link edu.kit.rose.model.roadsystem.RoadSystem} or a
-     * new set of {@link edu.kit.rose.model.plausibility.criteria.PlausibilityCriterion}.
-     */
-    void checkAll();
+  /**
+   * Checks all {@link edu.kit.rose.model.plausibility.criteria.PlausibilityCriterion} in the {@link CriteriaManager}.
+   * This is only supposed to be used when importing a new {@link edu.kit.rose.model.roadsystem.RoadSystem} or a
+   * new set of {@link edu.kit.rose.model.plausibility.criteria.PlausibilityCriterion}.
+   */
+  void checkAll();
 }

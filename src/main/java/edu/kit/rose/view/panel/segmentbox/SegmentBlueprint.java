@@ -16,42 +16,45 @@ import javafx.scene.layout.Pane;
  * Clicking a blueprint will create a segment of the selected type in the editor.
  */
 class SegmentBlueprint extends Pane {
-    /**
-     * These segments provide the data for the segment renderer.
-     */
-    private static final Segment[] SEGMENT_DATA = new Segment[]{
-        new Base(),
-        new Entrance(),
-        new Exit()
-    };
+  /**
+   * These segments provide the data for the segment renderer.
+   */
+  private static final Segment[] SEGMENT_DATA = new Segment[] {
+      new Base(),
+      new Entrance(),
+      new Exit()
+  };
 
 
-    private RoadSystemController controller;
-    /**
-     * The type of segment that this blueprint displays.
-     */
-    private SegmentType type;
-    /**
-     * The renderer for the given segment.
-     */
-    private SegmentView<? extends Segment> renderer;
+  private RoadSystemController controller;
+  /**
+   * The type of segment that this blueprint displays.
+   */
+  private SegmentType type;
+  /**
+   * The renderer for the given segment.
+   */
+  private SegmentView<? extends Segment> renderer;
 
-    /**
-     * Creates a new segment blueprint for the given type.
-     * @param type
-     */
-    public SegmentBlueprint(LocalizedTextProvider translator, RoadSystemController controller, SegmentType type) {
-        this.controller = controller;
-        this.type = type;
-        this.renderer = new SegmentViewFactory(translator, controller).createForSegment(getSegmentDataForType(type));
+  /**
+   * Creates a new segment blueprint for the given type.
+   *
+   * @param type
+   */
+  public SegmentBlueprint(LocalizedTextProvider translator, RoadSystemController controller,
+                          SegmentType type) {
+    this.controller = controller;
+    this.type = type;
+    this.renderer = new SegmentViewFactory(translator, controller).createForSegment(
+        getSegmentDataForType(type));
+  }
+
+  private Segment getSegmentDataForType(SegmentType type) {
+    for (Segment s : SEGMENT_DATA) {
+      if (s.getSegmentType() == type) {
+        return s;
+      }
     }
-
-    private Segment getSegmentDataForType(SegmentType type) {
-        for (Segment s : SEGMENT_DATA) {
-            if (s.getSegmentType() == type) {
-                return s;
-            }
-        }
-        return null;
-    }
+    return null;
+  }
 }

@@ -11,29 +11,30 @@ import edu.kit.rose.model.roadsystem.elements.Segment;
  * The segment view factory can create a {@link SegmentView} for a given {@link edu.kit.rose.model.roadsystem.elements.Segment}.
  */
 public class SegmentViewFactory {
-    private final LocalizedTextProvider translator;
-    private final RoadSystemController controller;
+  private final LocalizedTextProvider translator;
+  private final RoadSystemController controller;
 
-    public SegmentViewFactory(LocalizedTextProvider translator, RoadSystemController controller) {
-        this.translator = translator;
-        this.controller = controller;
-    }
+  public SegmentViewFactory(LocalizedTextProvider translator, RoadSystemController controller) {
+    this.translator = translator;
+    this.controller = controller;
+  }
 
-    /**
-     * Creates a segment view for a given segment.
-     * @param segment the segment to create a view for.
-     * @return the created view.
-     */
-    public SegmentView<? extends Segment> createForSegment(Segment segment) {
-        switch (segment.getSegmentType()) {
-            case BASE:
-                return new BaseSegmentView((Base) segment, this.controller, this.translator);
-            case ENTRANCE:
-                return new EntranceSegmentView((Entrance) segment, this.controller, this.translator);
-            case EXIT:
-                return new ExitSegmentView((Exit) segment, this.controller, this.translator);
-            default:
-                return null;
-        }
+  /**
+   * Creates a segment view for a given segment.
+   *
+   * @param segment the segment to create a view for.
+   * @return the created view.
+   */
+  public SegmentView<? extends Segment> createForSegment(Segment segment) {
+    switch (segment.getSegmentType()) {
+      case BASE:
+        return new BaseSegmentView((Base) segment, this.controller, this.translator);
+      case ENTRANCE:
+        return new EntranceSegmentView((Entrance) segment, this.controller, this.translator);
+      case EXIT:
+        return new ExitSegmentView((Exit) segment, this.controller, this.translator);
+      default:
+        return null;
     }
+  }
 }

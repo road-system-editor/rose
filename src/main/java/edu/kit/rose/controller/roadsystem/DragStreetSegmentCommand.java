@@ -15,24 +15,26 @@ import java.util.List;
  */
 public class DragStreetSegmentCommand implements ChangeCommand {
 
-    /**
-     * Creates a {@link DragStreetSegmentCommand} that drags a given set of segments by a specified movement
-     * @param project the model facade to execute {@link DragStreetSegmentCommand on}
-     * @param segments the segments to drag
-     * @param startingPosition the starting position of the segments
-     * @param movement the translation of the segments
-     */
-    public DragStreetSegmentCommand(Project project, List<Segment> segments, Position startingPosition, Movement movement) {
+  /**
+   * Creates a {@link DragStreetSegmentCommand} that drags a given set of segments by a specified movement
+   *
+   * @param project          the model facade to execute {@link DragStreetSegmentCommand on}
+   * @param segments         the segments to drag
+   * @param startingPosition the starting position of the segments
+   * @param movement         the translation of the segments
+   */
+  public DragStreetSegmentCommand(Project project, List<Segment> segments,
+                                  Position startingPosition, Movement movement) {
 
-    }
+  }
 
-    @Override
-    public void execute() {
+  @Override
+  public void execute() {
 
-    }
+  }
 
-    @Override
-    public void unexecute() {
+  @Override
+  public void unexecute() {
 
-    }
+  }
 }

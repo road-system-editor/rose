@@ -16,40 +16,42 @@ import javafx.scene.control.TabPane;
  * The segment editor panel allows the user to configure the attributes and measurements of a given segment, as specified in PF11.1.5.
  */
 public class SegmentEditorPanel extends FXMLContainer implements UnitObserver<Element> {
-    private final AttributeController attributeController;
-    private final MeasurementController measurementController;
+  private final AttributeController attributeController;
+  private final MeasurementController measurementController;
 
-    private final Segment segment;
-    @FXML
-    private TabPane tabPane;
-    @FXML
-    private AttributePanel attributePanel;
-    @FXML
-    private MeasurementPanel measurementPanel;
+  private final Segment segment;
+  @FXML
+  private TabPane tabPane;
+  @FXML
+  private AttributePanel attributePanel;
+  @FXML
+  private MeasurementPanel measurementPanel;
 
-    /**
-     * Creates a new segment editor panel for a given segment.
-     */
-    public SegmentEditorPanel(Segment segment, TimeSliceSetting timeSliceSetting, AttributeController attributeController, MeasurementController measurementController) {
-        super("segment_editor_panel.fxml");
-        this.segment = segment;
-        this.attributeController = attributeController;
-        this.measurementController = measurementController;
-        UnmountUtility.subscribeUntilUnmount(this, this, segment);
-        attributePanel.setAttributes(segment.getAttributeAccessors());
-        attributePanel.setController(attributeController);
-        measurementPanel.setSegment(segment);
-        measurementPanel.setTimeSliceSetting(timeSliceSetting);
-        measurementPanel.setController(measurementController);
-    }
+  /**
+   * Creates a new segment editor panel for a given segment.
+   */
+  public SegmentEditorPanel(Segment segment, TimeSliceSetting timeSliceSetting,
+                            AttributeController attributeController,
+                            MeasurementController measurementController) {
+    super("segment_editor_panel.fxml");
+    this.segment = segment;
+    this.attributeController = attributeController;
+    this.measurementController = measurementController;
+    UnmountUtility.subscribeUntilUnmount(this, this, segment);
+    attributePanel.setAttributes(segment.getAttributeAccessors());
+    attributePanel.setController(attributeController);
+    measurementPanel.setSegment(segment);
+    measurementPanel.setTimeSliceSetting(timeSliceSetting);
+    measurementPanel.setController(measurementController);
+  }
 
-    @Override
-    protected void updateTranslatableStrings(Language newLang) {
+  @Override
+  protected void updateTranslatableStrings(Language newLang) {
 
-    }
+  }
 
-    @Override
-    public void notifyChange(Element unit) {
+  @Override
+  public void notifyChange(Element unit) {
 
-    }
+  }
 }

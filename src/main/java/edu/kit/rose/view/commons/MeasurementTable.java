@@ -11,18 +11,19 @@ import javafx.scene.control.TableView;
 import java.util.Collection;
 
 public class MeasurementTable<T> extends FXMLContainer {
-    @FXML
-    private TableView<?> table;
+  @FXML
+  private TableView<?> table;
 
-    /**
-     * Creates a new measurement table for a given measurement type and segment list.
-     */
-    public MeasurementTable(MeasurementType type, Collection<Segment> segments, TimeSliceSetting timeSliceSetting) {
-        super("measurement_table.fxml");
-    }
+  /**
+   * Creates a new measurement table for a given measurement type and segment list.
+   */
+  public MeasurementTable(MeasurementType type, Collection<Segment> segments,
+                          TimeSliceSetting timeSliceSetting) {
+    super("measurement_table.fxml");
+  }
 
-    @Override
-    protected void updateTranslatableStrings(Language newLang) {
+  @Override
+  protected void updateTranslatableStrings(Language newLang) {
 
-    }
+  }
 }

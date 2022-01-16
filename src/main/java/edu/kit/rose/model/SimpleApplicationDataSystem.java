@@ -15,88 +15,88 @@ import java.nio.file.Path;
  */
 class SimpleApplicationDataSystem implements ApplicationDataSystem {
 
-    /**
-     * Constructor.
-     * Needs to be provided with a Path to a config File for global Settings.
-     * @param configFilePath the Path to a config File containing global Settings.
-     */
-    public SimpleApplicationDataSystem(Path configFilePath) {
+  /**
+   * Constructor.
+   * Needs to be provided with a Path to a config File for global Settings.
+   *
+   * @param configFilePath the Path to a config File containing global Settings.
+   */
+  public SimpleApplicationDataSystem(Path configFilePath) {
 
-    }
+  }
 
-    @Override
-    public Language getLanguage() {
-        return null;
-    }
+  @Override
+  public Language getLanguage() {
+    return null;
+  }
 
-    @Override
-    public void setLanguage(Language language) {
+  @Override
+  public void setLanguage(Language language) {
 
-    }
+  }
 
-    @Override
-    public CriteriaManager getCriteriaManager() {
-        return null;
-    }
+  @Override
+  public CriteriaManager getCriteriaManager() {
+    return null;
+  }
 
-    /**
-     * Imports all {@link edu.kit.rose.model.plausibility.criteria.CompatibilityCriterion} from the File at the given
-     * Path. This adds the included Criteria to the currently active Criteria.
-     *
-     *
-     * @param path the path to the File that contains the Criteria.
-     */
-    public void importCriteriaFromFile(Path path) {
+  /**
+   * Imports all {@link edu.kit.rose.model.plausibility.criteria.CompatibilityCriterion} from the File at the given
+   * Path. This adds the included Criteria to the currently active Criteria.
+   *
+   * @param path the path to the File that contains the Criteria.
+   */
+  public void importCriteriaFromFile(Path path) {
 
-    }
+  }
 
-    @Override
-    public Box<AttributeType> getShownAttributeTypes() {
-        return null;
-    }
+  @Override
+  public Box<AttributeType> getShownAttributeTypes() {
+    return null;
+  }
 
-    @Override
-    public void addShownAttributeType(AttributeType attributeType) {
+  @Override
+  public void addShownAttributeType(AttributeType attributeType) {
 
-    }
+  }
 
-    @Override
-    public void removeShownAttributeType(AttributeType attributeType) {
+  @Override
+  public void removeShownAttributeType(AttributeType attributeType) {
 
-    }
+  }
 
-    @Override
-    public void exportCriteriaToFile(Path path) {
+  @Override
+  public void exportCriteriaToFile(Path path) {
 
-    }
+  }
 
-    @Override
-    public void notifySubscribers() {
+  @Override
+  public void notifySubscribers() {
 
-    }
+  }
 
-    @Override
-    public void addSubscriber(UnitObserver<ApplicationDataSystem> observer) {
+  @Override
+  public void addSubscriber(UnitObserver<ApplicationDataSystem> observer) {
 
-    }
+  }
 
-    @Override
-    public void removeSubscriber(UnitObserver<ApplicationDataSystem> observer) {
+  @Override
+  public void removeSubscriber(UnitObserver<ApplicationDataSystem> observer) {
 
-    }
+  }
 
-    @Override
-    public void notifyChange(CriteriaManager unit) {
+  @Override
+  public void notifyChange(CriteriaManager unit) {
 
-    }
+  }
 
-    @Override
-    public void notifyAddition(PlausibilityCriterion unit) {
+  @Override
+  public void notifyAddition(PlausibilityCriterion unit) {
 
-    }
+  }
 
-    @Override
-    public void notifyRemoval(PlausibilityCriterion unit) {
+  @Override
+  public void notifyRemoval(PlausibilityCriterion unit) {
 
-    }
+  }
 }

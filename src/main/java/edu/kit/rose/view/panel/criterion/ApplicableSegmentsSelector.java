@@ -15,37 +15,36 @@ import javafx.scene.control.ListView;
  * The applicable segments selector allows the user to select which segment types a plausibility criterion applies to.
  */
 class ApplicableSegmentsSelector extends FXMLContainer {
-    @FXML
-    private ListView<SelectableSegmentType> typeSelector;
-    @FXML
-    private CheckBox selectAllCheckBox;
+  @FXML
+  private ListView<SelectableSegmentType> typeSelector;
+  @FXML
+  private CheckBox selectAllCheckBox;
+
+  /**
+   * Requires {@link #setTranslator(LocalizedTextProvider)}
+   */
+  public ApplicableSegmentsSelector() {
+    super("applicable_segments_selector.fxml");
+  }
+
+  @Override
+  protected void updateTranslatableStrings(Language lang) {
+
+  }
+
+  private static class SelectableSegmentType {
+    private SegmentType type;
+    private BooleanProperty selected = new SimpleBooleanProperty(true);
 
     /**
-     * Requires {@link #setTranslator(LocalizedTextProvider)}
+     * @param type
      */
-    public ApplicableSegmentsSelector() {
-        super("applicable_segments_selector.fxml");
+    public SelectableSegmentType(SegmentType type) {
+      this.type = type;
     }
 
-    @Override
-    protected void updateTranslatableStrings(Language lang) {
-
+    public BooleanProperty getSelectedProperty() {
+      return selected;
     }
-
-    private static class SelectableSegmentType {
-        private SegmentType type;
-        private BooleanProperty selected = new SimpleBooleanProperty(true);
-
-        /**
-         * 
-         * @param type
-         */
-        public SelectableSegmentType(SegmentType type) {
-            this.type = type;
-        }
-
-        public BooleanProperty getSelectedProperty() {
-            return selected;
-        }
-    }
+  }
 }

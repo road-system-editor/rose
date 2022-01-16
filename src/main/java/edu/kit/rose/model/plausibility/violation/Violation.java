@@ -12,28 +12,31 @@ import java.util.Collection;
  */
 public class Violation {
 
-    /**
-     * Constructor.
-     * @param violatedCriterion the {@link PlausibilityCriterion} this SimpleViolation offends.
-     * @param offendingSegments the {@link Segment}s that cause this SimpleViolation.
-     */
-    public Violation(PlausibilityCriterion violatedCriterion, Collection<Segment> offendingSegments) {
+  /**
+   * Constructor.
+   *
+   * @param violatedCriterion the {@link PlausibilityCriterion} this SimpleViolation offends.
+   * @param offendingSegments the {@link Segment}s that cause this SimpleViolation.
+   */
+  public Violation(PlausibilityCriterion violatedCriterion, Collection<Segment> offendingSegments) {
 
-    }
+  }
 
-    /**
-     * Provides the violated Criterion
-     * @return The violated {@link PlausibilityCriterion}.
-     */
-    public PlausibilityCriterion getViolatedCriterion() {
-        return null;
-    }
+  /**
+   * Provides the violated Criterion
+   *
+   * @return The violated {@link PlausibilityCriterion}.
+   */
+  public PlausibilityCriterion getViolatedCriterion() {
+    return null;
+  }
 
-    /**
-     * Provides the Segments that caused this violation.
-     * @return The {@link Segment}s that caused this Violation.
-     */
-    public Collection<Segment> offendingSegments() {
-        return null;
-    }
+  /**
+   * Provides the Segments that caused this violation.
+   *
+   * @return The {@link Segment}s that caused this Violation.
+   */
+  public Collection<Segment> offendingSegments() {
+    return null;
+  }
 }

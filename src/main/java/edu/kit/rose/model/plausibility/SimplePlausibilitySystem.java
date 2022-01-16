@@ -9,27 +9,28 @@ import edu.kit.rose.model.roadsystem.RoadSystem;
  */
 public class SimplePlausibilitySystem implements PlausibilitySystem {
 
-    /**
-     * Constructor.
-     * @param roadSystem The {@link RoadSystem} that this PlausibilitySystem is supposed to check.
-     * @param criteriaManager The CriteriaManager holding the Criteria that are to be checked against.
-     */
-    public SimplePlausibilitySystem(CriteriaManager criteriaManager, RoadSystem roadSystem) {
+  /**
+   * Constructor.
+   *
+   * @param roadSystem      The {@link RoadSystem} that this PlausibilitySystem is supposed to check.
+   * @param criteriaManager The CriteriaManager holding the Criteria that are to be checked against.
+   */
+  public SimplePlausibilitySystem(CriteriaManager criteriaManager, RoadSystem roadSystem) {
 
-    }
+  }
 
-    @Override
-    public ViolationManager getViolationManager() {
-        return null;
-    }
+  @Override
+  public ViolationManager getViolationManager() {
+    return null;
+  }
 
-    @Override
-    public CriteriaManager getCriteriaManager() {
-        return null;
-    }
+  @Override
+  public CriteriaManager getCriteriaManager() {
+    return null;
+  }
 
-    @Override
-    public void checkAll() {
+  @Override
+  public void checkAll() {
 
-    }
+  }
 }

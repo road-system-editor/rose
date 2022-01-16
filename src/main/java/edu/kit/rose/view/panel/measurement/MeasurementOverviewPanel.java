@@ -10,29 +10,31 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TableView;
 
 public class MeasurementOverviewPanel extends FXMLContainer {// also uses ScrollPane
-    private MeasurementController controller;
-    private RoadSystem roadSystem;
-    private MeasurementType type;
+  private MeasurementController controller;
+  private RoadSystem roadSystem;
+  private MeasurementType type;
 
-    @FXML
-    private TableView table;
+  @FXML
+  private TableView table;
 
-    /**
-     * Creates a new measurement overview panel for the given measurement type.
-     *
-     * @param translator
-     * @param type
-     */
-    public MeasurementOverviewPanel(LocalizedTextProvider translator, MeasurementController controller, RoadSystem roadSystem, MeasurementType type) {
-        super("measurement_overview_panel.fxml");
-        setTranslator(translator);
-        this.controller = controller;
-        this.roadSystem = roadSystem;
-        this.type = type;
-    }
+  /**
+   * Creates a new measurement overview panel for the given measurement type.
+   *
+   * @param translator
+   * @param type
+   */
+  public MeasurementOverviewPanel(LocalizedTextProvider translator,
+                                  MeasurementController controller, RoadSystem roadSystem,
+                                  MeasurementType type) {
+    super("measurement_overview_panel.fxml");
+    setTranslator(translator);
+    this.controller = controller;
+    this.roadSystem = roadSystem;
+    this.type = type;
+  }
 
-    @Override
-    protected void updateTranslatableStrings(Language lang) {
+  @Override
+  protected void updateTranslatableStrings(Language lang) {
 
-    }
+  }
 }

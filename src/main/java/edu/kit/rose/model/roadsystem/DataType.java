@@ -6,8 +6,8 @@ package edu.kit.rose.model.roadsystem;
  * BÖSE? DARF SOWAS HIER SCHON STEHEN?
  */
 public enum DataType {
-    INTEGER,
-    FRACTIONAL,
-    STRING,
-    BOOLEAN
+  INTEGER,
+  FRACTIONAL,
+  STRING,
+  BOOLEAN
 }

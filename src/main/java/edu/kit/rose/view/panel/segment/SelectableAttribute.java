@@ -12,40 +12,42 @@ import java.util.Collection;
 
 /**
  * This is the {@link EditableAttribute} implementation for {@link edu.kit.rose.model.roadsystem.DataType}s whose value needs to be selected out of a small set of options (like enums and booleans).
+ *
  * @param <T>
  */
 class SelectableAttribute<T> extends EditableAttribute<T> {
-    private final Collection<T> options;
+  private final Collection<T> options;
 
-    /**
-     * Creates a new selectable attribute editor for the given {@code attribute} with the given {@code options}.
-     */
-    SelectableAttribute(AttributeAccessor<T> attribute, AttributeController controller, Collection<T> options) {
-        super(attribute, controller);
-        this.options = options;
-    }
+  /**
+   * Creates a new selectable attribute editor for the given {@code attribute} with the given {@code options}.
+   */
+  SelectableAttribute(AttributeAccessor<T> attribute, AttributeController controller,
+                      Collection<T> options) {
+    super(attribute, controller);
+    this.options = options;
+  }
 
-    @Override
-    protected Node createInputField() {
-        ComboBox<T> cb = new ComboBox<>();
-        ObservableList<T> o = new SimpleListProperty<>();
-        o.addAll(options);
-        cb.setItems(o);
+  @Override
+  protected Node createInputField() {
+    ComboBox<T> cb = new ComboBox<>();
+    ObservableList<T> o = new SimpleListProperty<>();
+    o.addAll(options);
+    cb.setItems(o);
 
-        cb.getSelectionModel().selectedItemProperty().addListener((options, old, newVal) -> {
-            getController().setAttribute(getAttribute(), newVal);
-        });
+    cb.getSelectionModel().selectedItemProperty().addListener((options, old, newVal) -> {
+      getController().setAttribute(getAttribute(), newVal);
+    });
 
-        return cb;
-    }
+    return cb;
+  }
 
-    @Override
-    protected void updateTranslatableStrings(Language newLang) {
+  @Override
+  protected void updateTranslatableStrings(Language newLang) {
 
-    }
+  }
 
-    @Override
-    public void notifyChange(AttributeAccessor<T> unit) {
+  @Override
+  public void notifyChange(AttributeAccessor<T> unit) {
 
-    }
+  }
 }

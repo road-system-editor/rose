@@ -7,43 +7,44 @@ import javafx.collections.ObservableList;
 import javafx.scene.Node;
 
 public final class UnmountUtility {
-    public static <T> void subscribeUntilUnmount(Node node, UnitObserver<T> observer, Observable<UnitObserver<T>, T> observable) {
-        observable.addSubscriber(observer);
-        runOnUnmount(node, () -> observable.removeSubscriber(observer));
+  public static <T> void subscribeUntilUnmount(Node node, UnitObserver<T> observer,
+                                               Observable<UnitObserver<T>, T> observable) {
+    observable.addSubscriber(observer);
+    runOnUnmount(node, () -> observable.removeSubscriber(observer));
+  }
+
+  public static void runOnUnmount(Node node, Runnable listener) {
+    new ListenerAdapter(node, listener).register();
+  }
+
+  private static class ListenerAdapter implements ListChangeListener<Node> {
+    private final Node node;
+    private final Runnable listener;
+    private ObservableList<Node> subscribedTo;
+
+    public ListenerAdapter(Node node, Runnable listener) {
+      this.node = node;
+      this.listener = listener;
     }
 
-    public static void runOnUnmount(Node node, Runnable listener) {
-        new ListenerAdapter(node, listener).register();
+    @Override
+    public void onChanged(Change<? extends Node> c) {
+      if (c.getRemoved().contains(this.node)) {
+        this.listener.run();
+        this.unregister();
+      }
     }
 
-    private static class ListenerAdapter implements ListChangeListener<Node> {
-        private final Node node;
-        private final Runnable listener;
-        private ObservableList<Node> subscribedTo;
-
-        public ListenerAdapter(Node node, Runnable listener) {
-            this.node = node;
-            this.listener = listener;
-        }
-
-        @Override
-        public void onChanged(Change<? extends Node> c) {
-            if (c.getRemoved().contains(this.node)) {
-                this.listener.run();
-                this.unregister();
-            }
-        }
-
-        public void register() {
-            this.subscribedTo = node.getParent().getChildrenUnmodifiable();
-            this.subscribedTo.addListener(this);
-        }
-
-        public void unregister() {
-            if (this.subscribedTo != null) {
-                this.subscribedTo.removeListener(this);
-                this.subscribedTo = null;
-            }
-        }
+    public void register() {
+      this.subscribedTo = node.getParent().getChildrenUnmodifiable();
+      this.subscribedTo.addListener(this);
     }
+
+    public void unregister() {
+      if (this.subscribedTo != null) {
+        this.subscribedTo.removeListener(this);
+        this.subscribedTo = null;
+      }
+    }
+  }
 }

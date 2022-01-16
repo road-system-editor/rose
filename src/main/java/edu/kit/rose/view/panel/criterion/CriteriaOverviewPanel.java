@@ -18,60 +18,61 @@ import javafx.scene.control.ScrollPane;
 /**
  * The criteria overview panel allows the user to view the criteria
  */
-public class CriteriaOverviewPanel extends FXMLContainer implements SetObserver<PlausibilityCriterion, CriteriaManager> {
-    private PlausibilityController controller;
-    private CriteriaManager manager;
-    private CriterionHandle selected;
-    private Consumer<PlausibilityCriterion> selectionListener;
+public class CriteriaOverviewPanel extends FXMLContainer
+    implements SetObserver<PlausibilityCriterion, CriteriaManager> {
+  private PlausibilityController controller;
+  private CriteriaManager manager;
+  private CriterionHandle selected;
+  private Consumer<PlausibilityCriterion> selectionListener;
 
-    @FXML
-    private Button exportButton;
-    @FXML
-    private Button importButton;
-    @FXML
-    private Button deleteAllButton;
-    @FXML
-    private Button newButton;
-    @FXML
-    private ScrollPane list;
-    private Collection<CriterionHandle> handles;
+  @FXML
+  private Button exportButton;
+  @FXML
+  private Button importButton;
+  @FXML
+  private Button deleteAllButton;
+  @FXML
+  private Button newButton;
+  @FXML
+  private ScrollPane list;
+  private Collection<CriterionHandle> handles;
 
-    /**
-     * {@link #setController(PlausibilityController)} + {@link #setManager(CriteriaManager)} + {@link #setTranslator(LocalizedTextProvider)} + {@link #setSelectionListener(Consumer)} needs to be called!
-     */
-    public CriteriaOverviewPanel() {
-        super("criteria_overview_panel.fxml");
-    }
+  /**
+   * {@link #setController(PlausibilityController)} + {@link #setManager(CriteriaManager)} + {@link #setTranslator(LocalizedTextProvider)} + {@link #setSelectionListener(Consumer)} needs to be called!
+   */
+  public CriteriaOverviewPanel() {
+    super("criteria_overview_panel.fxml");
+  }
 
-    public void setController(PlausibilityController controller) {
-        this.controller = controller;
-    }
+  public void setController(PlausibilityController controller) {
+    this.controller = controller;
+  }
 
-    public void setManager(CriteriaManager manager) {
-        this.manager = manager;
-    }
+  public void setManager(CriteriaManager manager) {
+    this.manager = manager;
+  }
 
-    public void setSelectionListener(Consumer<PlausibilityCriterion> selectionListener) {
-        this.selectionListener = selectionListener;
-    }
+  public void setSelectionListener(Consumer<PlausibilityCriterion> selectionListener) {
+    this.selectionListener = selectionListener;
+  }
 
-    @Override
-    public void notifyAddition(PlausibilityCriterion unit) {
+  @Override
+  public void notifyAddition(PlausibilityCriterion unit) {
 
-    }
+  }
 
-    @Override
-    public void notifyRemoval(PlausibilityCriterion unit) {
+  @Override
+  public void notifyRemoval(PlausibilityCriterion unit) {
 
-    }
+  }
 
-    @Override
-    public void notifyChange(CriteriaManager unit) {
+  @Override
+  public void notifyChange(CriteriaManager unit) {
 
-    }
+  }
 
-    @Override
-    protected void updateTranslatableStrings(Language lang) {
+  @Override
+  protected void updateTranslatableStrings(Language lang) {
 
-    }
+  }
 }

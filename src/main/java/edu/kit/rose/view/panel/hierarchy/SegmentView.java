@@ -12,26 +12,27 @@ import javafx.scene.control.Label;
  * A segment view represents a {@link Segment} in the hierarchy panel.
  */
 class SegmentView extends ElementView<Segment> {
-    @FXML
-    private Label label;
+  @FXML
+  private Label label;
 
-    /**
-     * Creates a new segment view for a given \lstinline{segment}.
-     * @param translator
-     * @param segment
-     * @param controller
-     */
-    SegmentView(LocalizedTextProvider translator, Segment segment, HierarchyController controller) {
-        super(translator, "segment_view.fxml", segment, controller);
-    }
+  /**
+   * Creates a new segment view for a given \lstinline{segment}.
+   *
+   * @param translator
+   * @param segment
+   * @param controller
+   */
+  SegmentView(LocalizedTextProvider translator, Segment segment, HierarchyController controller) {
+    super(translator, "segment_view.fxml", segment, controller);
+  }
 
-    @Override
-    public void notifyChange(Element unit) {
+  @Override
+  public void notifyChange(Element unit) {
 
-    }
+  }
 
-    @Override
-    protected void updateTranslatableStrings(Language lang) {
+  @Override
+  protected void updateTranslatableStrings(Language lang) {
 
-    }
+  }
 }

@@ -6,16 +6,16 @@ import java.util.Locale;
  * Contains support languages and their {@link Locale}s.
  */
 public enum Language {
-    ENGLISH(new Locale("en")),
-    GERMAN(new Locale("de"));
+  ENGLISH(new Locale("en")),
+  GERMAN(new Locale("de"));
 
-    private Locale locale;
+  private Locale locale;
 
-    Language(Locale locale) {
-        this.locale = locale;
-    }
+  Language(Locale locale) {
+    this.locale = locale;
+  }
 
-    public Locale getLocale() {
-        return locale;
-    }
+  public Locale getLocale() {
+    return locale;
+  }
 }

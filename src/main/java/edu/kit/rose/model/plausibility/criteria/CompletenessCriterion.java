@@ -12,54 +12,54 @@ import edu.kit.rose.model.roadsystem.elements.SegmentType;
 class CompletenessCriterion implements PlausibilityCriterion {
 
 
-    @Override
-    public String getName() {
-        return null;
-    }
+  @Override
+  public String getName() {
+    return null;
+  }
 
-    @Override
-    public void setName(String name) {
+  @Override
+  public void setName(String name) {
 
-    }
+  }
 
-    @Override
-    public Box<SegmentType> getSegmentTypes() {
-        return null;
-    }
+  @Override
+  public Box<SegmentType> getSegmentTypes() {
+    return null;
+  }
 
 
-    @Override
-    public PlausibilityCriterionType getType() {
-        return null;
-    }
+  @Override
+  public PlausibilityCriterionType getType() {
+    return null;
+  }
 
-    @Override
-    public void addSegmentType(SegmentType type) {
+  @Override
+  public void addSegmentType(SegmentType type) {
 
-    }
+  }
 
-    @Override
-    public void removeSegmentType(SegmentType type) {
+  @Override
+  public void removeSegmentType(SegmentType type) {
 
-    }
+  }
 
-    @Override
-    public void notifyChange(Segment unit) {
+  @Override
+  public void notifyChange(Segment unit) {
 
-    }
+  }
 
-    @Override
-    public void addSubscriber(SetObserver<SegmentType, PlausibilityCriterion> observer) {
+  @Override
+  public void addSubscriber(SetObserver<SegmentType, PlausibilityCriterion> observer) {
 
-    }
+  }
 
-    @Override
-    public void removeSubscriber(SetObserver<SegmentType, PlausibilityCriterion> observer) {
+  @Override
+  public void removeSubscriber(SetObserver<SegmentType, PlausibilityCriterion> observer) {
 
-    }
+  }
 
-    @Override
-    public void notifySubscribers() {
+  @Override
+  public void notifySubscribers() {
 
-    }
+  }
 }

@@ -9,27 +9,26 @@ import java.util.List;
 /**
  * Encapsulates the functionality of creating a new group
  * and makes it changeable.
- *
  */
 public class CreateGroupCommand implements ChangeCommand {
 
-    /**
-     * Creates a {@link CreateGroupCommand} that creates a group out of a list of segments.
-     *
-     * @param project the model facade to execute the {@link CreateGroupCommand} on
-     * @param segments the segments that will be in the group
-     */
-    public CreateGroupCommand(Project project, List<Segment> segments) {
+  /**
+   * Creates a {@link CreateGroupCommand} that creates a group out of a list of segments.
+   *
+   * @param project  the model facade to execute the {@link CreateGroupCommand} on
+   * @param segments the segments that will be in the group
+   */
+  public CreateGroupCommand(Project project, List<Segment> segments) {
 
-    }
+  }
 
-    @Override
-    public void execute() {
+  @Override
+  public void execute() {
 
-    }
+  }
 
-    @Override
-    public void unexecute() {
+  @Override
+  public void unexecute() {
 
-    }
+  }
 }

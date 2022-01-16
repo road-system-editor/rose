@@ -5,7 +5,7 @@ package edu.kit.rose.model.plausibility.criteria;
  * {@link PlausibilityCriterion}. Allows quick access to all possible Criterion-types.
  */
 public enum PlausibilityCriterionType {
-    COMPLETENESS,
-    VALUE,
-    COMPATIBILITY
+  COMPLETENESS,
+  VALUE,
+  COMPATIBILITY
 }

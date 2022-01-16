@@ -7,17 +7,17 @@ import edu.kit.rose.model.roadsystem.elements.Exit;
 import javafx.scene.canvas.GraphicsContext;
 
 class ExitSegmentView extends SegmentView<Exit> {
-    ExitSegmentView(Exit segment, RoadSystemController controller, LocalizedTextProvider translator) {
-        super(segment, controller, translator);
-    }
+  ExitSegmentView(Exit segment, RoadSystemController controller, LocalizedTextProvider translator) {
+    super(segment, controller, translator);
+  }
 
-    @Override
-    protected void redraw(GraphicsContext graphicsContext) {
+  @Override
+  protected void redraw(GraphicsContext graphicsContext) {
 
-    }
+  }
 
-    @Override
-    public void notifyChange(Element unit) {
+  @Override
+  public void notifyChange(Element unit) {
 
-    }
+  }
 }

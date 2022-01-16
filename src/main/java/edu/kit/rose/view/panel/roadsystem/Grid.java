@@ -11,22 +11,24 @@ import java.util.List;
  */
 public class Grid extends Pane {
 
-    /**
-     * Contains all displayed segment views on grid
-     */
-    private List<SegmentView<? extends Segment>> segments;
+  /**
+   * Contains all displayed segment views on grid
+   */
+  private List<SegmentView<? extends Segment>> segments;
 
-    /**
-     * Adds a segment view and displays it on the grid
-     * @param segmentView the segment view to add
-     */
-    public void addSegmentView(SegmentView<? extends Segment> segmentView) {
-    }
+  /**
+   * Adds a segment view and displays it on the grid
+   *
+   * @param segmentView the segment view to add
+   */
+  public void addSegmentView(SegmentView<? extends Segment> segmentView) {
+  }
 
-    /**
-     * Removes a segment view from the grid
-     * @param segmentView the segment view to remove
-     */
-    public void removeSegmentView(SegmentView<? extends Segment> segmentView) {
-    }
+  /**
+   * Removes a segment view from the grid
+   *
+   * @param segmentView the segment view to remove
+   */
+  public void removeSegmentView(SegmentView<? extends Segment> segmentView) {
+  }
 }

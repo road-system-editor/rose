@@ -13,51 +13,55 @@ import javafx.scene.control.Label;
 
 /**
  * An editable attribute is a JavaFX component that allows the user to see and edit the value of an attribute.
+ *
  * @param <T>
  */
-abstract class EditableAttribute<T> extends FXMLContainer implements UnitObserver<AttributeAccessor<T>> { // uses HBox
-    private AttributeAccessor<T> attribute;
-    private AttributeController controller;
+abstract class EditableAttribute<T> extends FXMLContainer
+    implements UnitObserver<AttributeAccessor<T>> { // uses HBox
+  private AttributeAccessor<T> attribute;
+  private AttributeController controller;
 
-    @FXML
-    private CheckBox visibilitySwitch;
-    @FXML
-    private Label label;
+  @FXML
+  private CheckBox visibilitySwitch;
+  @FXML
+  private Label label;
 
-    /**
-     * Creates a new editable attribute component.
-     */
-    protected EditableAttribute(AttributeAccessor<T> attribute, AttributeController controller) {
-        super("editable_attribute.fxml");
-        this.attribute = attribute;
-        this.controller = controller;
-        UnmountUtility.subscribeUntilUnmount(this, this, attribute);
-        getChildren().add(createInputField());
-    }
+  /**
+   * Creates a new editable attribute component.
+   */
+  protected EditableAttribute(AttributeAccessor<T> attribute, AttributeController controller) {
+    super("editable_attribute.fxml");
+    this.attribute = attribute;
+    this.controller = controller;
+    UnmountUtility.subscribeUntilUnmount(this, this, attribute);
+    getChildren().add(createInputField());
+  }
 
-    /**
-     * Returns the attribute accessor that this component is bound to.
-     * @return
-     */
-    protected AttributeAccessor<T> getAttribute() {
-        return this.attribute;
-    }
+  /**
+   * Returns the attribute accessor that this component is bound to.
+   *
+   * @return
+   */
+  protected AttributeAccessor<T> getAttribute() {
+    return this.attribute;
+  }
 
-    /**
-     * Returns the controller that is used for handling attribute value updates.
-     * @return
-     */
-    protected AttributeController getController() {
-        return this.controller;
-    }
+  /**
+   * Returns the controller that is used for handling attribute value updates.
+   *
+   * @return
+   */
+  protected AttributeController getController() {
+    return this.controller;
+  }
 
-    @Override
-    protected void updateTranslatableStrings(Language newLang) {
+  @Override
+  protected void updateTranslatableStrings(Language newLang) {
 
-    }
+  }
 
-    /**
-     * Factory method that delegates the creation of the actual input field to the implementing class.
-     */
-    protected abstract Node createInputField(); // template / factory method
+  /**
+   * Factory method that delegates the creation of the actual input field to the implementing class.
+   */
+  protected abstract Node createInputField(); // template / factory method
 }

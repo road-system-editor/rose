@@ -1,5 +1,7 @@
 package edu.kit.rose.infrastructure.language;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -11,11 +13,14 @@ import java.util.function.Consumer;
  * @implNote This class uses resource bundles for translations.
  */
 public class RoseLocalizedTextProvider implements LocalizedTextProvider, LanguageSelector {
+    private final List<Consumer<Language>> subscribers = new LinkedList<>();
     private Language language;
 
     @Override
     public void setSelectedLanguage(Language language) {
         this.language = language;
+
+        subscribers.forEach(subscriber -> subscriber.accept(language));
     }
 
     @Override
@@ -30,13 +35,11 @@ public class RoseLocalizedTextProvider implements LocalizedTextProvider, Languag
 
     @Override
     public void subscribeToOnLanguageChanged(Consumer<Language> subscription) {
-
+        this.subscribers.add(subscription);
     }
 
     @Override
     public void unsubscribeFromOnLanguageChanged(Consumer<Language> subscription) {
-
+        this.subscribers.remove(subscription);
     }
-
-
 }

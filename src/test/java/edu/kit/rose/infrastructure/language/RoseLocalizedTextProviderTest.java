@@ -23,6 +23,8 @@ public class RoseLocalizedTextProviderTest {
   @Test
   public void testSubscription() {
     var translator = new RoseLocalizedTextProvider();
+    translator.setSelectedLanguage(Language.ENGLISH);
+
     AtomicInteger subscriberCalls = new AtomicInteger();
     Consumer<Language> subscriber = lang -> {
       subscriberCalls.getAndIncrement();

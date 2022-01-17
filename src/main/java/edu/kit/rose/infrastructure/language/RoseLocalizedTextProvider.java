@@ -2,6 +2,8 @@ package edu.kit.rose.infrastructure.language;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
 /**
@@ -15,6 +17,7 @@ import java.util.function.Consumer;
 public class RoseLocalizedTextProvider implements LocalizedTextProvider, LanguageSelector {
   private final List<Consumer<Language>> subscribers = new LinkedList<>();
   private Language language;
+  private ResourceBundle resourceBundle;
 
   @Override
   public String getLocalizedText(String key) {
@@ -29,10 +32,15 @@ public class RoseLocalizedTextProvider implements LocalizedTextProvider, Languag
   @Override
   public void setSelectedLanguage(Language language) {
     if (this.language != language) {
-      this.language = language;
+      loadLanguage(language);
 
       subscribers.forEach(subscriber -> subscriber.accept(language));
     }
+  }
+
+  private void loadLanguage(Language language) {
+    this.resourceBundle = ResourceBundle.getBundle("edu.kit.rose.infrastructure.language.roseLocalization", Locale.forLanguageTag(language.getLocale().getLanguage()));
+    this.language = language;
   }
 
   @Override

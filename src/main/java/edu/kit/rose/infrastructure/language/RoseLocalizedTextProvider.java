@@ -28,9 +28,11 @@ public class RoseLocalizedTextProvider implements LocalizedTextProvider, Languag
 
   @Override
   public void setSelectedLanguage(Language language) {
-    this.language = language;
+    if (this.language != language) {
+      this.language = language;
 
-    subscribers.forEach(subscriber -> subscriber.accept(language));
+      subscribers.forEach(subscriber -> subscriber.accept(language));
+    }
   }
 
   @Override

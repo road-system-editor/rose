@@ -69,4 +69,16 @@ public class RoseLocalizedTextProviderTest {
 
     translator.unsubscribeFromOnLanguageChanged(subscriber);
   }
+
+  @Test
+  public void testTitleTranslation() {
+    String ROSE_APPLICATION_NAME = "ROSE";
+    var translator = new RoseLocalizedTextProvider();
+
+    translator.setSelectedLanguage(Language.ENGLISH);
+    Assertions.assertEquals(ROSE_APPLICATION_NAME, translator.getLocalizedText("ROSE_Application_Name"));
+
+    translator.setSelectedLanguage(Language.GERMAN);
+    Assertions.assertEquals(ROSE_APPLICATION_NAME, translator.getLocalizedText("ROSE_Application_Name"));
+  }
 }

@@ -21,7 +21,7 @@ public class RoseLocalizedTextProvider implements LocalizedTextProvider, Languag
 
   @Override
   public String getLocalizedText(String key) {
-    return null;
+    return resourceBundle.getString(key);
   }
 
   @Override

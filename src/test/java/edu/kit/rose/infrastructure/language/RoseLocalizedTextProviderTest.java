@@ -23,12 +23,10 @@ public class RoseLocalizedTextProviderTest {
   @Test
   public void testSubscription() {
     var translator = new RoseLocalizedTextProvider();
-    translator.setSelectedLanguage(Language.ENGLISH);
 
     AtomicInteger subscriberCalls = new AtomicInteger();
     Consumer<Language> subscriber = lang -> {
       subscriberCalls.getAndIncrement();
-      Assertions.assertEquals(Language.ENGLISH, lang);
     };
 
     translator.setSelectedLanguage(Language.ENGLISH);
@@ -37,7 +35,7 @@ public class RoseLocalizedTextProviderTest {
     translator.subscribeToOnLanguageChanged(subscriber);
     Assertions.assertEquals(0, subscriberCalls.get());
 
-    translator.setSelectedLanguage(Language.ENGLISH);
+    translator.setSelectedLanguage(Language.GERMAN);
     Assertions.assertEquals(1, subscriberCalls.get());
 
     translator.unsubscribeFromOnLanguageChanged(subscriber);

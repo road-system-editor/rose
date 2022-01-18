@@ -6,36 +6,49 @@ import edu.kit.rose.model.roadsystem.elements.Segment;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A selection buffer is a container that stores selected segments and notifies its observer when  the selection state
+ * of one of the segments changes. Segments that are stored in the selection buffer are implicitly assumed to be selected.
+ */
 public class ROSESelectionBuffer implements SelectionBuffer {
 
-  private List<Segment> segmentList = new ArrayList<>();
-  private List<SetObserver<Segment, SelectionBuffer>> observers = new ArrayList<>();
+  private final List<Segment> segmentList = new ArrayList<>();
+  private final List<SetObserver<Segment, SelectionBuffer>> observers = new ArrayList<>();
 
   @Override
   public void addSegmentSelection(Segment segment) {
-    segmentList.add(segment);
-    observers.forEach(e -> e.notifyAddition(segment));
-    notifySubscribers();
+    if (!this.segmentList.contains(segment)) {
+      segmentList.add(segment);
+      observers.forEach(e -> e.notifyAddition(segment));
+      notifySubscribers();
+    }
   }
 
   @Override
   public void removeSegmentSelection(Segment segment) {
-    observers.forEach(e -> e.notifyRemoval(segment));
-    notifySubscribers();
+    if (this.segmentList.contains(segment)) {
+      this.segmentList.remove(segment);
+      observers.forEach(e -> e.notifyRemoval(segment));
+      notifySubscribers();
+    }
   }
 
   @Override
   public void toggleSegmentSelection(Segment segment) {
     if (segmentList.contains(segment)) {
       removeSegmentSelection((segment));
+      observers.forEach(e -> e.notifyRemoval(segment));
+      notifySubscribers();
     } else {
       addSegmentSelection(segment);
+      observers.forEach(e -> e.notifyAddition(segment));
+      notifySubscribers();
     }
   }
 
   @Override
   public boolean isSegmentSelected(Segment segment) {
-    return false;
+    return this.segmentList.contains(segment);
   }
 
   @Override

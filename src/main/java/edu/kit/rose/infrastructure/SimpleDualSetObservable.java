@@ -7,7 +7,7 @@ package edu.kit.rose.infrastructure;
  *
  * @param <T> the first type of Object that is held within.
  * @param <R> the second type of Object that is held within.
- * @param <S> the type of DualSetObservable, can be used as a 'normal' {@link Observable}
+ * @param <S> the type of SimpleDualSetObservable, should always be the same as the extending class.
  */
 public abstract class SimpleDualSetObservable<T, R, S>
         extends SubscriberManager<DualSetObserver<T, R, S>, S>

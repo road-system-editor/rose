@@ -8,7 +8,7 @@ import java.util.List;
  * Default implementation of the observable subscriber management logic.
  *
  * @param <T> the type of {@link UnitObserver} that is allowed to observe this Observable
- * @param <S> the type of DualSetObservable, can be used as a 'normal' {@link Observable}
+ * @param <S> the type of Observable, should always be the same as the extending class.
  */
 abstract class SubscriberManager<T extends UnitObserver<S>, S> implements Observable<T, S> {
 

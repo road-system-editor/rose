@@ -1,12 +1,17 @@
 package edu.kit.rose.model.roadsystem.elements;
 
-import edu.kit.rose.infrastructure.*;
+import edu.kit.rose.infrastructure.Box;
+import edu.kit.rose.infrastructure.Movement;
+import edu.kit.rose.infrastructure.Position;
+import edu.kit.rose.infrastructure.SortedBox;
+import edu.kit.rose.infrastructure.UnitObserver;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.measurements.Measurement;
 
 /**
  * Represents a freeway entrance.
- * An Entrance Segment is a {@link Segment} that provides one entrance from the main road  and one exit from it
+ * An Entrance Segment is a {@link Segment} that provides one entrance from the main road
+ * and one exit from it
  * as well as a ramp by which cars can enter the Road.
  */
 public class Entrance extends RampSegment {

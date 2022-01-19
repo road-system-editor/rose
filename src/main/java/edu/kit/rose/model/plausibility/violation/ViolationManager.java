@@ -3,10 +3,8 @@ package edu.kit.rose.model.plausibility.violation;
 import edu.kit.rose.infrastructure.SetObservable;
 import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.infrastructure.SortedBox;
-import edu.kit.rose.infrastructure.UnitObserver;
 import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterion;
 import edu.kit.rose.model.roadsystem.elements.Segment;
-
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -39,7 +37,8 @@ public class ViolationManager
    * Returns the {@link Violation} of a given {@link PlausibilityCriterion} that
    * is caused by the given {@link Segment}s.
    *
-   * @param criterion         The {@link PlausibilityCriterion} that the searched {@link Violation} offends against.
+   * @param criterion The {@link PlausibilityCriterion} that the searched
+   *        {@link Violation} offends against.
    * @param offendingSegments The {@link Segment}s that cause the {@link Violation}
    * @return the violation agoinst the given Criterion by the given Segments.
    */

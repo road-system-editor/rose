@@ -1,13 +1,14 @@
 package edu.kit.rose.model.plausibility.criteria;
 
-import edu.kit.rose.infrastructure.*;
+import edu.kit.rose.infrastructure.Box;
+import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
 
 /**
  * A ValueCriterion represents a Value Criterion (see Pflichtenheft: "Wertebereichkriterium")
- * This checks if the value of an {@link edu.kit.rose.model.roadsystem.attributes.AttributeType} of a
- * {@link Segment} is legal.
+ * This checks if the value of an {@link edu.kit.rose.model.roadsystem.attributes.AttributeType}
+ * of a {@link Segment} is legal.
  */
 class ValueCriterion implements PlausibilityCriterion {
 

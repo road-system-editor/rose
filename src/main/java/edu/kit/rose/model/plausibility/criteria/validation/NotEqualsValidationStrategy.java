@@ -1,11 +1,11 @@
 package edu.kit.rose.model.plausibility.criteria.validation;
 
 /**
- * Describes an equals operator for different Objects. Uses the java.util.equals function
+ * Describes a NotEquals Operator for different Objects. It uses the java.util.equals function.
  *
- * @param <T>
+ * @param <T> The Type that this ValidationStrategy is applied to.
  */
-class Equals_ValidationStrategy<T> extends ValidationStrategy<T> {
+class NotEqualsValidationStrategy<T> extends ValidationStrategy<T> {
   @Override
   boolean validate(Object first, Object second) {
     return false;

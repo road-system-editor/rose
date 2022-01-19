@@ -4,8 +4,9 @@ import edu.kit.rose.model.roadsystem.DataType;
 import edu.kit.rose.model.roadsystem.elements.Element;
 
 /**
- * Different Types of Attributes. Used to determine the UI needed to configure an attribute. Provides information about
- * whether an attribute should be bulkable, that is if it should be set to the same value as other attributes of the
+ * Different Types of Attributes. Used to determine the UI needed to configure an attribute.
+ * Provides information about whether an attribute should be bulkable, that is if it should be
+ * set to the same value as other attributes of the
  * same type.
  */
 public enum AttributeType {
@@ -24,7 +25,7 @@ public enum AttributeType {
   private final boolean isBulkable;
 
   /**
-   * Constructor
+   * Constructor.
    *
    * @param name       The name of the AttributeType.
    * @param dataType   The {@link DataType} of the Attribute Type.
@@ -38,22 +39,29 @@ public enum AttributeType {
   }
 
   /**
-   * @return the {@link DataType} of the AttributeType
+   * Provides the {@link DataType} of the AttributeType.
+   *
+   * @return the {@link DataType} of the AttributeType.
    */
   DataType getDataType() {
     return this.dataType;
   }
 
   /**
-   * @return a String holding the name of the AttributeType
+   * Provides a String holding the name of the AttributeType.
+   *
+   * @return a String holding the name of the AttributeType.
    */
   String getName() {
     return this.name;
   }
 
   /**
-   * @return a boolean describing if the AttributeType can be accessed
+   * Provides a boolean describing if the AttributeType can be accessed
    * for multiple {@link Element}s at once.
+   *
+   * @return a boolean describing if the AttributeType can be accessed for multiple
+   *        {@link Element}s at once.
    */
   boolean isBulkable() {
     return this.isBulkable;

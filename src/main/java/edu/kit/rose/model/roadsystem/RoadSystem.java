@@ -1,21 +1,25 @@
 package edu.kit.rose.model.roadsystem;
 
-import edu.kit.rose.infrastructure.*;
+import edu.kit.rose.infrastructure.Box;
+import edu.kit.rose.infrastructure.DualSetObservable;
+import edu.kit.rose.infrastructure.Movement;
+import edu.kit.rose.infrastructure.SortedBox;
+import edu.kit.rose.infrastructure.UnitObserver;
+import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.elements.Connection;
 import edu.kit.rose.model.roadsystem.elements.Connector;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Group;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
-import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
-
 import java.util.Collection;
 
 /**
- * A RoadSystem models a set of {@link Element}s that can be {@link edu.kit.rose.model.roadsystem.elements.Segment}s
- * or {@link Group}s of Segments. In also manages {@link Connection}s between these Segments and
- * allows the creation of new connections as well as their removal. It provides Methods to create and remove
- * {@link edu.kit.rose.model.roadsystem.elements.Segment}s.
+ * A RoadSystem models a set of {@link Element}s that can be
+ * {@link edu.kit.rose.model.roadsystem.elements.Segment}s or {@link Group}s of Segments.
+ * It also manages {@link Connection}s between these Segments and
+ * allows the creation of new connections as well as their removal.
+ * It provides Methods to create and remove {@link edu.kit.rose.model.roadsystem.elements.Segment}s.
  * In addition to this it allows for easy access to all information held within.
  */
 public interface RoadSystem
@@ -44,7 +48,7 @@ public interface RoadSystem
   void createSegment(SegmentType segmentType);
 
   /**
-   * Creates a {@link Group} containing the given {@link Element}s
+   * Creates a {@link Group} containing the given {@link Element}s.
    *
    * @param includedElements The {@link Element}s that shall be in the new {@link Group}
    */
@@ -58,12 +62,14 @@ public interface RoadSystem
   void removeElement(Element element);
 
   /**
-   * Returns a {@link SortedBox} of all shared {@link AttributeAccessor}s of the given {@link Element}s.
-   * The AttributeAccessors will set their respective attribute in all elements of the given collection.
+   * Returns a {@link SortedBox} of all shared {@link AttributeAccessor}s of the given
+   * {@link Element}s.
+   * The AttributeAccessors will set their respective attribute in all elements of
+   * the given collection.
    *
    * @param elements The Collection of {@link Element}s to get the {@link AttributeAccessor}s from.
-   * @return A {@link SortedBox} containing all shared {@link AttributeAccessor}s of the {@link Element}s.
-   * Or null in case of an Error.
+   * @return A {@link SortedBox} containing all shared {@link AttributeAccessor}s of the
+   *        {@link Element}s. Or null in case of an Error.
    */
   SortedBox<AttributeAccessor<?>> getSharedAttributeAccessors(Collection<Element> elements);
 
@@ -76,23 +82,24 @@ public interface RoadSystem
   void connectConnectors(Connector segment1Connector, Connector segment2Connector);
 
   /**
-   * Disconnects a given {@link Connection} this means the {@link Connector}s are no longer connected
-   * (same for their respective {@link Segment}s).
+   * Disconnects a given {@link Connection} this means the {@link Connector}s are no
+   * longer connected (same for their respective {@link Segment}s).
    *
    * @param connection The {@link Connection} to disconnect.
    */
   void disconnectConnection(Connection connection);
 
   /**
-   * Disconnect all {@link Connection}s the given {@link Segment} has. This will disconnect it from all Segments
-   * it was previously connected to.
+   * Disconnect all {@link Connection}s the given {@link Segment} has. This will disconnect it
+   * from all Segments it was previously connected to.
    *
    * @param segment The {@link Segment} to disconnect.
    */
   void disconnectFromAll(Segment segment);
 
   /**
-   * Returns a {@link Box} of the {@link Segment}s a given {@link Segment} is currently connected to.
+   * Returns a {@link Box} of the {@link Segment}s a given {@link Segment} is currently
+   * connected to.
    *
    * @param segment The {@link Segment} of which to return the connected {@link Segment}s.
    * @return A {@link Box} of {@link Segment}s the given {@link Segment} was connected to.
@@ -133,8 +140,10 @@ public interface RoadSystem
   Box<Connection> getConnections(Segment segment1, Segment segment2);
 
   /**
-   * Moves all the given {@link Segment}s from their current {@link edu.kit.rose.infrastructure.Position}
-   * to a new one. Uses the {@link Movement} and applies it to the old {@link edu.kit.rose.infrastructure.Position}.
+   * Moves all the given {@link Segment}s from their current
+   * {@link edu.kit.rose.infrastructure.Position} to a new one.
+   * Uses the {@link Movement} and applies it to the old
+   * {@link edu.kit.rose.infrastructure.Position}.
    * Does not disconnect the segments.
    *
    * @param segments the {@link Segment}s to move.

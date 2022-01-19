@@ -4,7 +4,6 @@ import edu.kit.rose.infrastructure.Box;
 import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.infrastructure.UnitObserver;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
-
 import java.util.Iterator;
 
 /**

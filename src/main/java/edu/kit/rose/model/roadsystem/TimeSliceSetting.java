@@ -11,6 +11,8 @@ import edu.kit.rose.infrastructure.UnitObserver;
 public class TimeSliceSetting implements UnitObservable<TimeSliceSetting> {
 
   /**
+   * Provides the number of TimeSlices.
+   *
    * @return the number of TimeSlices.
    */
   int getNumberOfTimeSliceSteps() {
@@ -18,6 +20,8 @@ public class TimeSliceSetting implements UnitObservable<TimeSliceSetting> {
   }
 
   /**
+   * Sets the number of TimeSlices.
+   *
    * @param numberOfTimeSliceSteps the new number of TimeSlices.
    */
   void setNumberOfTimeSliceSteps(int numberOfTimeSliceSteps) {
@@ -25,6 +29,8 @@ public class TimeSliceSetting implements UnitObservable<TimeSliceSetting> {
   }
 
   /**
+   * Provides the length of the TimeSlices.
+   *
    * @return the length of the TimeSlices.
    */
   int getTimeSliceLength() {
@@ -32,6 +38,8 @@ public class TimeSliceSetting implements UnitObservable<TimeSliceSetting> {
   }
 
   /**
+   * Sets the length of the TimeSlices.
+   *
    * @param length the new length of the TimeSlices.
    */
   void setTimeSliceLength(int length) {

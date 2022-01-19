@@ -1,11 +1,11 @@
 package edu.kit.rose.model.plausibility.criteria.validation;
 
 /**
- * An Operator describing the logical NOR function for two booleans.
+ * An Operator describing the logical OR function for two booleans.
  *
- * @param <T>
+ * @param <T> The Type that this ValidationStrategy is applied to.
  */
-class Nor_ValidationStrategy<T> extends ValidationStrategy<T> {
+class OrValidationStrategy<T> extends ValidationStrategy<T> {
   @Override
   boolean validate(Object first, Object second) {
     return false;

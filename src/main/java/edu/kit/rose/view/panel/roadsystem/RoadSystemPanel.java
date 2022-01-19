@@ -15,16 +15,19 @@ import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.view.commons.FXMLContainer;
 import edu.kit.rose.view.commons.SegmentView;
+import java.util.List;
 import javafx.fxml.FXML;
 
-import java.util.List;
 
 /**
- * The RoadSystem panel is a view component that display a panable and zoomable editor, where segment views can be placed,
+ * The RoadSystem panel is a view component that display a panable and zoomable editor,
+ * where segment views can be placed,
  * moved and edited.
  *
- * @implNote Uses SetObserver as anonymous class to subscribe to selection events from RoadsystemController
+ * @implNote Uses SetObserver as anonymous class
+ *      to subscribe to selection events from RoadsystemController
  */
+@SuppressWarnings("checkstyle:JavadocTagContinuationIndentation")
 public class RoadSystemPanel extends FXMLContainer
     implements DualSetObserver<Element, Connection, RoadSystem> {
   private ApplicationController applicationController;
@@ -57,7 +60,11 @@ public class RoadSystemPanel extends FXMLContainer
 
 
   /**
-   * requires {@link #setProject(Project)} + {@link #setApplicationController(ApplicationController)} + {@link #setRoadSystemController(RoadSystemController)} + {@link #setAttributeController(AttributeController)} + {@link #setMeasurementController(MeasurementController)}
+   * requires {@link #setProject(Project)} +
+   * {@link #setApplicationController(ApplicationController)} +
+   * {@link #setRoadSystemController(RoadSystemController)} +
+   * {@link #setAttributeController(AttributeController)} +
+   * {@link #setMeasurementController(MeasurementController)}.
    */
   public RoadSystemPanel() {
     super("road_system_panel.fxml");

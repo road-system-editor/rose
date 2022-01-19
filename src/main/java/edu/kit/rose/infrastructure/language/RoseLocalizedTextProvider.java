@@ -21,10 +21,20 @@ public class RoseLocalizedTextProvider implements LocalizedTextProvider, Languag
   private Language language;
   private ResourceBundle resourceBundle;
 
+  /**
+   * Creates an instance of the {@linkt RoseLocalizedTextProvider} class
+   * with {@link Language}.ENGLISH as selected language.
+   */
   public RoseLocalizedTextProvider() {
     loadLanguage(DEFAULT_LANGUAGE);
   }
 
+  /**
+   * Creates an instance of the {@link RoseLocalizedTextProvider} class
+   * with an initial language.
+   *
+   * @param language the language to initialize the {@link RoseLocalizedTextProvider} instance with
+   */
   public RoseLocalizedTextProvider(Language language) {
     if (language != null) {
       loadLanguage(language);

@@ -10,12 +10,13 @@ import edu.kit.rose.model.roadsystem.elements.Group;
  * A group view represents a {@link Group} in the hierarchy view.
  */
 class GroupView extends ElementView<Group> {
+
   /**
    * Creates a new group view for a given {@code group}.
    *
-   * @param translator
-   * @param group
-   * @param controller
+   * @param translator the {@link LocalizedTextProvider} to use.
+   * @param group the {@link Group} to use.
+   * @param controller the {@link HierarchyController} to use.
    */
   GroupView(LocalizedTextProvider translator, Group group, HierarchyController controller) {
     super(translator, "group_view.fxml", group, controller);

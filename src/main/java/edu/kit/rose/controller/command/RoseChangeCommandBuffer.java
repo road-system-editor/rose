@@ -22,8 +22,9 @@ public class RoseChangeCommandBuffer implements ChangeCommandBuffer {
 
   @Override
   public void undo() {
-    if (this.undoRedoPointer == POINT_TO_NOTHING)
+    if (this.undoRedoPointer == POINT_TO_NOTHING) {
       return;
+    }
 
     ChangeCommand command = this.changeCommandStack.get(this.undoRedoPointer);
     command.unexecute();
@@ -32,8 +33,10 @@ public class RoseChangeCommandBuffer implements ChangeCommandBuffer {
 
   @Override
   public void redo() {
-    if (this.undoRedoPointer == this.changeCommandStack.size() - 1)
+    if (this.undoRedoPointer == this.changeCommandStack.size() - 1) {
       return;
+    }
+
     this.undoRedoPointer++;
     ChangeCommand command = this.changeCommandStack.get(this.undoRedoPointer);
     command.execute();

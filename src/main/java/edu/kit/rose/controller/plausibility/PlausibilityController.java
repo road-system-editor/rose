@@ -113,7 +113,7 @@ public interface PlausibilityController {
    * @param onBegin called before the import or export
    * @param onDone  called after the import or export
    */
-  void subscribeToPlausibilityIOAction(Runnable onBegin, Runnable onDone);
+  void subscribeToPlausibilityIoAction(Runnable onBegin, Runnable onDone);
 
   /**
    * Unregisters a runnable that gets called before the controller executes an import or
@@ -122,6 +122,6 @@ public interface PlausibilityController {
    * @param onBegin called before the import or export
    * @param onDone  called after the import or export
    */
-  void unsubscribeFromPlausibilityIOAction(Runnable onBegin, Runnable onDone);
+  void unsubscribeFromPlausibilityIoAction(Runnable onBegin, Runnable onDone);
 }
 

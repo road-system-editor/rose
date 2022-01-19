@@ -4,8 +4,10 @@ import edu.kit.rose.infrastructure.SetObservable;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 
 /**
- * A selection buffer is a container that stores selected segments and notifies its observer when  the selection state
- * of one of the segments changes. Segments that are stored in the selection buffer are implicitly assumed to be selected.
+ * A selection buffer is a container that stores selected segments
+ * and notifies its observer when  the selection state
+ * of one of the segments changes.
+ * Segments that are stored in the selection buffer are implicitly assumed to be selected.
  */
 public interface SelectionBuffer extends SetObservable<Segment, SelectionBuffer> {
 

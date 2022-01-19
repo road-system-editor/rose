@@ -14,8 +14,6 @@ import edu.kit.rose.model.plausibility.violation.Violation;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
 
-import java.util.function.Consumer;
-
 
 /**
  * Provides functionality to work with
@@ -101,12 +99,12 @@ public class RosePlausibilityController extends Controller implements Plausibili
   }
 
   @Override
-  public void subscribeToPlausibilityIOAction(Runnable onBegin, Runnable onDone) {
+  public void subscribeToPlausibilityIoAction(Runnable onBegin, Runnable onDone) {
 
   }
 
   @Override
-  public void unsubscribeFromPlausibilityIOAction(Runnable onBegin, Runnable onDone) {
+  public void unsubscribeFromPlausibilityIoAction(Runnable onBegin, Runnable onDone) {
 
   }
 }

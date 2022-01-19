@@ -31,7 +31,7 @@ public class RoseLocalizedTextProvider implements LocalizedTextProvider, Languag
 
   @Override
   public void setSelectedLanguage(Language language) {
-    if (this.language != language) {
+    if (language != null && this.language != language) {
       loadLanguage(language);
 
       subscribers.forEach(subscriber -> subscriber.accept(language));
@@ -39,7 +39,7 @@ public class RoseLocalizedTextProvider implements LocalizedTextProvider, Languag
   }
 
   private void loadLanguage(Language language) {
-    this.resourceBundle = ResourceBundle.getBundle("edu.kit.rose.infrastructure.language.roseLocalization", Locale.forLanguageTag(language.getLocale().getLanguage()));
+    this.resourceBundle = ResourceBundle.getBundle("edu.kit.rose.infrastructure.language.RoseTextResources", language.getLocale());
     this.language = language;
   }
 

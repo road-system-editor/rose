@@ -30,13 +30,13 @@ public class RoseRoadSystemController extends Controller
   /**
    * Creates a new {@link RoseRoadSystemController}.
    *
-
+   * @param changeCommandBuffer the buffer for change commands
    * @param storageLock         the coordinator for controller actions
    * @param selectionBuffer     the container that stores selected segments
    * @param project             the model facade for project data
    */
-  public RoseRoadSystemController(StorageLock storageLock, SelectionBuffer selectionBuffer,
-                                  Project project) {
+  public RoseRoadSystemController(ChangeCommandBuffer changeCommandBuffer, StorageLock storageLock,
+                                  SelectionBuffer selectionBuffer, Project project) {
     super(storageLock);
     this.selectionBuffer = selectionBuffer;
   }

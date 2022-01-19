@@ -9,6 +9,17 @@ public class Position {
   private int ycoordinate;
 
   /**
+   * Constructor.
+   *
+   * @param xcoordinate the x coordinate for this Position.
+   * @param ycoordinate the y coordinate for this Position.
+   */
+  public Position(int xcoordinate, int ycoordinate) {
+    this.xcoordinate = xcoordinate;
+    this.ycoordinate = ycoordinate;
+  }
+
+  /**
    * Gives the x axis value of the Position.
    *
    * @return The x axis value of the Position.

@@ -10,12 +10,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
- * Unit test for {@link ROSESelectionBuffer}
+ * Unit test for {@link RoseSelectionBuffer}
  */
 class ROSESelectionBufferTest {
     private static Segment base;
     private static Segment exit;
-    private ROSESelectionBuffer selectionBuffer;
+    private RoseSelectionBuffer selectionBuffer;
 
     @BeforeAll
     static void init() {
@@ -25,7 +25,7 @@ class ROSESelectionBufferTest {
 
     @BeforeEach
     void setUp() {
-        this.selectionBuffer = new ROSESelectionBuffer();
+        this.selectionBuffer = new RoseSelectionBuffer();
     }
 
     @Test

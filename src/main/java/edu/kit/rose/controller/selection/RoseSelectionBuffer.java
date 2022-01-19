@@ -2,15 +2,16 @@ package edu.kit.rose.controller.selection;
 
 import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.model.roadsystem.elements.Segment;
-
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A selection buffer is a container that stores selected segments and notifies its observer when  the selection state
- * of one of the segments changes. Segments that are stored in the selection buffer are implicitly assumed to be selected.
+ * A selection buffer is a container that stores selected segments
+ * and notifies its observer when  the selection state
+ * of one of the segments changes.
+ * Segments that are stored in the selection buffer are implicitly assumed to be selected.
  */
-public class ROSESelectionBuffer implements SelectionBuffer {
+public class RoseSelectionBuffer implements SelectionBuffer {
 
   private final List<Segment> segmentList = new ArrayList<>();
   private final List<SetObserver<Segment, SelectionBuffer>> observers = new ArrayList<>();

@@ -72,13 +72,12 @@ public class RoseLocalizedTextProviderTest {
 
   @Test
   public void testTitleTranslation() {
-    String ROSE_APPLICATION_NAME = "ROSE";
     var translator = new RoseLocalizedTextProvider();
 
     translator.setSelectedLanguage(Language.ENGLISH);
-    Assertions.assertEquals(ROSE_APPLICATION_NAME, translator.getLocalizedText("ROSE_Application_Name"));
+    Assertions.assertEquals("Help", translator.getLocalizedText("view.window.menu.help"));
 
     translator.setSelectedLanguage(Language.GERMAN);
-    Assertions.assertEquals(ROSE_APPLICATION_NAME, translator.getLocalizedText("ROSE_Application_Name"));
+    Assertions.assertEquals("Hilfe", translator.getLocalizedText("view.window.menu.help"));
   }
 }

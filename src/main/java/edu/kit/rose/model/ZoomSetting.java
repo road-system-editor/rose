@@ -32,6 +32,7 @@ public class ZoomSetting implements UnitObservable<ZoomSetting> {
    */
   void setCenterOfView(Position position) {
     this.centerOfView = position;
+    notifySubscribers();
   }
 
   /**
@@ -50,6 +51,7 @@ public class ZoomSetting implements UnitObservable<ZoomSetting> {
    */
   void setZoomLevel(int zoomLevel) {
     this.zoomLevel = zoomLevel;
+    notifySubscribers();
   }
 
   @Override

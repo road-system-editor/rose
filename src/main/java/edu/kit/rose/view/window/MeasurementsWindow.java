@@ -4,19 +4,19 @@ import edu.kit.rose.controller.measurement.MeasurementController;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.roadsystem.measurements.MeasurementType;
-import edu.kit.rose.view.panel.measurement.TimeSliceSettingPanel;
 import edu.kit.rose.view.panel.measurement.MeasurementOverviewPanel;
+import edu.kit.rose.view.panel.measurement.TimeSliceSettingPanel;
+import java.util.List;
 import javafx.fxml.FXML;
 import javafx.scene.control.TabPane;
 import javafx.stage.Stage;
 
-import java.util.List;
-
 /**
- * The measurements window allows the user to look up and edit measurements of all street segments, as specified in PF11.1.4.
+ * The measurements window allows the user to look up and edit measurements of all street
+ * segments, as specified in PF11.1.4.
  * This class is responsible for laying it's contained panels and mediating between
  */
-public class MeasurementsWindow extends RoseWindow { // also uses HBox and VBox
+public class MeasurementsWindow extends RoseWindow {
   private MeasurementController measurementController;
   private Project project;
   /**
@@ -40,9 +40,9 @@ public class MeasurementsWindow extends RoseWindow { // also uses HBox and VBox
   /**
    * Creates a new measurements window instance.
    *
-   * @param translator
-   * @param controller
-   * @param project
+   * @param translator the data source for translated strings.
+   * @param controller the controller to handle measurement changes.
+   * @param project the project that contains the measurements to display.
    */
   public MeasurementsWindow(LocalizedTextProvider translator, MeasurementController controller,
                             Project project) {

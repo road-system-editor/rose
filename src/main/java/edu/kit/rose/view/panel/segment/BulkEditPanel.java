@@ -1,16 +1,14 @@
 package edu.kit.rose.view.panel.segment;
 
 import edu.kit.rose.controller.attribute.AttributeController;
-import edu.kit.rose.controller.roadsystem.RoadSystemController;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.view.commons.FXMLContainer;
+import java.util.Collection;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-
-import java.util.Collection;
 
 /**
  * The bulk edit panel allows the user to edit attributes of multiple segments simultaneously.

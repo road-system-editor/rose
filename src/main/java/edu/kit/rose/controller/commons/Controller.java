@@ -33,13 +33,4 @@ public abstract class Controller {
   protected final Navigator getNavigatior() {
     return null;
   }
-
-  /**
-   * Returns the command buffer of the controller.
-   *
-   * @return command buffer of the controller
-   */
-  protected final ChangeCommandBuffer getChangeCommandBuffer() {
-    return null;
-  }
 }

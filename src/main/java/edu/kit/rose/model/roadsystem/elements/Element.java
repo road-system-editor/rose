@@ -1,12 +1,14 @@
 package edu.kit.rose.model.roadsystem.elements;
 
-import edu.kit.rose.infrastructure.*;
+import edu.kit.rose.infrastructure.SortedBox;
+import edu.kit.rose.infrastructure.UnitObservable;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 
 /**
  * Represents an Element (see Pflichtenheft: "Element").
  * Holds a set of {@link AttributeAccessor}s.
- * Implements the Composite in the Composition Pattern with {@link Segment}s as leaf and {@link Group} as container.
+ * Implements the Composite in the Composition Pattern with {@link Segment}s as leaf
+ * and {@link Group} as container.
  */
 public interface Element extends UnitObservable<Element> {
 
@@ -25,7 +27,8 @@ public interface Element extends UnitObservable<Element> {
   String getName();
 
   /**
-   * Gives a boolean describing if this is a {@link Group} (contains other Elements) or a {@link Segment}
+   * Gives a boolean describing if this is a {@link Group} (contains other Elements) or a
+   * {@link Segment}.
    *
    * @return True if this Element can contain other Elements. False if it can not.
    */

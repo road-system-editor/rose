@@ -3,7 +3,6 @@ package edu.kit.rose.model.plausibility.violation;
 import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterion;
 import edu.kit.rose.model.roadsystem.elements.Connection;
 import edu.kit.rose.model.roadsystem.elements.Segment;
-
 import java.util.Collection;
 
 /**
@@ -23,7 +22,7 @@ public class Violation {
   }
 
   /**
-   * Provides the violated Criterion
+   * Provides the violated Criterion.
    *
    * @return The violated {@link PlausibilityCriterion}.
    */

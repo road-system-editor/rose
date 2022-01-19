@@ -5,7 +5,7 @@ import java.util.Iterator;
 /**
  * A standard implementation of a Box.
  *
- * @param <T>
+ * @param <T> The Type of the Objects in the Box.
  */
 public class SimpleBox<T> implements Box<T> {
 

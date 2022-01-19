@@ -1,7 +1,7 @@
 package edu.kit.rose.model.roadsystem.elements;
 
 /**
- * A {@link Base} segment with a ramp {@link Connector}
+ * A {@link Base} segment with a ramp {@link Connector}.
  */
 abstract class RampSegment extends Base {
 

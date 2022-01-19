@@ -1,11 +1,11 @@
 package edu.kit.rose.model.plausibility.criteria.validation;
 
 /**
- * Describes a LessThan Operator for numerical values. "<"
+ * An Operator describing the logical NOR function for two booleans.
  *
- * @param <T>
+ * @param <T> The Type that this ValidationStrategy is applied to.
  */
-class LessThan_ValidationStrategy<T> extends ValidationStrategy<T> {
+class NorValidationStrategy<T> extends ValidationStrategy<T> {
   @Override
   boolean validate(Object first, Object second) {
     return false;

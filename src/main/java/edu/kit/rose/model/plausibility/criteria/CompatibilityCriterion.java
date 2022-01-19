@@ -25,6 +25,8 @@ public class CompatibilityCriterion implements PlausibilityCriterion {
   }
 
   /**
+   * Provides the AttributeType that this Criterion is checking.
+   *
    * @return the AttributeType that this Criterion is checking.
    */
   public AttributeType getAttributeType() {
@@ -32,13 +34,17 @@ public class CompatibilityCriterion implements PlausibilityCriterion {
   }
 
   /**
-   * @param attributeType the AttributeType that this Criterion is suppossed to check.
+   * Sets the AttributeType that this Criterion is supposed to check.
+   *
+   * @param attributeType the AttributeType that this Criterion is supposed to check.
    */
   public void setAttributeType(AttributeType attributeType) {
 
   }
 
   /**
+   * Provides the type of Operator this Criterion is using.
+   *
    * @return the type of Operator this Criterion is using.
    */
   public OperatorType getOperatorType() {
@@ -46,6 +52,8 @@ public class CompatibilityCriterion implements PlausibilityCriterion {
   }
 
   /**
+   * Sets the Type of Operator this Criterion is supposed to use.
+   *
    * @param operatorType the Type of Operator this Criterion is supposed to use.
    */
   public void setOperatorType(OperatorType operatorType) {
@@ -53,7 +61,8 @@ public class CompatibilityCriterion implements PlausibilityCriterion {
   }
 
   /**
-   * Gives a {@link SortedBox} of {@link OperatorType}s that contains all Types that are compatible with this criterion.
+   * Gives a {@link SortedBox} of {@link OperatorType}s that contains all Types that are
+   * compatible with this criterion.
    * (This is depending on the AttributeType this criterion has)
    *
    * @return containing all {@link OperatorType}s that are compatible with this criterion.
@@ -63,6 +72,8 @@ public class CompatibilityCriterion implements PlausibilityCriterion {
   }
 
   /**
+   * Provides the legal discrepancy numeric values can have to be accepted by this criterion.
+   *
    * @return the legal discrepancy numeric values can have to be accepted by this criterion.
    */
   public double getLegalDiscrepancy() {
@@ -70,7 +81,11 @@ public class CompatibilityCriterion implements PlausibilityCriterion {
   }
 
   /**
-   * @param discrepancy the legal discrepancy numeric values are supposed to have to be accepted by this criterion.
+   * Sets the legal discrepancy numeric values are supposed to have to be accepted by this
+   * criterion.
+   *
+   * @param discrepancy the legal discrepancy numeric values are supposed to have to be accepted
+   *                    by this criterion.
    */
   public void setLegalDiscrepancy(double discrepancy) {
 

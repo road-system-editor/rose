@@ -5,7 +5,7 @@ import java.util.Iterator;
 /**
  * A standard implementation for a SortedBox.
  *
- * @param <T>
+ * @param <T> The Type of the Objects in the Box.
  */
 public class SimpleSortedBox<T> implements SortedBox<T> {
   @Override

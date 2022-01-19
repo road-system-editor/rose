@@ -5,11 +5,11 @@ import edu.kit.rose.model.plausibility.PlausibilitySystem;
 import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterion;
 import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.TimeSliceSetting;
-
 import java.nio.file.Path;
 
 /**
- * A Project holds all data specified in "Pflichtenheft: Projekt" as well as the current {@link ZoomSetting} and the
+ * A Project holds all data specified in "Pflichtenheft: Projekt" as well as the current
+ * {@link ZoomSetting} and the
  * current {@link TimeSliceSetting}.
  */
 public interface Project {
@@ -30,7 +30,8 @@ public interface Project {
 
 
   /**
-   * Formats the Project to fit a specified {@link ExportFormat} and exports it to a file at the given {@link Path}
+   * Formats the Project to fit a specified {@link ExportFormat} and exports it to a file at the
+   * given {@link Path}.
    *
    * @param exportFormat The {@link ExportFormat} to save in.
    * @param filePath     The {@link Path} of where to store the export.
@@ -38,7 +39,8 @@ public interface Project {
   void exportToFile(ExportFormat exportFormat, Path filePath);
 
   /**
-   * Saves the Project as a ROSE file. This saves everything the Project needs to be reopened in the program.
+   * Saves the Project as a ROSE file. This saves everything the Project needs to be reopened in
+   * the program.
    * Including {@link PlausibilityCriterion} and the {@link Position}s
    *
    * @param filePath The {@link Path} of where to store the file.
@@ -46,13 +48,16 @@ public interface Project {
   void save(Path filePath);
 
   /**
-   * Loads a ROSE File. This rewrites the Project to hold the information specified in the provided file.
+   * Loads a ROSE File. This rewrites the Project to hold the information specified in the
+   * provided file.
    *
    * @param filePath The {@link Path} of the File.
    */
   void load(Path filePath);
 
   /**
+   * Provides the {@link ZoomSetting} of a view that displays the RoadSystem.
+   *
    * @return the {@link ZoomSetting} of a view that displays the RoadSystem.
    */
   ZoomSetting getZoomSetting();

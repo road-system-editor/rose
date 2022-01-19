@@ -1,7 +1,6 @@
 package edu.kit.rose.model.plausibility.criteria.validation;
 
 import edu.kit.rose.model.roadsystem.DataType;
-
 import java.util.Collection;
 
 /**
@@ -24,6 +23,8 @@ public enum OperatorType {
   }
 
   /**
+   * Provides all {@link DataType}s that are compatible with this OperatorType.
+   *
    * @return All {@link DataType}s that are compatible with this OperatorType.
    */
   Collection<DataType> getCompatible() {
@@ -31,7 +32,9 @@ public enum OperatorType {
   }
 
   /**
-   * @return if the OperatorType can be used with a discrepancy.
+   * Provides a boolean describing if the OperatorType can be used with a discrepancy.
+   *
+   * @return true if the OperatorType can be used with a discrepancy.
    */
   public boolean hasDiscrepancy() {
     return hasDiscrepancy;

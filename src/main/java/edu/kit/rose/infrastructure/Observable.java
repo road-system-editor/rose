@@ -1,7 +1,8 @@
 package edu.kit.rose.infrastructure;
 
 /**
- * An Observable provides the methods that make it possible to add and remove subscribers as well as to notify them.
+ * An Observable provides the methods that make it possible to add and remove subscribers
+ * as well as to notify them.
  * Subscribers will get notified whenever the Observable undergoes a change.
  * An Observer is either an {@link UnitObserver} or an {@link SetObserver}.
  *
@@ -11,7 +12,8 @@ package edu.kit.rose.infrastructure;
 public interface Observable<T extends UnitObserver<S>, S> {
 
   /**
-   * Adds a given Observer so that it will be notified by the Observable in case of change to the Observable.
+   * Adds a given Observer so that it will be notified by the Observable in case of change
+   * to the Observable.
    *
    * @param observer The Observer that wants to be notified by this Observable.
    */

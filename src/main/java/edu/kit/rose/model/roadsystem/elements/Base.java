@@ -1,6 +1,10 @@
 package edu.kit.rose.model.roadsystem.elements;
 
-import edu.kit.rose.infrastructure.*;
+import edu.kit.rose.infrastructure.Box;
+import edu.kit.rose.infrastructure.Movement;
+import edu.kit.rose.infrastructure.Position;
+import edu.kit.rose.infrastructure.SortedBox;
+import edu.kit.rose.infrastructure.UnitObserver;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.measurements.Measurement;
 
@@ -11,6 +15,8 @@ import edu.kit.rose.model.roadsystem.measurements.Measurement;
 public class Base implements Segment {
 
   /**
+   * Provides the {@link Connector} describing the entrance of the Base Segment.
+   *
    * @return the {@link Connector} describing the entrance of the Base Segment.
    */
   Connector getEntry() {
@@ -18,7 +24,9 @@ public class Base implements Segment {
   }
 
   /**
-   * @return the {@link Connector} describing the exit of the base Segment
+   * Provides the {@link Connector} describing the exit of the base Segment.
+   *
+   * @return the {@link Connector} describing the exit of the base Segment.
    */
   Connector getExit() {
     return null;

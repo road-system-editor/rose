@@ -1,13 +1,18 @@
 package edu.kit.rose.model.roadsystem.elements;
 
-import edu.kit.rose.infrastructure.*;
+import edu.kit.rose.infrastructure.Movement;
+import edu.kit.rose.infrastructure.Position;
+import edu.kit.rose.infrastructure.SortedBox;
+import edu.kit.rose.infrastructure.UnitObservable;
+import edu.kit.rose.infrastructure.UnitObserver;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
-
 import java.util.Collection;
 
 /**
- * A Connector is part of a {@link edu.kit.rose.model.roadsystem.elements.Segment} and represents the movable end points
- * of the same (see Pflichtenheft: Straßensegment). A Connector can also be part of a {@link Connection}.
+ * A Connector is part of a {@link edu.kit.rose.model.roadsystem.elements.Segment}
+ * and represents the movable end points
+ * of the same (see Pflichtenheft: Straßensegment). A Connector can also be part of a
+ * {@link Connection}.
  */
 public class Connector implements UnitObservable<Connector> {
 
@@ -43,17 +48,21 @@ public class Connector implements UnitObservable<Connector> {
 
   /**
    * Gives the {@link AttributeAccessor}s to the Attributes that are specific for this Connector.
-   * The referenced Attributes are part of the Segment this Connector is part of, though only the accessors for
-   * the connector specific attributes will get returned. i.e. the lane count accessor returned by this method will
-   * give access to the lane count attribute of the end point of the segment represented by this connector.
+   * The referenced Attributes are part of the Segment this Connector is part of, though only the
+   * accessors for the connector specific attributes will get returned. i.e.
+   * the lane count accessor returned by this method will give access to the lane count attribute
+   * of the end point of the segment represented by this connector.
    *
-   * @return a {@link SortedBox} containing the specific {@link AttributeAccessor}s of this Connector.
+   * @return a {@link SortedBox} containing the specific {@link AttributeAccessor}s of this
+   *        Connector.
    */
   public SortedBox<AttributeAccessor<?>> getAttributeAccessors() {
     return null;
   }
 
   /**
+   * Provides the Type of Connector this is.
+   *
    * @return the Type of Connector this is.
    */
   public ConnectorType getType() {

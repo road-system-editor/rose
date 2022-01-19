@@ -1,12 +1,12 @@
 package edu.kit.rose.infrastructure;
 
 /**
- * A Position in a two Dimensional Plane
+ * A Position in a two Dimensional Plane.
  */
 public class Position {
 
-  private int x;
-  private int y;
+  private int xcoordinate;
+  private int ycoordinate;
 
   /**
    * Gives the x axis value of the Position.
@@ -14,7 +14,7 @@ public class Position {
    * @return The x axis value of the Position.
    */
   int getX() {
-    return x;
+    return xcoordinate;
   }
 
   /**
@@ -23,7 +23,7 @@ public class Position {
    * @param x The x axis value of the Position.
    */
   void setX(int x) {
-    this.x = x;
+    this.xcoordinate = x;
   }
 
   /**
@@ -32,7 +32,7 @@ public class Position {
    * @return The y axis value of the Position.
    */
   int getY() {
-    return y;
+    return ycoordinate;
   }
 
   /**
@@ -41,6 +41,6 @@ public class Position {
    * @param y The x axis value of the Position.
    */
   void setY(int y) {
-    this.y = y;
+    this.ycoordinate = y;
   }
 }

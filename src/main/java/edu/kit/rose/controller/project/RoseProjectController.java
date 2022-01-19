@@ -15,13 +15,11 @@ public class RoseProjectController extends Controller implements ProjectControll
   /**
    * Creates a new {@link RoseProjectController}.
    *
-   * @param changeCommandBuffer the buffer for change commands
    * @param storageLock         the coordinator for controller actions
    * @param project             the model facade for project data
    */
-  protected RoseProjectController(ChangeCommandBuffer changeCommandBuffer, StorageLock storageLock,
-                                  Project project) {
-    super(changeCommandBuffer, storageLock);
+  protected RoseProjectController(StorageLock storageLock, Project project) {
+    super(storageLock);
   }
 
   @Override

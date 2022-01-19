@@ -26,7 +26,7 @@ public class RoseApplicationController extends Controller implements Application
   public RoseApplicationController(ChangeCommandBuffer changeCommandBuffer, StorageLock storageLock,
                                    LanguageSelector languageSelector,
                                    ApplicationDataSystem applicationDataSystem) {
-    super(changeCommandBuffer, storageLock);
+    super(storageLock);
   }
 
   @Override

@@ -37,7 +37,7 @@ public class RoseRoadSystemController extends Controller
    */
   public RoseRoadSystemController(ChangeCommandBuffer changeCommandBuffer, StorageLock storageLock,
                                   SelectionBuffer selectionBuffer, Project project) {
-    super(changeCommandBuffer, storageLock);
+    super(storageLock);
     this.selectionBuffer = selectionBuffer;
   }
 

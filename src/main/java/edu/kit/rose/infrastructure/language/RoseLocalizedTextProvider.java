@@ -22,7 +22,7 @@ public class RoseLocalizedTextProvider implements LocalizedTextProvider, Languag
   private ResourceBundle resourceBundle;
 
   /**
-   * Creates an instance of the {@linkt RoseLocalizedTextProvider} class
+   * Creates an instance of the {@link RoseLocalizedTextProvider} class
    * with {@link Language}.ENGLISH as selected language.
    */
   public RoseLocalizedTextProvider() {

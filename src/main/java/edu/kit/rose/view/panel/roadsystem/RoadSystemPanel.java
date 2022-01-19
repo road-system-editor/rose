@@ -27,7 +27,6 @@ import javafx.fxml.FXML;
  * @implNote Uses SetObserver as anonymous class
  *      to subscribe to selection events from RoadsystemController
  */
-@SuppressWarnings("checkstyle:JavadocTagContinuationIndentation")
 public class RoadSystemPanel extends FXMLContainer
     implements DualSetObserver<Element, Connection, RoadSystem> {
   private ApplicationController applicationController;

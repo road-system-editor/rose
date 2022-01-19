@@ -21,10 +21,10 @@ abstract class ElementView<T extends Element> extends FXMLContainer
   /**
    * Creates a new element view for a given {@code element}.
    *
-   * @param translator the {@link LocalizedTextProvider} to use.
-   * @param fxmlResourceName
-   * @param element the {@link Element} to use.
-   * @param controller the {@link HierarchyController} to use.
+   * @param translator       the {@link LocalizedTextProvider} to use.
+   * @param fxmlResourceName the key for the localized title (or name, etc.) of the Element.
+   * @param element          the {@link Element} to use.
+   * @param controller       the {@link HierarchyController} to use.
    */
   protected ElementView(LocalizedTextProvider translator, String fxmlResourceName, T element,
                         HierarchyController controller) {

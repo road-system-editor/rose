@@ -17,10 +17,10 @@ class SegmentView extends ElementView<Segment> {
   private Label label;
 
   /**
-   * Creates a new segment view for a given \lstinline{segment}.
+   * Creates a new segment view for a given {@link Segment}.
    *
    * @param translator the {@link LocalizedTextProvider} to use.
-   * @param segment the {@link Segment} to show.
+   * @param segment    the {@link Segment} to show.
    * @param controller the {@link HierarchyController} to use.
    */
   SegmentView(LocalizedTextProvider translator, Segment segment, HierarchyController controller) {

@@ -25,15 +25,13 @@ public class RosePlausibilityController extends Controller implements Plausibili
   /**
    * Creates a new {@link RosePlausibilityController}.
    *
-   * @param changeCommandBuffer   the buffer for change commands
    * @param storageLock           the coordinator for controller actions
    * @param project               the model facade for project data
    * @param applicationDataSystem the model facade for application data
    */
-  public RosePlausibilityController(ChangeCommandBuffer changeCommandBuffer,
-                                    StorageLock storageLock, Project project,
+  public RosePlausibilityController(StorageLock storageLock, Project project,
                                     ApplicationDataSystem applicationDataSystem) {
-    super(changeCommandBuffer, storageLock);
+    super(storageLock);
   }
 
   @Override

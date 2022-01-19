@@ -13,7 +13,7 @@ import edu.kit.rose.controller.navigation.Navigator;
  */
 public abstract class Controller {
 
-  protected Controller(ChangeCommandBuffer changeCommandBuffer, StorageLock storageLock) {
+  protected Controller(StorageLock storageLock) {
   }
 
   /**

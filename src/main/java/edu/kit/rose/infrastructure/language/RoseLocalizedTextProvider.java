@@ -9,7 +9,8 @@ import java.util.function.Consumer;
 /**
  * Provides the functionality to get translated versions of the same text, which is identified
  * by a unique name.
- * The language of this text can be changed and clients can observe {@link RoseLocalizedTextProvider},
+ * The language of this text can be changed and clients can observe 
+ {@link RoseLocalizedTextProvider},
  * to get notified when these changes occur.
  *
  * @implNote This class uses resource bundles for translations.
@@ -39,7 +40,9 @@ public class RoseLocalizedTextProvider implements LocalizedTextProvider, Languag
   }
 
   private void loadLanguage(Language language) {
-    this.resourceBundle = ResourceBundle.getBundle("edu.kit.rose.infrastructure.language.roseLocalization", Locale.forLanguageTag(language.getLocale().getLanguage()));
+    this.resourceBundle = ResourceBundle.getBundle(
+      "edu.kit.rose.infrastructure.language.roseLocalization", 
+      Locale.forLanguageTag(language.getLocale().getLanguage()));
     this.language = language;
   }
 

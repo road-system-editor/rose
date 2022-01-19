@@ -19,7 +19,7 @@ public class RoseHierarchyController extends Controller
     SetObserver<Segment, SelectionBuffer> {
 
   /**
-   * The container for selected segments
+   * The container for selected segments.
    */
   private SelectionBuffer selectionBuffer;
 

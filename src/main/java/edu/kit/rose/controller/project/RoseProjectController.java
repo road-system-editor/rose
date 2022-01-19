@@ -35,12 +35,12 @@ public class RoseProjectController extends Controller implements ProjectControll
   }
 
   @Override
-  public void subscribeToProjectIOAction(Runnable onBegin, Runnable onDone) {
+  public void subscribeToProjectIoAction(Runnable onBegin, Runnable onDone) {
 
   }
 
   @Override
-  public void unsubscribeFromProjectIOAction(Runnable onBegin, Runnable onEnd) {
+  public void unsubscribeFromProjectIoAction(Runnable onBegin, Runnable onEnd) {
 
   }
 }

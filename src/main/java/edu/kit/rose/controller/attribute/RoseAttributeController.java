@@ -8,6 +8,10 @@ import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 
 
+/**
+ * Provides methods for setting the values of attribute accessors.
+ *
+ */
 public class RoseAttributeController extends Controller implements AttributeController {
 
   /**

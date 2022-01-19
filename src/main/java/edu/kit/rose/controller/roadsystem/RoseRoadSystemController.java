@@ -23,7 +23,7 @@ public class RoseRoadSystemController extends Controller
     SetObserver<Segment, SelectionBuffer> {
 
   /**
-   * The container for selected segments
+   * The container for selected segments.
    */
   private SelectionBuffer selectionBuffer;
 

@@ -77,6 +77,11 @@ class SimpleApplicationDataSystem implements ApplicationDataSystem {
   }
 
   @Override
+  public ApplicationDataSystem getThis() {
+    return this;
+  }
+
+  @Override
   public void addSubscriber(UnitObserver<ApplicationDataSystem> observer) {
 
   }

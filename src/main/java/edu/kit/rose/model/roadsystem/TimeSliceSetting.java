@@ -53,6 +53,11 @@ public class TimeSliceSetting implements UnitObservable<TimeSliceSetting> {
   }
 
   @Override
+  public TimeSliceSetting getThis() {
+    return this;
+  }
+
+  @Override
   public void addSubscriber(UnitObserver<TimeSliceSetting> observer) {
 
   }

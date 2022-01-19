@@ -1,9 +1,6 @@
 package edu.kit.rose.model.roadsystem;
 
-import edu.kit.rose.infrastructure.Box;
-import edu.kit.rose.infrastructure.DualSetObserver;
-import edu.kit.rose.infrastructure.Movement;
-import edu.kit.rose.infrastructure.SortedBox;
+import edu.kit.rose.infrastructure.*;
 import edu.kit.rose.model.plausibility.criteria.CriteriaManager;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.elements.Connection;
@@ -17,7 +14,8 @@ import java.util.Collection;
  * A Standard implementation of a {@link RoadSystem}
  * using a Graph for holding the connections between the {@link Segment}s.
  */
-class GraphRoadSystem implements RoadSystem {
+class GraphRoadSystem extends SimpleDualSetObservable<Element, Connection, RoadSystem>
+        implements RoadSystem {
 
   /**
    * Constructor.
@@ -149,6 +147,11 @@ class GraphRoadSystem implements RoadSystem {
   @Override
   public void notifySubscribers() {
 
+  }
+
+  @Override
+  public RoadSystem getThis() {
+    return this;
   }
 
   @Override

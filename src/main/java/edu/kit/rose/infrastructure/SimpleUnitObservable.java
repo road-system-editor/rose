@@ -7,6 +7,6 @@ package edu.kit.rose.infrastructure;
  *
  * @param <T> the type of Object that can be Observed.
  */
-public class SimpleUnitObservable<T> extends SubscriberManager<UnitObserver<T>, T>
-    implements UnitObservable<T> {
+public abstract class SimpleUnitObservable<T>
+        extends SubscriberManager<UnitObserver<T>, T> implements UnitObservable<T> {
 }

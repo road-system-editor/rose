@@ -61,6 +61,11 @@ public class AttributeAccessor<T> implements UnitObservable<AttributeAccessor<T>
   }
 
   @Override
+  public AttributeAccessor<T> getThis() {
+    return this;
+  }
+
+  @Override
   public void addSubscriber(UnitObserver<AttributeAccessor<T>> observer) {
 
   }

@@ -49,7 +49,7 @@ class SelectableAttribute<T> extends EditableAttribute<T> {
   }
 
   @Override
-  protected List<FXMLContainer> getSubFXMLContainer() {
+  protected List<FXMLContainer> getSubFxmlContainer() {
     return null;
   }
 

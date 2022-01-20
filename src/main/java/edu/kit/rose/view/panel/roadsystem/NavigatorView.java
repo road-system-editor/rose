@@ -3,10 +3,9 @@ package edu.kit.rose.view.panel.roadsystem;
 import edu.kit.rose.controller.roadsystem.RoadSystemController;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.view.commons.FxmlContainer;
+import java.util.Collection;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-
-import java.util.List;
 
 /**
  * The navigator view is a set of buttons which can be used to navigate on the RoadSystemPanel.
@@ -40,7 +39,7 @@ public class NavigatorView extends FxmlContainer {
   }
 
   @Override
-  protected List<FXMLContainer> getSubFXMLContainer() {
+  protected Collection<FxmlContainer> getSubFxmlContainer() {
     return null;
   }
 }

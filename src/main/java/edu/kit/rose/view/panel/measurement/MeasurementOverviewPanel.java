@@ -42,7 +42,7 @@ public class MeasurementOverviewPanel extends FxmlContainer {
   }
 
   @Override
-  protected List<FXMLContainer> getSubFXMLContainer() {
+  protected List<FXMLContainer> getSubFxmlContainer() {
     return null;
   }
 }

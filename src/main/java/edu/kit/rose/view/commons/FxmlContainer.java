@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
+import java.util.Collection;
 import java.util.function.Consumer;
 import javafx.scene.layout.Pane;
 
@@ -54,7 +55,7 @@ public abstract class FxmlContainer extends Pane {
   protected abstract void updateTranslatableStrings(Language newLang);
 
   /**
-   * Initializes the {@link FXMLContainer} and its sub container.
+   * Initializes the {@link FxmlContainer} and its sub container.
    */
   public void init() {
     initSubContainer();
@@ -62,10 +63,10 @@ public abstract class FxmlContainer extends Pane {
   }
 
   private void initSubContainer() {
-    Collection<FXMLContainer> fxmlSubContainers = getSubFXMLContainer();
+    Collection<FxmlContainer> fxmlSubContainers = getSubFxmlContainer();
 
     if (fxmlSubContainers != null && injector != null) {
-      for (FXMLContainer subContainer : fxmlSubContainers) {
+      for (FxmlContainer subContainer : fxmlSubContainers) {
         injector.injectMembers(subContainer);
         subContainer.init();
       }
@@ -74,13 +75,15 @@ public abstract class FxmlContainer extends Pane {
 
   private void initTranslator() {
     if (this.translator != null) {
-      this.translator.subscribeToOnLanguageChanged(c);
+      this.translator.subscribeToOnLanguageChanged(translatorSubscriber);
     }
   }
 
   /**
-   * Hook method that returns a list of all sub {@link FXMLContainer}s of the current {@link FXMLContainer}
-   * @return list of {@link FXMLUtility}s
+   * Hook method that returns a list of all sub
+   * {@link FxmlContainer}s of the current {@link FxmlContainer}.
+   *
+   * @return list of {@link FxmlContainer}s
    */
-  protected abstract Collection<FXMLContainer> getSubFXMLContainer();
+  protected abstract Collection<FxmlContainer> getSubFxmlContainer();
 }

@@ -4,10 +4,9 @@ import edu.kit.rose.infrastructure.UnitObservable;
 import edu.kit.rose.infrastructure.UnitObserver;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
+import java.util.Collection;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
-
-import java.util.List;
 
 /**
  * A search bar is a text input component whose input is used to filter the content of another
@@ -46,7 +45,7 @@ public class SearchBar extends FxmlContainer implements UnitObservable<String> {
   }
 
   @Override
-  protected List<FXMLContainer> getSubFXMLContainer() {
+  protected Collection<FxmlContainer> getSubFxmlContainer() {
     return null;
   }
 }

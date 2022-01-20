@@ -5,11 +5,10 @@ import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.model.roadsystem.TimeSliceSetting;
 import edu.kit.rose.view.commons.FxmlContainer;
+import java.util.Collection;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-
-import java.util.List;
 
 /**
  * The time slice setting panel allows the user to configure the measurement time slice
@@ -56,7 +55,7 @@ public class TimeSliceSettingPanel extends FxmlContainer {
   }
 
   @Override
-  protected List<FXMLContainer> getSubFXMLContainer() {
+  protected Collection<FxmlContainer> getSubFxmlContainer() {
     return null;
   }
 }

@@ -6,10 +6,11 @@ import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.view.commons.FxmlContainer;
+import java.util.Collection;
 import javafx.fxml.FXML;
 import javafx.scene.layout.VBox;
 
-import java.util.List;
+
 
 /**
  * An attribute panel allows the user to see and configure attributes.
@@ -60,7 +61,7 @@ class AttributePanel extends FxmlContainer {
   }
 
   @Override
-  protected List<FXMLContainer> getSubFXMLContainer() {
+  protected Collection<FxmlContainer> getSubFxmlContainer() {
     return null;
   }
 }

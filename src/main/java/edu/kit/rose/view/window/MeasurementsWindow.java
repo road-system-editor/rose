@@ -45,7 +45,7 @@ public class MeasurementsWindow extends RoseWindow {
    * @param translator the data source for translated strings.
    * @param controller the controller to handle measurement changes.
    * @param project the project that contains the measurements to display.
-   * @param injector
+   * @param injector the injector for dependency injection
    */
   @Inject
   public MeasurementsWindow(LocalizedTextProvider translator, MeasurementController controller,

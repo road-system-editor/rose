@@ -75,7 +75,7 @@ public class ControllerFactory {
    * @return attribute controller instance
    */
   public AttributeController getAttributeController() {
-    return new RoseAttributeController(this.storageLock, this.project);
+    return new RoseAttributeController(this.changeCommandBuffer, this.storageLock, this.project);
   }
 
   /**
@@ -121,6 +121,7 @@ public class ControllerFactory {
    * @return roadsystem controller instance
    */
   public RoadSystemController getRoadSystemController() {
-    return new RoseRoadSystemController(this.storageLock, this.selectionBuffer, this.project);
+    return new RoseRoadSystemController(this.changeCommandBuffer, this.storageLock,
+        this.selectionBuffer, this.project);
   }
 }

@@ -9,7 +9,11 @@ import edu.kit.rose.view.commons.FXMLContainer;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableView;
 
-public class MeasurementOverviewPanel extends FXMLContainer {// also uses ScrollPane
+/**
+ * The measurement overview panel provides an editable overview over all measurement
+ * values of a given type for all segments of the road system.
+ */
+public class MeasurementOverviewPanel extends FXMLContainer {
   private MeasurementController controller;
   private RoadSystem roadSystem;
   private MeasurementType type;
@@ -20,8 +24,8 @@ public class MeasurementOverviewPanel extends FXMLContainer {// also uses Scroll
   /**
    * Creates a new measurement overview panel for the given measurement type.
    *
-   * @param translator
-   * @param type
+   * @param translator the data source for localized strings.
+   * @param type the type of measurement to show.
    */
   public MeasurementOverviewPanel(LocalizedTextProvider translator,
                                   MeasurementController controller, RoadSystem roadSystem,

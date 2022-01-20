@@ -1,5 +1,7 @@
 package edu.kit.rose.view;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.Injector;
 import edu.kit.rose.controller.ControllerFactory;
 import edu.kit.rose.controller.navigation.Navigator;
 import edu.kit.rose.controller.navigation.WindowType;
@@ -52,6 +54,11 @@ public class RoseApplication extends Application implements Navigator {
   private LocalizedTextProvider translator;
 
   /**
+   * The guice dependency injector.
+   */
+  private Injector injector;
+
+  /**
    * Instantiates a new RoseApplication object.
    * This constructor is used by the JavaFX framework and should never be called manually.
    */
@@ -85,5 +92,13 @@ public class RoseApplication extends Application implements Navigator {
    */
   public static void main(String[] args) {
     launch(args);
+  }
+
+
+  private class RoseModule extends AbstractModule {
+    @Override
+    protected void configure() {
+
+    }
   }
 }

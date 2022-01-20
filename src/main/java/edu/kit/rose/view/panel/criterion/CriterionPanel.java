@@ -29,7 +29,6 @@ public abstract class CriterionPanel<T extends PlausibilityCriterion> extends Fx
   protected CriterionPanel(LocalizedTextProvider translator, String fxmlResourceName,
                            PlausibilityController controller, T criterion) {
     super(fxmlResourceName);
-    setTranslator(translator);
     this.controller = controller;
     this.criterion = criterion;
     this.criterion.addSubscriber(this);

@@ -1,5 +1,7 @@
 package edu.kit.rose.view.window;
 
+import com.google.inject.Inject;
+import com.google.inject.Injector;
 import edu.kit.rose.controller.application.ApplicationController;
 import edu.kit.rose.controller.attribute.AttributeController;
 import edu.kit.rose.controller.hierarchy.HierarchyController;
@@ -60,6 +62,7 @@ public class MainWindow extends RoseWindow {
    * @param applicationData the application metadata to use for displaying the project.
    * @param stage the primary stage of the JavaFX application.
    */
+  @Inject
   public MainWindow(LocalizedTextProvider translator,
                     ApplicationController applicationController,
                     AttributeController attributeController,
@@ -69,8 +72,9 @@ public class MainWindow extends RoseWindow {
                     RoadSystemController roadSystemController,
                     Project project,
                     ApplicationDataSystem applicationData,
-                    Stage stage) {
-    super(translator, stage);
+                    Stage stage,
+                    Injector injector) {
+    super(translator, stage, injector);
 
     this.applicationController = applicationController;
     this.attributeController = attributeController;
@@ -85,22 +89,18 @@ public class MainWindow extends RoseWindow {
 
   @Override
   protected void configureStage(Stage stage) {
-    hierarchyPanel.setTranslator(getTranslator());
     hierarchyPanel.setController(hierarchyController);
     hierarchyPanel.setRoadSystem(project.getRoadSystem());
 
-    roadSystemPanel.setTranslator(getTranslator());
     roadSystemPanel.setProject(project);
     roadSystemPanel.setApplicationController(applicationController);
     roadSystemPanel.setRoadSystemController(roadSystemController);
     roadSystemPanel.setAttributeController(attributeController);
     roadSystemPanel.setMeasurementController(measurementController);
 
-    problemOverviewPanel.setTranslator(getTranslator());
     problemOverviewPanel.setController(plausibilityController);
     problemOverviewPanel.setManager(project.getPlausibilitySystem().getViolationManager());
 
-    segmentBoxPanel.setTranslator(getTranslator());
     segmentBoxPanel.setController(roadSystemController);
   }
 }

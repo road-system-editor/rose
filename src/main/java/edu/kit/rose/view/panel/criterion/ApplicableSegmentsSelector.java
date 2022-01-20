@@ -4,6 +4,7 @@ import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import edu.kit.rose.view.commons.FxmlContainer;
+import java.util.Collection;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
@@ -32,6 +33,11 @@ class ApplicableSegmentsSelector extends FxmlContainer {
   @Override
   protected void updateTranslatableStrings(Language lang) {
 
+  }
+
+  @Override
+  protected Collection<FxmlContainer> getSubFxmlContainer() {
+    return null;
   }
 
   private static class SelectableSegmentType {

@@ -4,6 +4,7 @@ import edu.kit.rose.infrastructure.UnitObservable;
 import edu.kit.rose.infrastructure.UnitObserver;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
+import java.util.Collection;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
@@ -41,5 +42,10 @@ public class SearchBar extends FxmlContainer implements UnitObservable<String> {
   @Override
   protected void updateTranslatableStrings(Language lang) {
 
+  }
+
+  @Override
+  protected Collection<FxmlContainer> getSubFxmlContainer() {
+    return null;
   }
 }

@@ -2,7 +2,10 @@ package edu.kit.rose.view.panel.segment;
 
 import edu.kit.rose.controller.attribute.AttributeController;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
+import edu.kit.rose.view.commons.FxmlContainer;
+import java.util.Collection;
 import javafx.scene.Node;
+
 
 /**
  * This is the {@link EditableAttribute} implementation for the
@@ -27,5 +30,10 @@ class IntegerAttribute extends EditableAttribute<Integer> {
   @Override
   public void notifyChange(AttributeAccessor<Integer> unit) {
 
+  }
+
+  @Override
+  protected Collection<FxmlContainer> getSubFxmlContainer() {
+    return null;
   }
 }

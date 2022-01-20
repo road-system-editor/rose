@@ -92,4 +92,9 @@ public class CriteriaOverviewPanel extends FxmlContainer
   protected void updateTranslatableStrings(Language lang) {
 
   }
+
+  @Override
+  protected Collection<FxmlContainer> getSubFxmlContainer() {
+    return null;
+  }
 }

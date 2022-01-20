@@ -1,5 +1,7 @@
 package edu.kit.rose.view.window;
 
+import com.google.inject.Inject;
+import com.google.inject.Injector;
 import edu.kit.rose.controller.plausibility.PlausibilityController;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.model.ApplicationDataSystem;
@@ -38,9 +40,10 @@ public class CriteriaWindow extends RoseWindow {
    * @param controller the controller to handle criterion changes.
    * @param applicationData the application data system that stores the criteria.
    */
+  @Inject
   public CriteriaWindow(LocalizedTextProvider translator, PlausibilityController controller,
-                        ApplicationDataSystem applicationData) {
-    super(translator);
+                        ApplicationDataSystem applicationData, Injector injector) {
+    super(translator, injector);
     this.plausibilityController = controller;
     this.applicationData = applicationData;
   }
@@ -49,7 +52,6 @@ public class CriteriaWindow extends RoseWindow {
   protected void configureStage(Stage stage) {
     // fxml loading
     overview.setController(plausibilityController);
-    overview.setTranslator(getTranslator());
     overview.setManager(applicationData.getCriteriaManager());
     overview.setSelectionListener(this::onSelect);
   }

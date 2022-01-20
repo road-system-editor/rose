@@ -30,4 +30,9 @@ public class MeasurementTable<T> extends FxmlContainer {
   protected void updateTranslatableStrings(Language newLang) {
 
   }
+
+  @Override
+  protected Collection<FxmlContainer> getSubFxmlContainer() {
+    return null;
+  }
 }

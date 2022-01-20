@@ -1,5 +1,6 @@
 package edu.kit.rose.view.window;
 
+import com.google.inject.Injector;
 import edu.kit.rose.controller.navigation.Navigator;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import javafx.stage.Stage;
@@ -25,12 +26,14 @@ public abstract class RoseWindow {
 
   private WindowState state = WindowState.INITIALIZED;
 
+  private Injector injector;
+
   /**
    * Creates a new window for the ROSE application.
    *
    * @param translator the data source for translated strings.
    */
-  protected RoseWindow(LocalizedTextProvider translator) {
+  protected RoseWindow(LocalizedTextProvider translator, Injector injector) {
     this.translator = translator;
   }
 
@@ -41,8 +44,8 @@ public abstract class RoseWindow {
    * @param translator the data source for translated strings.
    * @param stage the primary stage of the JavaFX application.
    */
-  protected RoseWindow(LocalizedTextProvider translator, Stage stage) {
-    this(translator);
+  protected RoseWindow(LocalizedTextProvider translator, Stage stage, Injector injector) {
+    this(translator, injector);
     this.stage = stage;
     stage.setOnCloseRequest(event -> {
       event.consume(); // might need to check state

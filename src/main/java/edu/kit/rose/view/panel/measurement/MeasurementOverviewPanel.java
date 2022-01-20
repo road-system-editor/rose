@@ -6,8 +6,10 @@ import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.measurements.MeasurementType;
 import edu.kit.rose.view.commons.FxmlContainer;
+import java.util.Collection;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableView;
+
 
 /**
  * The measurement overview panel provides an editable overview over all measurement
@@ -31,7 +33,6 @@ public class MeasurementOverviewPanel extends FxmlContainer {
                                   MeasurementController controller, RoadSystem roadSystem,
                                   MeasurementType type) {
     super("measurement_overview_panel.fxml");
-    setTranslator(translator);
     this.controller = controller;
     this.roadSystem = roadSystem;
     this.type = type;
@@ -40,5 +41,10 @@ public class MeasurementOverviewPanel extends FxmlContainer {
   @Override
   protected void updateTranslatableStrings(Language lang) {
 
+  }
+
+  @Override
+  protected Collection<FxmlContainer> getSubFxmlContainer() {
+    return null;
   }
 }

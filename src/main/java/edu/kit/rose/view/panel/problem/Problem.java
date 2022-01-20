@@ -5,9 +5,12 @@ import edu.kit.rose.infrastructure.UnitObserver;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.model.plausibility.violation.Violation;
 import edu.kit.rose.view.commons.FxmlContainer;
+import java.util.Collection;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
+
+
 
 /**
  * A {@link Problem} informs the user about a violation against a
@@ -54,5 +57,10 @@ class Problem extends FxmlContainer implements UnitObserver<Violation> {
   @Override
   protected void updateTranslatableStrings(Language newLang) {
 
+  }
+
+  @Override
+  protected Collection<FxmlContainer> getSubFxmlContainer() {
+    return null;
   }
 }

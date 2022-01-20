@@ -1,7 +1,10 @@
 package edu.kit.rose.view.commons;
 
+import com.google.inject.Inject;
+import com.google.inject.Injector;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
+import java.util.Collection;
 import java.util.function.Consumer;
 import javafx.scene.layout.Pane;
 
@@ -14,7 +17,15 @@ public abstract class FxmlContainer extends Pane {
   /**
    * Data source for translated strings.
    */
+  @Inject
   private LocalizedTextProvider translator;
+
+  /**
+   * The Guice injector.
+   */
+  @Inject
+  private Injector injector;
+
 
   /**
    * Creates a new FXMLPanel and immediately mounts the components specified in the given FXML
@@ -35,18 +46,6 @@ public abstract class FxmlContainer extends Pane {
     return translator;
   }
 
-  /**
-   * Sets the data source for string translation.
-   *
-   * @param translator the new data source for string translation, may not be null.
-   */
-  public void setTranslator(LocalizedTextProvider translator) {
-    if (this.translator != null) {
-      this.translator.unsubscribeFromOnLanguageChanged(translatorSubscriber);
-    }
-    this.translator = translator;
-    this.translator.subscribeToOnLanguageChanged(translatorSubscriber);
-  }
 
   /**
    * Template method that updates all visible strings in this container to the new translation.
@@ -54,4 +53,37 @@ public abstract class FxmlContainer extends Pane {
    * @param newLang the new language.
    */
   protected abstract void updateTranslatableStrings(Language newLang);
+
+  /**
+   * Initializes the {@link FxmlContainer} and its sub container.
+   */
+  public void init() {
+    initSubContainer();
+    initTranslator();
+  }
+
+  private void initSubContainer() {
+    Collection<FxmlContainer> fxmlSubContainers = getSubFxmlContainer();
+
+    if (fxmlSubContainers != null && injector != null) {
+      for (FxmlContainer subContainer : fxmlSubContainers) {
+        injector.injectMembers(subContainer);
+        subContainer.init();
+      }
+    }
+  }
+
+  private void initTranslator() {
+    if (this.translator != null) {
+      this.translator.subscribeToOnLanguageChanged(translatorSubscriber);
+    }
+  }
+
+  /**
+   * Hook method that returns a list of all sub
+   * {@link FxmlContainer}s of the current {@link FxmlContainer}.
+   *
+   * @return list of {@link FxmlContainer}s
+   */
+  protected abstract Collection<FxmlContainer> getSubFxmlContainer();
 }

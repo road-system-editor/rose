@@ -9,8 +9,11 @@ import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.view.commons.FxmlContainer;
 import edu.kit.rose.view.commons.UnmountUtility;
+import java.util.Collection;
 import javafx.fxml.FXML;
 import javafx.scene.control.TabPane;
+
+
 
 /**
  * The segment editor panel allows the user to configure the attributes and measurements
@@ -49,6 +52,11 @@ public class SegmentEditorPanel extends FxmlContainer implements UnitObserver<El
   @Override
   protected void updateTranslatableStrings(Language newLang) {
 
+  }
+
+  @Override
+  protected Collection<FxmlContainer> getSubFxmlContainer() {
+    return null;
   }
 
   @Override

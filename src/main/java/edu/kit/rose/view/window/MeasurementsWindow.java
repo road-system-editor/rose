@@ -1,5 +1,7 @@
 package edu.kit.rose.view.window;
 
+import com.google.inject.Inject;
+import com.google.inject.Injector;
 import edu.kit.rose.controller.measurement.MeasurementController;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.model.Project;
@@ -43,10 +45,12 @@ public class MeasurementsWindow extends RoseWindow {
    * @param translator the data source for translated strings.
    * @param controller the controller to handle measurement changes.
    * @param project the project that contains the measurements to display.
+   * @param injector the injector for dependency injection
    */
+  @Inject
   public MeasurementsWindow(LocalizedTextProvider translator, MeasurementController controller,
-                            Project project) {
-    super(translator);
+                            Project project, Injector injector) {
+    super(translator, injector);
     this.measurementController = controller;
     this.project = project;
   }
@@ -54,7 +58,6 @@ public class MeasurementsWindow extends RoseWindow {
   @Override
   protected void configureStage(Stage stage) {
     // fxml loading
-    timeSliceSetting.setTranslator(getTranslator());
     timeSliceSetting.setController(controller);
     timeSliceSetting.setTimeSliceSetting(project.getRoadSystem().getTimeSliceSetting());
 

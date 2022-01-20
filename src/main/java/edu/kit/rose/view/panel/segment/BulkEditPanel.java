@@ -26,8 +26,6 @@ public class BulkEditPanel extends FxmlContainer {
                        AttributeController controller, Collection<Element> elements) {
     super("bulk_edit_panel.fxml");
 
-    setTranslator(translator);
-    attributePanel.setTranslator(translator);
     attributePanel.setController(controller);
     attributePanel.setAttributes(roadSystem.getSharedAttributeAccessors(elements));
   }
@@ -35,5 +33,10 @@ public class BulkEditPanel extends FxmlContainer {
   @Override
   protected void updateTranslatableStrings(Language newLang) {
 
+  }
+
+  @Override
+  protected Collection<FxmlContainer> getSubFxmlContainer() {
+    return null;
   }
 }

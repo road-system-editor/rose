@@ -3,7 +3,9 @@ package edu.kit.rose.view.panel.segment;
 import edu.kit.rose.controller.attribute.AttributeController;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
+import edu.kit.rose.view.commons.FxmlContainer;
 import edu.kit.rose.view.commons.UnmountUtility;
+import java.util.Collection;
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
 
@@ -35,6 +37,11 @@ class StringAttribute extends EditableAttribute<String> {
   @Override
   protected void updateTranslatableStrings(Language newLang) {
 
+  }
+
+  @Override
+  protected Collection<FxmlContainer> getSubFxmlContainer() {
+    return null;
   }
 
   @Override

@@ -3,6 +3,7 @@ package edu.kit.rose.view.panel.roadsystem;
 import edu.kit.rose.controller.roadsystem.RoadSystemController;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.view.commons.FxmlContainer;
+import java.util.Collection;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 
@@ -35,5 +36,10 @@ public class NavigatorView extends FxmlContainer {
   @Override
   protected void updateTranslatableStrings(Language lang) {
 
+  }
+
+  @Override
+  protected Collection<FxmlContainer> getSubFxmlContainer() {
+    return null;
   }
 }

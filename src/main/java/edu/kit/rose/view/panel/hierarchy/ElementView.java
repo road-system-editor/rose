@@ -29,7 +29,6 @@ abstract class ElementView<T extends Element> extends FxmlContainer
   protected ElementView(LocalizedTextProvider translator, String fxmlResourceName, T element,
                         HierarchyController controller) {
     super(fxmlResourceName);
-    setTranslator(translator);
     this.element = element;
     this.controller = controller;
 

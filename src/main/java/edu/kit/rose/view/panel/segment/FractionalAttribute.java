@@ -2,8 +2,12 @@ package edu.kit.rose.view.panel.segment;
 
 import edu.kit.rose.controller.attribute.AttributeController;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
+import edu.kit.rose.view.commons.FxmlContainer;
+import java.util.Collection;
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
+
+
 
 /**
  * This is the {@link EditableAttribute} implementation for the
@@ -28,5 +32,10 @@ class FractionalAttribute extends EditableAttribute<Double> {
   @Override
   protected Node createInputField() {
     return new TextField();
+  }
+
+  @Override
+  protected Collection<FxmlContainer> getSubFxmlContainer() {
+    return null;
   }
 }

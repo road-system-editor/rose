@@ -76,4 +76,9 @@ public class ProblemOverviewPanel extends FxmlContainer
   protected void updateTranslatableStrings(Language lang) {
 
   }
+
+  @Override
+  protected Collection<FxmlContainer> getSubFxmlContainer() {
+    return null;
+  }
 }

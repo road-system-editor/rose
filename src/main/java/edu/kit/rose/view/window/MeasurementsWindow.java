@@ -1,5 +1,7 @@
 package edu.kit.rose.view.window;
 
+import com.google.inject.Inject;
+import com.google.inject.Injector;
 import edu.kit.rose.controller.measurement.MeasurementController;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.model.Project;
@@ -43,10 +45,12 @@ public class MeasurementsWindow extends RoseWindow { // also uses HBox and VBox
    * @param translator
    * @param controller
    * @param project
+   * @param injector
    */
+  @Inject
   public MeasurementsWindow(LocalizedTextProvider translator, MeasurementController controller,
-                            Project project) {
-    super(translator);
+                            Project project, Injector injector) {
+    super(translator, injector);
     this.measurementController = controller;
     this.project = project;
   }

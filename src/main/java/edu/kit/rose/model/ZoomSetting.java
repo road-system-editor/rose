@@ -22,7 +22,7 @@ public class ZoomSetting implements UnitObservable<ZoomSetting> {
    * @return the Position of the center of the View.
    */
   Position getCenterOfView() {
-    return this.centerOfView;
+    return new Position(this.centerOfView.getX(), this.centerOfView.getY());
   }
 
   /**

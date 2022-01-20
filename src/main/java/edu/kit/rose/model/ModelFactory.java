@@ -26,7 +26,7 @@ public class ModelFactory {
    * @return the constructed Project
    */
   public Project createProject() {
-    return null;
+    return project;
   }
 
   /**
@@ -35,6 +35,6 @@ public class ModelFactory {
    * @return the constructed ApplicationDataSystem
    */
   public ApplicationDataSystem createApplicationDataSystem() {
-    return null;
+    return applicationDataSystem;
   }
 }

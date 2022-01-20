@@ -74,4 +74,9 @@ public class ViolationManager
   public void notifySubscribers() {
 
   }
+
+  @Override
+  public ViolationManager getThis() {
+    return this;
+  }
 }

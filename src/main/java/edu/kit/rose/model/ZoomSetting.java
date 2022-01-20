@@ -60,6 +60,11 @@ public class ZoomSetting implements UnitObservable<ZoomSetting> {
   }
 
   @Override
+  public ZoomSetting getThis() {
+    return this;
+  }
+
+  @Override
   public void addSubscriber(UnitObserver<ZoomSetting> observer) {
     if (!this.observers.contains(observer)) {
       this.observers.add(observer);

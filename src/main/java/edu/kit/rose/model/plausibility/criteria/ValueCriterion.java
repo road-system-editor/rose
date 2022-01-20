@@ -62,4 +62,9 @@ class ValueCriterion implements PlausibilityCriterion {
   public void notifySubscribers() {
 
   }
+
+  @Override
+  public PlausibilityCriterion getThis() {
+    return this;
+  }
 }

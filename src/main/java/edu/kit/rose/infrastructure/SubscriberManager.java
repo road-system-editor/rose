@@ -1,6 +1,7 @@
 package edu.kit.rose.infrastructure;
 
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -33,5 +34,9 @@ abstract class SubscriberManager<T extends UnitObserver<S>, S> implements Observ
   @Override
   public void notifySubscribers() {
     subscribers.forEach(sub -> sub.notifyChange(getThis()));
+  }
+
+  protected Iterator<T> getSubscriberIterator() {
+    return this.subscribers.listIterator();
   }
 }

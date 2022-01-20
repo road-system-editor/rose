@@ -1,6 +1,10 @@
 package edu.kit.rose.model.roadsystem;
 
-import edu.kit.rose.infrastructure.*;
+import edu.kit.rose.infrastructure.Box;
+import edu.kit.rose.infrastructure.DualSetObserver;
+import edu.kit.rose.infrastructure.Movement;
+import edu.kit.rose.infrastructure.SimpleDualSetObservable;
+import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.model.plausibility.criteria.CriteriaManager;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.elements.Connection;

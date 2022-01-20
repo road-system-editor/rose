@@ -4,7 +4,7 @@ import edu.kit.rose.controller.plausibility.PlausibilityController;
 import edu.kit.rose.infrastructure.UnitObserver;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.model.plausibility.violation.Violation;
-import edu.kit.rose.view.commons.FXMLContainer;
+import edu.kit.rose.view.commons.FxmlContainer;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
@@ -13,7 +13,7 @@ import javafx.scene.control.Tooltip;
  * A {@link Problem} informs the user about a violation against a
  * {@link edu.kit.rose.model.plausibility.criteria.PlausibilityCriterion}.
  */
-class Problem extends FXMLContainer implements UnitObserver<Violation> {
+class Problem extends FxmlContainer implements UnitObserver<Violation> {
   /**
    * The controller to use for handling navigation to the affected segments in the road system view.
    */

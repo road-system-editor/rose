@@ -3,14 +3,14 @@ package edu.kit.rose.view.panel.segmentbox;
 import edu.kit.rose.controller.roadsystem.RoadSystemController;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
-import edu.kit.rose.view.commons.FXMLContainer;
+import edu.kit.rose.view.commons.FxmlContainer;
 import java.util.List;
 
 /**
  * The segment box panel provides an overview over the available street segment types which can
  * be created, as specified in PF11.1.7.
  */
-public class SegmentBoxPanel extends FXMLContainer {
+public class SegmentBoxPanel extends FxmlContainer {
   /**
    * The controller to use for segment creation.
    */

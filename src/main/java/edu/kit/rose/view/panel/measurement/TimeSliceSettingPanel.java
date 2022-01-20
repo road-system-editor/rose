@@ -4,7 +4,7 @@ import edu.kit.rose.controller.measurement.MeasurementController;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.model.roadsystem.TimeSliceSetting;
-import edu.kit.rose.view.commons.FXMLContainer;
+import edu.kit.rose.view.commons.FxmlContainer;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -13,7 +13,7 @@ import javafx.scene.control.TextField;
  * The time slice setting panel allows the user to configure the measurement time slice
  * settings, as specified in PF11.1.4.
  */
-public class TimeSliceSettingPanel extends FXMLContainer {
+public class TimeSliceSettingPanel extends FxmlContainer {
   private TimeSliceSetting timeSliceSetting;
   private MeasurementController controller;
 

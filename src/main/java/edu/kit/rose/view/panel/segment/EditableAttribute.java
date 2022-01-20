@@ -4,7 +4,7 @@ import edu.kit.rose.controller.attribute.AttributeController;
 import edu.kit.rose.infrastructure.UnitObserver;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
-import edu.kit.rose.view.commons.FXMLContainer;
+import edu.kit.rose.view.commons.FxmlContainer;
 import edu.kit.rose.view.commons.UnmountUtility;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -17,7 +17,7 @@ import javafx.scene.control.Label;
  *
  * @param <T> the java type of the attribute value.
  */
-abstract class EditableAttribute<T> extends FXMLContainer
+abstract class EditableAttribute<T> extends FxmlContainer
     implements UnitObserver<AttributeAccessor<T>> {
   private final AttributeAccessor<T> attribute;
   private final AttributeController controller;

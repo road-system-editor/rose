@@ -9,7 +9,7 @@ import javafx.scene.layout.Pane;
  * FXML containers mount components specified in an FXML file provided by the subclass into
  * themselves.
  */
-public abstract class FXMLContainer extends Pane {
+public abstract class FxmlContainer extends Pane {
   private final Consumer<Language> translatorSubscriber = this::updateTranslatableStrings;
   /**
    * Data source for translated strings.
@@ -22,8 +22,8 @@ public abstract class FXMLContainer extends Pane {
    *
    * @param fxmlResourceName the name of the fxml resource.
    */
-  public FXMLContainer(String fxmlResourceName) {
-    FXMLUtility.loadFXML(this, this, this.getClass().getResource(fxmlResourceName));
+  public FxmlContainer(String fxmlResourceName) {
+    FxmlUtility.loadFxml(this, this, this.getClass().getResource(fxmlResourceName));
   }
 
   /**

@@ -14,7 +14,7 @@ import javafx.scene.control.TableView;
  *
  * @param <T> the data type of the measurement to display.
  */
-public class MeasurementTable<T> extends FXMLContainer {
+public class MeasurementTable<T> extends FxmlContainer {
   @FXML
   private TableView<?> table;
 

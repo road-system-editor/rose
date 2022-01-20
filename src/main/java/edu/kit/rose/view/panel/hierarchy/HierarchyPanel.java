@@ -7,7 +7,7 @@ import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.elements.Connection;
 import edu.kit.rose.model.roadsystem.elements.Element;
-import edu.kit.rose.view.commons.FXMLContainer;
+import edu.kit.rose.view.commons.FxmlContainer;
 import java.util.Collection;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -16,7 +16,7 @@ import javafx.scene.control.Button;
 /**
  * The hierarchy panel shows the hierarchical order of the elements contained in the road system.
  */
-public class HierarchyPanel extends FXMLContainer
+public class HierarchyPanel extends FxmlContainer
     implements DualSetObserver<Element, Connection, RoadSystem> {
 
   private HierarchyController controller;

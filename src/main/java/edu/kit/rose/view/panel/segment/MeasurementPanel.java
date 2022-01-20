@@ -5,7 +5,7 @@ import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.model.roadsystem.TimeSliceSetting;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.measurements.Measurement;
-import edu.kit.rose.view.commons.FXMLContainer;
+import edu.kit.rose.view.commons.FxmlContainer;
 import edu.kit.rose.view.commons.MeasurementTableFactory;
 import java.util.List;
 import javafx.scene.control.Tab;
@@ -15,7 +15,7 @@ import javafx.scene.control.TabPane;
  * A measurement panel allows the user to see and configure time-dependant measurements for a given
  * segment.
  */
-class MeasurementPanel extends FXMLContainer {
+class MeasurementPanel extends FxmlContainer {
   private TabPane tabPane;
   private MeasurementController controller;
   private TimeSliceSetting timeSliceSetting;

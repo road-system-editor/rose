@@ -6,7 +6,7 @@ import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.model.plausibility.criteria.CriteriaManager;
 import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterion;
-import edu.kit.rose.view.commons.FXMLContainer;
+import edu.kit.rose.view.commons.FxmlContainer;
 import java.util.Collection;
 import java.util.function.Consumer;
 import javafx.fxml.FXML;
@@ -16,7 +16,7 @@ import javafx.scene.control.ScrollPane;
 /**
  * The criteria overview panel allows the user to view the criteria.
  */
-public class CriteriaOverviewPanel extends FXMLContainer
+public class CriteriaOverviewPanel extends FxmlContainer
     implements SetObserver<PlausibilityCriterion, CriteriaManager> {
   private PlausibilityController controller;
   private CriteriaManager manager;

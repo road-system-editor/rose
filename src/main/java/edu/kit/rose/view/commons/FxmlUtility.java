@@ -7,7 +7,7 @@ import javafx.fxml.FXMLLoader;
 /**
  * Utility class that helps with loading FXML components.
  */
-public final class FXMLUtility {
+public final class FxmlUtility {
   /**
    * Loads the JavaFX nodes from the given the FXML file ({@code fxmlUrl}) into the given
    * {@code root} object and injects the given {@code controller}.
@@ -18,7 +18,7 @@ public final class FXMLUtility {
    * @param <T> the type of the root element in the fxml file.
    * @return the loaded object hierarchy.
    */
-  public static <T> T loadFXML(Object root, Object controller, URL fxmlUrl) {
+  public static <T> T loadFxml(Object root, Object controller, URL fxmlUrl) {
     FXMLLoader loader = new FXMLLoader(fxmlUrl);
     loader.setRoot(root);
     loader.setController(controller);

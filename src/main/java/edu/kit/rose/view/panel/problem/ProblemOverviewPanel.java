@@ -6,7 +6,7 @@ import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.model.plausibility.violation.Violation;
 import edu.kit.rose.model.plausibility.violation.ViolationManager;
-import edu.kit.rose.view.commons.FXMLContainer;
+import edu.kit.rose.view.commons.FxmlContainer;
 import java.util.Collection;
 
 /**
@@ -14,7 +14,7 @@ import java.util.Collection;
  * all current violations of the current road system against any plausibility criteria.
  * This realizes the problem overview part of specification PF11.1.2.
  */
-public class ProblemOverviewPanel extends FXMLContainer
+public class ProblemOverviewPanel extends FxmlContainer
     implements SetObserver<Violation, ViolationManager> {
   /**
    * The controller to use for handling navigation to the affected segments in the road system view.

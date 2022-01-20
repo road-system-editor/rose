@@ -3,7 +3,7 @@ package edu.kit.rose.view.panel.criterion;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
-import edu.kit.rose.view.commons.FXMLContainer;
+import edu.kit.rose.view.commons.FxmlContainer;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
@@ -14,7 +14,7 @@ import javafx.scene.control.ListView;
  * The applicable segments' selector allows the user to select which segment types a plausibility
  * criterion applies to.
  */
-class ApplicableSegmentsSelector extends FXMLContainer {
+class ApplicableSegmentsSelector extends FxmlContainer {
   @FXML
   private ListView<SelectableSegmentType> typeSelector;
   @FXML

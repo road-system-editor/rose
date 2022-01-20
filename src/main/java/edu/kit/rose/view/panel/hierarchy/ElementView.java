@@ -4,7 +4,7 @@ import edu.kit.rose.controller.hierarchy.HierarchyController;
 import edu.kit.rose.infrastructure.UnitObserver;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.model.roadsystem.elements.Element;
-import edu.kit.rose.view.commons.FXMLContainer;
+import edu.kit.rose.view.commons.FxmlContainer;
 
 /**
  * An element view represents an element in the hierarchy view and is responsible for
@@ -12,7 +12,7 @@ import edu.kit.rose.view.commons.FXMLContainer;
  *
  * @param <T> the type of Element this ElementView uses.
  */
-abstract class ElementView<T extends Element> extends FXMLContainer
+abstract class ElementView<T extends Element> extends FxmlContainer
     implements UnitObserver<Element> {
 
   private HierarchyController controller;

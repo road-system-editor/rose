@@ -1,7 +1,5 @@
 package edu.kit.rose.view.panel.problem;
 
-import java.util.Collection;
-
 import edu.kit.rose.controller.plausibility.PlausibilityController;
 import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.infrastructure.language.Language;
@@ -9,9 +7,11 @@ import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.model.plausibility.violation.Violation;
 import edu.kit.rose.model.plausibility.violation.ViolationManager;
 import edu.kit.rose.view.commons.FXMLContainer;
+import java.util.Collection;
 
 /**
- * The problem overview panel provides an overview over all current violations of the current road system against any plausibilty criteria.
+ * The problem overview panel provides an overview over
+ * all current violations of the current road system against any plausibility criteria.
  * This realizes the problem overview part of specification PF11.1.2.
  */
 public class ProblemOverviewPanel extends FXMLContainer
@@ -31,16 +31,28 @@ public class ProblemOverviewPanel extends FXMLContainer
 
   /**
    * Creates a new problem overview panel.
-   * Requires {@link #setTranslator(LocalizedTextProvider)} + {@link #setController(PlausibilityController)} + {@link #setManager(ViolationManager)}
+   * Requires {@link #setTranslator(LocalizedTextProvider)}
+   *        + {@link #setController(PlausibilityController)}
+   *        + {@link #setManager(ViolationManager)}
    */
   public ProblemOverviewPanel() {
     super("problem_overview_panel.fxml");
   }
 
+  /**
+   * Sets the controller that handles plausibility input.
+   *
+   * @param controller controller that handles plausibility input.
+   */
   public void setController(PlausibilityController controller) {
     this.controller = controller;
   }
 
+  /**
+   * Sets the {@link ViolationManager}.
+   *
+   * @param manager the {@link ViolationManager} instance
+   */
   public void setManager(ViolationManager manager) {
     this.manager = manager;
   }

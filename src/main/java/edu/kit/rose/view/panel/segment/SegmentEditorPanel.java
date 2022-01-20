@@ -12,6 +12,8 @@ import edu.kit.rose.view.commons.UnmountUtility;
 import javafx.fxml.FXML;
 import javafx.scene.control.TabPane;
 
+import java.util.List;
+
 /**
  * The segment editor panel allows the user to configure the attributes and measurements of a given segment, as specified in PF11.1.5.
  */
@@ -48,6 +50,11 @@ public class SegmentEditorPanel extends FXMLContainer implements UnitObserver<El
   @Override
   protected void updateTranslatableStrings(Language newLang) {
 
+  }
+
+  @Override
+  protected List<FXMLContainer> getSubFXMLContainer() {
+    return null;
   }
 
   @Override

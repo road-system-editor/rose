@@ -58,7 +58,6 @@ public class MeasurementsWindow extends RoseWindow { // also uses HBox and VBox
   @Override
   protected void configureStage(Stage stage) {
     // fxml loading
-    timeSliceSetting.setTranslator(getTranslator());
     timeSliceSetting.setController(controller);
     timeSliceSetting.setTimeSliceSetting(project.getRoadSystem().getTimeSliceSetting());
 

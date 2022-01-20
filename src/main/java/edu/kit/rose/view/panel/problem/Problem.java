@@ -11,6 +11,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 
+import java.util.List;
+
 /**
  * A problem informs the user about a violation agains a plausibility criterion.
  */
@@ -54,5 +56,10 @@ class Problem extends FXMLContainer implements UnitObserver<Violation> {
   @Override
   protected void updateTranslatableStrings(Language newLang) {
 
+  }
+
+  @Override
+  protected List<FXMLContainer> getSubFXMLContainer() {
+    return null;
   }
 }

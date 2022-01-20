@@ -3,12 +3,14 @@ package edu.kit.rose.view.panel.segment;
 import edu.kit.rose.controller.attribute.AttributeController;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
+import edu.kit.rose.view.commons.FXMLContainer;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * This is the {@link EditableAttribute} implementation for {@link edu.kit.rose.model.roadsystem.DataType}s whose value needs to be selected out of a small set of options (like enums and booleans).
@@ -44,6 +46,11 @@ class SelectableAttribute<T> extends EditableAttribute<T> {
   @Override
   protected void updateTranslatableStrings(Language newLang) {
 
+  }
+
+  @Override
+  protected List<FXMLContainer> getSubFXMLContainer() {
+    return null;
   }
 
   @Override

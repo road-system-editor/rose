@@ -9,6 +9,8 @@ import edu.kit.rose.view.commons.FXMLContainer;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableView;
 
+import java.util.List;
+
 public class MeasurementOverviewPanel extends FXMLContainer {// also uses ScrollPane
   private MeasurementController controller;
   private RoadSystem roadSystem;
@@ -27,7 +29,6 @@ public class MeasurementOverviewPanel extends FXMLContainer {// also uses Scroll
                                   MeasurementController controller, RoadSystem roadSystem,
                                   MeasurementType type) {
     super("measurement_overview_panel.fxml");
-    setTranslator(translator);
     this.controller = controller;
     this.roadSystem = roadSystem;
     this.type = type;
@@ -36,5 +37,10 @@ public class MeasurementOverviewPanel extends FXMLContainer {// also uses Scroll
   @Override
   protected void updateTranslatableStrings(Language lang) {
 
+  }
+
+  @Override
+  protected List<FXMLContainer> getSubFXMLContainer() {
+    return null;
   }
 }

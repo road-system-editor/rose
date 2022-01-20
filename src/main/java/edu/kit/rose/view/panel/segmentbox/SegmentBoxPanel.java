@@ -43,4 +43,9 @@ public class SegmentBoxPanel extends
   protected void updateTranslatableStrings(Language lang) {
 
   }
+
+  @Override
+  protected List<FXMLContainer> getSubFXMLContainer() {
+    return null;
+  }
 }

@@ -6,6 +6,8 @@ import edu.kit.rose.view.commons.FXMLContainer;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 
+import java.util.List;
+
 /**
  * The navigator view is a set of buttons which can be used to navigate on the RoadSystemPanel.
  */
@@ -35,5 +37,10 @@ public class NavigatorView extends FXMLContainer {
   @Override
   protected void updateTranslatableStrings(Language lang) {
 
+  }
+
+  @Override
+  protected List<FXMLContainer> getSubFXMLContainer() {
+    return null;
   }
 }

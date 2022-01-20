@@ -1,6 +1,7 @@
 package edu.kit.rose.view.panel.criterion;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.function.Consumer;
 
@@ -74,5 +75,10 @@ public class CriteriaOverviewPanel extends FXMLContainer
   @Override
   protected void updateTranslatableStrings(Language lang) {
 
+  }
+
+  @Override
+  protected List<FXMLContainer> getSubFXMLContainer() {
+    return null;
   }
 }

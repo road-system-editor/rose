@@ -5,6 +5,8 @@ import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.view.commons.FXMLContainer;
 
+import java.util.List;
+
 /**
  * The change button panel contains the buttons for undoing and redoing a changeable action.
  */
@@ -34,5 +36,10 @@ public class ChangeButtonPanel extends FXMLContainer {
   @Override
   protected void updateTranslatableStrings(Language lang) {
 
+  }
+
+  @Override
+  protected List<FXMLContainer> getSubFXMLContainer() {
+    return null;
   }
 }

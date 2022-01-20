@@ -61,6 +61,11 @@ class MeasurementPanel extends FXMLContainer {
 
   }
 
+  @Override
+  protected List<FXMLContainer> getSubFXMLContainer() {
+    return null;
+  }
+
   /**
    * Sets the controller that handles measurement value updates.
    *

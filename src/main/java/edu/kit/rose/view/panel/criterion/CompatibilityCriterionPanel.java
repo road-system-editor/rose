@@ -9,10 +9,13 @@ import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterion;
 import edu.kit.rose.model.plausibility.criteria.validation.OperatorType;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
+import edu.kit.rose.view.commons.FXMLContainer;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+
+import java.util.List;
 
 /**
  * The compatibility criterion panel allows the user to configure a given compatibility criterion.
@@ -61,5 +64,10 @@ class CompatibilityCriterionPanel
   @Override
   protected void updateTranslatableStrings(Language lang) {
 
+  }
+
+  @Override
+  protected List<FXMLContainer> getSubFXMLContainer() {
+    return null;
   }
 }

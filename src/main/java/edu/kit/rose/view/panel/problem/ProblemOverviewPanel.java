@@ -1,6 +1,7 @@
 package edu.kit.rose.view.panel.problem;
 
 import java.util.Collection;
+import java.util.List;
 
 import edu.kit.rose.controller.plausibility.PlausibilityController;
 import edu.kit.rose.infrastructure.SetObserver;
@@ -63,5 +64,10 @@ public class ProblemOverviewPanel extends FXMLContainer
   @Override
   protected void updateTranslatableStrings(Language lang) {
 
+  }
+
+  @Override
+  protected List<FXMLContainer> getSubFXMLContainer() {
+    return null;
   }
 }

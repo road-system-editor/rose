@@ -7,6 +7,8 @@ import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
+import java.util.List;
+
 /**
  * A search bar is a text input component whose input is used to filter the content of another component.
  */
@@ -41,5 +43,10 @@ public class SearchBar extends FXMLContainer
   @Override
   protected void updateTranslatableStrings(Language lang) {
 
+  }
+
+  @Override
+  protected List<FXMLContainer> getSubFXMLContainer() {
+    return null;
   }
 }

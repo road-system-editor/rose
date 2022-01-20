@@ -9,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TableView;
 
 import java.util.Collection;
+import java.util.List;
 
 public class MeasurementTable<T> extends FXMLContainer {
   @FXML
@@ -25,5 +26,10 @@ public class MeasurementTable<T> extends FXMLContainer {
   @Override
   protected void updateTranslatableStrings(Language newLang) {
 
+  }
+
+  @Override
+  protected List<FXMLContainer> getSubFXMLContainer() {
+    return null;
   }
 }

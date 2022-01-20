@@ -12,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * The hierarchy panel shows the hierarchical order of the elements contained in the road system.
@@ -79,5 +80,10 @@ public class HierarchyPanel extends FXMLContainer
   @Override
   protected void updateTranslatableStrings(Language lang) {
 
+  }
+
+  @Override
+  protected List<FXMLContainer> getSubFXMLContainer() {
+    return null;
   }
 }

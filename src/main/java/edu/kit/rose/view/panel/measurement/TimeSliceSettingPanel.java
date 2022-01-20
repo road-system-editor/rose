@@ -9,6 +9,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
+import java.util.List;
+
 /**
  * The time slice setting panel allows the user to configure the measurement time slice settings, as specified in 11.1.4.
  */
@@ -43,5 +45,10 @@ public class TimeSliceSettingPanel extends FXMLContainer { // also uses HBox
   @Override
   protected void updateTranslatableStrings(Language lang) {
 
+  }
+
+  @Override
+  protected List<FXMLContainer> getSubFXMLContainer() {
+    return null;
   }
 }

@@ -10,6 +10,8 @@ import edu.kit.rose.view.commons.FXMLContainer;
 import javafx.fxml.FXML;
 import javafx.scene.layout.VBox;
 
+import java.util.List;
+
 /**
  * An attribute panel allows the user to see and configure attributes.
  */
@@ -55,5 +57,10 @@ class AttributePanel extends FXMLContainer {
   @Override
   protected void updateTranslatableStrings(Language newLang) {
 
+  }
+
+  @Override
+  protected List<FXMLContainer> getSubFXMLContainer() {
+    return null;
   }
 }

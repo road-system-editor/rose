@@ -5,6 +5,9 @@ import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Group;
+import edu.kit.rose.view.commons.FXMLContainer;
+
+import java.util.List;
 
 /**
  * A group view represents a {@link Group} in the hierarchy view.
@@ -29,5 +32,10 @@ class GroupView extends ElementView<Group> {
   @Override
   protected void updateTranslatableStrings(Language lang) {
 
+  }
+
+  @Override
+  protected List<FXMLContainer> getSubFXMLContainer() {
+    return null;
   }
 }

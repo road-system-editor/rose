@@ -89,22 +89,18 @@ public class MainWindow extends RoseWindow {
 
   @Override
   protected void configureStage(Stage stage) {
-    hierarchyPanel.setTranslator(getTranslator());
     hierarchyPanel.setController(hierarchyController);
     hierarchyPanel.setRoadSystem(project.getRoadSystem());
 
-    roadSystemPanel.setTranslator(getTranslator());
     roadSystemPanel.setProject(project);
     roadSystemPanel.setApplicationController(applicationController);
     roadSystemPanel.setRoadSystemController(roadSystemController);
     roadSystemPanel.setAttributeController(attributeController);
     roadSystemPanel.setMeasurementController(measurementController);
 
-    problemOverviewPanel.setTranslator(getTranslator());
     problemOverviewPanel.setController(plausibilityController);
     problemOverviewPanel.setManager(project.getPlausibilitySystem().getViolationManager());
 
-    segmentBoxPanel.setTranslator(getTranslator());
     segmentBoxPanel.setController(roadSystemController);
   }
 }

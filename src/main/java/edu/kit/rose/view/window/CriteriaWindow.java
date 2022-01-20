@@ -52,7 +52,6 @@ public class CriteriaWindow extends RoseWindow {
   protected void configureStage(Stage stage) {
     // fxml loading
     overview.setController(plausibilityController);
-    overview.setTranslator(getTranslator());
     overview.setManager(applicationData.getCriteriaManager());
     overview.setSelectionListener(this::onSelect);
   }

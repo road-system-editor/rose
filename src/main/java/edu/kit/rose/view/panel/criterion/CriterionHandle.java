@@ -10,7 +10,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 
 /**
- * Criterion handles are the entries in the {@link CriteriaOverviewPanel} that each represent one plausibility criterion.
+ * Criterion handles are the entries in the {@link CriteriaOverviewPanel} that each represent
+ * one plausibility criterion.
  */
 class CriterionHandle extends HBox
     implements UnitObserver<PlausibilityCriterion> { // TODO maybe as a listcell implementation?
@@ -24,7 +25,7 @@ class CriterionHandle extends HBox
   private Button deleteButton;
 
   /**
-   * Creates a new criterion handler
+   * Creates a new criterion handler.
    *
    * @param controller     the controller that links to model
    * @param criterion      the criteria to be handled
@@ -38,14 +39,18 @@ class CriterionHandle extends HBox
   }
 
   /**
-   * @return true if the criteria is selected and false otherwise
+   * selected must be true if the criteria is selected and false otherwise.
+   *
+   * @return true if the criteria is selected and false otherwise.
    */
   public boolean isSelected() {
     return this.selected;
   }
 
   /**
-   * @param selected true if the criteria is selected and false otherwise
+   * returns true if the criteria is selected and false otherwise.
+   *
+   * @param selected true if the criteria is selected and false otherwise.
    */
   public void setSelected(boolean selected) {
     this.selected = selected;

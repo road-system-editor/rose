@@ -11,9 +11,9 @@ import edu.kit.rose.controller.roadsystem.RoadSystemController;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.model.ApplicationDataSystem;
 import edu.kit.rose.model.Project;
-import edu.kit.rose.view.panel.roadsystem.RoadSystemPanel;
 import edu.kit.rose.view.panel.hierarchy.HierarchyPanel;
 import edu.kit.rose.view.panel.problem.ProblemOverviewPanel;
+import edu.kit.rose.view.panel.roadsystem.RoadSystemPanel;
 import edu.kit.rose.view.panel.segmentbox.SegmentBoxPanel;
 import javafx.fxml.FXML;
 import javafx.stage.Stage;
@@ -57,10 +57,10 @@ public class MainWindow extends RoseWindow {
   /**
    * Creates a new main window instance.
    *
-   * @param hierarchyController
-   * @param project
-   * @param applicationData
-   * @param stage               the primary stage of the JavaFX application.
+   * @param translator the data source for translated strings.
+   * @param project the project to display.
+   * @param applicationData the application metadata to use for displaying the project.
+   * @param stage the primary stage of the JavaFX application.
    */
   @Inject
   public MainWindow(LocalizedTextProvider translator,

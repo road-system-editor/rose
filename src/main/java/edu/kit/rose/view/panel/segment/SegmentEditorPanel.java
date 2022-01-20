@@ -7,7 +7,7 @@ import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.model.roadsystem.TimeSliceSetting;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Segment;
-import edu.kit.rose.view.commons.FXMLContainer;
+import edu.kit.rose.view.commons.FxmlContainer;
 import edu.kit.rose.view.commons.UnmountUtility;
 import javafx.fxml.FXML;
 import javafx.scene.control.TabPane;
@@ -15,9 +15,10 @@ import javafx.scene.control.TabPane;
 import java.util.List;
 
 /**
- * The segment editor panel allows the user to configure the attributes and measurements of a given segment, as specified in PF11.1.5.
+ * The segment editor panel allows the user to configure the attributes and measurements
+ * of a given segment, as specified in PF11.1.5.
  */
-public class SegmentEditorPanel extends FXMLContainer implements UnitObserver<Element> {
+public class SegmentEditorPanel extends FxmlContainer implements UnitObserver<Element> {
   private final AttributeController attributeController;
   private final MeasurementController measurementController;
 
@@ -30,7 +31,7 @@ public class SegmentEditorPanel extends FXMLContainer implements UnitObserver<El
   private MeasurementPanel measurementPanel;
 
   /**
-   * Creates a new segment editor panel for a given segment.
+   * Creates a new segment editor panel for a given {@code segment}.
    */
   public SegmentEditorPanel(Segment segment, TimeSliceSetting timeSliceSetting,
                             AttributeController attributeController,

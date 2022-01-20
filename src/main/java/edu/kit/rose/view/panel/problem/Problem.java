@@ -3,20 +3,19 @@ package edu.kit.rose.view.panel.problem;
 import edu.kit.rose.controller.plausibility.PlausibilityController;
 import edu.kit.rose.infrastructure.UnitObserver;
 import edu.kit.rose.infrastructure.language.Language;
-import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.model.plausibility.violation.Violation;
-import edu.kit.rose.view.commons.FXMLContainer;
+import edu.kit.rose.view.commons.FxmlContainer;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
-import javafx.scene.layout.HBox;
 
 import java.util.List;
 
 /**
- * A problem informs the user about a violation agains a plausibility criterion.
+ * A {@link Problem} informs the user about a violation against a
+ * {@link edu.kit.rose.model.plausibility.criteria.PlausibilityCriterion}.
  */
-class Problem extends FXMLContainer implements UnitObserver<Violation> {
+class Problem extends FxmlContainer implements UnitObserver<Violation> {
   /**
    * The controller to use for handling navigation to the affected segments in the road system view.
    */
@@ -31,16 +30,17 @@ class Problem extends FXMLContainer implements UnitObserver<Violation> {
   @FXML
   private Label label;
   /**
-   * A more detailed description of the violation that is only visible when this component is hovered.
+   * A more detailed description of the violation
+   * that is only visible when this component is hovered.
    */
   @FXML
   private Tooltip tooltip;
 
   /**
-   * Creates a new problem view for a given {@code violation}.
+   * Creates a new {@link Problem} for a given {@code violation}.
    *
-   * @param controller
-   * @param violation
+   * @param controller the {@link PlausibilityController} instance
+   * @param violation the {@link Violation} the {@link Problem} belongs to
    */
   public Problem(PlausibilityController controller, Violation violation) {
     super("problem.fxml");

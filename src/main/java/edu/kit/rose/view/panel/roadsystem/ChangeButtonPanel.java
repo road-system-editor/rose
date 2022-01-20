@@ -3,15 +3,14 @@ package edu.kit.rose.view.panel.roadsystem;
 import edu.kit.rose.controller.application.ApplicationController;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
-import edu.kit.rose.view.commons.FXMLContainer;
+import edu.kit.rose.view.commons.FxmlContainer;
 
 import java.util.List;
 
 /**
  * The change button panel contains the buttons for undoing and redoing a changeable action.
  */
-@SuppressWarnings("checkstyle:SummaryJavadoc")
-public class ChangeButtonPanel extends FXMLContainer {
+public class ChangeButtonPanel extends FxmlContainer {
   private ApplicationController controller;
 
   /**

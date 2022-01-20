@@ -4,20 +4,15 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
+import java.util.function.Consumer;
 import javafx.scene.layout.Pane;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.function.Consumer;
-
 /**
- * FXML containers mount components specified in an FXML file provided by the subclass into themselves.
+ * FXML containers mount components specified in an FXML file provided by the subclass into
+ * themselves.
  */
-public abstract class FXMLContainer extends Pane {
-  /**
-   * implementation detail
-   */
-  private final Consumer<Language> c = this::updateTranslatableStrings;
+public abstract class FxmlContainer extends Pane {
+  private final Consumer<Language> translatorSubscriber = this::updateTranslatableStrings;
   /**
    * Data source for translated strings.
    */
@@ -32,12 +27,13 @@ public abstract class FXMLContainer extends Pane {
 
 
   /**
-   * Creates a new FXMLPanel and immediately mounts the components specified in the given FXML resource ({@code fxmlResourceName}).
+   * Creates a new FXMLPanel and immediately mounts the components specified in the given FXML
+   * resource ({@code fxmlResourceName}).
    *
-   * @param fxmlResourceName
+   * @param fxmlResourceName the name of the fxml resource.
    */
-  public FXMLContainer(String fxmlResourceName) {
-    FXMLUtility.loadFXML(this, this, this.getClass().getResource(fxmlResourceName));
+  public FxmlContainer(String fxmlResourceName) {
+    FxmlUtility.loadFxml(this, this, this.getClass().getResource(fxmlResourceName));
   }
 
   /**

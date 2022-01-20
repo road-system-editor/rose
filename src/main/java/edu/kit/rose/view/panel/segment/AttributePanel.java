@@ -1,12 +1,11 @@
 package edu.kit.rose.view.panel.segment;
 
 import edu.kit.rose.controller.attribute.AttributeController;
-import edu.kit.rose.controller.roadsystem.RoadSystemController;
 import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
-import edu.kit.rose.view.commons.FXMLContainer;
+import edu.kit.rose.view.commons.FxmlContainer;
 import javafx.fxml.FXML;
 import javafx.scene.layout.VBox;
 
@@ -15,7 +14,7 @@ import java.util.List;
 /**
  * An attribute panel allows the user to see and configure attributes.
  */
-class AttributePanel extends FXMLContainer {
+class AttributePanel extends FxmlContainer {
   private AttributeController controller;
   private SortedBox<AttributeAccessor<?>> attributes;
 
@@ -23,8 +22,9 @@ class AttributePanel extends FXMLContainer {
   private VBox layout;
 
   /**
-   * Creates a new attribute editor panel.
-   * Requires {@link #setTranslator(LocalizedTextProvider)} + {@link #setController(AttributeController)} + {@link #setAttributes(SortedBox)}
+   * Creates an empty attribute panel.
+   * Requires {@link #setTranslator(LocalizedTextProvider)} +
+   * {@link #setController(AttributeController)} + {@link #setAttributes(SortedBox)}
    */
   public AttributePanel() {
     super("attribute_editor.fxml");
@@ -33,7 +33,7 @@ class AttributePanel extends FXMLContainer {
   /**
    * Sets the controller that handles attribute value updates.
    *
-   * @param controller
+   * @param controller the controller that should handle attribute value updates.
    */
   public void setController(AttributeController controller) {
     this.controller = controller;
@@ -42,7 +42,7 @@ class AttributePanel extends FXMLContainer {
   /**
    * Sets which attributes are shown in this panel.
    *
-   * @param attributes
+   * @param attributes the attributes to display.
    */
   public void setAttributes(SortedBox<AttributeAccessor<?>> attributes) {
     this.attributes = attributes;

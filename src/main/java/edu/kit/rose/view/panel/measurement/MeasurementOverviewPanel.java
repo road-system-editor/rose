@@ -5,13 +5,15 @@ import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.measurements.MeasurementType;
-import edu.kit.rose.view.commons.FXMLContainer;
+import edu.kit.rose.view.commons.FxmlContainer;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableView;
 
-import java.util.List;
-
-public class MeasurementOverviewPanel extends FXMLContainer {// also uses ScrollPane
+/**
+ * The measurement overview panel provides an editable overview over all measurement
+ * values of a given type for all segments of the road system.
+ */
+public class MeasurementOverviewPanel extends FxmlContainer {
   private MeasurementController controller;
   private RoadSystem roadSystem;
   private MeasurementType type;
@@ -22,8 +24,8 @@ public class MeasurementOverviewPanel extends FXMLContainer {// also uses Scroll
   /**
    * Creates a new measurement overview panel for the given measurement type.
    *
-   * @param translator
-   * @param type
+   * @param translator the data source for localized strings.
+   * @param type the type of measurement to show.
    */
   public MeasurementOverviewPanel(LocalizedTextProvider translator,
                                   MeasurementController controller, RoadSystem roadSystem,

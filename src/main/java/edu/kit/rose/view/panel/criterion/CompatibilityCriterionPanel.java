@@ -3,7 +3,6 @@ package edu.kit.rose.view.panel.criterion;
 import edu.kit.rose.controller.plausibility.PlausibilityController;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
-import edu.kit.rose.model.ApplicationDataSystem;
 import edu.kit.rose.model.plausibility.criteria.CompatibilityCriterion;
 import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterion;
 import edu.kit.rose.model.plausibility.criteria.validation.OperatorType;
@@ -39,6 +38,13 @@ class CompatibilityCriterionPanel
   @FXML
   private TextField valueField;
 
+  /**
+   * Creates a new CompatibilityCriterionPanel.
+   *
+   * @param translator the localizedTextProvider.
+   * @param controller the plausibility controller.
+   * @param criterion compatibility criteria that will be configured.
+   */
   public CompatibilityCriterionPanel(LocalizedTextProvider translator,
                                      PlausibilityController controller,
                                      CompatibilityCriterion criterion) {

@@ -6,18 +6,23 @@ import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.model.plausibility.criteria.CompatibilityCriterion;
 import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterion;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
+import edu.kit.rose.view.commons.FxmlContainer;
 import edu.kit.rose.view.commons.UnmountUtility;
-import edu.kit.rose.view.commons.FXMLContainer;
 
-public abstract class CriterionPanel<T extends PlausibilityCriterion> extends FXMLContainer
+/**
+ * The criteria panel allows the user to set up the criteria.
+ *
+ * @param <T> the type of PlausibilityCriterion this CriterionPanel is for.
+ */
+public abstract class CriterionPanel<T extends PlausibilityCriterion> extends FxmlContainer
     implements SetObserver<SegmentType, PlausibilityCriterion> {
   private PlausibilityController controller;
   private T criterion;
 
   /**
-   * Creates a new CriterionPanel
+   * Creates a new CriterionPanel.
    *
-   * @param translator       data that will be used for {@link FXMLContainer} constructor
+   * @param translator       data that will be used for {@link FxmlContainer} constructor
    * @param fxmlResourceName the name of fxml file that models this panel
    * @param criterion        the criteria to be set up
    */
@@ -32,11 +37,12 @@ public abstract class CriterionPanel<T extends PlausibilityCriterion> extends FX
   }
 
   /**
-   * Constructs a criterion panel for a given criterion, if it is configurable. For non-configurable criteria, {@code null} is returned.
+   * Constructs a criterion panel for a given criterion, if it is configurable.
+   * For non-configurable criteria, {@code null} is returned.
    *
-   * @param translator
-   * @param criterion
-   * @return
+   * @param translator the translator that is to be used.
+   * @param criterion the criterion this criterion panel is for.
+   * @return the newly constructed criterion panel.
    */
   public static CriterionPanel<? extends PlausibilityCriterion> forCriterion(
       LocalizedTextProvider translator, PlausibilityController controller,
@@ -51,6 +57,8 @@ public abstract class CriterionPanel<T extends PlausibilityCriterion> extends FX
   }
 
   /**
+   * Returns the criterion that is being set up.
+   *
    * @return the criteria that is being set up
    */
   public T getCriterion() {

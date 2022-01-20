@@ -7,7 +7,8 @@ import javafx.stage.Stage;
 
 /**
  * A ROSE window manages a JavaFX window.
- * ROSE windows usually mount JavaFX panels from the {@link edu.kit.rose.view.panel} package into their stage.
+ * ROSE windows usually mount JavaFX panels from the {@link edu.kit.rose.view.panel} package into
+ * their stage.
  */
 public abstract class RoseWindow {
   /**
@@ -17,9 +18,9 @@ public abstract class RoseWindow {
   /**
    * Data source for translated strings.
    */
-  private LocalizedTextProvider translator;
+  private final LocalizedTextProvider translator;
   /**
-   * Reference to the navigator of the applciation.
+   * Reference to the navigator of the application.
    */
   private Navigator navigator;
 
@@ -30,8 +31,7 @@ public abstract class RoseWindow {
   /**
    * Creates a new window for the ROSE application.
    *
-   * @param translator
-   * @param injector
+   * @param translator the data source for translated strings.
    */
   protected RoseWindow(LocalizedTextProvider translator, Injector injector) {
     this.translator = translator;
@@ -41,9 +41,8 @@ public abstract class RoseWindow {
    * Creates a new window for the ROSE application, using the given {@code stage}.
    * This constructor should only be if this window should be set up in the primary stage.
    *
-   * @param translator
-   * @param stage
-   * @param injector
+   * @param translator the data source for translated strings.
+   * @param stage the primary stage of the JavaFX application.
    */
   protected RoseWindow(LocalizedTextProvider translator, Stage stage, Injector injector) {
     this(translator, injector);
@@ -56,6 +55,7 @@ public abstract class RoseWindow {
 
   /**
    * Makes this window visible and puts it into focus.
+   * The window can not be shown if it has already been closed.
    */
   public void show() {
 
@@ -70,16 +70,27 @@ public abstract class RoseWindow {
   }
 
   /**
-   * Template method that allows the implementing class to populate the {@link #stage} of this window.
+   * Template method that allows the implementing class to populate the {@link #stage} of this
+   * window.
    *
-   * @param stage
+   * @param stage the stage of this window.
    */
   protected abstract void configureStage(Stage stage);
 
+  /**
+   * Returns the state of this window.
+   *
+   * @return the state of this window.
+   */
   public WindowState getState() {
     return this.state;
   }
 
+  /**
+   * Returns the data source for string translation.
+   *
+   * @return the data source for string translation.
+   */
   protected LocalizedTextProvider getTranslator() {
     return translator;
   }

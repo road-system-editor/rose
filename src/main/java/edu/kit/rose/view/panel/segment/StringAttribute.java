@@ -11,14 +11,15 @@ import javafx.scene.control.TextField;
 import java.util.List;
 
 /**
- * This is the {@link EditableAttribute} implementation for the {@link edu.kit.rose.model.roadsystem.DataType} {@code STRING}.
+ * This is the {@link EditableAttribute} implementation for the
+ * {@link edu.kit.rose.model.roadsystem.DataType} {@code STRING}.
  */
 class StringAttribute extends EditableAttribute<String> {
   /**
    * Creates a new string attribute editor for the given {@code attribute}.
    *
-   * @param attribute
-   * @param controller
+   * @param attribute the attribute to display.
+   * @param controller the controller that should handle attribute value updates.
    */
   StringAttribute(AttributeAccessor<String> attribute, AttributeController controller) {
     super(attribute, controller);

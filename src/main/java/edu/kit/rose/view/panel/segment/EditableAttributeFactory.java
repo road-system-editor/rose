@@ -2,19 +2,20 @@ package edu.kit.rose.view.panel.segment;
 
 import edu.kit.rose.controller.attribute.AttributeController;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
-
 import java.util.List;
 
 /**
- * The editable attribute factory can generate {@link EditableAttribute}s from {@link AttributeAccessor}s.
+ * The editable attribute factory can generate {@link EditableAttribute}s from
+ * {@link AttributeAccessor}s.
  */
 class EditableAttributeFactory {
   private final AttributeController controller;
 
   /**
-   * Creates a factory that will
+   * Initializes the factory.
    *
-   * @param controller
+   * @param controller the attribute value update handler to pass to all created
+   *     {@link EditableAttribute}s.
    */
   public EditableAttributeFactory(AttributeController controller) {
     this.controller = controller;
@@ -23,8 +24,8 @@ class EditableAttributeFactory {
   /**
    * Creates an editable attribute component for a given attribute accessor.
    *
-   * @param attribute
-   * @return
+   * @param attribute the attribute to create an editable attribute component for.
+   * @return the created editable attribute component.
    */
   @SuppressWarnings("unchecked")
   public EditableAttribute<?> forAttribute(AttributeAccessor<?> attribute) {

@@ -23,10 +23,10 @@ public class RoseLocalizedTextProviderTest {
   @Test
   public void testSubscription() {
     var translator = new RoseLocalizedTextProvider();
+
     AtomicInteger subscriberCalls = new AtomicInteger();
     Consumer<Language> subscriber = lang -> {
       subscriberCalls.getAndIncrement();
-      Assertions.assertEquals(Language.ENGLISH, lang);
     };
 
     translator.setSelectedLanguage(Language.ENGLISH);
@@ -35,7 +35,7 @@ public class RoseLocalizedTextProviderTest {
     translator.subscribeToOnLanguageChanged(subscriber);
     Assertions.assertEquals(0, subscriberCalls.get());
 
-    translator.setSelectedLanguage(Language.ENGLISH);
+    translator.setSelectedLanguage(Language.GERMAN);
     Assertions.assertEquals(1, subscriberCalls.get());
 
     translator.unsubscribeFromOnLanguageChanged(subscriber);
@@ -43,5 +43,41 @@ public class RoseLocalizedTextProviderTest {
 
     translator.setSelectedLanguage(Language.ENGLISH);
     Assertions.assertEquals(1, subscriberCalls.get());
+  }
+
+  @Test
+  public void testSubscriptionOnlyFiresOnLanguageChange() {
+    var translator = new RoseLocalizedTextProvider();
+    translator.setSelectedLanguage(Language.ENGLISH);
+
+    AtomicInteger subscriberCalls = new AtomicInteger();
+
+    Consumer<Language> subscriber = lang -> {
+      subscriberCalls.getAndIncrement();
+    };
+
+    translator.subscribeToOnLanguageChanged(subscriber);
+    Assertions.assertEquals(0, subscriberCalls.get());
+
+    translator.setSelectedLanguage(Language.GERMAN);
+    Assertions.assertEquals(translator.getSelectedLanguage(), Language.GERMAN);
+    Assertions.assertEquals(1, subscriberCalls.get());
+
+    translator.setSelectedLanguage(Language.GERMAN);
+    Assertions.assertEquals(translator.getSelectedLanguage(), Language.GERMAN);
+    Assertions.assertEquals(1, subscriberCalls.get());
+
+    translator.unsubscribeFromOnLanguageChanged(subscriber);
+  }
+
+  @Test
+  public void testTitleTranslation() {
+    var translator = new RoseLocalizedTextProvider();
+
+    translator.setSelectedLanguage(Language.ENGLISH);
+    Assertions.assertEquals("Help", translator.getLocalizedText("view.window.menu.help"));
+
+    translator.setSelectedLanguage(Language.GERMAN);
+    Assertions.assertEquals("Hilfe", translator.getLocalizedText("view.window.menu.help"));
   }
 }

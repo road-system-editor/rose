@@ -13,7 +13,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TabPane;
 
 /**
- * The segment editor panel allows the user to configure the attributes and measurements of a given segment, as specified in PF11.1.5.
+ * The segment editor panel allows the user to configure the attributes and measurements
+ * of a given segment, as specified in PF11.1.5.
  */
 public class SegmentEditorPanel extends FXMLContainer implements UnitObserver<Element> {
   private final AttributeController attributeController;
@@ -28,7 +29,7 @@ public class SegmentEditorPanel extends FXMLContainer implements UnitObserver<El
   private MeasurementPanel measurementPanel;
 
   /**
-   * Creates a new segment editor panel for a given segment.
+   * Creates a new segment editor panel for a given {@code segment}.
    */
   public SegmentEditorPanel(Segment segment, TimeSliceSetting timeSliceSetting,
                             AttributeController attributeController,

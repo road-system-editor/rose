@@ -1,6 +1,5 @@
-package edu.kit.rose.infrastructure.observerPattern;
+package edu.kit.rose.infrastructure;
 
-import edu.kit.rose.infrastructure.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -137,7 +136,8 @@ public class SubscriberManagerAndSimpleClassesTest {
     }
   }
 
-  private static class TestDualSetObservable extends SimpleDualSetObservable<Object, Object, TestDualSetObservable> {
+  private static class TestDualSetObservable
+          extends SimpleDualSetObservable<Object, Object, TestDualSetObservable> {
 
     @Override
     public TestDualSetObservable getThis() {
@@ -176,7 +176,7 @@ public class SubscriberManagerAndSimpleClassesTest {
   }
 
   private static class TestDualSetObserver
-          implements DualSetObserver<Object,Object, TestDualSetObservable> {
+          implements DualSetObserver<Object, Object, TestDualSetObservable> {
 
     private boolean isNotified = false;
 

@@ -14,6 +14,15 @@ public class TimeSliceSetting implements UnitObservable<TimeSliceSetting> {
   private int timeSlicesLength;
 
   /**
+   * Standard Constructor.
+   * Initializes the numberOfTimeSlices and the timeSliceLength to 0.
+   */
+  public TimeSliceSetting() {
+    this.numberOfTimeSlices = 0;
+    this.timeSlicesLength = 0;
+  }
+
+  /**
    * Constructor.
    *
    * @param numberOfTimeSlices the number of Time Slices to use.

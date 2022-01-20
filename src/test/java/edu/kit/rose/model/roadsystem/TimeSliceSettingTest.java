@@ -15,6 +15,13 @@ public class TimeSliceSettingTest {
   }
 
   @Test
+  public void TestStandardConstructor() {
+    TimeSliceSetting setting = new TimeSliceSetting();
+    Assertions.assertEquals(0, setting.getNumberOfTimeSlices());
+    Assertions.assertEquals(0, setting.getTimeSliceLength());
+  }
+
+  @Test
   public void TestSetters() {
     TimeSliceSetting setting = new TimeSliceSetting(firstTestInt, secondTestInt);
     setting.setNumberOfTimeSlices(secondTestInt);

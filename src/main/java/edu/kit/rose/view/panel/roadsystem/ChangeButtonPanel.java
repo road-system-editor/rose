@@ -8,7 +8,6 @@ import edu.kit.rose.view.commons.FxmlContainer;
 /**
  * The change button panel contains the buttons for undoing and redoing a changeable action.
  */
-@SuppressWarnings("checkstyle:SummaryJavadoc")
 public class ChangeButtonPanel extends FxmlContainer {
   private ApplicationController controller;
 

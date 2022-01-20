@@ -13,7 +13,7 @@ import edu.kit.rose.controller.navigation.Navigator;
  */
 public abstract class Controller {
 
-  protected Controller(ChangeCommandBuffer changeCommandBuffer, StorageLock storageLock) {
+  protected Controller(StorageLock storageLock) {
   }
 
   /**
@@ -26,7 +26,7 @@ public abstract class Controller {
   }
 
   /**
-   * Returns the navigator instance of the controller
+   * Returns the navigator instance of the controller.
    *
    * @return navigator instance of the controller
    */
@@ -35,7 +35,7 @@ public abstract class Controller {
   }
 
   /**
-   * Returns the command buffer of the controller
+   * Returns the command buffer of the controller.
    *
    * @return command buffer of the controller
    */

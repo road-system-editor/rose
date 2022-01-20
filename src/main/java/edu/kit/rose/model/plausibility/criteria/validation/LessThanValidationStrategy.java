@@ -1,11 +1,11 @@
 package edu.kit.rose.model.plausibility.criteria.validation;
 
 /**
- * An Operator describing the logical OR function for two booleans.
+ * Describes a LessThan Operator for numerical values. "<"
  *
- * @param <T>
+ * @param <T> The Type that this ValidationStrategy is applied to.
  */
-class Or_ValidationStrategy<T> extends ValidationStrategy<T> {
+class LessThanValidationStrategy<T> extends ValidationStrategy<T> {
   @Override
   boolean validate(Object first, Object second) {
     return false;

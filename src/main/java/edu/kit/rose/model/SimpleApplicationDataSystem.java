@@ -6,12 +6,12 @@ import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.model.plausibility.criteria.CriteriaManager;
 import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterion;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
-
 import java.nio.file.Path;
 
 /**
  * A standard implementation for the {@link ApplicationDataSystem}.
- * Provided with a global config file it will write changes in the applicationData to the config file in real time.
+ * Provided with a global config file it will write changes in the applicationData to the
+ * config file in real time.
  */
 class SimpleApplicationDataSystem implements ApplicationDataSystem {
 
@@ -41,7 +41,8 @@ class SimpleApplicationDataSystem implements ApplicationDataSystem {
   }
 
   /**
-   * Imports all {@link edu.kit.rose.model.plausibility.criteria.CompatibilityCriterion} from the File at the given
+   * Imports all {@link edu.kit.rose.model.plausibility.criteria.CompatibilityCriterion}
+   * from the File at the given
    * Path. This adds the included Criteria to the currently active Criteria.
    *
    * @param path the path to the File that contains the Criteria.

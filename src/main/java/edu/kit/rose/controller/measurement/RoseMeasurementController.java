@@ -21,7 +21,7 @@ public class RoseMeasurementController extends Controller implements Measurement
    */
   public RoseMeasurementController(ChangeCommandBuffer changeCommandBuffer, StorageLock storageLock,
                                    Project project) {
-    super(changeCommandBuffer, storageLock);
+    super(storageLock);
   }
 
   @Override

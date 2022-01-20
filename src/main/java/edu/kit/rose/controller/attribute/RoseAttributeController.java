@@ -8,6 +8,10 @@ import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 
 
+/**
+ * Provides methods for setting the values of attribute accessors.
+ *
+ */
 public class RoseAttributeController extends Controller implements AttributeController {
 
   /**
@@ -17,9 +21,9 @@ public class RoseAttributeController extends Controller implements AttributeCont
    * @param storageLock         the coordinator for controller actions
    * @param project             the model facade for project data
    */
-  public RoseAttributeController(ChangeCommandBuffer changeCommandBuffer, StorageLock storageLock,
-                                 Project project) {
-    super(changeCommandBuffer, storageLock);
+  public RoseAttributeController(ChangeCommandBuffer changeCommandBuffer,
+                                 StorageLock storageLock, Project project) {
+    super(storageLock);
   }
 
   @Override

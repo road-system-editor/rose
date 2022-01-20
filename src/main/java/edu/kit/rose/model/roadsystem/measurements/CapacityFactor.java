@@ -3,7 +3,8 @@ package edu.kit.rose.model.roadsystem.measurements;
 import edu.kit.rose.model.roadsystem.TimeSliceSetting;
 
 /**
- * A {@link Measurement} describing the Capacity Factor of a {@link edu.kit.rose.model.roadsystem.elements.Segment}
+ * A {@link Measurement} describing the Capacity Factor of a
+ * {@link edu.kit.rose.model.roadsystem.elements.Segment}.
  */
 class CapacityFactor extends Measurement<Double> {
 

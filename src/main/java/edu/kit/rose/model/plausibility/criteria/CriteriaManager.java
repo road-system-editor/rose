@@ -9,8 +9,8 @@ import edu.kit.rose.model.plausibility.violation.ViolationManager;
 /**
  * A CriteriaManager holds {@link PlausibilityCriterion}s .
  * It provides functions to create and remove Criteria as well as getters for them.
- * Provided with a {@link edu.kit.rose.model.roadsystem.RoadSystem} it will set up created Criteria to observe the
- * appropriate {@link edu.kit.rose.model.roadsystem.elements.Segment}s.
+ * Provided with a {@link edu.kit.rose.model.roadsystem.RoadSystem} it will set up created
+ * Criteria to observe the appropriate {@link edu.kit.rose.model.roadsystem.elements.Segment}s.
  */
 public class CriteriaManager implements SetObservable<PlausibilityCriterion, CriteriaManager>,
     UnitObserver<PlausibilityCriterion> {
@@ -26,9 +26,11 @@ public class CriteriaManager implements SetObservable<PlausibilityCriterion, Cri
   }
 
   /**
-   * Sets the {@link ViolationManager} that will receive the {@link edu.kit.rose.model.plausibility.violation.Violation}s
+   * Sets the {@link ViolationManager} that will receive the
+   * {@link edu.kit.rose.model.plausibility.violation.Violation}s
    * of {@link PlausibilityCriterion} in this CriteriaManager.
-   * Sets the {@link ViolationManager} that will receive the {@link edu.kit.rose.model.plausibility.violation.Violation}s of
+   * Sets the {@link ViolationManager} that will receive the
+   * {@link edu.kit.rose.model.plausibility.violation.Violation}s of
    * {@link PlausibilityCriterion} in this CriteriaManager.
    *
    * @param violationManager the violationManager this CriteriaManager is supposed to use.
@@ -38,15 +40,19 @@ public class CriteriaManager implements SetObservable<PlausibilityCriterion, Cri
   }
 
   /**
-   * @return a {@link SortedBox} containing all {@link PlausibilityCriterion} that this CriteriaManager contains.
+   * Provides a {@link SortedBox} containing all {@link PlausibilityCriterion}
+   * that this CriteriaManager contains.
+   *
+   * @return a {@link SortedBox} containing all {@link PlausibilityCriterion}
+   *        that this CriteriaManager contains.
    */
   public SortedBox<PlausibilityCriterion> getCriteria() {
     return null;
   }
 
   /**
-   * Gives a {@link SortedBox} containing all {@link PlausibilityCriterion} of the given {@link PlausibilityCriterionType}
-   * that this CriteriaManager contains.
+   * Gives a {@link SortedBox} containing all {@link PlausibilityCriterion} of
+   * the given {@link PlausibilityCriterionType} that this CriteriaManager contains.
    *
    * @param type The Criteria Type to look for.
    * @return a {@link SortedBox} containing all {@link PlausibilityCriterion} of the given type.
@@ -58,13 +64,13 @@ public class CriteriaManager implements SetObservable<PlausibilityCriterion, Cri
   /**
    * Creates a new {@link PlausibilityCriterion} with the given {@link PlausibilityCriterionType}.
    *
-   * @param type The Type of the new {@link PlausibilityCriterion}
+   * @param type The Type of the new {@link PlausibilityCriterion}.
    */
   public void createCriterionOfType(PlausibilityCriterionType type) {
   }
 
   /**
-   * Removes a given {@link PlausibilityCriterion} from this CriterionManager
+   * Removes a given {@link PlausibilityCriterion} from this CriterionManager.
    *
    * @param criteria the Criterion to remove.
    */

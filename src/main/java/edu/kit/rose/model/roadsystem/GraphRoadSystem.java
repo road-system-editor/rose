@@ -1,6 +1,9 @@
 package edu.kit.rose.model.roadsystem;
 
-import edu.kit.rose.infrastructure.*;
+import edu.kit.rose.infrastructure.Box;
+import edu.kit.rose.infrastructure.DualSetObserver;
+import edu.kit.rose.infrastructure.Movement;
+import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.model.plausibility.criteria.CriteriaManager;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.elements.Connection;
@@ -8,7 +11,6 @@ import edu.kit.rose.model.roadsystem.elements.Connector;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
-
 import java.util.Collection;
 
 /**
@@ -90,14 +92,15 @@ class GraphRoadSystem implements RoadSystem {
   }
 
   @Override
-  public Connection getConnection(Connector connector) {
+  public Box<Connection> getConnections(Segment segment1, Segment segment2) {
     return null;
   }
 
   @Override
-  public Box<Connection> getConnections(Segment segment1, Segment segment2) {
+  public Connection getConnection(Connector connector) {
     return null;
   }
+
 
   @Override
   public void moveSegments(Collection<Segment> segments, Movement movement) {
@@ -105,7 +108,8 @@ class GraphRoadSystem implements RoadSystem {
   }
 
   /**
-   * Rotates the given {@link Segment} on its current {@link edu.kit.rose.infrastructure.Position} by 15 degrees.
+   * Rotates the given {@link Segment} on its current {@link edu.kit.rose.infrastructure.Position}
+   * by 15 degrees.
    * Uses the center of the segment as a center of rotation.
    *
    * @param segment the {@link Segment} to rotate.
@@ -116,7 +120,8 @@ class GraphRoadSystem implements RoadSystem {
   }
 
   /**
-   * Rotates the given {@link Segment}s on its current {@link edu.kit.rose.infrastructure.Position} by 15 degrees.
+   * Rotates the given {@link Segment}s on its current {@link edu.kit.rose.infrastructure.Position}
+   * by 15 degrees.
    * Uses the average center of the segments as a center of rotation.
    *
    * @param segments the {@link Segment}s to rotate.

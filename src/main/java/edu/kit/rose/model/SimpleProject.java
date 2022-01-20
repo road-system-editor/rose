@@ -4,7 +4,6 @@ import edu.kit.rose.model.plausibility.PlausibilitySystem;
 import edu.kit.rose.model.plausibility.criteria.CriteriaManager;
 import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.TimeSliceSetting;
-
 import java.nio.file.Path;
 
 /**

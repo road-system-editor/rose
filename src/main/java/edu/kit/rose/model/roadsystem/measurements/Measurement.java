@@ -16,7 +16,8 @@ public abstract class Measurement<T>
   /**
    * Constructor.
    * This creates a Measurement with decoy values for both number of time slices and their length.
-   * Needs to be subscribed to a {@link TimeSliceSetting}o be consistent with other Measurements using the same.
+   * Needs to be subscribed to a {@link TimeSliceSetting}o be consistent with other Measurements
+   * using the same.
    * Notify after subscription.
    */
   public Measurement() {

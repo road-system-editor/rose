@@ -12,7 +12,7 @@ public enum MeasurementType {
   RAMP_DEMAND("Ramp Demand"),
   RAMP_CAPACITY_FACTOR("Ramp Capacity Factor");
 
-  private String name;
+  private final String name;
 
   /**
    * Constructor.
@@ -24,6 +24,8 @@ public enum MeasurementType {
   }
 
   /**
+   * Provides a String containing the name of the MeasurementType.
+   *
    * @return a String containing the name of the MeasurementType.
    */
   public String getName() {

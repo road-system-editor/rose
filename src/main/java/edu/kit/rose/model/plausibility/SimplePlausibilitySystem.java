@@ -12,7 +12,7 @@ public class SimplePlausibilitySystem implements PlausibilitySystem {
   /**
    * Constructor.
    *
-   * @param roadSystem      The {@link RoadSystem} that this PlausibilitySystem is supposed to check.
+   * @param roadSystem The {@link RoadSystem} that this PlausibilitySystem is supposed to check.
    * @param criteriaManager The CriteriaManager holding the Criteria that are to be checked against.
    */
   public SimplePlausibilitySystem(CriteriaManager criteriaManager, RoadSystem roadSystem) {

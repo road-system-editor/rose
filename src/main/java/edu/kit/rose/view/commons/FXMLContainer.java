@@ -6,6 +6,7 @@ import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import javafx.scene.layout.Pane;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -65,7 +66,7 @@ public abstract class FXMLContainer extends Pane {
   }
 
   private void initSubContainer() {
-    List<FXMLContainer> fxmlSubContainers = getSubFXMLContainer();
+    Collection<FXMLContainer> fxmlSubContainers = getSubFXMLContainer();
 
     if (fxmlSubContainers != null && injector != null) {
       for (FXMLContainer subContainer : fxmlSubContainers) {
@@ -85,5 +86,5 @@ public abstract class FXMLContainer extends Pane {
    * Hook method that returns a list of all sub {@link FXMLContainer}s of the current {@link FXMLContainer}
    * @return list of {@link FXMLUtility}s
    */
-  protected abstract List<FXMLContainer> getSubFXMLContainer();
+  protected abstract Collection<FXMLContainer> getSubFXMLContainer();
 }

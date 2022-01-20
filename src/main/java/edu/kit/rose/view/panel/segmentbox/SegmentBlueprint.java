@@ -12,7 +12,8 @@ import edu.kit.rose.view.commons.SegmentViewFactory;
 import javafx.scene.layout.Pane;
 
 /**
- * A segment blueprint represents a segment type by dislaying an example of what the segment could look like.
+ * A segment blueprint represents a segment type by displaying an example of what the segment
+ * could look like.
  * Clicking a blueprint will create a segment of the selected type in the editor.
  */
 class SegmentBlueprint extends Pane {
@@ -37,9 +38,9 @@ class SegmentBlueprint extends Pane {
   private SegmentView<? extends Segment> renderer;
 
   /**
-   * Creates a new segment blueprint for the given type.
+   * Creates a new segment blueprint for the given {@code type}.
    *
-   * @param type
+   * @param type the type of segment to display.
    */
   public SegmentBlueprint(LocalizedTextProvider translator, RoadSystemController controller,
                           SegmentType type) {

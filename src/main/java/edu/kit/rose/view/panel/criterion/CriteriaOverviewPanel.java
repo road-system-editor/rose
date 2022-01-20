@@ -94,7 +94,7 @@ public class CriteriaOverviewPanel extends FxmlContainer
   }
 
   @Override
-  protected List<FXMLContainer> getSubFxmlContainer() {
+  protected Collection<FxmlContainer> getSubFxmlContainer() {
     return null;
   }
 }

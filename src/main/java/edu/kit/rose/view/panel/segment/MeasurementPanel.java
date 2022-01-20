@@ -7,6 +7,7 @@ import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.measurements.Measurement;
 import edu.kit.rose.view.commons.FxmlContainer;
 import edu.kit.rose.view.commons.MeasurementTableFactory;
+import java.util.Collection;
 import java.util.List;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -58,7 +59,7 @@ class MeasurementPanel extends FxmlContainer {
   }
 
   @Override
-  protected List<FXMLContainer> getSubFxmlContainer() {
+  protected Collection<FxmlContainer> getSubFxmlContainer() {
     return null;
   }
 

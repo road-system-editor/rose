@@ -3,11 +3,13 @@ package edu.kit.rose.view.panel.segment;
 import edu.kit.rose.controller.attribute.AttributeController;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
+import edu.kit.rose.view.commons.FxmlContainer;
 import java.util.Collection;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
+
 
 /**
  * This is the {@link EditableAttribute} implementation for
@@ -49,7 +51,7 @@ class SelectableAttribute<T> extends EditableAttribute<T> {
   }
 
   @Override
-  protected List<FXMLContainer> getSubFxmlContainer() {
+  protected Collection<FxmlContainer> getSubFxmlContainer() {
     return null;
   }
 

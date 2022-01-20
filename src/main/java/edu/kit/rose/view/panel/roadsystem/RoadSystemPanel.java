@@ -13,6 +13,7 @@ import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.view.commons.FxmlContainer;
 import edu.kit.rose.view.commons.SegmentView;
+import java.util.Collection;
 import java.util.List;
 import javafx.fxml.FXML;
 
@@ -118,7 +119,7 @@ public class RoadSystemPanel extends FxmlContainer
   }
 
   @Override
-  protected List<FXMLContainer> getSubFxmlContainer() {
+  protected Collection<FxmlContainer> getSubFxmlContainer() {
     return null;
   }
 

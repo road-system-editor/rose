@@ -33,8 +33,9 @@ public interface LocalizedTextProvider {
   void subscribeToOnLanguageChanged(Consumer<Language> subscription);
 
   /**
-   * Removes the registration of a given function that was registered with the subscribeToOnLanguageChanged
-   * method. If the function is not registered, this method does nothing.
+   * Removes the registration of a given function that was registered with the
+   * {@link #subscribeToOnLanguageChanged(Consumer)} method. If the function is not registered,
+   * this method does nothing.
    *
    * @param subscription function to unregister
    */

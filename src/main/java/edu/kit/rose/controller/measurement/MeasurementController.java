@@ -19,14 +19,14 @@ public interface MeasurementController {
   <T> void setMeasurementValue(Measurement<T> measurement, T value, int targetSlot);
 
   /**
-   * Sets the length of all measurement value's intervals
+   * Sets the length of all measurement value's intervals.
    *
    * @param intervalLength new interval length
    */
   void setIntervalLength(int intervalLength);
 
   /**
-   * Sets the amount of measurement intervals per measurement value
+   * Sets the amount of measurement intervals per measurement value.
    *
    * @param intervalCount new amount of intervals per measurement value
    */

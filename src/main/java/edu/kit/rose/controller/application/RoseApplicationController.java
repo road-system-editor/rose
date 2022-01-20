@@ -3,10 +3,15 @@ package edu.kit.rose.controller.application;
 import edu.kit.rose.controller.command.ChangeCommandBuffer;
 import edu.kit.rose.controller.commons.Controller;
 import edu.kit.rose.controller.commons.StorageLock;
-import edu.kit.rose.infrastructure.language.LanguageSelector;
 import edu.kit.rose.infrastructure.language.Language;
+import edu.kit.rose.infrastructure.language.LanguageSelector;
 import edu.kit.rose.model.ApplicationDataSystem;
 
+/**
+ * Provides functionality for application settings
+ * and other GUI related methods.
+ *
+ */
 public class RoseApplicationController extends Controller implements ApplicationController {
 
 
@@ -21,7 +26,7 @@ public class RoseApplicationController extends Controller implements Application
   public RoseApplicationController(ChangeCommandBuffer changeCommandBuffer, StorageLock storageLock,
                                    LanguageSelector languageSelector,
                                    ApplicationDataSystem applicationDataSystem) {
-    super(changeCommandBuffer, storageLock);
+    super(storageLock);
   }
 
   @Override

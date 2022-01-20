@@ -7,7 +7,7 @@ import java.nio.file.Path;
  */
 public interface Navigator {
   /**
-   * Creates and shows a new window of specified type
+   * Creates and shows a new window of specified type.
    *
    * @param windowType the type of window to be created and shown
    */
@@ -16,7 +16,7 @@ public interface Navigator {
   /**
    * Creates and shows a file dialog, that provides to user
    * the possibility to choose the path of a file
-   * and return that path
+   * and return that path.
    *
    * @return the path that the user chose
    */

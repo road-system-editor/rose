@@ -3,7 +3,6 @@ package edu.kit.rose.controller.hierarchy;
 import edu.kit.rose.controller.command.ChangeCommand;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.roadsystem.elements.Segment;
-
 import java.util.List;
 
 /**

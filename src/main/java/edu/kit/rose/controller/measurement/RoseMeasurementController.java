@@ -15,13 +15,11 @@ public class RoseMeasurementController extends Controller implements Measurement
   /**
    * Creates a new {@link RoseMeasurementController}.
    *
-   * @param changeCommandBuffer the buffer for change commands
    * @param storageLock         the coordinator for controller actions
    * @param project             the model facade for project data
    */
-  public RoseMeasurementController(ChangeCommandBuffer changeCommandBuffer, StorageLock storageLock,
-                                   Project project) {
-    super(changeCommandBuffer, storageLock);
+  public RoseMeasurementController(StorageLock storageLock, Project project) {
+    super(storageLock);
   }
 
   @Override

@@ -4,7 +4,7 @@ import edu.kit.rose.controller.attribute.AttributeController;
 import edu.kit.rose.infrastructure.UnitObserver;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
-import edu.kit.rose.view.commons.FXMLContainer;
+import edu.kit.rose.view.commons.FxmlContainer;
 import edu.kit.rose.view.commons.UnmountUtility;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -12,14 +12,15 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 
 /**
- * An editable attribute is a JavaFX component that allows the user to see and edit the value of an attribute.
+ * An editable attribute is a JavaFX component that allows the user to see and edit the value of
+ * an attribute.
  *
- * @param <T>
+ * @param <T> the java type of the attribute value.
  */
-abstract class EditableAttribute<T> extends FXMLContainer
-    implements UnitObserver<AttributeAccessor<T>> { // uses HBox
-  private AttributeAccessor<T> attribute;
-  private AttributeController controller;
+abstract class EditableAttribute<T> extends FxmlContainer
+    implements UnitObserver<AttributeAccessor<T>> {
+  private final AttributeAccessor<T> attribute;
+  private final AttributeController controller;
 
   @FXML
   private CheckBox visibilitySwitch;
@@ -27,7 +28,7 @@ abstract class EditableAttribute<T> extends FXMLContainer
   private Label label;
 
   /**
-   * Creates a new editable attribute component.
+   * Creates an editable attribute component for a given attribute accessor.
    */
   protected EditableAttribute(AttributeAccessor<T> attribute, AttributeController controller) {
     super("editable_attribute.fxml");
@@ -40,7 +41,7 @@ abstract class EditableAttribute<T> extends FXMLContainer
   /**
    * Returns the attribute accessor that this component is bound to.
    *
-   * @return
+   * @return the attribute accessor that this component is bound to.
    */
   protected AttributeAccessor<T> getAttribute() {
     return this.attribute;
@@ -49,7 +50,7 @@ abstract class EditableAttribute<T> extends FXMLContainer
   /**
    * Returns the controller that is used for handling attribute value updates.
    *
-   * @return
+   * @return the controller that is used for handling attribute value updates.
    */
   protected AttributeController getController() {
     return this.controller;
@@ -63,5 +64,5 @@ abstract class EditableAttribute<T> extends FXMLContainer
   /**
    * Factory method that delegates the creation of the actual input field to the implementing class.
    */
-  protected abstract Node createInputField(); // template / factory method
+  protected abstract Node createInputField();
 }

@@ -25,7 +25,7 @@ public interface ChangeCommandBuffer {
   void addCommand(ChangeCommand changeCommand);
 
   /**
-   * Deletes all {@link ChangeCommand}s in the {@link ChangeCommandBuffer}
+   * Deletes all {@link ChangeCommand}s in the {@link ChangeCommandBuffer}.
    */
   void clear();
 }

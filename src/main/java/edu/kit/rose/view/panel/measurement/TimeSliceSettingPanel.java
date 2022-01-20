@@ -10,9 +10,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
 /**
- * The time slice setting panel allows the user to configure the measurement time slice settings, as specified in 11.1.4.
+ * The time slice setting panel allows the user to configure the measurement time slice
+ * settings, as specified in PF11.1.4.
  */
-public class TimeSliceSettingPanel extends FXMLContainer { // also uses HBox
+public class TimeSliceSettingPanel extends FXMLContainer {
   private TimeSliceSetting timeSliceSetting;
   private MeasurementController controller;
 
@@ -26,16 +27,23 @@ public class TimeSliceSettingPanel extends FXMLContainer { // also uses HBox
   private TextField intervalLengthField;
 
   /**
-   * Needs {@link #setTranslator(LocalizedTextProvider)} + {@link #setController(MeasurementController)} + {@link #setTimeSliceSetting(TimeSliceSetting)}
+   * Needs {@link #setTranslator(LocalizedTextProvider)} +
+   * {@link #setController(MeasurementController)} + {@link #setTimeSliceSetting(TimeSliceSetting)}.
    */
   public TimeSliceSettingPanel() {
     super("interval_settings_panel.fxml");
   }
 
+  /**
+   * Sets the controller that handles measurement value updates.
+   */
   public void setController(MeasurementController controller) {
     this.controller = controller;
   }
 
+  /**
+   * Sets the time slice settings instance that is editable through this panel.
+   */
   public void setTimeSliceSetting(TimeSliceSetting timeSliceSetting) {
     this.timeSliceSetting = timeSliceSetting;
   }

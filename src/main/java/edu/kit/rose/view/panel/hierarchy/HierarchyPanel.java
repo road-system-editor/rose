@@ -8,16 +8,17 @@ import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.elements.Connection;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.view.commons.FXMLContainer;
+import java.util.Collection;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 
-import java.util.Collection;
 
 /**
  * The hierarchy panel shows the hierarchical order of the elements contained in the road system.
  */
 public class HierarchyPanel extends FXMLContainer
-    implements DualSetObserver<Element, Connection, RoadSystem> { // also uses ScrollPane, VBox
+    implements DualSetObserver<Element, Connection, RoadSystem> {
+
   private HierarchyController controller;
   private RoadSystem roadSystem;
 
@@ -27,7 +28,8 @@ public class HierarchyPanel extends FXMLContainer
 
   /**
    * Creates an empty hierarchy view.
-   * Requires {@link #setTranslator(LocalizedTextProvider)} + {@link #setController(HierarchyController)} + {@link #setRoadSystem(RoadSystem)}
+   * Requires {@link #setTranslator(LocalizedTextProvider)}
+   *        + {@link #setController(HierarchyController)} + {@link #setRoadSystem(RoadSystem)}
    */
   public HierarchyPanel() {
     super("hierarchy_panel.fxml");
@@ -36,7 +38,7 @@ public class HierarchyPanel extends FXMLContainer
   /**
    * Sets the controller that handles interactions with this panel.
    *
-   * @param controller
+   * @param controller the controller to use.
    */
   public void setController(HierarchyController controller) {
     this.controller = controller;
@@ -45,7 +47,7 @@ public class HierarchyPanel extends FXMLContainer
   /**
    * Sets the road system that this hierarchy panel should display.
    *
-   * @param roadSystem
+   * @param roadSystem the {@link RoadSystem} to use.
    */
   public void setRoadSystem(RoadSystem roadSystem) {
     this.roadSystem = roadSystem;

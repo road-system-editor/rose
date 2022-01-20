@@ -13,8 +13,15 @@ public class MovementTest {
     @Test
     public void TestGetCoordinates() {
         Movement movement = new Movement(FirstTestInt, SecondTestInt);
-        Assertions.assertEquals(FirstTestInt ,movement.getX());
+        Assertions.assertEquals(FirstTestInt, movement.getX());
         Assertions.assertEquals(SecondTestInt, movement.getY());
+    }
+
+    @Test
+    public void TestStandardConstructor() {
+        Movement movement = new Movement();
+        Assertions.assertEquals(0, movement.getX());
+        Assertions.assertEquals(0, movement.getY());
     }
 
     @Test
@@ -22,7 +29,7 @@ public class MovementTest {
         Movement movement = new Movement(FirstTestInt, SecondTestInt);
         movement.setX(SecondTestInt);
         movement.setY(FirstTestInt);
-        Assertions.assertEquals(SecondTestInt ,movement.getX());
+        Assertions.assertEquals(SecondTestInt, movement.getX());
         Assertions.assertEquals(FirstTestInt, movement.getY());
     }
 }

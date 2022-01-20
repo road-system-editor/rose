@@ -19,11 +19,18 @@ public class PositionTest {
     }
 
     @Test
+    public void TestStandardConstructor() {
+        Position position = new Position();
+        Assertions.assertEquals(0, position.getX());
+        Assertions.assertEquals(0, position.getY());
+    }
+
+    @Test
     public void TestSetCoordinates() {
         Position position = new Position(FirstTestInt, SecondTestInt);
         position.setX(SecondTestInt);
         position.setY(FirstTestInt);
-        Assertions.assertEquals(SecondTestInt ,position.getX());
+        Assertions.assertEquals(SecondTestInt, position.getX());
         Assertions.assertEquals(FirstTestInt, position.getY());
     }
 }

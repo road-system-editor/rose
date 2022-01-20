@@ -9,6 +9,15 @@ public class Position {
   private int ycoordinate;
 
   /**
+   * Standard Constructor.
+   * Sets x and y Coordinate to 0.
+   */
+  public Position() {
+    this.xcoordinate = 0;
+    this.ycoordinate = 0;
+  }
+
+  /**
    * Constructor.
    *
    * @param xcoordinate the x coordinate for this Position.

@@ -9,6 +9,15 @@ public class Movement {
   private int yvalue;
 
   /**
+   * Standard Constructor.
+   * Sets x and y values to 0.
+   */
+  public Movement() {
+    this.xvalue = 0;
+    this.yvalue = 0;
+  }
+
+  /**
    * Constructor.
    *
    * @param xvalue the x value of the Vector.

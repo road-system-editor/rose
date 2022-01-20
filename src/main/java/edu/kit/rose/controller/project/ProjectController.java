@@ -29,7 +29,7 @@ public interface ProjectController {
    * @param onBegin called before the import or export
    * @param onDone  called after the import or export
    */
-  void subscribeToProjectIOAction(Runnable onBegin, Runnable onDone);
+  void subscribeToProjectIoAction(Runnable onBegin, Runnable onDone);
 
   /**
    * Unregisters a runnable that gets called before the controller executes a loading, saving or
@@ -38,6 +38,6 @@ public interface ProjectController {
    * @param onBegin called before the import or export
    * @param onDone  called after the import or export
    */
-  void unsubscribeFromProjectIOAction(Runnable onBegin, Runnable onDone);
+  void unsubscribeFromProjectIoAction(Runnable onBegin, Runnable onDone);
 }
 

@@ -6,7 +6,6 @@ import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
-
 import java.util.List;
 
 /**
@@ -16,7 +15,8 @@ import java.util.List;
 public class DragStreetSegmentCommand implements ChangeCommand {
 
   /**
-   * Creates a {@link DragStreetSegmentCommand} that drags a given set of segments by a specified movement
+   * Creates a {@link DragStreetSegmentCommand}
+   * that drags a given set of segments by a specified movement.
    *
    * @param project          the model facade to execute {@link DragStreetSegmentCommand on}
    * @param segments         the segments to drag

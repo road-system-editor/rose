@@ -20,6 +20,7 @@ public abstract class FXMLContainer extends Pane {
   /**
    * Data source for translated strings.
    */
+  @Inject
   private LocalizedTextProvider translator;
 
   /**
@@ -47,18 +48,6 @@ public abstract class FXMLContainer extends Pane {
     return translator;
   }
 
-  /**
-   * Sets the data source for string translation.
-   *
-   * @param translator the new data source for string translation, may not be null.
-   */
-  public void setTranslator(LocalizedTextProvider translator) {
-    if (this.translator != null) {
-      this.translator.unsubscribeFromOnLanguageChanged(c);
-    }
-    this.translator = translator;
-    this.translator.subscribeToOnLanguageChanged(c);
-  }
 
   /**
    * Template method that updates all visible strings in this container to the new translation.
@@ -71,6 +60,11 @@ public abstract class FXMLContainer extends Pane {
    * Initializes the {@link FXMLContainer} and its sub container.
    */
   public void init() {
+    initSubContainer();
+    initTranslator();
+  }
+
+  private void initSubContainer() {
     List<FXMLContainer> fxmlSubContainers = getSubFXMLContainer();
 
     if (fxmlSubContainers != null && injector != null) {
@@ -78,6 +72,12 @@ public abstract class FXMLContainer extends Pane {
         injector.injectMembers(subContainer);
         subContainer.init();
       }
+    }
+  }
+
+  private void initTranslator() {
+    if (this.translator != null) {
+      this.translator.subscribeToOnLanguageChanged(c);
     }
   }
 

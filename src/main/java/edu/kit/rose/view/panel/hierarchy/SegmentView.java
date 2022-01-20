@@ -17,7 +17,7 @@ class SegmentView extends ElementView<Segment> {
   private Label label;
 
   /**
-   * Creates a new segment view for a given {@link Segment}.
+   * Creates a new segment view for a given {@code segment}.
    *
    * @param translator the {@link LocalizedTextProvider} to use.
    * @param segment    the {@link Segment} to show.

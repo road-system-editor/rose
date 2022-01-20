@@ -17,7 +17,7 @@ import javafx.scene.control.Button;
  * The hierarchy panel shows the hierarchical order of the elements contained in the road system.
  */
 public class HierarchyPanel extends FXMLContainer
-    implements DualSetObserver<Element, Connection, RoadSystem> { // also uses ScrollPane, VBox
+    implements DualSetObserver<Element, Connection, RoadSystem> {
 
   private HierarchyController controller;
   private RoadSystem roadSystem;

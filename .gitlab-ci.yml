@@ -60,4 +60,4 @@ checkstyle_test:
     when: always
     paths:
       - build/reports/checkstyle/
-  allow_failure: true
+  allow_failure: false

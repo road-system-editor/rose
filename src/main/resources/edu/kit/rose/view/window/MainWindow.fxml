@@ -18,18 +18,16 @@
                 <MenuItem fx:id="saveProject"/>
                 <MenuItem fx:id="saveProjectAs"/>
                 <Menu fx:id="loadProjectBackup">
-                    <MenuItem text="Backup 1"/>
-                    <MenuItem text="Backup 2"/>
-                    <MenuItem text="Backup 3"/>
+                    <MenuItem text="Backups will be inserted here"/>
                 </Menu>
                 <SeparatorMenuItem/>
-                <MenuItem text="Road System 1"/>
-                <MenuItem text="Road System 2"/>
-                <MenuItem text="Road System 3"/>
-                <MenuItem text="Road System 4"/>
             </Menu>
-            <Menu fx:id="validation"/>
-            <Menu fx:id="measurements"/>
+            <Menu fx:id="validation">
+                <MenuItem fx:id="criteria"/>
+            </Menu>
+            <Menu fx:id="measurements">
+                <MenuItem fx:id="measurementsOverview"/>
+            </Menu>
             <Menu fx:id="language">
                 <MenuItem fx:id="germanLanguage"/>
                 <MenuItem fx:id="englishLanguage"/>

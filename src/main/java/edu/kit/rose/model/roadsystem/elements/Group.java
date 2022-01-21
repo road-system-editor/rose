@@ -1,6 +1,7 @@
 package edu.kit.rose.model.roadsystem.elements;
 
 import edu.kit.rose.infrastructure.Box;
+import edu.kit.rose.infrastructure.SimpleUnitObservable;
 import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.infrastructure.UnitObserver;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
@@ -11,7 +12,7 @@ import java.util.Iterator;
  * Might hold other groups.
  * (see: Pflichtenheft: "Gruppe")
  */
-public class Group implements Element, Iterable<Element> {
+public class Group extends SimpleUnitObservable<Element> implements Element, Iterable<Element> {
 
   @Override
   public Iterator<Element> iterator() {

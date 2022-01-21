@@ -9,6 +9,8 @@ import edu.kit.rose.model.roadsystem.elements.Group;
  * and makes it changeable.
  */
 public class DeleteGroupCommand implements ChangeCommand {
+  private final Project project;
+  private final Group group;
 
   /**
    * Creates a {@link DeleteGroupCommand} that deletes the given group.
@@ -17,12 +19,13 @@ public class DeleteGroupCommand implements ChangeCommand {
    * @param group   the group to be deleted
    */
   public DeleteGroupCommand(Project project, Group group) {
-
+    this.project = project;
+    this.group = group;
   }
 
   @Override
   public void execute() {
-
+    this.project.getRoadSystem().removeElement(this.group);
   }
 
   @Override

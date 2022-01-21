@@ -10,25 +10,27 @@ import edu.kit.rose.model.roadsystem.elements.Group;
  * and makes it changeable.
  */
 public class AddElementToGroupCommand implements ChangeCommand {
+  private final Element element;
+  private final Group group;
 
   /**
-   * Creates a new {@link AddElementToGroupCommand} that adds an {@link Element} to a {@Group}.
+   * Creates a new {@link AddElementToGroupCommand} that adds an {@link Element} to a {@link Group}.
    *
-   * @param project the model facade to execute the {@link AddElementToGroupCommand} on
    * @param element the element to add
    * @param group   the group to add an element to
    */
-  public AddElementToGroupCommand(Project project, Element element, Group group) {
-
+  public AddElementToGroupCommand(Element element, Group group) {
+    this.element = element;
+    this.group = group;
   }
 
   @Override
   public void execute() {
-
+    this.group.addElement(this.element);
   }
 
   @Override
   public void unexecute() {
-
+    this.group.removeElement(element);
   }
 }

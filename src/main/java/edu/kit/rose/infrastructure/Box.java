@@ -15,4 +15,12 @@ public interface Box<T> extends Iterable<T> {
    */
   int getSize();
 
+  /**
+   * Provides information about the content of a Box.
+   *
+   * @param t the object that is to be checked for its containment status
+   * @return {@code true} if the object is contained in this Box. {@code false} otherwise.
+   */
+  boolean contains(T t);
+
 }

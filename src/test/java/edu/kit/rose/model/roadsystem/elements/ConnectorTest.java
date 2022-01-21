@@ -28,7 +28,7 @@ class ConnectorTest {
 
   @Test
   public void getAttributeAccessors() {
-      Assertions.assertIterableEquals(accessors, this.connector.getAttributeAccessors());
+    Assertions.assertIterableEquals(accessors, this.connector.getAttributeAccessors());
   }
 
   @Test

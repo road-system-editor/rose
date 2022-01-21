@@ -64,7 +64,7 @@ public class Connector extends SimpleUnitObservable<Connector>
    * @return the Type of Connector this is.
    */
   public ConnectorType getType() {
-    return null;
+    return this.type;
   }
 
   @Override

@@ -2,21 +2,15 @@ package edu.kit.rose.view.window;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-import edu.kit.rose.controller.application.ApplicationController;
-import edu.kit.rose.controller.attribute.AttributeController;
-import edu.kit.rose.controller.hierarchy.HierarchyController;
-import edu.kit.rose.controller.measurement.MeasurementController;
-import edu.kit.rose.controller.plausibility.PlausibilityController;
-import edu.kit.rose.controller.roadsystem.RoadSystemController;
-import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
-import edu.kit.rose.model.ApplicationDataSystem;
-import edu.kit.rose.model.Project;
+import edu.kit.rose.view.commons.FxmlUtility;
 import edu.kit.rose.view.panel.hierarchy.HierarchyPanel;
 import edu.kit.rose.view.panel.problem.ProblemOverviewPanel;
 import edu.kit.rose.view.panel.roadsystem.RoadSystemPanel;
 import edu.kit.rose.view.panel.segmentbox.SegmentBoxPanel;
 import javafx.fxml.FXML;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 /**
@@ -24,24 +18,6 @@ import javafx.stage.Stage;
  * This class lays out the contained panels and sets up the menu bar, as specified in PF11.1.2.
  */
 public class MainWindow extends RoseWindow {
-  @Inject
-  private AttributeController attributeController;
-  @Inject
-  private ApplicationController applicationController;
-  @Inject
-  private HierarchyController hierarchyController;
-  @Inject
-  private MeasurementController measurementController;
-  @Inject
-  private PlausibilityController plausibilityController;
-  @Inject
-  private RoadSystemController roadSystemController;
-
-  @Inject
-  private Project project;
-  @Inject
-  private ApplicationDataSystem applicationData;
-
   /**
    * The hierarchy overview panel is contained in the main window.
    */
@@ -77,10 +53,16 @@ public class MainWindow extends RoseWindow {
 
   @Override
   protected void configureStage(Stage stage, Injector injector) {
-    this.hierarchyPanel = new HierarchyPanel();
-    hierarchyPanel.init(injector);
+    Parent tree = FxmlUtility.loadFxml(null, this, getClass().getResource("MainWindow.fxml"));
+    var scene = new Scene(tree);
 
-    var scene = new Scene(hierarchyPanel);
     stage.setScene(scene);
+    stage.setWidth(1280);
+    stage.setHeight(720);
+
+    this.hierarchyPanel.init(injector);
+    this.roadSystemPanel.init(injector);
+    this.problemOverviewPanel.init(injector);
+    this.segmentBoxPanel.init(injector);
   }
 }

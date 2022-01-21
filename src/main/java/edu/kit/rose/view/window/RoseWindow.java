@@ -65,7 +65,10 @@ public abstract class RoseWindow {
    * The window can not be shown if it has already been closed.
    */
   public void show() {
-    this.stage.show();
+    if (state == WindowState.INITIALIZED || state == WindowState.VISIBLE) {
+      this.stage.show();
+      state = WindowState.VISIBLE;
+    }
   }
 
   /**
@@ -73,7 +76,10 @@ public abstract class RoseWindow {
    * Closed windows can not be {@link #show()}n again.
    */
   public void close() {
-
+    if (state == WindowState.VISIBLE) {
+      stage.close();
+      state = WindowState.CLOSED;
+    }
   }
 
   /**

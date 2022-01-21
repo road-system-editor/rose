@@ -17,8 +17,10 @@ import javafx.stage.Stage;
  * selection of a criterion in the overview panel and the editor panel.
  */
 public class CriteriaWindow extends RoseWindow {
-  private final PlausibilityController plausibilityController;
-  private final ApplicationDataSystem applicationData;
+  @Inject
+  private PlausibilityController plausibilityController;
+  @Inject
+  private ApplicationDataSystem applicationData;
 
   /**
    * The criterion overview panel is contained in the criteria window.
@@ -36,20 +38,15 @@ public class CriteriaWindow extends RoseWindow {
   /**
    * Creates a new criterion window instance.
    *
-   * @param translator the data source for translated strings.
-   * @param controller the controller to handle criterion changes.
-   * @param applicationData the application data system that stores the criteria.
+   * @param injector the dependency injector.
    */
   @Inject
-  public CriteriaWindow(LocalizedTextProvider translator, PlausibilityController controller,
-                        ApplicationDataSystem applicationData, Injector injector) {
-    super(translator, injector);
-    this.plausibilityController = controller;
-    this.applicationData = applicationData;
+  public CriteriaWindow(Injector injector) {
+    super(injector);
   }
 
   @Override
-  protected void configureStage(Stage stage) {
+  protected void configureStage(Stage stage, Injector injector) {
     // fxml loading
     overview.setController(plausibilityController);
     overview.setManager(applicationData.getCriteriaManager());

@@ -16,6 +16,7 @@ import edu.kit.rose.view.panel.problem.ProblemOverviewPanel;
 import edu.kit.rose.view.panel.roadsystem.RoadSystemPanel;
 import edu.kit.rose.view.panel.segmentbox.SegmentBoxPanel;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 /**
@@ -23,15 +24,23 @@ import javafx.stage.Stage;
  * This class lays out the contained panels and sets up the menu bar, as specified in PF11.1.2.
  */
 public class MainWindow extends RoseWindow {
-  private final AttributeController attributeController;
-  private final ApplicationController applicationController;
-  private final HierarchyController hierarchyController;
-  private final MeasurementController measurementController;
-  private final PlausibilityController plausibilityController;
-  private final RoadSystemController roadSystemController;
+  @Inject
+  private AttributeController attributeController;
+  @Inject
+  private ApplicationController applicationController;
+  @Inject
+  private HierarchyController hierarchyController;
+  @Inject
+  private MeasurementController measurementController;
+  @Inject
+  private PlausibilityController plausibilityController;
+  @Inject
+  private RoadSystemController roadSystemController;
 
-  private final Project project;
-  private final ApplicationDataSystem applicationData;
+  @Inject
+  private Project project;
+  @Inject
+  private ApplicationDataSystem applicationData;
 
   /**
    * The hierarchy overview panel is contained in the main window.
@@ -57,50 +66,21 @@ public class MainWindow extends RoseWindow {
   /**
    * Creates a new main window instance.
    *
-   * @param translator the data source for translated strings.
-   * @param project the project to display.
-   * @param applicationData the application metadata to use for displaying the project.
    * @param stage the primary stage of the JavaFX application.
+   * @param injector the dependency injector.
    */
   @Inject
-  public MainWindow(LocalizedTextProvider translator,
-                    ApplicationController applicationController,
-                    AttributeController attributeController,
-                    HierarchyController hierarchyController,
-                    MeasurementController measurementController,
-                    PlausibilityController plausibilityController,
-                    RoadSystemController roadSystemController,
-                    Project project,
-                    ApplicationDataSystem applicationData,
-                    Stage stage,
+  public MainWindow(Stage stage,
                     Injector injector) {
-    super(translator, stage, injector);
-
-    this.applicationController = applicationController;
-    this.attributeController = attributeController;
-    this.hierarchyController = hierarchyController;
-    this.measurementController = measurementController;
-    this.plausibilityController = plausibilityController;
-    this.roadSystemController = roadSystemController;
-
-    this.project = project;
-    this.applicationData = applicationData;
+    super(stage, injector);
   }
 
   @Override
-  protected void configureStage(Stage stage) {
-    hierarchyPanel.setController(hierarchyController);
-    hierarchyPanel.setRoadSystem(project.getRoadSystem());
+  protected void configureStage(Stage stage, Injector injector) {
+    this.hierarchyPanel = new HierarchyPanel();
+    hierarchyPanel.init(injector);
 
-    roadSystemPanel.setProject(project);
-    roadSystemPanel.setApplicationController(applicationController);
-    roadSystemPanel.setRoadSystemController(roadSystemController);
-    roadSystemPanel.setAttributeController(attributeController);
-    roadSystemPanel.setMeasurementController(measurementController);
-
-    problemOverviewPanel.setController(plausibilityController);
-    problemOverviewPanel.setManager(project.getPlausibilitySystem().getViolationManager());
-
-    segmentBoxPanel.setController(roadSystemController);
+    var scene = new Scene(hierarchyPanel);
+    stage.setScene(scene);
   }
 }

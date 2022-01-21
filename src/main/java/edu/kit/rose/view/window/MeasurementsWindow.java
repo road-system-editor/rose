@@ -19,8 +19,11 @@ import javafx.stage.Stage;
  * This class is responsible for laying it's contained panels and mediating between
  */
 public class MeasurementsWindow extends RoseWindow {
+  @Inject
   private MeasurementController measurementController;
+  @Inject
   private Project project;
+
   /**
    * The interval settings panel is contained in the measurements window.
    */
@@ -42,21 +45,15 @@ public class MeasurementsWindow extends RoseWindow {
   /**
    * Creates a new measurements window instance.
    *
-   * @param translator the data source for translated strings.
-   * @param controller the controller to handle measurement changes.
-   * @param project the project that contains the measurements to display.
    * @param injector the injector for dependency injection
    */
   @Inject
-  public MeasurementsWindow(LocalizedTextProvider translator, MeasurementController controller,
-                            Project project, Injector injector) {
-    super(translator, injector);
-    this.measurementController = controller;
-    this.project = project;
+  public MeasurementsWindow(Injector injector) {
+    super(injector);
   }
 
   @Override
-  protected void configureStage(Stage stage) {
+  protected void configureStage(Stage stage, Injector injector) {
     // fxml loading
     timeSliceSetting.setController(controller);
     timeSliceSetting.setTimeSliceSetting(project.getRoadSystem().getTimeSliceSetting());

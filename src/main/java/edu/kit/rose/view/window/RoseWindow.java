@@ -1,5 +1,6 @@
 package edu.kit.rose.view.window;
 
+import com.google.inject.Inject;
 import com.google.inject.Injector;
 import edu.kit.rose.controller.navigation.Navigator;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
@@ -18,10 +19,12 @@ public abstract class RoseWindow {
   /**
    * Data source for translated strings.
    */
-  private final LocalizedTextProvider translator;
+  @Inject
+  private LocalizedTextProvider translator;
   /**
    * Reference to the navigator of the application.
    */
+  @Inject
   private Navigator navigator;
 
   private WindowState state = WindowState.INITIALIZED;
@@ -31,26 +34,30 @@ public abstract class RoseWindow {
   /**
    * Creates a new window for the ROSE application.
    *
-   * @param translator the data source for translated strings.
+   * @param injector the dependency injector.
    */
-  protected RoseWindow(LocalizedTextProvider translator, Injector injector) {
-    this.translator = translator;
+  protected RoseWindow(Injector injector) {
+    this(new Stage(), injector);
   }
 
   /**
    * Creates a new window for the ROSE application, using the given {@code stage}.
    * This constructor should only be if this window should be set up in the primary stage.
    *
-   * @param translator the data source for translated strings.
    * @param stage the primary stage of the JavaFX application.
+   * @param injector the dependency injector.
    */
-  protected RoseWindow(LocalizedTextProvider translator, Stage stage, Injector injector) {
-    this(translator, injector);
+  protected RoseWindow(Stage stage, Injector injector) {
     this.stage = stage;
+    this.injector = injector;
+    this.injector.injectMembers(this);
+
     stage.setOnCloseRequest(event -> {
       event.consume(); // might need to check state
       close();
     });
+
+    this.configureStage(this.stage, this.injector);
   }
 
   /**
@@ -58,7 +65,7 @@ public abstract class RoseWindow {
    * The window can not be shown if it has already been closed.
    */
   public void show() {
-
+    this.stage.show();
   }
 
   /**
@@ -74,8 +81,9 @@ public abstract class RoseWindow {
    * window.
    *
    * @param stage the stage of this window.
+   * @param injector the dependency injector.
    */
-  protected abstract void configureStage(Stage stage);
+  protected abstract void configureStage(Stage stage, Injector injector);
 
   /**
    * Returns the state of this window.

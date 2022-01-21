@@ -1,12 +1,22 @@
 package edu.kit.rose.view;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
 import com.google.inject.Injector;
 import edu.kit.rose.controller.ControllerFactory;
+import edu.kit.rose.controller.application.ApplicationController;
+import edu.kit.rose.controller.attribute.AttributeController;
+import edu.kit.rose.controller.hierarchy.HierarchyController;
+import edu.kit.rose.controller.measurement.MeasurementController;
 import edu.kit.rose.controller.navigation.Navigator;
 import edu.kit.rose.controller.navigation.WindowType;
+import edu.kit.rose.controller.plausibility.PlausibilityController;
+import edu.kit.rose.controller.project.ProjectController;
+import edu.kit.rose.controller.roadsystem.RoadSystemController;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
+import edu.kit.rose.infrastructure.language.RoseLocalizedTextProvider;
 import edu.kit.rose.model.ApplicationDataSystem;
+import edu.kit.rose.model.ModelFactory;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.view.window.CriteriaWindow;
 import edu.kit.rose.view.window.MainWindow;
@@ -23,6 +33,8 @@ import javafx.stage.Stage;
  * {@link edu.kit.rose.model} packages.
  */
 public class RoseApplication extends Application implements Navigator {
+  private static final Path CONFIG_PATH = Path.of(""); //TODO
+
   /**
    * Contains the main window instance of the application.
    */
@@ -72,7 +84,10 @@ public class RoseApplication extends Application implements Navigator {
    */
   @Override
   public void start(Stage primaryStage) throws Exception {
+    this.injector = Guice.createInjector(new RoseModule(this));
 
+    this.mainWindow = new MainWindow(primaryStage, injector);
+    this.mainWindow.show();
   }
 
   @Override
@@ -94,11 +109,55 @@ public class RoseApplication extends Application implements Navigator {
     launch(args);
   }
 
-
+  /**
+   * Responsible for binding interfaces and classes in the injector.
+   */
   private class RoseModule extends AbstractModule {
+    private final Navigator navigator;
+    private final RoseLocalizedTextProvider provider;
+
+    private RoseModule(Navigator navigator) {
+      this.navigator = navigator;
+      this.provider = new RoseLocalizedTextProvider();
+    }
+
     @Override
     protected void configure() {
+      bind(LocalizedTextProvider.class).toInstance(this.provider);
+      bind(Navigator.class).toInstance(this.navigator);
 
+      this.configureModel();
+      this.configureControllers();
+      this.configureWindows();
+    }
+
+    private void configureModel() {
+      ModelFactory factory = new ModelFactory(CONFIG_PATH);
+
+      applicationData = factory.createApplicationDataSystem();
+      bind(ApplicationDataSystem.class).toInstance(applicationData);
+
+      project = factory.createProject();
+      bind(Project.class).toInstance(project);
+    }
+
+    private void configureControllers() {
+      ControllerFactory factory =
+          new ControllerFactory(navigator, provider, applicationData, project, null);
+
+      bind(ApplicationController.class).toInstance(factory.getApplicationController());
+      bind(AttributeController.class).toInstance(factory.getAttributeController());
+      bind(HierarchyController.class).toInstance(factory.getHierarchyController());
+      bind(MeasurementController.class).toInstance(factory.getMeasurementController());
+      bind(PlausibilityController.class).toInstance(factory.getPlausibilityController());
+      bind(ProjectController.class).toInstance(factory.getProjectController());
+      bind(RoadSystemController.class).toInstance(factory.getRoadSystemController());
+    }
+
+    private void configureWindows() {
+      bind(MainWindow.class);
+      bind(CriteriaWindow.class);
+      bind(MeasurementsWindow.class);
     }
   }
 }

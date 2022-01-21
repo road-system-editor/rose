@@ -27,6 +27,11 @@ public class SimpleSortedBox<T> implements SortedBox<T> {
   }
 
   @Override
+  public boolean contains(T t) {
+    return content.contains(t);
+  }
+
+  @Override
   public T get(int index) {
     return content.get(index);
   }

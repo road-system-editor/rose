@@ -15,24 +15,25 @@ public class RoseBoxTest {
   static int numberOfElements = 10;
   static Collection<Integer> testArrayList;
 
+  static Box<Integer> box;
+
   @BeforeAll
   static void setup() {
     testArrayList = new ArrayList<>();
     for (int i = 0; i < numberOfElements; i++) {
       testArrayList.add(i);
     }
+    box = new SimpleBox<>(testArrayList);
   }
 
   @Test
   public void testGetSize() {
-    Box<Integer> box = new SimpleBox<>(testArrayList);
     Assertions.assertEquals(numberOfElements, box.getSize());
   }
 
   @Test
   public void testIterator() {
 
-    Box<Integer> box = new SimpleBox<>(testArrayList);
     Iterator<Integer> iterator = box.iterator();
     Collection<Integer> actualContent = new ArrayList<>();
 
@@ -42,5 +43,11 @@ public class RoseBoxTest {
     for (int i = 0; i < numberOfElements; i++) {
       Assertions.assertTrue(actualContent.contains(i));
     }
+  }
+
+  @Test
+  public void testContains() {
+    testArrayList.forEach(i -> Assertions.assertTrue(box.contains(i)));
+    Assertions.assertFalse(box.contains(numberOfElements));
   }
 }

@@ -4,6 +4,8 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import edu.kit.rose.controller.navigation.Navigator;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
+import java.util.Objects;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 /**
@@ -15,7 +17,7 @@ public abstract class RoseWindow {
   /**
    * The JavaFX top-level container that belongs to the JavaFX window this ROSE window is managing.
    */
-  private Stage stage;
+  private final Stage stage;
   /**
    * Data source for translated strings.
    */
@@ -28,8 +30,6 @@ public abstract class RoseWindow {
   private Navigator navigator;
 
   private WindowState state = WindowState.INITIALIZED;
-
-  private Injector injector;
 
   /**
    * Creates a new window for the ROSE application.
@@ -49,15 +49,16 @@ public abstract class RoseWindow {
    */
   protected RoseWindow(Stage stage, Injector injector) {
     this.stage = stage;
-    this.injector = injector;
-    this.injector.injectMembers(this);
+    injector.injectMembers(this);
 
     stage.setOnCloseRequest(event -> {
       event.consume(); // might need to check state
       close();
     });
+    stage.getIcons().add(new Image(Objects.requireNonNull(RoseWindow.class.getResourceAsStream(
+        "logo.png"))));
 
-    this.configureStage(this.stage, this.injector);
+    this.configureStage(this.stage, injector);
   }
 
   /**

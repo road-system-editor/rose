@@ -103,7 +103,8 @@ public class GroupTest {
     Assertions.assertTrue(hasAccessorOfAttributeType(attributeAccessors, AttributeType.COMMENT));
   }
 
-  private boolean hasAccessorOfAttributeType(Iterable<AttributeAccessor<?>> accessors, AttributeType attributeType) {
+  private boolean hasAccessorOfAttributeType(
+      Iterable<AttributeAccessor<?>> accessors, AttributeType attributeType) {
     for (AttributeAccessor<?> accessor : accessors) {
       if (accessor.getAttributeType() == attributeType) {
         return true;

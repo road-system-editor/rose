@@ -32,4 +32,12 @@ public interface Observable<T extends UnitObserver<S>, S> {
    */
   void notifySubscribers();
 
+  /**
+   * Returns the current instance, should always return "this". S is thus to be of the same type
+   * as the implementing class.
+   *
+   * @return the current instance.
+   */
+  S getThis();
+
 }

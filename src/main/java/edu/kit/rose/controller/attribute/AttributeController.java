@@ -28,7 +28,8 @@ public interface AttributeController {
   void addShownAttributeType(AttributeType attributeType);
 
   /**
-   * Removes an attribute type from the list of attribute types, that are displayed on street segments.
+   * Removes an attribute type from the list of attribute types,
+   * that are displayed on street segments.
    *
    * @param attributeType the attribute type to remove
    */

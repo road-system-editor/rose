@@ -2,9 +2,10 @@ package edu.kit.rose.controller.roadsystem;
 
 import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.infrastructure.SetObservable;
+import edu.kit.rose.model.roadsystem.elements.Connector;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
-import edu.kit.rose.model.roadsystem.elements.Connector;
+
 
 
 /**
@@ -16,7 +17,7 @@ import edu.kit.rose.model.roadsystem.elements.Connector;
 public interface RoadSystemController extends SetObservable<Segment, RoadSystemController> {
 
   /**
-   * Sets the zoomLevel of the road system editor
+   * Sets the zoomLevel of the road system editor.
    *
    * @param zoomLevel zoomlevel of the road system editor
    */
@@ -67,7 +68,8 @@ public interface RoadSystemController extends SetObservable<Segment, RoadSystemC
   void toggleSegmentSelection(Segment segment);
 
   /**
-   * Selects all segments that have a connector inside the rectangle which the given positions determine.
+   * Selects all segments that have a connector inside the rectangle
+   * which the given positions determine.
    * The positions have to be located diagonally to each other on the rectangle.
    *
    * @param firstSelectionCorner  a corner position of the drag selection box
@@ -76,7 +78,8 @@ public interface RoadSystemController extends SetObservable<Segment, RoadSystemC
   void selectSegmentsInRectangle(Position firstSelectionCorner, Position secondSelectionCorner);
 
   /**
-   * Begins a drag action for an end of a street segment. The controller remembers the connector of the
+   * Begins a drag action for an end of a street segment.
+   * The controller remembers the connector of the
    * last method call, until endDragStreetSegment is called.
    *
    * @param connector              connector which represents the end of a street segment

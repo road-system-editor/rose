@@ -23,7 +23,7 @@ public class RoseRoadSystemController extends Controller
     SetObserver<Segment, SelectionBuffer> {
 
   /**
-   * The container for selected segments
+   * The container for selected segments.
    */
   private SelectionBuffer selectionBuffer;
 
@@ -37,7 +37,7 @@ public class RoseRoadSystemController extends Controller
    */
   public RoseRoadSystemController(ChangeCommandBuffer changeCommandBuffer, StorageLock storageLock,
                                   SelectionBuffer selectionBuffer, Project project) {
-    super(changeCommandBuffer, storageLock);
+    super(storageLock);
     this.selectionBuffer = selectionBuffer;
   }
 
@@ -106,6 +106,11 @@ public class RoseRoadSystemController extends Controller
   @Override
   public void notifySubscribers() {
 
+  }
+
+  @Override
+  public RoadSystemController getThis() {
+    return this;
   }
 
   @Override

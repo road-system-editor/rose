@@ -7,10 +7,10 @@ import edu.kit.rose.model.Project;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 
+
 /**
- * Standard implementation of the {@link AttributeController} interface.
+ * Provides methods for setting the values of attribute accessors.
  *
- * @author ROSE Team
  */
 public class RoseAttributeController extends Controller implements AttributeController {
 

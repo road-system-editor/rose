@@ -2,9 +2,9 @@ package edu.kit.rose.view.panel.criterion;
 
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
-import edu.kit.rose.model.ApplicationDataSystem;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
-import edu.kit.rose.view.commons.FXMLContainer;
+import edu.kit.rose.view.commons.FxmlContainer;
+import java.util.Collection;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
@@ -12,19 +12,22 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ListView;
 
 /**
- * The applicable segments selector allows the user to select which segment types a plausibility criterion applies to.
+ * The applicable segments' selector allows the user to select which segment types a plausibility
+ * criterion applies to.
  */
-class ApplicableSegmentsSelector extends FXMLContainer {
+class ApplicableSegmentsSelector extends FxmlContainer {
   @FXML
   private ListView<SelectableSegmentType> typeSelector;
   @FXML
   private CheckBox selectAllCheckBox;
 
   /**
-   * Requires {@link #setTranslator(LocalizedTextProvider)}
+   * Creates a new ApplicableSegmentSelector.
+   *
+   * @param translator the localizedTextProvider.
    */
-  public ApplicableSegmentsSelector() {
-    super("applicable_segments_selector.fxml");
+  public ApplicableSegmentsSelector(LocalizedTextProvider translator) {
+    super("applicable_segments_selector.fxml"); //? -philipp 19.01
   }
 
   @Override
@@ -32,13 +35,15 @@ class ApplicableSegmentsSelector extends FXMLContainer {
 
   }
 
-  private static class SelectableSegmentType {
-    private SegmentType type;
-    private BooleanProperty selected = new SimpleBooleanProperty(true);
+  @Override
+  protected Collection<FxmlContainer> getSubFxmlContainer() {
+    return null;
+  }
 
-    /**
-     * @param type
-     */
+  private static class SelectableSegmentType {
+    private final SegmentType type;
+    private final BooleanProperty selected = new SimpleBooleanProperty(true);
+
     public SelectableSegmentType(SegmentType type) {
       this.type = type;
     }

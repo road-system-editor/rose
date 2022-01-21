@@ -9,11 +9,31 @@ public class Position {
   private int ycoordinate;
 
   /**
+   * Standard Constructor.
+   * Sets x and y Coordinate to 0.
+   */
+  public Position() {
+    this.xcoordinate = 0;
+    this.ycoordinate = 0;
+  }
+
+  /**
+   * Constructor.
+   *
+   * @param xcoordinate the x coordinate for this Position.
+   * @param ycoordinate the y coordinate for this Position.
+   */
+  public Position(int xcoordinate, int ycoordinate) {
+    this.xcoordinate = xcoordinate;
+    this.ycoordinate = ycoordinate;
+  }
+
+  /**
    * Gives the x axis value of the Position.
    *
    * @return The x axis value of the Position.
    */
-  int getX() {
+  public int getX() {
     return xcoordinate;
   }
 
@@ -22,7 +42,7 @@ public class Position {
    *
    * @param x The x axis value of the Position.
    */
-  void setX(int x) {
+  public void setX(int x) {
     this.xcoordinate = x;
   }
 
@@ -31,7 +51,7 @@ public class Position {
    *
    * @return The y axis value of the Position.
    */
-  int getY() {
+  public int getY() {
     return ycoordinate;
   }
 
@@ -40,7 +60,7 @@ public class Position {
    *
    * @param y The x axis value of the Position.
    */
-  void setY(int y) {
+  public void setY(int y) {
     this.ycoordinate = y;
   }
 }

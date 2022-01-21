@@ -83,6 +83,11 @@ public class Base implements Segment {
   }
 
   @Override
+  public Element getThis() {
+    return this;
+  }
+
+  @Override
   public void addSubscriber(UnitObserver<Element> observer) {
 
   }

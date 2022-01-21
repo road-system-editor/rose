@@ -11,45 +11,46 @@ import javafx.scene.layout.Pane;
 
 /**
  * The {@link SegmentView} is the base class for the visual representation of a street segment.
+ * It is responsible for drawing itself and receiving drag and drop operations.
  *
- * @param <T> the segment type the segment view represents
- * @implNote A {@link SegmentView} is supposed to be placed on a managed pane. It then draws itself
- * on that pane.
+ * @param <T> the segment type the segment view represents.
+ * @implNote A {@link SegmentView} is supposed to be placed on a managed pane.
+ *     It then draws itself on that pane.
  */
 public abstract class SegmentView<T extends Segment> extends Pane implements UnitObserver<Element> {
 
   /**
-   * The segment which this segment view represents
+   * The segment which this segment view represents.
    */
-  private T segment;
+  private final T segment;
 
   /**
-   * The canvas on which the segment view is drawn
+   * The canvas on which the segment view is drawn.
    */
-  private Canvas canvas;
+  private final Canvas canvas;
 
   /**
-   * Determines if segment view is drawn with a selection indicator
+   * Determines if segment view is drawn with a selection indicator.
    */
   private boolean drawAsSelected;
 
   /**
-   * Determines if the segment can drag itself
+   * Determines if the segment can drag itself.
    */
   private boolean isDraggable;
 
   /**
-   * The roadSystemController to notify about drag movements
+   * The roadSystemController to notify about drag movements.
    */
-  private RoadSystemController controller;
+  private final RoadSystemController controller;
 
   /**
-   * The text provider for translated string
+   * The text provider for translated string.
    */
-  private LocalizedTextProvider translator;
+  private final LocalizedTextProvider translator;
 
   /**
-   * Creates a new segment view that acts as visual representation of a given segment
+   * Creates a new segment view that acts as visual representation of a given segment.
    *
    * @param segment the segment to create a visual representation for
    */
@@ -71,25 +72,25 @@ public abstract class SegmentView<T extends Segment> extends Pane implements Uni
   }
 
   /**
-   * Returns the segment that is represented by the segment view
+   * Returns the segment that is represented by the segment view.
    *
-   * @return represented stegment
+   * @return the segment that is represented by the segment view.
    */
   public T getSegment() {
     return segment;
   }
 
   /**
-   * Draws the segment
+   * Draws the segment.
    */
   public void draw() {
     redraw(canvas.getGraphicsContext2D());
   }
 
   /**
-   * Returns a boolean that indicates if the segment view is drawn with a selection indicator.
+   * Returns whether the segment view is drawn with a selection indicator.
    *
-   * @return boolean that indicates if segment is drawn with a selection indicator
+   * @return whether the segment view is drawn with a selection indicator.
    */
   public boolean getDrawAsSelected() {
     return drawAsSelected;
@@ -107,7 +108,7 @@ public abstract class SegmentView<T extends Segment> extends Pane implements Uni
   /**
    * Returns whether the segment view can drag itself.
    *
-   * @return boolean if the segment view can drag itself
+   * @return whether the segment view can drag itself.
    */
   public boolean getIsDraggable() {
     return isDraggable;
@@ -116,7 +117,7 @@ public abstract class SegmentView<T extends Segment> extends Pane implements Uni
   /**
    * Sets whether the segment view can drag itself.
    *
-   * @param isDraggable boolean if the segment view can drag itself
+   * @param isDraggable whether the segment view can drag itself.
    */
   public void setIsDraggable(boolean isDraggable) {
     this.isDraggable = isDraggable;
@@ -125,14 +126,14 @@ public abstract class SegmentView<T extends Segment> extends Pane implements Uni
   /**
    * Returns the localized text provider instance of the segment view.
    *
-   * @return localizedTextProvider instance.
+   * @return the localized text provider instance of the segment view.
    */
   protected LocalizedTextProvider getTranslator() {
     return translator;
   }
 
   /**
-   * Draws the segment on a given graphical context
+   * Draws the segment on a given graphical context.
    *
    * @param context graphical context
    */

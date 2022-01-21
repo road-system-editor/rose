@@ -76,6 +76,11 @@ public class Group implements Element, Iterable<Element> {
   }
 
   @Override
+  public Element getThis() {
+    return this;
+  }
+
+  @Override
   public void addSubscriber(UnitObserver<Element> observer) {
 
   }

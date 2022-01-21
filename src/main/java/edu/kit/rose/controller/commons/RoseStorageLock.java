@@ -5,18 +5,29 @@ package edu.kit.rose.controller.commons;
  * and coordinate their actions.
  */
 public class RoseStorageLock implements StorageLock {
-  @Override
-  public void aquireStorageLock() {
 
+  private final Object synchronizationObject = new Object();
+  private boolean isAcquired = false;
+
+  @Override
+  public void acquireStorageLock() {
+    synchronized (synchronizationObject) {
+      isAcquired = true;
+    }
   }
 
   @Override
-  public boolean isStorageLockAquired() {
-    return false;
+  public boolean isStorageLockAcquired() {
+    synchronized (synchronizationObject) {
+      return isAcquired;
+    }
+
   }
 
   @Override
   public void releaseStorageLock() {
-
+    synchronized (synchronizationObject) {
+      isAcquired = false;
+    }
   }
 }

@@ -25,6 +25,11 @@ public class Connection implements UnitObservable<Connection> {
 
   }
 
+  @Override
+  public Connection getThis() {
+    return this;
+  }
+
   /**
    * Gives the {@link Connector}s that are connected with this Connection.
    *

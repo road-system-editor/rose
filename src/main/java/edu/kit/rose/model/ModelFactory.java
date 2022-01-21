@@ -21,20 +21,20 @@ public class ModelFactory {
   }
 
   /**
-   * Returns the constructed {@link Project}
+   * Returns the constructed {@link Project}.
    *
    * @return the constructed Project
    */
   public Project createProject() {
-    return null;
+    return project;
   }
 
   /**
-   * Returns the constructed {@link ApplicationDataSystem}
+   * Returns the constructed {@link ApplicationDataSystem}.
    *
    * @return the constructed ApplicationDataSystem
    */
   public ApplicationDataSystem createApplicationDataSystem() {
-    return null;
+    return applicationDataSystem;
   }
 }

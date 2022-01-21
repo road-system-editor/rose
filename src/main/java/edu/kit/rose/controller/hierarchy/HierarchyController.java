@@ -12,7 +12,7 @@ import edu.kit.rose.model.roadsystem.elements.Segment;
 public interface HierarchyController extends SetObservable<Segment, HierarchyController> {
 
   /**
-   * Creates a new group that contains all selected segments in the element hierarchy
+   * Creates a new group that contains all selected segments in the element hierarchy.
    */
   void createGroup();
 

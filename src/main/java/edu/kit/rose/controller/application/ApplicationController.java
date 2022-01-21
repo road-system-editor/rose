@@ -4,9 +4,8 @@ import edu.kit.rose.infrastructure.language.Language;
 
 /**
  * Provides functionality for application settings
- * and other GUI related methods
+ * and other GUI related methods.
  *
- * @author ROSE Team
  */
 public interface ApplicationController {
 
@@ -18,17 +17,17 @@ public interface ApplicationController {
   void setLanguage(Language language);
 
   /**
-   * Shows a help-window to user
+   * Shows a help-window to user.
    */
   void showHelp();
 
   /**
-   * Undoes the last undoable action of the user
+   * Undoes the last undoable action of the user.
    */
   void undo();
 
   /**
-   * Redoes the last undoable action of the user
+   * Redoes the last undoable action of the user.
    */
   void redo();
 }

@@ -13,7 +13,8 @@ import edu.kit.rose.model.roadsystem.elements.Connector;
 public class DragSegmentEndCommand implements ChangeCommand {
 
   /**
-   * Creates a {@link DragSegmentEndCommand} that drags a given end of a segments by a specified movement.
+   * Creates a {@link DragSegmentEndCommand}
+   * that drags a given end of a segments by a specified movement.
    *
    * @param project          the model facade to execute {@link DragStreetSegmentCommand on}
    * @param segmentEnd       the segment end to drag

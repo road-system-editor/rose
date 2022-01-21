@@ -54,9 +54,13 @@ public class RoseAttributeControllerTest {
     applicationDataSystem.getShownAttributeTypes()
         .forEach(applicationDataSystem::removeShownAttributeType);
     attributeController.addShownAttributeType(TEST_TYPE);
+    Assertions.assertTrue(applicationDataSystem.getShownAttributeTypes().contains(TEST_TYPE));
   }
 
   @Test
-  void testRemoveShownAttribute() { //Boxes need to provide contains() method
+  void testRemoveShownAttribute() {
+    attributeController.addShownAttributeType(TEST_TYPE);
+    attributeController.removeShownAttributeType(TEST_TYPE);
+    Assertions.assertFalse(applicationDataSystem.getShownAttributeTypes().contains(TEST_TYPE));
   }
 }

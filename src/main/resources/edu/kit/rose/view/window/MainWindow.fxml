@@ -3,9 +3,43 @@
 <?import edu.kit.rose.view.panel.segmentbox.SegmentBoxPanel?>
 <?import edu.kit.rose.view.panel.problem.ProblemOverviewPanel?>
 <?import edu.kit.rose.view.panel.hierarchy.HierarchyPanel?>
-
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
 <BorderPane xmlns="http://javafx.com/javafx"
-         xmlns:fx="http://javafx.com/fxml">
+            xmlns:fx="http://javafx.com/fxml">
+    <top>
+        <MenuBar fx:id="menuBar">
+            <Menu fx:id="project">
+                <MenuItem fx:id="newProject"/>
+                <MenuItem fx:id="loadProject"/>
+                <MenuItem fx:id="exportProject"/>
+                <MenuItem fx:id="saveProject"/>
+                <MenuItem fx:id="saveProjectAs"/>
+                <Menu fx:id="loadProjectBackup">
+                    <MenuItem text="Backup 1"/>
+                    <MenuItem text="Backup 2"/>
+                    <MenuItem text="Backup 3"/>
+                </Menu>
+                <SeparatorMenuItem/>
+                <MenuItem text="Road System 1"/>
+                <MenuItem text="Road System 2"/>
+                <MenuItem text="Road System 3"/>
+                <MenuItem text="Road System 4"/>
+            </Menu>
+            <Menu fx:id="validation"/>
+            <Menu fx:id="measurements"/>
+            <Menu fx:id="language">
+                <MenuItem fx:id="germanLanguage"/>
+                <MenuItem fx:id="englishLanguage"/>
+            </Menu>
+            <Menu fx:id="help">
+                <MenuItem fx:id="shortcuts"/>
+                <MenuItem fx:id="tutorial" disable="true"/>
+            </Menu>
+        </MenuBar>
+    </top>
     <left>
         <BorderPane>
             <top>
@@ -23,3 +57,4 @@
         <HierarchyPanel fx:id="hierarchyPanel"/>
     </right>
 </BorderPane>
+

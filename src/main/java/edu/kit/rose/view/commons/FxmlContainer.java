@@ -57,6 +57,8 @@ public abstract class FxmlContainer extends Pane {
 
     initSubContainer(injector);
     initTranslator();
+
+    updateTranslatableStrings(translator.getSelectedLanguage());
   }
 
   private void initSubContainer(Injector injector) {

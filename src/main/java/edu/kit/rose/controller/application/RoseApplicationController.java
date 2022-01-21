@@ -13,7 +13,7 @@ import edu.kit.rose.model.ApplicationDataSystem;
  *
  */
 public class RoseApplicationController extends Controller implements ApplicationController {
-
+  private final LanguageSelector languageSelector;
 
   /**
    * Creates a new {@link RoseApplicationController}.
@@ -27,11 +27,13 @@ public class RoseApplicationController extends Controller implements Application
                                    LanguageSelector languageSelector,
                                    ApplicationDataSystem applicationDataSystem) {
     super(storageLock);
+    this.languageSelector = languageSelector;
   }
 
   @Override
   public void setLanguage(Language language) {
-
+    //TODO check if this is everything that needs to be done here (implemented for testing the UI)
+    languageSelector.setSelectedLanguage(language);
   }
 
   @Override

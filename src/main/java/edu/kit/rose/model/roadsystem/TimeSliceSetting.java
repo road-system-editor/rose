@@ -10,22 +10,45 @@ import edu.kit.rose.infrastructure.UnitObserver;
  */
 public class TimeSliceSetting implements UnitObservable<TimeSliceSetting> {
 
+  private int numberOfTimeSlices;
+  private int timeSlicesLength;
+
+  /**
+   * Standard Constructor.
+   * Initializes the numberOfTimeSlices and the timeSliceLength to 0.
+   */
+  public TimeSliceSetting() {
+    this.numberOfTimeSlices = 0;
+    this.timeSlicesLength = 0;
+  }
+
+  /**
+   * Constructor.
+   *
+   * @param numberOfTimeSlices the number of Time Slices to use.
+   * @param timeSlicesLength   the length of the Time Slices to use.
+   */
+  public TimeSliceSetting(int numberOfTimeSlices, int timeSlicesLength) {
+    this.numberOfTimeSlices = numberOfTimeSlices;
+    this.timeSlicesLength = timeSlicesLength;
+  }
+
   /**
    * Provides the number of TimeSlices.
    *
    * @return the number of TimeSlices.
    */
-  int getNumberOfTimeSliceSteps() {
-    return 0;
+  int getNumberOfTimeSlices() {
+    return this.numberOfTimeSlices;
   }
 
   /**
    * Sets the number of TimeSlices.
    *
-   * @param numberOfTimeSliceSteps the new number of TimeSlices.
+   * @param numberOfTimeSlices the new number of TimeSlices.
    */
-  void setNumberOfTimeSliceSteps(int numberOfTimeSliceSteps) {
-
+  void setNumberOfTimeSlices(int numberOfTimeSlices) {
+    this.numberOfTimeSlices = numberOfTimeSlices;
   }
 
   /**
@@ -34,16 +57,16 @@ public class TimeSliceSetting implements UnitObservable<TimeSliceSetting> {
    * @return the length of the TimeSlices.
    */
   int getTimeSliceLength() {
-    return 0;
+    return this.timeSlicesLength;
   }
 
   /**
    * Sets the length of the TimeSlices.
    *
-   * @param length the new length of the TimeSlices.
+   * @param timeSlicesLength the new length of the TimeSlices.
    */
-  void setTimeSliceLength(int length) {
-
+  void setTimeSliceLength(int timeSlicesLength) {
+    this.timeSlicesLength = timeSlicesLength;
   }
 
 
@@ -66,4 +89,5 @@ public class TimeSliceSetting implements UnitObservable<TimeSliceSetting> {
   public void removeSubscriber(UnitObserver<TimeSliceSetting> observer) {
 
   }
+
 }

@@ -1,12 +1,15 @@
 package edu.kit.rose.model;
 
 import edu.kit.rose.infrastructure.Box;
+import edu.kit.rose.infrastructure.SimpleBox;
 import edu.kit.rose.infrastructure.UnitObserver;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.model.plausibility.criteria.CriteriaManager;
 import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterion;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A standard implementation for the {@link ApplicationDataSystem}.
@@ -15,6 +18,8 @@ import java.nio.file.Path;
  */
 class SimpleApplicationDataSystem implements ApplicationDataSystem {
 
+  private final List<AttributeType> shownAttributeTypes;
+
   /**
    * Constructor.
    * Needs to be provided with a Path to a config File for global Settings.
@@ -22,7 +27,8 @@ class SimpleApplicationDataSystem implements ApplicationDataSystem {
    * @param configFilePath the Path to a config File containing global Settings.
    */
   public SimpleApplicationDataSystem(Path configFilePath) {
-
+    this.shownAttributeTypes = new ArrayList<>(); //fill with standard AttributeTypes
+    // or get from config file
   }
 
   @Override
@@ -53,17 +59,19 @@ class SimpleApplicationDataSystem implements ApplicationDataSystem {
 
   @Override
   public Box<AttributeType> getShownAttributeTypes() {
-    return null;
+    return new SimpleBox<>(shownAttributeTypes);
   }
 
   @Override
   public void addShownAttributeType(AttributeType attributeType) {
-
+    if (!this.shownAttributeTypes.contains(attributeType)) {
+      this.shownAttributeTypes.add(attributeType);
+    }
   }
 
   @Override
   public void removeShownAttributeType(AttributeType attributeType) {
-
+    this.shownAttributeTypes.remove(attributeType);
   }
 
   @Override

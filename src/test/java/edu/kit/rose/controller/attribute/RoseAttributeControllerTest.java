@@ -50,6 +50,10 @@ public class RoseAttributeControllerTest {
   }
 
   @Test
-  void testAddShownAttribute() {
+  void testAddShownAttribute() { //Boxes need to provide contains() method
+  }
+
+  @Test
+  void testRemoveShownAttribute() { //Boxes need to provide contains() method
   }
 }

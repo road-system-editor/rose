@@ -33,7 +33,7 @@ public class Movement {
    *
    * @return The x axis value of the Vector.
    */
-  int getX() {
+  public int getX() {
     return xvalue;
   }
 
@@ -42,7 +42,7 @@ public class Movement {
    *
    * @param x The x axis value of the Vector.
    */
-  void setX(int x) {
+  public void setX(int x) {
     this.xvalue = x;
   }
 
@@ -51,7 +51,7 @@ public class Movement {
    *
    * @return The y axis value of the Vector.
    */
-  int getY() {
+  public int getY() {
     return yvalue;
   }
 
@@ -60,7 +60,7 @@ public class Movement {
    *
    * @param y The x axis value of the Vector.
    */
-  void setY(int y) {
+  public void setY(int y) {
     this.yvalue = y;
   }
 }

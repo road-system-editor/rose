@@ -40,43 +40,30 @@ public class RoseAttributeController extends Controller implements AttributeCont
   public <T> void setAttribute(AttributeAccessor<T> accessor, T value) {
     if (getStorageLock().isStorageLockAcquired()) {
       return;
-    } else {
-      getStorageLock().acquireStorageLock();
     }
 
     var command  = new SetAttributeAccessorCommand<>(project, accessor,
         accessor.getValue(), value);
-
     command.execute();
     changeCommandBuffer.addCommand(command);
-
-    getStorageLock().releaseStorageLock();
   }
 
   @Override
   public void addShownAttributeType(AttributeType attributeType) {
     if (getStorageLock().isStorageLockAcquired()) {
       return;
-    } else {
-      getStorageLock().acquireStorageLock();
     }
 
     this.applicationDataSystem.addShownAttributeType(attributeType);
-
-    getStorageLock().releaseStorageLock();
   }
 
   @Override
   public void removeShownAttributeType(AttributeType attributeType) {
     if (getStorageLock().isStorageLockAcquired()) {
       return;
-    } else {
-      getStorageLock().acquireStorageLock();
     }
 
     this.applicationDataSystem.removeShownAttributeType(attributeType);
-
-    getStorageLock().releaseStorageLock();
   }
 
 }

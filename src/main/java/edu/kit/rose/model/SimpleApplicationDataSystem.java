@@ -8,8 +8,8 @@ import edu.kit.rose.model.plausibility.criteria.CriteriaManager;
 import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterion;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * A standard implementation for the {@link ApplicationDataSystem}.
@@ -18,7 +18,7 @@ import java.util.List;
  */
 class SimpleApplicationDataSystem implements ApplicationDataSystem {
 
-  private final List<AttributeType> shownAttributeTypes;
+  private final Set<AttributeType> shownAttributeTypes;
 
   /**
    * Constructor.
@@ -27,7 +27,7 @@ class SimpleApplicationDataSystem implements ApplicationDataSystem {
    * @param configFilePath the Path to a config File containing global Settings.
    */
   public SimpleApplicationDataSystem(Path configFilePath) {
-    this.shownAttributeTypes = new ArrayList<>(); //fill with standard AttributeTypes
+    this.shownAttributeTypes = new HashSet<>(); //fill with standard AttributeTypes
     // or get from config file
   }
 
@@ -64,9 +64,7 @@ class SimpleApplicationDataSystem implements ApplicationDataSystem {
 
   @Override
   public void addShownAttributeType(AttributeType attributeType) {
-    if (!this.shownAttributeTypes.contains(attributeType)) {
-      this.shownAttributeTypes.add(attributeType);
-    }
+    this.shownAttributeTypes.add(attributeType);
   }
 
   @Override

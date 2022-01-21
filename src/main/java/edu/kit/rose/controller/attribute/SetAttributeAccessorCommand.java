@@ -43,5 +43,6 @@ public class SetAttributeAccessorCommand<T> implements ChangeCommand {
   @Override
   public void unexecute() {
     accessor.setValue(oldValue);
+    //TODO: bulk edit has to be supported. New Type of AttributeAccessor?
   }
 }

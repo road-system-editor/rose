@@ -1,0 +1,25 @@
+<?import javafx.scene.layout.BorderPane?>
+<?import edu.kit.rose.view.panel.roadsystem.RoadSystemPanel?>
+<?import edu.kit.rose.view.panel.segmentbox.SegmentBoxPanel?>
+<?import edu.kit.rose.view.panel.problem.ProblemOverviewPanel?>
+<?import edu.kit.rose.view.panel.hierarchy.HierarchyPanel?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+         xmlns:fx="http://javafx.com/fxml">
+    <left>
+        <BorderPane>
+            <top>
+                <SegmentBoxPanel fx:id="segmentBoxPanel"/>
+            </top>
+            <bottom>
+                <ProblemOverviewPanel fx:id="problemOverviewPanel"/>
+            </bottom>
+        </BorderPane>
+    </left>
+    <center>
+        <RoadSystemPanel fx:id="roadSystemPanel"/>
+    </center>
+    <right>
+        <HierarchyPanel fx:id="hierarchyPanel"/>
+    </right>
+</BorderPane>

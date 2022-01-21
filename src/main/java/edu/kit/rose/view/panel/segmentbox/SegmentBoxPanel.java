@@ -27,7 +27,7 @@ public class SegmentBoxPanel extends FxmlContainer {
    * {@link #setController(RoadSystemController)}
    */
   public SegmentBoxPanel() {
-    super("segment_box_panel.fxml");
+    super("SegmentBoxPanel.fxml");
   }
 
   /**

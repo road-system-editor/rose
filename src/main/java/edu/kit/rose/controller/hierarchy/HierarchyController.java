@@ -1,9 +1,11 @@
 package edu.kit.rose.controller.hierarchy;
 
 import edu.kit.rose.infrastructure.SetObservable;
+import edu.kit.rose.infrastructure.UnitObservable;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Group;
 import edu.kit.rose.model.roadsystem.elements.Segment;
+import java.util.List;
 
 /**
  * Provides the functionality to manage the element
@@ -14,7 +16,7 @@ public interface HierarchyController extends SetObservable<Segment, HierarchyCon
   /**
    * Creates a new group that contains all selected segments in the element hierarchy.
    */
-  void createGroup();
+  void createGroup(List<Element> elements);
 
   /**
    * Deletes a group in the element hierarchy.

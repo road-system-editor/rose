@@ -5,7 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
- * Unit tests for {@link RoseChangeCommandBuffer}
+ * Unit tests for {@link RoseChangeCommandBuffer}.
  */
 public class RoseChangeCommandBufferTest {
   private TestChangeCommand command1;
@@ -14,7 +14,7 @@ public class RoseChangeCommandBufferTest {
   private RoseChangeCommandBuffer buffer;
 
   /**
-   * Initializes a command buffer with 3 commands in it
+   * Initializes a command buffer with 3 commands in it.
    */
   @BeforeEach
   void setUp() {

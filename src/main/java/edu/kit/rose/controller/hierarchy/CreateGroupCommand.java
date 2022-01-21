@@ -1,6 +1,7 @@
 package edu.kit.rose.controller.hierarchy;
 
 import edu.kit.rose.controller.command.ChangeCommand;
+import edu.kit.rose.infrastructure.SimpleSetObservable;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Group;
@@ -14,23 +15,23 @@ import java.util.List;
  */
 public class CreateGroupCommand implements ChangeCommand {
   private final Project project;
-  private final List<Element> segments;
+  private final List<Element> elements;
   private Group group;
 
   /**
    * Creates a {@link CreateGroupCommand} that creates a group out of a list of segments.
    *
    * @param project  the model facade to execute the {@link CreateGroupCommand} on
-   * @param segments the segments that will be in the group
+   * @param elements the elements that will be in the group
    */
-  public CreateGroupCommand(Project project, List<Segment> segments) {
+  public CreateGroupCommand(Project project, List<Element> elements) {
     this.project = project;
-    this.segments = new ArrayList<>(segments);
+    this.elements = new ArrayList<>(elements);
   }
 
   @Override
   public void execute() {
-    this.group = this.project.getRoadSystem().createGroup(this.segments);
+    this.group = this.project.getRoadSystem().createGroup(this.elements);
   }
 
   @Override

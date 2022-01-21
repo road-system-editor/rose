@@ -6,7 +6,6 @@ import edu.kit.rose.controller.commons.Controller;
 import edu.kit.rose.controller.commons.StorageLock;
 import edu.kit.rose.controller.selection.SelectionBuffer;
 import edu.kit.rose.infrastructure.SetObserver;
-import edu.kit.rose.infrastructure.UnitObservable;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Group;

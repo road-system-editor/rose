@@ -50,7 +50,10 @@ public class RoseAttributeControllerTest {
   }
 
   @Test
-  void testAddShownAttribute() { //Boxes need to provide contains() method
+  void testAddShownAttribute() {
+    applicationDataSystem.getShownAttributeTypes()
+        .forEach(applicationDataSystem::removeShownAttributeType);
+    attributeController.addShownAttributeType(TEST_TYPE);
   }
 
   @Test

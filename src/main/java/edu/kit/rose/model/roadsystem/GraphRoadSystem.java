@@ -9,6 +9,7 @@ import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.elements.Connection;
 import edu.kit.rose.model.roadsystem.elements.Connector;
 import edu.kit.rose.model.roadsystem.elements.Element;
+import edu.kit.rose.model.roadsystem.elements.Group;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import java.util.Collection;
@@ -49,7 +50,8 @@ class GraphRoadSystem implements RoadSystem {
   }
 
   @Override
-  public void createGroup(Collection<Element> includedElements) {
+  public Group createGroup(Collection<Element> includedElements) {
+    return null;
   }
 
   @Override

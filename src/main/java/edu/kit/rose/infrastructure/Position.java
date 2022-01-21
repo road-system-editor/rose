@@ -33,7 +33,7 @@ public class Position {
    *
    * @return The x axis value of the Position.
    */
-  int getX() {
+  public int getX() {
     return xcoordinate;
   }
 
@@ -42,7 +42,7 @@ public class Position {
    *
    * @param x The x axis value of the Position.
    */
-  void setX(int x) {
+  public void setX(int x) {
     this.xcoordinate = x;
   }
 
@@ -51,7 +51,7 @@ public class Position {
    *
    * @return The y axis value of the Position.
    */
-  int getY() {
+  public int getY() {
     return ycoordinate;
   }
 
@@ -60,7 +60,7 @@ public class Position {
    *
    * @param y The x axis value of the Position.
    */
-  void setY(int y) {
+  public void setY(int y) {
     this.ycoordinate = y;
   }
 }

@@ -6,6 +6,10 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 
+/**
+ * This is a utility class that allows executing {@link Runnable}s in the event that a JavaFX node
+ * is removed from its parent.
+ */
 public final class UnmountUtility {
   public static <T> void subscribeUntilUnmount(Node node, UnitObserver<T> observer,
                                                Observable<UnitObserver<T>, T> observable) {

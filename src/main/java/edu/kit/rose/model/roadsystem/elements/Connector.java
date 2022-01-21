@@ -74,6 +74,11 @@ public class Connector implements UnitObservable<Connector> {
 
   }
 
+  @Override
+  public Connector getThis() {
+    return this;
+  }
+
   /**
    * Moves Connector.
    *

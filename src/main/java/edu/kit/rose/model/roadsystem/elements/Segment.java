@@ -8,6 +8,7 @@ import edu.kit.rose.model.roadsystem.measurements.Measurement;
 
 /**
  * A Piece of a road in a RoadSystem. (see: Pflichtenheft: "Straßensegment")
+ * Is additionally to be observed by PlausibilityCriteria.
  */
 public interface Segment extends Element, Comparable<Segment> {
 

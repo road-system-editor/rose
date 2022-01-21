@@ -1,6 +1,5 @@
 package edu.kit.rose.controller.commons;
 
-import edu.kit.rose.controller.command.ChangeCommandBuffer;
 import edu.kit.rose.controller.navigation.Navigator;
 
 /**
@@ -13,33 +12,42 @@ import edu.kit.rose.controller.navigation.Navigator;
  */
 public abstract class Controller {
 
-  protected Controller(ChangeCommandBuffer changeCommandBuffer, StorageLock storageLock) {
+  private final StorageLock storageLock;
+  private Navigator navigator;
+
+  /**
+   * Creates a new instance of the {@link Controller} class.
+   *
+   * @param storageLock the {@link StorageLock} instance of the controller
+   */
+  protected Controller(StorageLock storageLock) {
+    this.storageLock = storageLock;
   }
 
   /**
-   * Initializes the controller with a navigator and a command buffer.
+   * Initializes the {@link Controller} with a {@link Navigator}.
    *
    * @param navigator the navigator for the controller
    */
   public final void initialize(Navigator navigator) {
-
+    this.navigator = navigator;
   }
 
   /**
-   * Returns the navigator instance of the controller
+   * Returns the {@link Navigator} instance of the {@link Controller}.
    *
-   * @return navigator instance of the controller
+   * @return {@link Navigator} instance of the {@link Controller}
    */
-  protected final Navigator getNavigatior() {
-    return null;
+  protected final Navigator getNavigator() {
+    return navigator;
   }
 
   /**
-   * Returns the command buffer of the controller
+   * Returns the {@link StorageLock} instance of the {@link Controller}.
    *
-   * @return command buffer of the controller
+   * @return {@link StorageLock} instance of the {@link Controller}
    */
-  protected final ChangeCommandBuffer getChangeCommandBuffer() {
-    return null;
+  protected final StorageLock getStorageLock() {
+    return storageLock;
   }
 }

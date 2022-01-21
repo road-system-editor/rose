@@ -19,7 +19,7 @@ public class RoseHierarchyController extends Controller
     SetObserver<Segment, SelectionBuffer> {
 
   /**
-   * The container for selected segments
+   * The container for selected segments.
    */
   private SelectionBuffer selectionBuffer;
 
@@ -27,14 +27,13 @@ public class RoseHierarchyController extends Controller
   /**
    * Creates a new {@link RoseHierarchyController}.
    *
-   * @param changeCommandBuffer the buffer for change commands
    * @param storageLock         the coordinator for controller actions
    * @param selectionBuffer     the container that stores selected segments
    * @param project             the model facade for project data
    */
-  public RoseHierarchyController(ChangeCommandBuffer changeCommandBuffer, StorageLock storageLock,
+  public RoseHierarchyController(StorageLock storageLock,
                                  SelectionBuffer selectionBuffer, Project project) {
-    super(changeCommandBuffer, storageLock);
+    super(storageLock);
     this.selectionBuffer = selectionBuffer;
   }
 
@@ -71,6 +70,11 @@ public class RoseHierarchyController extends Controller
   @Override
   public void notifySubscribers() {
 
+  }
+
+  @Override
+  public HierarchyController getThis() {
+    return this;
   }
 
   @Override

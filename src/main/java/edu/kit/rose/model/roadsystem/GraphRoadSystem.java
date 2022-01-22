@@ -3,6 +3,7 @@ package edu.kit.rose.model.roadsystem;
 import edu.kit.rose.infrastructure.Box;
 import edu.kit.rose.infrastructure.DualSetObserver;
 import edu.kit.rose.infrastructure.Movement;
+import edu.kit.rose.infrastructure.SimpleDualSetObservable;
 import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.model.plausibility.criteria.CriteriaManager;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
@@ -18,7 +19,8 @@ import java.util.Collection;
  * A Standard implementation of a {@link RoadSystem}
  * using a Graph for holding the connections between the {@link Segment}s.
  */
-public class GraphRoadSystem implements RoadSystem {
+public class GraphRoadSystem extends SimpleDualSetObservable<Element, Connection, RoadSystem>
+        implements RoadSystem {
 
   /**
    * Constructor.

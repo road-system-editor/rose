@@ -18,7 +18,7 @@ import java.util.Collection;
  * A Standard implementation of a {@link RoadSystem}
  * using a Graph for holding the connections between the {@link Segment}s.
  */
-class GraphRoadSystem implements RoadSystem {
+public class GraphRoadSystem implements RoadSystem {
 
   /**
    * Constructor.

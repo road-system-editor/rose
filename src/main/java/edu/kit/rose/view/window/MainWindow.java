@@ -2,11 +2,13 @@ package edu.kit.rose.view.window;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import edu.kit.rose.controller.navigation.Navigator;
 import edu.kit.rose.view.commons.FxmlUtility;
 import edu.kit.rose.view.panel.hierarchy.HierarchyPanel;
 import edu.kit.rose.view.panel.problem.ProblemOverviewPanel;
 import edu.kit.rose.view.panel.roadsystem.RoadSystemPanel;
 import edu.kit.rose.view.panel.segmentbox.SegmentBoxPanel;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -39,6 +41,12 @@ public class MainWindow extends RoseWindow {
   public MainWindow(Stage stage,
                     Injector injector) {
     super(stage, injector);
+  }
+
+  @Override
+  public void close() {
+    super.close();
+    Platform.exit();
   }
 
   @Override

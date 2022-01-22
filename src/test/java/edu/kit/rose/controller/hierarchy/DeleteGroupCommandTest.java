@@ -13,15 +13,13 @@ import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.elements.Base;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Group;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit test for {@link DeleteGroupCommand}.
@@ -127,7 +125,7 @@ class DeleteGroupCommandTest {
   void execute() {
     DeleteGroupCommand command = new DeleteGroupCommand(this.project, this.group);
     command.execute();
-    assertNull(this.group);
+    Assertions.assertNull(this.group);
   }
 
   @Test

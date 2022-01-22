@@ -7,13 +7,14 @@ import edu.kit.rose.model.plausibility.criteria.CriteriaManager;
 import edu.kit.rose.model.roadsystem.GraphRoadSystem;
 import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.TimeSliceSetting;
-import edu.kit.rose.model.roadsystem.elements.*;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import edu.kit.rose.model.roadsystem.elements.Element;
+import edu.kit.rose.model.roadsystem.elements.Group;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit Test for {@link CreateGroupCommand}.

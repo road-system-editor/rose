@@ -48,7 +48,4 @@ public interface Segment extends Element, Comparable<Segment> {
    * @param movement the movement that is to be applied.
    */
   void move(Movement movement);
-
-
-  Date getSegmentDate();
 }

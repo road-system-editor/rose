@@ -8,18 +8,22 @@ import edu.kit.rose.model.roadsystem.attributes.AttributeType;
  */
 abstract class RampSegment extends Base {
 
+  //TODO: add attributes for rampConnector
+
   private Connector rampConnector;
 
-  public RampSegment() {
-    super();
+  public RampSegment(SegmentType segmentType) {
+    super(segmentType);
+    initRamp();
+    connectors.add(rampConnector);
   }
 
-  public RampSegment(String name) {
-    super(name);
-    AttributeAccessor<?> rampLaneCount = new AttributeAccessor<>();
-    AttributeAccessor<?> rampSpeedLimit = new AttributeAccessor<>();
-    this.attributeAccessors.add(rampLaneCount);
-    this.attributeAccessors.add(rampSpeedLimit);
+  public RampSegment(SegmentType segmentType, String name) {
+    super(segmentType, name);
+  }
+
+  private static void initRamp() {
+    //TODO: implement, needs to set up ramp connector position and add attributeAccessors
   }
 
   /**
@@ -28,7 +32,7 @@ abstract class RampSegment extends Base {
    * @return the ramp Connector.
    */
   public Connector getRamp() {
-    return null;
+    return this.rampConnector;
   }
 
 

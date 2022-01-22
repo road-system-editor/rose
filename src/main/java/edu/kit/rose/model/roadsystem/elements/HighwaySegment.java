@@ -4,11 +4,11 @@ import edu.kit.rose.infrastructure.Box;
 import edu.kit.rose.infrastructure.Movement;
 import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.infrastructure.SimpleBox;
-import edu.kit.rose.infrastructure.SimpleUnitObservable;
+import edu.kit.rose.infrastructure.SimpleSortedBox;
 import edu.kit.rose.infrastructure.SortedBox;
-import edu.kit.rose.infrastructure.UnitObserver;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.measurements.Measurement;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -19,27 +19,83 @@ import java.util.List;
 public abstract class HighwaySegment implements Segment {
 
   //Attributes for the Element Interface
-  private SortedBox<AttributeAccessor<?>> attributeAccessors;
+  private List<AttributeAccessor<?>> attributeAccessors;
   private String name;
   private boolean isContainer;
   //Attributes for the Segment Interface
   private Position position;
-  private SegmentType segmentType;
-  private SortedBox<Measurement<?>> measurements;
+  protected SegmentType segmentType;
+  private List<Measurement<?>> measurements;
   private Connector entryConnector;
   private Connector exitConnector;
 
-  private Date date;
+  private final Date date;
 
   HighwaySegment() {
     this.date = new Date();
     this.isContainer = false;
+    this.position = new Position(0, 0);
+    initializeAttributesAndConnectors(name);
+
+    //TODO: set Position
   }
 
   HighwaySegment(String name) {
     this.date = new Date();
-    this.name = name;
     this.isContainer = false;
+    this.position = new Position(0, 0);
+    initializeAttributesAndConnectors(name);
+  }
+
+  private void initializeAttributesAndConnectors(String name) {
+    final int standardLength = 100;
+    final int standardPitch = 0;
+    final int standardNrOfLanes = 1;
+    final boolean standardConurbation = false;
+    final int standardSpeedLimit = 100;
+    final int standardxcoordinate = 0;
+    final int standardyCoordinate = 0;
+
+    //Create all AttributeAccessors.
+    AttributeAccessor<String> nameAttribute = new AttributeAccessor<String>();
+    nameAttribute.setValue(name);
+    AttributeAccessor<Integer> lengthAttribute = new AttributeAccessor<Integer>();
+    lengthAttribute.setValue(standardLength);
+    AttributeAccessor<Integer> pitchAttribute = new AttributeAccessor<Integer>();
+    pitchAttribute.setValue(standardPitch);
+    AttributeAccessor<Integer> nrOfEntryLanesAttribute = new AttributeAccessor<Integer>();
+    nrOfEntryLanesAttribute.setValue(standardNrOfLanes);
+    AttributeAccessor<Integer> nrOfExitLanesAttribute = new AttributeAccessor<Integer>();
+    nrOfExitLanesAttribute.setValue(standardNrOfLanes);
+    AttributeAccessor<Boolean> conurbationAttribute = new AttributeAccessor<Boolean>();
+    conurbationAttribute.setValue(standardConurbation);
+    AttributeAccessor<Integer> speedLimitAttribute = new AttributeAccessor<Integer>();
+    speedLimitAttribute.setValue(standardSpeedLimit);
+
+    //TODO: AttributeAccessor need Constructor that takes AttributeType.
+
+    //Create Lists out of the Attribute Accessors.
+    List<AttributeAccessor<?>> attributeAccessorList = Arrays.asList(nameAttribute,
+        lengthAttribute, pitchAttribute, nrOfEntryLanesAttribute, nrOfExitLanesAttribute,
+        conurbationAttribute,
+        speedLimitAttribute);
+
+    List<AttributeAccessor<?>> entryAttributesList =
+        Arrays.asList(lengthAttribute, nrOfEntryLanesAttribute);
+
+    List<AttributeAccessor<?>> exitAttributesList =
+        Arrays.asList(lengthAttribute, nrOfExitLanesAttribute);
+
+    //Set the lists as the attributes.
+    this.attributeAccessors = new ArrayList<>(attributeAccessorList);
+    this.entryConnector = new Connector(ConnectorType.ENTRY,
+        new Position(standardxcoordinate - standardLength / 2,
+            standardyCoordinate - standardLength / 2),
+        entryAttributesList);
+    this.exitConnector = new Connector(ConnectorType.EXIT,
+        new Position(standardxcoordinate + standardLength / 2,
+            standardyCoordinate + standardLength / 2), exitAttributesList);
+
   }
 
   /**
@@ -62,7 +118,7 @@ public abstract class HighwaySegment implements Segment {
 
   @Override
   public SortedBox<AttributeAccessor<?>> getAttributeAccessors() {
-    return this.attributeAccessors;
+    return new SimpleSortedBox<>(this.attributeAccessors);
   }
 
   @Override
@@ -72,7 +128,7 @@ public abstract class HighwaySegment implements Segment {
 
   @Override
   public boolean isContainer() {
-    return this.isContainer;
+    return false;
   }
 
   @Override
@@ -82,7 +138,7 @@ public abstract class HighwaySegment implements Segment {
 
   @Override
   public SortedBox<Measurement<?>> getMeasurements() {
-    return this.measurements;
+    return new SimpleSortedBox<>(this.measurements);
   }
 
   @Override

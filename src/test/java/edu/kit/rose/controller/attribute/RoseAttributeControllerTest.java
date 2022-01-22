@@ -29,17 +29,11 @@ public class RoseAttributeControllerTest {
     applicationDataSystem = modelFactory.createApplicationDataSystem();
     attributeController = new RoseAttributeController(new RoseChangeCommandBuffer(),
         new RoseStorageLock(), modelFactory.createProject(), applicationDataSystem);
-    accessor = new AttributeAccessor<>() {
-      @Override
-      public void setValue(Integer value) {
-        testInt = value;
-      }
-
-      @Override
-      public Integer getValue() {
-        return testInt;
-      }
-    };
+    accessor = new AttributeAccessor<>(
+        AttributeType.LANE_COUNT,
+        () -> testInt,
+        newValue -> testInt = newValue
+    );
     testInt = INITIAL_VALUE;
   }
 

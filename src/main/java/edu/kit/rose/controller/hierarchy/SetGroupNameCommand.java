@@ -33,7 +33,6 @@ public class SetGroupNameCommand implements ChangeCommand {
 
   @Override
   public void unexecute() {
-
     setNameToGroup(this.lastName);
   }
 

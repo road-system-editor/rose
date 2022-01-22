@@ -30,6 +30,7 @@ public class Base extends HighwaySegment implements Segment, UnitObservable<Base
   public Base(String name) {
     super(name);
     this.observerList = new ArrayList<>();
+    segmentType = SegmentType.BASE;
   }
 
   @Override

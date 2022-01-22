@@ -19,13 +19,13 @@ import java.util.List;
 public abstract class HighwaySegment implements Segment {
 
   //Attributes for the Element Interface
-  private List<AttributeAccessor<?>> attributeAccessors;
+  protected List<AttributeAccessor<?>> attributeAccessors;
   private String name;
   private boolean isContainer;
   //Attributes for the Segment Interface
   private Position position;
   protected SegmentType segmentType;
-  private List<Measurement<?>> measurements;
+  protected List<Measurement<?>> measurements;
   private Connector entryConnector;
   private Connector exitConnector;
 

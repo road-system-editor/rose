@@ -58,6 +58,11 @@ public class RoseHierarchyController extends Controller
   }
 
   @Override
+  public void toggleSegmentSelection(Segment segment) {
+
+  }
+
+  @Override
   public void addSubscriber(SetObserver<Segment, HierarchyController> observer) {
 
   }

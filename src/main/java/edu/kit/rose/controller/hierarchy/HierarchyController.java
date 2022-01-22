@@ -40,4 +40,11 @@ public interface HierarchyController extends SetObservable<Segment, HierarchyCon
    * @param name  the new name of the group
    */
   void setGroupName(Group group, String name);
+
+  /**
+   * Toggles the selection state of a given segment.
+   *
+   * @param segment the segment to toggle the selection state
+   */
+  void toggleSegmentSelection(Segment segment);
 }

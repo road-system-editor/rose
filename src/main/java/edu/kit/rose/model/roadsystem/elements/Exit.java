@@ -43,4 +43,9 @@ public class Exit extends RampSegment {
   public void removeSubscriber(UnitObserver<Element> observer) {
 
   }
+
+  @Override
+  public SegmentType getSegmentType() {
+    return SegmentType.EXIT;
+  }
 }

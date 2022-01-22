@@ -5,6 +5,7 @@ import edu.kit.rose.infrastructure.Movement;
 import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.model.roadsystem.measurements.Measurement;
+import java.util.Date;
 
 /**
  * A Piece of a road in a RoadSystem. (see: Pflichtenheft: "Straßensegment")
@@ -47,4 +48,7 @@ public interface Segment extends Element, Comparable<Segment> {
    * @param movement the movement that is to be applied.
    */
   void move(Movement movement);
+
+
+  Date getSegmentDate();
 }

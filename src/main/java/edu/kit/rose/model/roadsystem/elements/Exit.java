@@ -15,49 +15,18 @@ import edu.kit.rose.model.roadsystem.measurements.Measurement;
  */
 public class Exit extends RampSegment {
 
-  @Override
-  public SortedBox<AttributeAccessor<?>> getAttributeAccessors() {
-    return null;
+  /**
+   *
+   */
+  public Exit() {
+    super();
   }
 
-  @Override
-  public String getName() {
-    return null;
-  }
-
-  @Override
-  public boolean isContainer() {
-    return false;
-  }
-
-  @Override
-  public SegmentType getSegmentType() {
-    return null;
-  }
-
-  @Override
-  public SortedBox<Measurement<?>> getMeasurements() {
-    return null;
-  }
-
-  @Override
-  public Box<Connector> getConnectors() {
-    return null;
-  }
-
-  @Override
-  public Position getCenter() {
-    return null;
-  }
-
-  @Override
-  public void move(Movement movement) {
-
-  }
-
-  @Override
-  public int compareTo(Segment o) {
-    return 0;
+  /**
+   * @param name
+   */
+  public Exit(String name) {
+    super(name);
   }
 
   @Override

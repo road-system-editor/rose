@@ -1,7 +1,36 @@
 <?import javafx.scene.layout.Pane?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.BorderPane?>
+<?import edu.kit.rose.view.commons.SearchBar?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.geometry.Insets?>
 <fx:root xmlns="http://javafx.com/javafx"
-         xmlns:fx="http://javafx.com/fxml" type="Pane">
-    <Button fx:id="createGroupButton" text="Create group" />
+         xmlns:fx="http://javafx.com/fxml" type="Pane"
+         fx:id="parentContainer"
+         minWidth="230">
+
+    <BorderPane fx:id="hierarchyLayout" prefWidth="${parentContainer.width}" prefHeight="${parentContainer.height}">
+        <padding>
+            <Insets top="5" bottom="5"/>
+        </padding>
+        <top>
+            <SearchBar fx:id="searchBar">
+            </SearchBar>
+        </top>
+        <center>
+            <ListView fx:id="elementsListView">
+                <padding>
+                    <Insets bottom="5"/>
+                </padding>
+            </ListView>
+        </center>
+        <bottom>
+            <Button fx:id="createGroupButton" prefWidth="${hierarchyLayout.width}" text="Gruppe aus Selektion">
+                <padding>
+                    <Insets top="5"/>
+                </padding>
+            </Button>
+        </bottom>
+    </BorderPane>
 </fx:root>

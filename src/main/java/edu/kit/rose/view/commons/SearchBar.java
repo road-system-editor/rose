@@ -21,7 +21,7 @@ public class SearchBar extends FxmlContainer implements UnitObservable<SearchBar
    * Requires {@link #setTranslator(LocalizedTextProvider)}
    */
   public SearchBar() {
-    super("search_bar.fxml");
+    super("SearchBar.fxml");
   }
 
   @Override

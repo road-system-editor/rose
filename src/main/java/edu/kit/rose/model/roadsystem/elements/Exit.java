@@ -7,6 +7,8 @@ import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.infrastructure.UnitObserver;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.measurements.Measurement;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Represents a freeway exit.
@@ -15,37 +17,36 @@ import edu.kit.rose.model.roadsystem.measurements.Measurement;
  */
 public class Exit extends RampSegment {
 
+  private final Set<UnitObserver<Element>> observers = new HashSet<>();
+
+  //TODO: add javadoc
   /**
    *
    */
   public Exit() {
-    super();
+    super(SegmentType.EXIT);
   }
 
+  //TODO: add javadoc
   /**
    * @param name
    */
   public Exit(String name) {
-    super(name);
-  }
-
-  @Override
-  public void notifySubscribers() {
-
+    super(SegmentType.EXIT, name);
   }
 
   @Override
   public void addSubscriber(UnitObserver<Element> observer) {
-
+    observers.add(observer);
   }
 
   @Override
   public void removeSubscriber(UnitObserver<Element> observer) {
-
+    observers.remove(observer);
   }
 
   @Override
-  public SegmentType getSegmentType() {
-    return SegmentType.EXIT;
+  public void notifySubscribers() {
+    observers.forEach(o -> o.notifyChange(this));
   }
 }

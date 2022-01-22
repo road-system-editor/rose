@@ -11,91 +11,80 @@ import edu.kit.rose.model.roadsystem.measurements.Measurement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * A base Class for a {@link Segment} that implements the basic functionality all Segments share.
  */
 public abstract class HighwaySegment implements Segment {
 
-  //Attributes for the Element Interface
-  protected List<AttributeAccessor<?>> attributeAccessors;
+  private static final int INITIAL_CONNECTOR_DISTANCE_TO_CENTER = 50;
+
+  protected final Set<AttributeAccessor<?>> attributeAccessors = new HashSet<>();
+  protected final Set<Connector> connectors = new HashSet<>();
+  protected final Set<Measurement<?>> measurements = new HashSet<>();
+
+  private final SegmentType segmentType;
+
   private String name;
-  private boolean isContainer;
-  //Attributes for the Segment Interface
-  private Position position;
-  protected SegmentType segmentType;
-  protected List<Measurement<?>> measurements;
+  private int length = 2 * INITIAL_CONNECTOR_DISTANCE_TO_CENTER;
+  private int pitch = 0;
+  private int nrOfEntryLanes = 1;
+  private int nrOfExitLanes = 1;
+  private boolean conurbation = false;
+  private int speedLimit = 100;
+  private Position center = new Position(0, 0);
+
   private Connector entryConnector;
   private Connector exitConnector;
 
-  private final Date date;
+  private final Date creationTime = new Date();
 
-  HighwaySegment() {
-    this.date = new Date();
-    this.isContainer = false;
-    this.position = new Position(0, 0);
-    initializeAttributesAndConnectors(name);
+  HighwaySegment(SegmentType segmentType) {
+    this(segmentType, segmentType.name());
 
     //TODO: set Position
   }
 
-  HighwaySegment(String name) {
-    this.date = new Date();
-    this.isContainer = false;
-    this.position = new Position(0, 0);
-    initializeAttributesAndConnectors(name);
+  HighwaySegment(SegmentType segmentType, String name) {
+    this.segmentType = segmentType;
+    this.name = name;
+    init();
   }
 
-  private void initializeAttributesAndConnectors(String name) {
-    final int standardLength = 100;
-    final int standardPitch = 0;
-    final int standardNrOfLanes = 1;
-    final boolean standardConurbation = false;
-    final int standardSpeedLimit = 100;
-    final int standardxcoordinate = 0;
-    final int standardyCoordinate = 0;
+  private void init() {
+
 
     //Create all AttributeAccessors.
-    AttributeAccessor<String> nameAttribute = new AttributeAccessor<String>();
-    nameAttribute.setValue(name);
-    AttributeAccessor<Integer> lengthAttribute = new AttributeAccessor<Integer>();
-    lengthAttribute.setValue(standardLength);
-    AttributeAccessor<Integer> pitchAttribute = new AttributeAccessor<Integer>();
-    pitchAttribute.setValue(standardPitch);
-    AttributeAccessor<Integer> nrOfEntryLanesAttribute = new AttributeAccessor<Integer>();
-    nrOfEntryLanesAttribute.setValue(standardNrOfLanes);
-    AttributeAccessor<Integer> nrOfExitLanesAttribute = new AttributeAccessor<Integer>();
-    nrOfExitLanesAttribute.setValue(standardNrOfLanes);
-    AttributeAccessor<Boolean> conurbationAttribute = new AttributeAccessor<Boolean>();
-    conurbationAttribute.setValue(standardConurbation);
-    AttributeAccessor<Integer> speedLimitAttribute = new AttributeAccessor<Integer>();
-    speedLimitAttribute.setValue(standardSpeedLimit);
+    AttributeAccessor<String> nameAccessor = new AttributeAccessor<>();
+    attributeAccessors.add(nameAccessor);
+    AttributeAccessor<Integer> lengthAccessor = new AttributeAccessor<>();
+    attributeAccessors.add(lengthAccessor);
+    AttributeAccessor<Integer> pitchAccessor = new AttributeAccessor<>();
+    attributeAccessors.add(pitchAccessor);
+    AttributeAccessor<Integer> nrOfEntryLanesAccessor = new AttributeAccessor<>();
+    attributeAccessors.add(nrOfEntryLanesAccessor);
+    AttributeAccessor<Integer> nrOfExitLanesAccessor = new AttributeAccessor<>();
+    attributeAccessors.add(nrOfExitLanesAccessor);
+    AttributeAccessor<Boolean> conurbationAccessor = new AttributeAccessor<>();
+    attributeAccessors.add(conurbationAccessor);
+    AttributeAccessor<Integer> speedLimitAccessor = new AttributeAccessor<>();
+    attributeAccessors.add(speedLimitAccessor);
 
-    //TODO: AttributeAccessor need Constructor that takes AttributeType.
-
-    //Create Lists out of the Attribute Accessors.
-    List<AttributeAccessor<?>> attributeAccessorList = Arrays.asList(nameAttribute,
-        lengthAttribute, pitchAttribute, nrOfEntryLanesAttribute, nrOfExitLanesAttribute,
-        conurbationAttribute,
-        speedLimitAttribute);
+    //TODO: Redo when AttributeAccessors are implemented
 
     List<AttributeAccessor<?>> entryAttributesList =
-        Arrays.asList(lengthAttribute, nrOfEntryLanesAttribute);
+        Arrays.asList(lengthAccessor, nrOfEntryLanesAccessor);
 
     List<AttributeAccessor<?>> exitAttributesList =
-        Arrays.asList(lengthAttribute, nrOfExitLanesAttribute);
+        Arrays.asList(lengthAccessor, nrOfExitLanesAccessor);
 
-    //Set the lists as the attributes.
-    this.attributeAccessors = new ArrayList<>(attributeAccessorList);
     this.entryConnector = new Connector(ConnectorType.ENTRY,
-        new Position(standardxcoordinate - standardLength / 2,
-            standardyCoordinate - standardLength / 2),
-        entryAttributesList);
+        new Position(center.getX(), -INITIAL_CONNECTOR_DISTANCE_TO_CENTER), entryAttributesList);
     this.exitConnector = new Connector(ConnectorType.EXIT,
-        new Position(standardxcoordinate + standardLength / 2,
-            standardyCoordinate + standardLength / 2), exitAttributesList);
-
+        new Position(center.getX(), INITIAL_CONNECTOR_DISTANCE_TO_CENTER), exitAttributesList);
   }
 
   /**
@@ -104,7 +93,7 @@ public abstract class HighwaySegment implements Segment {
    * @return the entry Connector for this Segment.
    */
   public Connector getEntry() {
-    return entryConnector;
+    return this.entryConnector;
   }
 
   /**
@@ -113,12 +102,12 @@ public abstract class HighwaySegment implements Segment {
    * @return the exit Connector for this Segment.
    */
   public Connector getExit() {
-    return this.entryConnector;
+    return this.exitConnector;
   }
 
   @Override
   public SortedBox<AttributeAccessor<?>> getAttributeAccessors() {
-    return new SimpleSortedBox<>(this.attributeAccessors);
+    return new SimpleSortedBox<>(new ArrayList<>(this.attributeAccessors));
   }
 
   @Override
@@ -138,28 +127,35 @@ public abstract class HighwaySegment implements Segment {
 
   @Override
   public SortedBox<Measurement<?>> getMeasurements() {
-    return new SimpleSortedBox<>(this.measurements);
+    return new SimpleSortedBox<>(new ArrayList<>(this.measurements));
   }
 
   @Override
   public Box<Connector> getConnectors() {
-    return new SimpleBox<Connector>(Arrays.asList(this.entryConnector, this.exitConnector));
+    return new SimpleBox<>(new ArrayList<>(this.connectors));
   }
 
   @Override
   public Position getCenter() {
-    return this.position;
+    return this.center;
   }
 
   @Override
   public void move(Movement movement) {
-    position.setX(position.getX() + movement.getX());
-    position.setY(position.getY() + movement.getY());
+    center.setX(center.getX() + movement.getX());
+    center.setY(center.getY() + movement.getY());
+    connectors.forEach(c -> c.move(movement));
   }
 
   @Override
   public int compareTo(Segment segment) {
-    return date.compareTo(segment.getSegmentDate());
+    //TODO: make more easy to look at
+    try {
+      var highWaySegment = (HighwaySegment) segment;
+      return creationTime.compareTo(highWaySegment.getCreationTime());
+    } catch (ClassCastException e) {
+      return  segment.compareTo(this);
+    }
   }
 
   @Override
@@ -167,8 +163,7 @@ public abstract class HighwaySegment implements Segment {
     return this;
   }
 
-  @Override
-  public Date getSegmentDate() {
-    return this.date;
+  private Date getCreationTime() {
+    return this.creationTime;
   }
 }

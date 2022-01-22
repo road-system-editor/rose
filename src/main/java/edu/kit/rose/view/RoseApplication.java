@@ -21,6 +21,8 @@ import edu.kit.rose.model.Project;
 import edu.kit.rose.view.window.CriteriaWindow;
 import edu.kit.rose.view.window.MainWindow;
 import edu.kit.rose.view.window.MeasurementsWindow;
+import edu.kit.rose.view.window.RoseWindow;
+import edu.kit.rose.view.window.WindowState;
 import java.nio.file.Path;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -83,7 +85,7 @@ public class RoseApplication extends Application implements Navigator {
    * <a href=https://openjfx.io/javadoc/17/javafx.graphics/javafx/application/Application.html#start(javafx.stage.Stage)}>inherited from Application</a>.
    */
   @Override
-  public void start(Stage primaryStage) throws Exception {
+  public void start(Stage primaryStage) {
     this.injector = Guice.createInjector(new RoseModule(this));
 
     this.mainWindow = new MainWindow(primaryStage, injector);
@@ -92,7 +94,27 @@ public class RoseApplication extends Application implements Navigator {
 
   @Override
   public void showWindow(WindowType windowType) {
-    return;
+    switch (windowType) {
+      case CRITERION -> {
+        if (!canBeShown(this.criteriaWindow)) {
+          this.criteriaWindow = new CriteriaWindow(this.injector);
+        }
+        this.criteriaWindow.show();
+      }
+      case ROADSYSTEM, Attribute, MEASUREMENT_EDITOR -> this.mainWindow.show();
+      case MEASUREMENT_OVERVIEW -> {
+        if (!canBeShown(measurementsWindow)) {
+          measurementsWindow = new MeasurementsWindow(this.injector);
+        }
+        measurementsWindow.show();
+      }
+      default -> throw new RuntimeException("RoseApplication can't show window type " + windowType);
+    }
+  }
+
+  private static boolean canBeShown(RoseWindow window) {
+    return window != null && (window.getState() == WindowState.INITIALIZED
+        || window.getState() == WindowState.VISIBLE);
   }
 
   @Override

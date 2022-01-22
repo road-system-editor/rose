@@ -3,12 +3,15 @@ package edu.kit.rose.view.window;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import edu.kit.rose.controller.plausibility.PlausibilityController;
-import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.model.ApplicationDataSystem;
 import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterion;
+import edu.kit.rose.view.commons.FxmlUtility;
 import edu.kit.rose.view.panel.criterion.CriteriaOverviewPanel;
 import edu.kit.rose.view.panel.criterion.CriterionPanel;
 import javafx.fxml.FXML;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.ScrollPane;
 import javafx.stage.Stage;
 
 /**
@@ -27,6 +30,8 @@ public class CriteriaWindow extends RoseWindow {
    */
   @FXML
   private CriteriaOverviewPanel overview;
+  @FXML
+  private ScrollPane criterionContainer;
   /**
    * The criterion editor panel is contained in the criteria window.
    * The criterion shown in this panel must match the criterion selected in the {@link #overview}
@@ -47,15 +52,27 @@ public class CriteriaWindow extends RoseWindow {
 
   @Override
   protected void configureStage(Stage stage, Injector injector) {
-    // fxml loading
-    overview.setController(plausibilityController);
-    overview.setManager(applicationData.getCriteriaManager());
+    Parent tree = FxmlUtility.loadFxml(null, this, getClass().getResource("CriteriaWindow.fxml"));
+    var scene = new Scene(tree);
+
+    stage.setScene(scene);
+    stage.setWidth(640); // TODO magic numbers
+    stage.setHeight(360);
+
+    getTranslator().subscribeToOnLanguageChanged(lang -> updateTranslatableStrings(stage));
+    updateTranslatableStrings(stage);
+
     overview.setSelectionListener(this::onSelect);
+  }
+
+  private void updateTranslatableStrings(Stage stage) {
+    stage.setTitle(getTranslator().getLocalizedText("view.window.criteria.title"));
   }
 
   private void onSelect(PlausibilityCriterion plausibilityCriterion) {
     // implementation detail
     criterion = CriterionPanel.forCriterion(getTranslator(), this.plausibilityController,
         plausibilityCriterion);
+    criterionContainer.setContent(criterion);
   }
 }

@@ -1,9 +1,11 @@
 package edu.kit.rose.view.panel.criterion;
 
+import com.google.inject.Inject;
 import edu.kit.rose.controller.plausibility.PlausibilityController;
 import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
+import edu.kit.rose.model.ApplicationDataSystem;
 import edu.kit.rose.model.plausibility.criteria.CriteriaManager;
 import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterion;
 import edu.kit.rose.view.commons.FxmlContainer;
@@ -18,8 +20,10 @@ import javafx.scene.control.ScrollPane;
  */
 public class CriteriaOverviewPanel extends FxmlContainer
     implements SetObserver<PlausibilityCriterion, CriteriaManager> {
+  @Inject
   private PlausibilityController controller;
-  private CriteriaManager manager;
+  @Inject
+  private ApplicationDataSystem applicationDataSystem;
   private CriterionHandle selected;
   private Consumer<PlausibilityCriterion> selectionListener;
 
@@ -37,31 +41,9 @@ public class CriteriaOverviewPanel extends FxmlContainer
 
   /**
    * Creates a new CriteriaOverviewPanel.
-   *
-   * {@link #setController(PlausibilityController)} + {@link #setManager(CriteriaManager)} +
-   * {@link #setTranslator(LocalizedTextProvider)} + {@link #setSelectionListener(Consumer)}
-   * needs to be called!
    */
   public CriteriaOverviewPanel() {
-    super("criteria_overview_panel.fxml");
-  }
-
-  /**
-   * Setter for {@link PlausibilityController} held within.
-   *
-   * @param controller is the PlausibilityController to be set.
-   */
-  public void setController(PlausibilityController controller) {
-    this.controller = controller;
-  }
-
-  /**
-   * Setter for the {@link CriteriaManager} held within.
-   *
-   * @param manager is the CriteriaManager to be set.
-   */
-  public void setManager(CriteriaManager manager) {
-    this.manager = manager;
+    super("CriteriaOverviewPanel.fxml");
   }
 
   /**

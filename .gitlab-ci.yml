@@ -33,7 +33,7 @@ test:
 checkstyle:
   stage: test
   needs: []
-  script: gradle checkstyleMain checkstyleTest
+  script: gradle checkstyleMain
   cache:
     key: "$CI_COMMIT_REF_NAME"
     policy: pull
@@ -44,4 +44,20 @@ checkstyle:
     when: always
     paths:
       - build/reports/checkstyle/
-  allow_failure: true
+  allow_failure: false
+
+checkstyle_test:
+  stage: test
+  needs: []
+  script: gradle checkstyleTest
+  cache:
+    key: "$CI_COMMIT_REF_NAME"
+    policy: pull
+    paths:
+      - build
+      - .gradle
+  artifacts:
+    when: always
+    paths:
+      - build/reports/checkstyle/
+  allow_failure: false

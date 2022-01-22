@@ -8,12 +8,16 @@ import edu.kit.rose.model.roadsystem.elements.Exit;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 
 /**
- * The segment view factory can create a {@link SegmentView} for a given {@link edu.kit.rose.model.roadsystem.elements.Segment}.
+ * The segment view factory can create a {@link SegmentView} for a given
+ * {@link Segment}.
  */
 public class SegmentViewFactory {
   private final LocalizedTextProvider translator;
   private final RoadSystemController controller;
 
+  /**
+   * Creates a new segment view factory.
+   */
   public SegmentViewFactory(LocalizedTextProvider translator, RoadSystemController controller) {
     this.translator = translator;
     this.controller = controller;

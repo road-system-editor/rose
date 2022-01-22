@@ -101,6 +101,11 @@ public class CriteriaManager implements SetObservable<PlausibilityCriterion, Cri
   }
 
   @Override
+  public CriteriaManager getThis() {
+    return this;
+  }
+
+  @Override
   public void notifyChange(PlausibilityCriterion unit) {
 
   }

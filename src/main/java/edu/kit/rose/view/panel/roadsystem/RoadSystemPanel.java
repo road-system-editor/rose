@@ -2,7 +2,6 @@ package edu.kit.rose.view.panel.roadsystem;
 
 import edu.kit.rose.controller.application.ApplicationController;
 import edu.kit.rose.controller.attribute.AttributeController;
-import edu.kit.rose.controller.hierarchy.HierarchyController;
 import edu.kit.rose.controller.measurement.MeasurementController;
 import edu.kit.rose.controller.roadsystem.RoadSystemController;
 import edu.kit.rose.infrastructure.DualSetObserver;
@@ -10,11 +9,11 @@ import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.elements.Connection;
-import edu.kit.rose.model.roadsystem.elements.Connector;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Segment;
-import edu.kit.rose.view.commons.FXMLContainer;
+import edu.kit.rose.view.commons.FxmlContainer;
 import edu.kit.rose.view.commons.SegmentView;
+import java.util.Collection;
 import java.util.List;
 import javafx.fxml.FXML;
 
@@ -27,8 +26,7 @@ import javafx.fxml.FXML;
  * @implNote Uses SetObserver as anonymous class
  *      to subscribe to selection events from RoadsystemController
  */
-@SuppressWarnings("checkstyle:JavadocTagContinuationIndentation")
-public class RoadSystemPanel extends FXMLContainer
+public class RoadSystemPanel extends FxmlContainer
     implements DualSetObserver<Element, Connection, RoadSystem> {
   private ApplicationController applicationController;
   private RoadSystemController roadSystemController;
@@ -118,6 +116,11 @@ public class RoadSystemPanel extends FXMLContainer
   @Override
   protected void updateTranslatableStrings(Language lang) {
 
+  }
+
+  @Override
+  protected Collection<FxmlContainer> getSubFxmlContainer() {
+    return null;
   }
 
   @Override

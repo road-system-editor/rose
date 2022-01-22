@@ -109,6 +109,11 @@ public class RoseRoadSystemController extends Controller
   }
 
   @Override
+  public RoadSystemController getThis() {
+    return this;
+  }
+
+  @Override
   public void notifyAddition(Segment unit) {
 
   }

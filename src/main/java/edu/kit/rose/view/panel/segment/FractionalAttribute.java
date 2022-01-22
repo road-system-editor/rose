@@ -2,18 +2,23 @@ package edu.kit.rose.view.panel.segment;
 
 import edu.kit.rose.controller.attribute.AttributeController;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
+import edu.kit.rose.view.commons.FxmlContainer;
+import java.util.Collection;
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
 
+
+
 /**
- * This is the {@link EditableAttribute} implementation for the {@link edu.kit.rose.model.roadsystem.DataType} {@code FRACTIONAL}.
+ * This is the {@link EditableAttribute} implementation for the
+ * {@link edu.kit.rose.model.roadsystem.DataType} {@code FRACTIONAL}.
  */
 class FractionalAttribute extends EditableAttribute<Double> {
   /**
    * Creates a new fractional attribute editor for the given {@code attribute}.
    *
-   * @param attribute
-   * @param controller
+   * @param attribute the attribute to display.
+   * @param controller the controller that should handle attribute value updates.
    */
   FractionalAttribute(AttributeAccessor<Double> attribute, AttributeController controller) {
     super(attribute, controller);
@@ -27,5 +32,10 @@ class FractionalAttribute extends EditableAttribute<Double> {
   @Override
   protected Node createInputField() {
     return new TextField();
+  }
+
+  @Override
+  protected Collection<FxmlContainer> getSubFxmlContainer() {
+    return null;
   }
 }

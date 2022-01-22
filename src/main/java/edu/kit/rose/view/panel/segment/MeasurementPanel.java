@@ -5,17 +5,18 @@ import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.model.roadsystem.TimeSliceSetting;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.measurements.Measurement;
-import edu.kit.rose.view.commons.FXMLContainer;
+import edu.kit.rose.view.commons.FxmlContainer;
 import edu.kit.rose.view.commons.MeasurementTableFactory;
+import java.util.Collection;
+import java.util.List;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 
-import java.util.List;
-
 /**
- * A measurement panel allows the user to see and configure time-dependant measurements for a given segment.
+ * A measurement panel allows the user to see and configure time-dependant measurements for a given
+ * segment.
  */
-class MeasurementPanel extends FXMLContainer {
+class MeasurementPanel extends FxmlContainer {
   private TabPane tabPane;
   private MeasurementController controller;
   private TimeSliceSetting timeSliceSetting;
@@ -30,8 +31,6 @@ class MeasurementPanel extends FXMLContainer {
 
   /**
    * Sets the time slice settings that the measurement should be displayed with.
-   *
-   * @param timeSliceSetting
    */
   public void setTimeSliceSetting(TimeSliceSetting timeSliceSetting) {
     this.timeSliceSetting = timeSliceSetting;
@@ -39,8 +38,6 @@ class MeasurementPanel extends FXMLContainer {
 
   /**
    * Sets the segment whose values should be displayed in the measurement panel.
-   *
-   * @param segment
    */
   public void setSegment(Segment segment) {
     this.segment = segment;
@@ -61,10 +58,13 @@ class MeasurementPanel extends FXMLContainer {
 
   }
 
+  @Override
+  protected Collection<FxmlContainer> getSubFxmlContainer() {
+    return null;
+  }
+
   /**
    * Sets the controller that handles measurement value updates.
-   *
-   * @param controller
    */
   public void setController(MeasurementController controller) {
     this.controller = controller;

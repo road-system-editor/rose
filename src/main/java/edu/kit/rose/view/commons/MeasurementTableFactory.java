@@ -3,9 +3,12 @@ package edu.kit.rose.view.commons;
 import edu.kit.rose.model.roadsystem.TimeSliceSetting;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.measurements.MeasurementType;
-
 import java.util.Collection;
 
+/**
+ * The measurement table factory is responsible for creating {@link MeasurementTable}s for a given
+ * measurement type.
+ */
 public class MeasurementTableFactory {
   private final Collection<Segment> segments;
   private final TimeSliceSetting timeSliceSetting;
@@ -15,6 +18,9 @@ public class MeasurementTableFactory {
     this.timeSliceSetting = timeSliceSetting;
   }
 
+  /**
+   * Creates a measurement table for a given measurement type.
+   */
   public MeasurementTable<?> forMeasurementType(MeasurementType type) {
     switch (type) {
       case DEMAND:

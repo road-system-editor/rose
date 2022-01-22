@@ -22,4 +22,9 @@ class HeavyTrafficProportion extends Measurement<Double> {
   public void notifySubscribers() {
 
   }
+
+  @Override
+  public Measurement<Double> getThis() {
+    return this;
+  }
 }

@@ -1,13 +1,25 @@
 package edu.kit.rose.controller;
 
 import edu.kit.rose.controller.application.ApplicationController;
+import edu.kit.rose.controller.application.RoseApplicationController;
 import edu.kit.rose.controller.attribute.AttributeController;
+import edu.kit.rose.controller.attribute.RoseAttributeController;
+import edu.kit.rose.controller.command.ChangeCommandBuffer;
+import edu.kit.rose.controller.command.RoseChangeCommandBuffer;
+import edu.kit.rose.controller.commons.StorageLock;
 import edu.kit.rose.controller.hierarchy.HierarchyController;
+import edu.kit.rose.controller.hierarchy.RoseHierarchyController;
 import edu.kit.rose.controller.measurement.MeasurementController;
+import edu.kit.rose.controller.measurement.RoseMeasurementController;
 import edu.kit.rose.controller.navigation.Navigator;
 import edu.kit.rose.controller.plausibility.PlausibilityController;
+import edu.kit.rose.controller.plausibility.RosePlausibilityController;
 import edu.kit.rose.controller.project.ProjectController;
+import edu.kit.rose.controller.project.RoseProjectController;
 import edu.kit.rose.controller.roadsystem.RoadSystemController;
+import edu.kit.rose.controller.roadsystem.RoseRoadSystemController;
+import edu.kit.rose.controller.selection.RoseSelectionBuffer;
+import edu.kit.rose.controller.selection.SelectionBuffer;
 import edu.kit.rose.infrastructure.language.LanguageSelector;
 import edu.kit.rose.model.ApplicationDataSystem;
 import edu.kit.rose.model.Project;
@@ -19,6 +31,13 @@ import edu.kit.rose.model.Project;
  * multiple controller to work together.
  */
 public class ControllerFactory {
+  private final Navigator navigator;
+  private final LanguageSelector languageSelector;
+  private final ApplicationDataSystem applicationDataSystem;
+  private final Project project;
+  private final ChangeCommandBuffer changeCommandBuffer;
+  private final SelectionBuffer selectionBuffer;
+  private StorageLock storageLock;
 
   /**
    * Creates a new instance of {@link ControllerFactory}.
@@ -27,10 +46,17 @@ public class ControllerFactory {
    * @param languageSelector      component on which controllers can set the applications language
    * @param applicationDataSystem the model facade for application data
    * @param project               the model facade for project specific data
+   * @param storageLock           the coordinator for controller actions
    */
   public ControllerFactory(Navigator navigator, LanguageSelector languageSelector,
-                           ApplicationDataSystem applicationDataSystem, Project project) {
-
+                           ApplicationDataSystem applicationDataSystem, Project project,
+                           StorageLock storageLock) {
+    this.navigator = navigator;
+    this.languageSelector = languageSelector;
+    this.applicationDataSystem = applicationDataSystem;
+    this.project = project;
+    this.changeCommandBuffer = new RoseChangeCommandBuffer();
+    this.selectionBuffer = new RoseSelectionBuffer();
   }
 
   /**
@@ -39,7 +65,8 @@ public class ControllerFactory {
    * @return application controller instance
    */
   public ApplicationController getApplicationController() {
-    return null;
+    return new RoseApplicationController(this.changeCommandBuffer, this.storageLock,
+            this.languageSelector, this.applicationDataSystem);
   }
 
   /**
@@ -48,7 +75,8 @@ public class ControllerFactory {
    * @return attribute controller instance
    */
   public AttributeController getAttributeController() {
-    return null;
+    return new RoseAttributeController(this.changeCommandBuffer, this.storageLock, this.project,
+        this.applicationDataSystem);
   }
 
   /**
@@ -57,7 +85,7 @@ public class ControllerFactory {
    * @return hierarchy controller instance
    */
   public HierarchyController getHierarchyController() {
-    return null;
+    return new RoseHierarchyController(this.storageLock, this.selectionBuffer, this.project);
   }
 
   /**
@@ -66,7 +94,7 @@ public class ControllerFactory {
    * @return measurement controller instance
    */
   public MeasurementController getMeasurementController() {
-    return null;
+    return new RoseMeasurementController(this.storageLock, this.project);
   }
 
   /**
@@ -75,7 +103,8 @@ public class ControllerFactory {
    * @return plausibility controller instance
    */
   public PlausibilityController getPlausibilityController() {
-    return null;
+    return new RosePlausibilityController(this.storageLock, this.project,
+            this.applicationDataSystem);
   }
 
   /**
@@ -84,7 +113,7 @@ public class ControllerFactory {
    * @return project controller instance
    */
   public ProjectController getProjectController() {
-    return null;
+    return new RoseProjectController(this.storageLock, this.project);
   }
 
   /**
@@ -93,6 +122,7 @@ public class ControllerFactory {
    * @return roadsystem controller instance
    */
   public RoadSystemController getRoadSystemController() {
-    return null;
+    return new RoseRoadSystemController(this.changeCommandBuffer, this.storageLock,
+        this.selectionBuffer, this.project);
   }
 }

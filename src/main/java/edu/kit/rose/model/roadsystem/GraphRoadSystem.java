@@ -156,6 +156,11 @@ public class GraphRoadSystem extends SimpleDualSetObservable<Element, Connection
   }
 
   @Override
+  public RoadSystem getThis() {
+    return this;
+  }
+
+  @Override
   public void notifyChange(Connector unit) {
 
   }

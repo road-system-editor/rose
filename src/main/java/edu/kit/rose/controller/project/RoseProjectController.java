@@ -18,7 +18,7 @@ public class RoseProjectController extends Controller implements ProjectControll
    * @param storageLock         the coordinator for controller actions
    * @param project             the model facade for project data
    */
-  protected RoseProjectController(StorageLock storageLock, Project project) {
+  public RoseProjectController(StorageLock storageLock, Project project) {
     super(storageLock);
   }
 

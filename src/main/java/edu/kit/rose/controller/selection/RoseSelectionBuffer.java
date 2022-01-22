@@ -68,4 +68,9 @@ public class RoseSelectionBuffer implements SelectionBuffer {
   public void notifySubscribers() {
     observers.forEach(e -> e.notifyChange(this));
   }
+
+  @Override
+  public SelectionBuffer getThis() {
+    return this;
+  }
 }

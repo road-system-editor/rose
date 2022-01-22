@@ -29,6 +29,11 @@ public class SimpleBox<T> implements Box<T> {
   }
 
   @Override
+  public boolean contains(T t) {
+    return content.contains(t);
+  }
+
+  @Override
   public Iterator<T> iterator() {
     return content.iterator();
   }

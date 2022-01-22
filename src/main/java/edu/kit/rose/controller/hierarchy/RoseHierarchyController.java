@@ -87,6 +87,11 @@ public class RoseHierarchyController extends Controller
   }
 
   @Override
+  public HierarchyController getThis() {
+    return this;
+  }
+
+  @Override
   public void notifyAddition(Segment unit) {
     observers.forEach(e -> e.notifyAddition(unit));
   }

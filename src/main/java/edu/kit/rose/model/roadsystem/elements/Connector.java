@@ -2,19 +2,25 @@ package edu.kit.rose.model.roadsystem.elements;
 
 import edu.kit.rose.infrastructure.Movement;
 import edu.kit.rose.infrastructure.Position;
+import edu.kit.rose.infrastructure.SimpleSortedBox;
+import edu.kit.rose.infrastructure.SimpleUnitObservable;
 import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.infrastructure.UnitObservable;
-import edu.kit.rose.infrastructure.UnitObserver;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
- * A Connector is part of a {@link edu.kit.rose.model.roadsystem.elements.Segment}
- * and represents the movable end points
- * of the same (see Pflichtenheft: Straßensegment). A Connector can also be part of a
- * {@link Connection}.
- */
-public class Connector implements UnitObservable<Connector> {
+* A Connector is part of a {@link edu.kit.rose.model.roadsystem.elements.Segment}
+* and represents the movable end points
+* of the same (see Pflichtenheft: Straßensegment). A Connector can also be part of a
+* {@link Connection}.
+*/
+public class Connector extends SimpleUnitObservable<Connector>
+          implements UnitObservable<Connector> {
+  private final ConnectorType type;
+  private final Position position;
+  private final Collection<AttributeAccessor<?>> accessors;
 
   /**
    * Constructor.
@@ -24,17 +30,9 @@ public class Connector implements UnitObservable<Connector> {
    * @param accessors The {@link AttributeAccessor}s that this SimpleConnector is supposed to have.
    */
   Connector(ConnectorType type, Position position, Collection<AttributeAccessor<?>> accessors) {
-
-  }
-
-  @Override
-  public void addSubscriber(UnitObserver<Connector> observer) {
-
-  }
-
-  @Override
-  public void removeSubscriber(UnitObserver<Connector> observer) {
-
+    this.type = type;
+    this.position = position;
+    this.accessors = accessors;
   }
 
   /**
@@ -43,7 +41,7 @@ public class Connector implements UnitObservable<Connector> {
    * @return the {@link Position} of the connector.
    */
   public Position getPosition() {
-    return null;
+    return new Position(this.position.getX(), this.position.getY());
   }
 
   /**
@@ -57,7 +55,7 @@ public class Connector implements UnitObservable<Connector> {
    *        Connector.
    */
   public SortedBox<AttributeAccessor<?>> getAttributeAccessors() {
-    return null;
+    return new SimpleSortedBox<>(new ArrayList<>(this.accessors));
   }
 
   /**
@@ -66,12 +64,12 @@ public class Connector implements UnitObservable<Connector> {
    * @return the Type of Connector this is.
    */
   public ConnectorType getType() {
-    return null;
+    return this.type;
   }
 
   @Override
-  public void notifySubscribers() {
-
+  public Connector getThis() {
+    return this;
   }
 
   /**
@@ -81,5 +79,8 @@ public class Connector implements UnitObservable<Connector> {
    */
   void move(Movement movement) {
 
+    this.position.setX(this.position.getX() + movement.getX());
+    this.position.setY(this.position.getY() + movement.getY());
+    notifySubscribers();
   }
 }

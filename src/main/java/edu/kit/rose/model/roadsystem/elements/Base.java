@@ -1,80 +1,45 @@
 package edu.kit.rose.model.roadsystem.elements;
 
-import edu.kit.rose.infrastructure.Box;
-import edu.kit.rose.infrastructure.Movement;
+
 import edu.kit.rose.infrastructure.Position;
-import edu.kit.rose.infrastructure.SortedBox;
+import edu.kit.rose.infrastructure.UnitObservable;
 import edu.kit.rose.infrastructure.UnitObserver;
-import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
-import edu.kit.rose.model.roadsystem.measurements.Measurement;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Observer;
 
 /**
  * Represents a one way road. (as in part of a freeway)
  * A Base {@link Segment} is a simple {@link Segment} that only has one entrance and one exit.
  */
-public class Base implements Segment {
+public class Base extends HighwaySegment implements Segment, UnitObservable<Base> {
+
+  private List<UnitObserver<Base>> observerList;
+  private static SegmentType segmentType = SegmentType.BASE;
 
   /**
-   * Provides the {@link Connector} describing the entrance of the Base Segment.
    *
-   * @return the {@link Connector} describing the entrance of the Base Segment.
    */
-  Connector getEntry() {
-    return null;
+  public Base() {
+    super();
   }
 
   /**
-   * Provides the {@link Connector} describing the exit of the base Segment.
-   *
-   * @return the {@link Connector} describing the exit of the base Segment.
+   * @param name
    */
-  Connector getExit() {
-    return null;
+  public Base(String name) {
+    super(name);
+    this.observerList = new ArrayList<>();
   }
 
   @Override
-  public SortedBox<AttributeAccessor<?>> getAttributeAccessors() {
-    return null;
+  public void addSubscriber(UnitObserver<Base> observer) {
+    observerList.add(observer);
   }
 
   @Override
-  public String getName() {
-    return null;
-  }
+  public void removeSubscriber(UnitObserver<Base> observer) {
 
-  @Override
-  public boolean isContainer() {
-    return false;
-  }
-
-  @Override
-  public SegmentType getSegmentType() {
-    return null;
-  }
-
-  @Override
-  public SortedBox<Measurement<?>> getMeasurements() {
-    return null;
-  }
-
-  @Override
-  public Box<Connector> getConnectors() {
-    return null;
-  }
-
-  @Override
-  public Position getCenter() {
-    return null;
-  }
-
-  @Override
-  public void move(Movement movement) {
-
-  }
-
-  @Override
-  public int compareTo(Segment o) {
-    return 0;
   }
 
   @Override
@@ -83,17 +48,7 @@ public class Base implements Segment {
   }
 
   @Override
-  public Element getThis() {
-    return this;
-  }
-
-  @Override
-  public void addSubscriber(UnitObserver<Element> observer) {
-
-  }
-
-  @Override
-  public void removeSubscriber(UnitObserver<Element> observer) {
-
+  public SegmentType getSegmentType() {
+    return SegmentType.BASE;
   }
 }

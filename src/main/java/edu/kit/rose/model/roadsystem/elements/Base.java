@@ -1,12 +1,10 @@
 package edu.kit.rose.model.roadsystem.elements;
 
 
-import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.infrastructure.UnitObservable;
 import edu.kit.rose.infrastructure.UnitObserver;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observer;
 
 /**
  * Represents a one way road. (as in part of a freeway)
@@ -18,14 +16,16 @@ public class Base extends HighwaySegment implements Segment, UnitObservable<Base
   private static SegmentType segmentType = SegmentType.BASE;
 
   /**
-   *
+   * Standard Constructor.
    */
   public Base() {
     super();
   }
 
   /**
-   * @param name
+   * Constructor.
+   *
+   * @param name the name for this Base.
    */
   public Base(String name) {
     super(name);

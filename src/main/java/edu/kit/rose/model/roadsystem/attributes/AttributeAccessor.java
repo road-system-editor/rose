@@ -1,6 +1,6 @@
 package edu.kit.rose.model.roadsystem.attributes;
 
-import edu.kit.rose.infrastructure.SimpleUnitObservable;
+import edu.kit.rose.infrastructure.RoseUnitObservable;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -12,7 +12,7 @@ import java.util.function.Supplier;
  *
  * @param <T> the Class of the Attribute that this Accessor is used for.
  */
-public class AttributeAccessor<T> extends SimpleUnitObservable<AttributeAccessor<T>> {
+public class AttributeAccessor<T> extends RoseUnitObservable<AttributeAccessor<T>> {
   private final AttributeType type;
   private final Supplier<T> getter;
   private final Consumer<T> setter;

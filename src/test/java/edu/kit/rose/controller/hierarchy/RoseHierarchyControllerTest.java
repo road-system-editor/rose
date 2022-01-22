@@ -82,8 +82,8 @@ class RoseHierarchyControllerTest {
       }
     };
 
-    this.controller = new RoseHierarchyController(new RoseStorageLock(), new RoseChangeCommandBuffer(),
-            new RoseSelectionBuffer(), this.project);
+    this.controller = new RoseHierarchyController(new RoseStorageLock(),
+            new RoseChangeCommandBuffer(), new RoseSelectionBuffer(), this.project);
 
     this.roadSystem = new GraphRoadSystem(criteriaManager, new TimeSliceSetting()) {
 

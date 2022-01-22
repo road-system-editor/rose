@@ -58,17 +58,17 @@ class SetGroupNameCommandTest {
 
   @Test
   void execute() {
-    ChangeCommand SetGroupNameCommand = new SetGroupNameCommand(this.group, SETED);
-    SetGroupNameCommand.execute();
+    ChangeCommand setGroupNameCommand = new SetGroupNameCommand(this.group, SETED);
+    setGroupNameCommand.execute();
 
     Assertions.assertEquals(SETED, this.name);
   }
 
   @Test
   void unexecute() {
-    ChangeCommand SetGroupNameCommand = new SetGroupNameCommand(this.group, SETED);
-    SetGroupNameCommand.execute();
-    SetGroupNameCommand.unexecute();
+    ChangeCommand setGroupNameCommand = new SetGroupNameCommand(this.group, SETED);
+    setGroupNameCommand.execute();
+    setGroupNameCommand.unexecute();
 
     Assertions.assertEquals(UNSETED, this.name);
   }

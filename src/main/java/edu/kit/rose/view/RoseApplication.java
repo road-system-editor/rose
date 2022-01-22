@@ -25,6 +25,7 @@ import edu.kit.rose.view.window.RoseWindow;
 import edu.kit.rose.view.window.WindowState;
 import java.nio.file.Path;
 import javafx.application.Application;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 /**
@@ -119,7 +120,10 @@ public class RoseApplication extends Application implements Navigator {
 
   @Override
   public Path showFileDialog() {
-    return null;
+    var fileChooser = new FileChooser();
+    // TODO differentiate between saving and opening files
+    var file = fileChooser.showOpenDialog(null);
+    return file == null ? null : file.toPath();
   }
 
   /**

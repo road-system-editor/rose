@@ -15,6 +15,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Unit Test for {@link CreateGroupCommand}.
+ */
 class CreateGroupCommandTest {
   private RoadSystem roadSystem;
   private CriteriaManager criteriaManager;

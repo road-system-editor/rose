@@ -16,7 +16,6 @@ import edu.kit.rose.model.roadsystem.elements.Group;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -24,6 +23,9 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Unit test for {@link DeleteGroupCommand}.
+ */
 class DeleteGroupCommandTest {
   private static final int EXPECTED_NUMBER_OF_ELEMENTS = 2;
   private static final String UNSETED = "unseted";

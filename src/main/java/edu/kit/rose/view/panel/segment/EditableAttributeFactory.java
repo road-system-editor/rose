@@ -36,7 +36,7 @@ class EditableAttributeFactory {
         return new FractionalAttribute((AttributeAccessor<Double>) attribute, controller);
       case CONURBATION:
         return new SelectableAttribute<>((AttributeAccessor<Boolean>) attribute, controller,
-            List.of(true, false));
+            List.of(true, false), null); //TODO add localizer
       case MAX_SPEED:
       case MAX_SPEED_RAMP:
       case LANE_COUNT:

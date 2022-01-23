@@ -5,10 +5,12 @@ import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.view.commons.FxmlContainer;
 import java.util.Collection;
+import java.util.function.Function;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ListCell;
 
 
 /**
@@ -19,30 +21,47 @@ import javafx.scene.control.ComboBox;
  * @param <T> the java type of the attribute value.
  */
 class SelectableAttribute<T> extends EditableAttribute<T> {
+  
+  private final ComboBox<T> inputField;
+  
   private final Collection<T> options;
+
+  private final Function<T, String> localizer;
 
   /**
    * Creates a new selectable attribute editor for the given {@code attribute} with the given
    * {@code options}.
    */
   SelectableAttribute(AttributeAccessor<T> attribute, AttributeController controller,
-                      Collection<T> options) {
+                      Collection<T> options, Function<T, String> localizer) {
     super(attribute, controller);
     this.options = options;
+    this.inputField = new ComboBox<>();
+    this.localizer = localizer;
   }
 
   @Override
   protected Node createInputField() {
-    ComboBox<T> cb = new ComboBox<>();
     ObservableList<T> o = new SimpleListProperty<>();
     o.addAll(options);
-    cb.setItems(o);
+    inputField.setItems(o);
 
-    cb.getSelectionModel().selectedItemProperty().addListener((options, old, newVal) -> {
-      getController().setAttribute(getAttribute(), newVal);
+    inputField.setCellFactory(listView -> new ListCell<>() {
+      @Override
+      protected void updateItem(T item, boolean empty) {
+        super.updateItem(item, empty);
+        if (item == null) {
+          setText(INHOMOGENEOUS_VALUE_PLACEHOLDER);
+        } else {
+          setText(localizer.apply(item));
+        }
+      }
     });
 
-    return cb;
+    inputField.getSelectionModel().selectedItemProperty().addListener(
+        (options, old, newVal) -> getController().setAttribute(getAttribute(), newVal));
+
+    return inputField;
   }
 
   @Override

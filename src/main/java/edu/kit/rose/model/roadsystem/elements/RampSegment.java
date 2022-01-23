@@ -6,7 +6,7 @@ import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 /**
  * A {@link Base} segment with a ramp {@link Connector}.
  */
-abstract class RampSegment extends Base {
+abstract class RampSegment extends HighwaySegment {
 
   //TODO: add attributes for rampConnector
 

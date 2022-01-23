@@ -30,15 +30,6 @@ public class Base extends HighwaySegment implements Segment {
     super(SegmentType.BASE, name);
   }
 
-  protected Base(SegmentType segmentType) {
-    super(segmentType);
-  }
-
-  protected Base(SegmentType segmentType, String name) {
-    super(segmentType);
-  }
-
-
   @Override
   public void addSubscriber(UnitObserver<Element> observer) {
     observers.add(observer);

@@ -6,11 +6,10 @@ import edu.kit.rose.infrastructure.RoseUnitObservable;
 import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
-import java.lang.runtime.ObjectMethods;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
+import java.util.Set;
 
 /**
  * A container tha holds multiple {@link Element}s.
@@ -19,7 +18,7 @@ import java.util.Objects;
  */
 public class Group extends RoseUnitObservable<Element> implements Element, Iterable<Element> {
 
-  private final List<Element> elements = new ArrayList<>();
+  private final Set<Element> elements = new HashSet<>();
   private final SortedBox<AttributeAccessor<?>> accessors;
   private String name;
   private String comment;
@@ -41,6 +40,10 @@ public class Group extends RoseUnitObservable<Element> implements Element, Itera
         ));
   }
 
+  public Group(Set<Element> elements) {
+    //TODO: implement
+  }
+
   @Override
   public Iterator<Element> iterator() {
     return elements.iterator();
@@ -56,10 +59,7 @@ public class Group extends RoseUnitObservable<Element> implements Element, Itera
       throw new IllegalArgumentException(
           "The parameter element may not be null on Group.addElement");
     }
-
-    if (!elements.contains(element)) {
-      elements.add(element);
-    }
+    elements.add(element);
   }
 
   /**

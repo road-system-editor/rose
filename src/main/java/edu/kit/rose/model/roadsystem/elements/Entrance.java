@@ -20,17 +20,19 @@ public class Entrance extends RampSegment {
 
   private final Set<UnitObserver<Element>> observers = new HashSet<>();
 
-  //TODO: add javadoc
   /**
-   *
+   * Standard Constructor.
+   * Initializes all values to default ones.
    */
   public Entrance() {
     super(SegmentType.ENTRANCE);
   }
 
-  //TODO: add javadoc
   /**
-   * @param name
+   * Constructor.
+   * Uses the name and initializes all values to default ones.
+   *
+   * @param name the name for the Entrance Segment
    */
   public Entrance(String name) {
     super(SegmentType.ENTRANCE, name);

@@ -7,6 +7,7 @@ import edu.kit.rose.infrastructure.UnitObserver;
 import edu.kit.rose.model.plausibility.criteria.validation.OperatorType;
 import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
+import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
 
@@ -122,7 +123,7 @@ public class CompatibilityCriterion implements PlausibilityCriterion {
   }
 
   @Override
-  public void notifyChange(Segment unit) {
+  public void notifyChange(Element unit) {
 
   }
 

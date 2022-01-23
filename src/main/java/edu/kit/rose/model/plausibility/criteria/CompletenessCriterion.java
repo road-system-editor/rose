@@ -2,6 +2,7 @@ package edu.kit.rose.model.plausibility.criteria;
 
 import edu.kit.rose.infrastructure.Box;
 import edu.kit.rose.infrastructure.SetObserver;
+import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
 
@@ -45,7 +46,7 @@ class CompletenessCriterion implements PlausibilityCriterion {
   }
 
   @Override
-  public void notifyChange(Segment unit) {
+  public void notifyChange(Element unit) {
 
   }
 

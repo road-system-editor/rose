@@ -97,17 +97,23 @@ class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, RoadSys
   public void removeElement(Element element) {
     elements.remove(element);
     if (element.isContainer()) {
-      var group = (Group) element;
-      groups.remove(group);
-      group.getElements().forEach(this::removeElement);
+      removeGroup((Group) element);
     } else {
-      var segment = (Segment) element;
-      var connectionsToSegment = segmentConnectionGraph.edgesOf(segment);
-      segmentConnectionGraph.removeVertex(segment);
-      subscribers.forEach(s -> connectionsToSegment.forEach(s::notifyRemovalSecond));
-      criteriaManager.getCriteria().forEach(segment::removeSubscriber);
+      removeSegment((Segment) element);
     }
     subscribers.forEach(s -> s.notifyRemoval(element));
+  }
+
+  private void removeSegment(Segment segment) {
+    var connectionsToSegment = segmentConnectionGraph.edgesOf(segment);
+    segmentConnectionGraph.removeVertex(segment);
+    subscribers.forEach(s -> connectionsToSegment.forEach(s::notifyRemovalSecond));
+    criteriaManager.getCriteria().forEach(segment::removeSubscriber);
+  }
+
+  private void removeGroup(Group group) {
+    groups.remove(group);
+    group.getElements().forEach(this::removeElement);
   }
 
   @Override

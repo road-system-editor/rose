@@ -9,6 +9,15 @@ import javafx.geometry.Insets;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.TreeCell;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.DataFormat;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.Background;
 
 /**
@@ -32,6 +41,11 @@ public class ElementListCell extends TreeCell<Element> {
       HierarchyController hierarchyController, LocalizedTextProvider translator) {
     this.hierarchyController = hierarchyController;
     this.translator = translator;
+
+    this.setOnDragDetected(this::onDragDetected);
+    this.setOnDragOver(this::onDragOver);
+    this.setOnDragDropped(this::onDragDropped);
+    this.setOnDragDone(this::onDragDone);
   }
 
   @Override
@@ -56,5 +70,20 @@ public class ElementListCell extends TreeCell<Element> {
 
   private void updateSegment(Element element) {
     setGraphic(new SegmentView(translator, (Segment) element, hierarchyController));
+  }
+
+  private void onDragDetected(MouseEvent mouseEvent) {
+  }
+
+  private void onDragOver(DragEvent dragEvent) {
+
+  }
+
+  private void onDragDropped(DragEvent dragEvent) {
+
+  }
+
+  private void onDragDone(DragEvent dragEvent) {
+
   }
 }

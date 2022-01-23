@@ -9,17 +9,12 @@ import edu.kit.rose.model.Project;
 import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.elements.Connection;
 import edu.kit.rose.model.roadsystem.elements.Element;
-import edu.kit.rose.model.roadsystem.elements.Entrance;
-import edu.kit.rose.model.roadsystem.elements.Group;
-import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.view.commons.FxmlContainer;
 import edu.kit.rose.view.commons.SearchBar;
 import java.util.Collection;
 import java.util.List;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
-import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.BorderPane;
@@ -63,9 +58,6 @@ public class HierarchyPanel extends FxmlContainer
         .setCellFactory(elementsTree -> new ElementListCell(controller, getTranslator()));
     elementsListView.setShowRoot(false);
     elementsListView.setRoot(rootItem);
-
-    TreeItem<Element> i1 = new TreeItem<>(new Entrance());
-    rootItem.getChildren().add(i1);
   }
 
   @Override

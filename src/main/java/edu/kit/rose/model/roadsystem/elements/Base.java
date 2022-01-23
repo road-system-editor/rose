@@ -16,6 +16,7 @@ public class Base extends HighwaySegment implements Segment {
 
   /**
    * Standard Constructor.
+   * Initializes all values to default ones.
    */
   public Base() {
     super(SegmentType.BASE);
@@ -23,8 +24,9 @@ public class Base extends HighwaySegment implements Segment {
 
   /**
    * Constructor.
+   * Uses the name and initializes all values to default ones.
    *
-   * @param name the name for this Base.
+   * @param name the name for the Base Segment
    */
   public Base(String name) {
     super(SegmentType.BASE, name);

@@ -8,6 +8,7 @@ import edu.kit.rose.infrastructure.SimpleSortedBox;
 import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.measurements.Measurement;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -40,22 +41,22 @@ public abstract class HighwaySegment implements Segment {
   private Connector entryConnector;
   private Connector exitConnector;
 
-  private final Date creationTime = new Date();
+  private Long creationTime;
+
+  //private final Date creationTime = new Date();
 
   HighwaySegment(SegmentType segmentType) {
     this(segmentType, segmentType.name());
-
-    //TODO: set Position
   }
 
   HighwaySegment(SegmentType segmentType, String name) {
+    this.creationTime = System.nanoTime();
     this.segmentType = segmentType;
     this.name = name;
     init();
   }
 
   private void init() {
-
 
     //Create all AttributeAccessors.
     AttributeAccessor<String> nameAccessor = new AttributeAccessor<>();
@@ -81,10 +82,32 @@ public abstract class HighwaySegment implements Segment {
     List<AttributeAccessor<?>> exitAttributesList =
         Arrays.asList(lengthAccessor, nrOfExitLanesAccessor);
 
-    this.entryConnector = new Connector(ConnectorType.ENTRY,
-        new Position(center.getX(), -INITIAL_CONNECTOR_DISTANCE_TO_CENTER), entryAttributesList);
-    this.exitConnector = new Connector(ConnectorType.EXIT,
-        new Position(center.getX(), INITIAL_CONNECTOR_DISTANCE_TO_CENTER), exitAttributesList);
+    initConnectors(entryAttributesList, exitAttributesList);
+  }
+
+  private void initConnectors(List<AttributeAccessor<?>> entryAttributesList,
+                              List<AttributeAccessor<?>> exitAttributesList) {
+    if (this.getSegmentType() == SegmentType.BASE) {
+      this.entryConnector = new MoveableConnector(ConnectorType.ENTRY,
+          new Position(center.getX() - INITIAL_CONNECTOR_DISTANCE_TO_CENTER,
+              center.getY()),
+          entryAttributesList);
+      this.exitConnector = new MoveableConnector(ConnectorType.EXIT,
+          new Position(center.getX() + INITIAL_CONNECTOR_DISTANCE_TO_CENTER,
+              center.getY()),
+          exitAttributesList);
+    } else {
+      this.entryConnector = new Connector(ConnectorType.ENTRY,
+          new Position(center.getX() - INITIAL_CONNECTOR_DISTANCE_TO_CENTER,
+              center.getY()),
+          entryAttributesList);
+      this.exitConnector = new Connector(ConnectorType.EXIT,
+          new Position(center.getX() + INITIAL_CONNECTOR_DISTANCE_TO_CENTER,
+              center.getY()),
+          exitAttributesList);
+    }
+    connectors.add(entryConnector);
+    connectors.add(exitConnector);
   }
 
   /**
@@ -144,7 +167,9 @@ public abstract class HighwaySegment implements Segment {
   public void move(Movement movement) {
     center.setX(center.getX() + movement.getX());
     center.setY(center.getY() + movement.getY());
-    connectors.forEach(c -> c.move(movement));
+    //connectors.forEach(c -> c.move(movement));
+    entryConnector.move(movement);
+    exitConnector.move(movement);
   }
 
   @Override
@@ -154,7 +179,7 @@ public abstract class HighwaySegment implements Segment {
       var highWaySegment = (HighwaySegment) segment;
       return creationTime.compareTo(highWaySegment.getCreationTime());
     } catch (ClassCastException e) {
-      return  segment.compareTo(this);
+      return segment.compareTo(this);
     }
   }
 
@@ -163,7 +188,7 @@ public abstract class HighwaySegment implements Segment {
     return this;
   }
 
-  private Date getCreationTime() {
+  private Long getCreationTime() {
     return this.creationTime;
   }
 }

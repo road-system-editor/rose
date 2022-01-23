@@ -22,6 +22,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.layout.BorderPane;
 
 
 /**
@@ -41,6 +42,8 @@ public class HierarchyPanel extends FxmlContainer
   private Button createGroupButton;
   @FXML
   private TreeView<Element> elementsListView;
+  @FXML
+  private BorderPane hierarchyLayout;
 
   private final TreeItem<Element> rootItem;
 
@@ -55,7 +58,6 @@ public class HierarchyPanel extends FxmlContainer
 
     rootItem = new TreeItem<>(null);
     elementsListView.setRoot(rootItem);
-
   }
 
   @Override
@@ -85,7 +87,9 @@ public class HierarchyPanel extends FxmlContainer
 
   @Override
   protected void updateTranslatableStrings(Language lang) {
-
+    createGroupButton.setText(
+        getTranslator().getLocalizedText(
+            "view.panel.hierarchy.hierarchypanel.createGroupFromSelectionButton"));
   }
 
   @Override

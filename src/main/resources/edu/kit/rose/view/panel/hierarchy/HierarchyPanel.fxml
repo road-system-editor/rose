@@ -11,26 +11,32 @@
          prefWidth="250">
 
     <BorderPane fx:id="hierarchyLayout" prefWidth="${parentContainer.width}" prefHeight="${parentContainer.height}">
-        <padding>
-            <Insets top="5" bottom="5"/>
-        </padding>
         <top>
             <SearchBar fx:id="searchBar">
+                <BorderPane.margin>
+                    <Insets left="5" bottom="5" top="5" right="5"/>
+                </BorderPane.margin>
             </SearchBar>
         </top>
         <center>
             <TreeView
-                    fx:id="elementsListView">
-                <padding>
-                    <Insets bottom="5"/>
-                </padding>
+                    fx:id="elementsListView"
+                    style="-fx-background-insets: 2; -fx-background-color: #ffffffff;">
+                <BorderPane.margin>
+                    <Insets bottom="5" right="5"/>
+                </BorderPane.margin>
             </TreeView>
         </center>
         <bottom>
-            <Button fx:id="createGroupButton" prefWidth="${hierarchyLayout.width}" text="Gruppe aus Selektion">
-                <padding>
-                    <Insets top="5"/>
-                </padding>
+            <Button
+                    fx:id="createGroupButton"
+                    prefWidth="${hierarchyLayout.width}"
+                    text="Gruppe aus Selektion"
+                    textFill="white"
+                    style="-fx-background-radius: 5.0; -fx-background-color: #009682;">
+                <BorderPane.margin>
+                    <Insets left="5" right="10" bottom="5"/>
+                </BorderPane.margin>
             </Button>
         </bottom>
     </BorderPane>

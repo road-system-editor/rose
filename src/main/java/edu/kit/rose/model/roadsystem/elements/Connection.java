@@ -33,7 +33,7 @@ public class Connection extends SimpleUnitObservable<Connection> {
    * @return The {@link Connector}s that are connected with this Connection.
    */
   public Box<Connector> getConnectors() {
-    return new SimpleBox<>(Arrays.asList(connector1, connector2));
+    return new SimpleBox<>(List.of(connector1, connector2));
   }
 
   /**

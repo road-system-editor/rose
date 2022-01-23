@@ -3,6 +3,7 @@ package edu.kit.rose.model.roadsystem;
 import edu.kit.rose.infrastructure.Box;
 import edu.kit.rose.infrastructure.DualSetObserver;
 import edu.kit.rose.infrastructure.Movement;
+import edu.kit.rose.infrastructure.RoseBox;
 import edu.kit.rose.infrastructure.RoseDualSetObservable;
 import edu.kit.rose.infrastructure.RoseSortedBox;
 import edu.kit.rose.infrastructure.SortedBox;
@@ -38,12 +39,17 @@ class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, RoadSys
    * @param timeSliceSetting the time slice setinng to use for this GraphRoadSystem.
    */
   public GraphRoadSystem(CriteriaManager criteriaManager, TimeSliceSetting timeSliceSetting) {
-
+    this.criteriaManager = criteriaManager;
+    this.timeSliceSetting = timeSliceSetting;
+    this.segmentConnectionGraph = new DefaultUndirectedGraph<>(Connection.class);
+    this.groups = new LinkedList<>();
   }
 
   @Override
   public Box<Element> getElements() {
-    return null;
+    List<Element> elements = new LinkedList<>(segmentConnectionGraph.vertexSet());
+    elements.addAll(groups);
+    return new SimpleBox<>(elements);
   }
 
   @Override

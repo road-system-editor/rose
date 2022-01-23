@@ -24,8 +24,8 @@ public class MoveableConnector extends Connector {
 
   @Override
   public void move(Movement movement) {
-    Position position = this.getPosition();
-    position.setX(position.getX() + movement.getX());
-    position.setY(position.getY() + movement.getY());
+    this.position.setX(position.getX() + movement.getX());
+    this.position.setY(position.getY() + movement.getY());
+    notifySubscribers();
   }
 }

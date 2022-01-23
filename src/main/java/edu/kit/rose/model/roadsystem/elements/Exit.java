@@ -20,16 +20,20 @@ public class Exit extends RampSegment {
   private final Set<UnitObserver<Element>> observers = new HashSet<>();
 
   //TODO: add javadoc
+
   /**
-   *
+   * Standard Constructor.
+   * initializes all values to default ones.
    */
   public Exit() {
     super(SegmentType.EXIT);
   }
 
-  //TODO: add javadoc
   /**
-   * @param name
+   * Constructor.
+   * Uses the name and initializes all values to default ones.
+   *
+   * @param name the name for the Exit Segment
    */
   public Exit(String name) {
     super(SegmentType.EXIT, name);

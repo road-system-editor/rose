@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
@@ -10,5 +7,13 @@
          xmlns:fx="http://javafx.com/fxml"
          type="Pane"
          fx:id="parentContainer">
-    <Button text="SearchBar" prefWidth="${parentContainer.width}"/>
+    <AnchorPane prefWidth="${parentContainer.width}" prefHeight="${parentContainer.height}">
+        <TextField
+                fx:id="searchTextField"
+                AnchorPane.bottomAnchor="0.0"
+                AnchorPane.topAnchor="0.0"
+                AnchorPane.rightAnchor="0.0"
+                AnchorPane.leftAnchor="0.0"
+                promptText="Search Element..."/>
+    </AnchorPane>
 </fx:root>

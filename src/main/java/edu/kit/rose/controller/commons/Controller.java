@@ -1,6 +1,7 @@
 package edu.kit.rose.controller.commons;
 
 import edu.kit.rose.controller.navigation.Navigator;
+import java.util.Objects;
 
 /**
  * Base class for all controllers.
@@ -11,26 +12,18 @@ import edu.kit.rose.controller.navigation.Navigator;
  * @author ROSE Team
  */
 public abstract class Controller {
-
   private final StorageLock storageLock;
-  private Navigator navigator;
+  private final Navigator navigator;
 
   /**
    * Creates a new instance of the {@link Controller} class.
    *
-   * @param storageLock the {@link StorageLock} instance of the controller
+   * @param storageLock the {@link StorageLock} instance of the controller, may not be null.
+   * @param navigator the navigator for the controller.
    */
-  protected Controller(StorageLock storageLock) {
-    this.storageLock = storageLock;
-  }
-
-  /**
-   * Initializes the {@link Controller} with a {@link Navigator}.
-   *
-   * @param navigator the navigator for the controller
-   */
-  public final void initialize(Navigator navigator) {
-    this.navigator = navigator;
+  protected Controller(StorageLock storageLock, Navigator navigator) {
+    this.storageLock = Objects.requireNonNull(storageLock, "storage lock may not be null");
+    this.navigator = Objects.requireNonNull(navigator, "navigator may not be null");
   }
 
   /**

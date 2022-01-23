@@ -3,6 +3,7 @@ package edu.kit.rose.controller.hierarchy;
 import edu.kit.rose.controller.command.ChangeCommandBuffer;
 import edu.kit.rose.controller.commons.Controller;
 import edu.kit.rose.controller.commons.StorageLock;
+import edu.kit.rose.controller.navigation.Navigator;
 import edu.kit.rose.controller.selection.SelectionBuffer;
 import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.model.Project;
@@ -28,12 +29,13 @@ public class RoseHierarchyController extends Controller
    * Creates a new {@link RoseHierarchyController}.
    *
    * @param storageLock         the coordinator for controller actions
+   * @param navigator           the navigator for the controller
    * @param selectionBuffer     the container that stores selected segments
    * @param project             the model facade for project data
    */
-  public RoseHierarchyController(StorageLock storageLock,
+  public RoseHierarchyController(StorageLock storageLock, Navigator navigator,
                                  SelectionBuffer selectionBuffer, Project project) {
-    super(storageLock);
+    super(storageLock, navigator);
     this.selectionBuffer = selectionBuffer;
   }
 

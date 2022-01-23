@@ -52,10 +52,10 @@ public class Connector extends RoseUnitObservable<Connector>
    * of the end point of the segment represented by this connector.
    *
    * @return a {@link SortedBox} containing the specific {@link AttributeAccessor}s of this
-   *        Connector.
+   * Connector.
    */
   public SortedBox<AttributeAccessor<?>> getAttributeAccessors() {
-    return new RoseSortedBox<>(new ArrayList<>(this.accessors));
+    return null;
   }
 
   /**

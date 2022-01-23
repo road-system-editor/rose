@@ -24,7 +24,7 @@ public class BaseTest {
 
   @BeforeEach
   public void initialize() {
-    Base testBase = new Base("testBase");
+    testBase = new Base("testBase");
   }
 
   /**

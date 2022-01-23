@@ -15,10 +15,10 @@ import javafx.scene.layout.Background;
  * This class is a {@link javafx.scene.control.ListView} cell,
  * that displays a {@link Group}.
  */
-public class ElementListCell extends ListCell<Element> {
+public class ElementListCell extends TreeCell<Element> {
 
-  private LocalizedTextProvider translator;
-  private HierarchyController hierarchyController;
+  private final LocalizedTextProvider translator;
+  private final HierarchyController hierarchyController;
 
   private ElementView<? extends Element> elementView;
 
@@ -30,7 +30,6 @@ public class ElementListCell extends ListCell<Element> {
    */
   public ElementListCell(
       HierarchyController hierarchyController, LocalizedTextProvider translator) {
-    this.setBackground(Background.EMPTY);
     this.hierarchyController = hierarchyController;
     this.translator = translator;
   }
@@ -52,19 +51,10 @@ public class ElementListCell extends ListCell<Element> {
   }
 
   private void updateGroup(Element element) {
-    if (elementView == null) {
-      elementView = new GroupView(translator, (Group) element, hierarchyController);
-      this.setPadding(new Insets(0, 5, 0, 0));
-      elementView.setMaxWidth(this.getWidth());
-      setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-      setGraphic(elementView);
-    }
+    setGraphic(new GroupView(translator, (Group) element, hierarchyController));
   }
 
   private void updateSegment(Element element) {
-    if (elementView == null) {
-      elementView = new SegmentView(translator, (Segment) element, hierarchyController);
-      setGraphic(elementView);
-    }
+    setGraphic(new SegmentView(translator, (Segment) element, hierarchyController));
   }
 }

@@ -19,6 +19,7 @@ import java.util.List;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 
@@ -39,7 +40,9 @@ public class HierarchyPanel extends FxmlContainer
   @FXML
   private Button createGroupButton;
   @FXML
-  private ListView<Element> elementsListView;
+  private TreeView<Element> elementsListView;
+
+  private final TreeItem<Element> rootItem;
 
   /**
    * Creates an empty hierarchy view.
@@ -48,10 +51,11 @@ public class HierarchyPanel extends FxmlContainer
     super("HierarchyPanel.fxml");
     elementsListView
         .setCellFactory(elementsTree -> new ElementListCell(controller, getTranslator()));
+    elementsListView.setShowRoot(false);
 
-    Group g = new Group();
-    g.addElement(new Entrance());
-    elementsListView.getItems().add(g);
+    rootItem = new TreeItem<>(null);
+    elementsListView.setRoot(rootItem);
+
   }
 
   @Override
@@ -86,7 +90,7 @@ public class HierarchyPanel extends FxmlContainer
 
   @Override
   protected Collection<FxmlContainer> getSubFxmlContainer() {
-    return List.of();
+    return null;
   }
 
   @Override

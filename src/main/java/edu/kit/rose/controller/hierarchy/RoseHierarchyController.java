@@ -63,12 +63,12 @@ public class RoseHierarchyController extends Controller
   }
 
   @Override
-  public void addSubscriber(SetObserver<Segment, HierarchyController> observer) {
+  public void addSubscriber(SetObserver<Element, HierarchyController> observer) {
 
   }
 
   @Override
-  public void removeSubscriber(SetObserver<Segment, HierarchyController> observer) {
+  public void removeSubscriber(SetObserver<Element, HierarchyController> observer) {
 
   }
 

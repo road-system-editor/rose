@@ -9,7 +9,7 @@ import edu.kit.rose.model.roadsystem.elements.Segment;
  * Provides the functionality to manage the element
  * hierarchy of the roadsystem.
  */
-public interface HierarchyController extends SetObservable<Segment, HierarchyController> {
+public interface HierarchyController extends SetObservable<Element, HierarchyController> {
 
   /**
    * Creates a new group that contains all selected segments in the element hierarchy.

@@ -31,7 +31,6 @@
             <Button
                     fx:id="createGroupButton"
                     prefWidth="${hierarchyLayout.width}"
-                    text="Gruppe aus Selektion"
                     textFill="white"
                     style="-fx-background-radius: 5.0; -fx-background-color: #009682;">
                 <BorderPane.margin>

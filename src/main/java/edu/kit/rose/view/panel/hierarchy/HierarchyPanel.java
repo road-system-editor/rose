@@ -52,12 +52,20 @@ public class HierarchyPanel extends FxmlContainer
    */
   public HierarchyPanel() {
     super("HierarchyPanel.fxml");
+
+    rootItem = new TreeItem<>(null);
+
+    setUp();
+  }
+
+  private void setUp() {
     elementsListView
         .setCellFactory(elementsTree -> new ElementListCell(controller, getTranslator()));
     elementsListView.setShowRoot(false);
-
-    rootItem = new TreeItem<>(null);
     elementsListView.setRoot(rootItem);
+
+    TreeItem<Element> i1 = new TreeItem<>(new Entrance());
+    rootItem.getChildren().add(i1);
   }
 
   @Override
@@ -94,7 +102,7 @@ public class HierarchyPanel extends FxmlContainer
 
   @Override
   protected Collection<FxmlContainer> getSubFxmlContainer() {
-    return null;
+    return List.of(searchBar);
   }
 
   @Override

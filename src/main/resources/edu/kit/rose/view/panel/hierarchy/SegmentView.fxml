@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
@@ -11,12 +8,9 @@
          xmlns:fx="http://javafx.com/fxml"
          type="Pane"
          fx:id="parentContainer">
-    <AnchorPane prefWidth="${parentContainer.width}" prefHeight="${parentContainer.height}">
-        <padding>
-            <Insets top="5" bottom="5" left="5" right="5"/>
-        </padding>
-        <GridPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" alignment="BASELINE_LEFT"
-                  style="-fx-background-color: #bfbfbf; -fx-background-radius: 5.0;">
+    <AnchorPane>
+        <GridPane fx:id="segmentViewSurface" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" alignment="BASELINE_LEFT"
+                  style="-fx-background-radius: 5.0; -fx-background-color: #bfbfbf;">
             <padding>
                 <Insets right="5" top="5" bottom="5" left="5"/>
             </padding>
@@ -33,5 +27,4 @@
                     style="-fx-background-radius: 5.0; -fx-background-color: gray;"/>
         </GridPane>
     </AnchorPane>
-
 </fx:root>

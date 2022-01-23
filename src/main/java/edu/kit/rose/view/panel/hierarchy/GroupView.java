@@ -7,14 +7,18 @@ import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Group;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.view.commons.FxmlContainer;
+import edu.kit.rose.view.commons.UnmountUtility;
+import java.nio.Buffer;
 import java.util.Collection;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.TitledPane;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -25,10 +29,9 @@ import javafx.scene.layout.VBox;
 class GroupView extends ElementView<Group> {
 
   @FXML
-  private TitledPane titledPane;
-
+  private Label segmentNameLabel;
   @FXML
-  private VBox titledPaneContent;
+  private Button deleteGroupButton;
 
   /**
    * Creates a new group view for a given {@code group}.
@@ -39,45 +42,26 @@ class GroupView extends ElementView<Group> {
    */
   GroupView(LocalizedTextProvider translator, Group group, HierarchyController controller) {
     super(translator, "GroupView.fxml", group, controller);
-    titledPane.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-    this.getStyleClass().add("-fx-background-radius: 5.0;");
 
-    for (Element e : group.getElements()) {
-      if (e.isContainer()) {
-        titledPaneContent.getChildren().add(new GroupView(translator, (Group) e, controller));
-      } else {
-        titledPaneContent.getChildren().add(new SegmentView(translator, (Segment) e, controller));
-      }
+    segmentNameLabel.setText(group.getName());
+    deleteGroupButton.setOnMouseClicked(this::onDeleteGroupButtonClicked);
+  }
 
-    }
+  private void onDeleteGroupButtonClicked(MouseEvent mouseEvent) {
+    getController().deleteGroup(getElement());
   }
 
   @Override
   public void notifyChange(Element unit) {
-
+    segmentNameLabel.setText(getElement().getName());
   }
 
   @Override
   protected void updateTranslatableStrings(Language lang) {
-
   }
 
   @Override
   protected Collection<FxmlContainer> getSubFxmlContainer() {
     return null;
-  }
-
-  private Pane getHeader() {
-
-    FXMLLoader loader = new FXMLLoader(getClass().getResource("SegmentView.fxml"));
-    loader.setController(this);
-    Pane pane = new Pane();
-    loader.setRoot(pane);
-    try {
-      loader.load();
-    } catch (Exception ex) {
-      return null;
-    }
-    return pane;
   }
 }

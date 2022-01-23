@@ -41,9 +41,8 @@ public abstract class HighwaySegment implements Segment {
   private Connector entryConnector;
   private Connector exitConnector;
 
-  private Long creationTime;
+  private final Long creationTime;
 
-  //private final Date creationTime = new Date();
 
   HighwaySegment(SegmentType segmentType) {
     this(segmentType, segmentType.name());

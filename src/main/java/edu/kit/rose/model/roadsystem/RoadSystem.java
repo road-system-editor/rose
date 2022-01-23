@@ -45,14 +45,14 @@ public interface RoadSystem
    *
    * @param segmentType The {@link SegmentType} the {@link Segment} shall have.
    */
-  void createSegment(SegmentType segmentType);
+  Segment createSegment(SegmentType segmentType);
 
   /**
    * Creates a {@link Group} containing the given {@link Element}s.
    *
    * @param includedElements The {@link Element}s that shall be in the new {@link Group}
    */
-  void createGroup(Collection<Element> includedElements);
+  Group createGroup(Collection<Element> includedElements);
 
   /**
    * Removes an {@link Element} from the RoadSystem. It cannot be accessed afterwards.

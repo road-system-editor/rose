@@ -151,6 +151,18 @@ class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, RoadSys
     subscribers.forEach(s -> s.notifyRemoval(group));
   }
 
+  private void removeSegment(Segment segment) {
+    var connectionsToSegment = segmentConnectionGraph.edgesOf(segment);
+    segmentConnectionGraph.removeVertex(segment);
+    subscribers.forEach(s -> connectionsToSegment.forEach(s::notifyRemovalSecond));
+    criteriaManager.getCriteria().forEach(segment::removeSubscriber);
+  }
+
+  private void removeGroup(Group group) {
+    groups.remove(group);
+    group.getElements().forEach(this::removeElement);
+  }
+
   @Override
   public SortedBox<AttributeAccessor<?>> getSharedAttributeAccessors(Collection<Element> elements) {
     if (elements.isEmpty()) {

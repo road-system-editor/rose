@@ -13,6 +13,7 @@ import edu.kit.rose.model.roadsystem.elements.Group;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import java.util.Collection;
+import java.util.Set;
 
 /**
  * A RoadSystem models a set of {@link Element}s that can be
@@ -52,7 +53,7 @@ public interface RoadSystem
    *
    * @param includedElements The {@link Element}s that shall be in the new {@link Group}
    */
-  Group createGroup(Collection<Element> includedElements);
+  Group createGroup(Set<Element> includedElements);
 
   /**
    * Removes an {@link Element} from the RoadSystem. It cannot be accessed afterwards.

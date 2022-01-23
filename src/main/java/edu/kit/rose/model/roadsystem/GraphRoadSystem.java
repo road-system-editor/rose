@@ -3,21 +3,30 @@ package edu.kit.rose.model.roadsystem;
 import edu.kit.rose.infrastructure.Box;
 import edu.kit.rose.infrastructure.DualSetObserver;
 import edu.kit.rose.infrastructure.Movement;
+import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.infrastructure.SimpleBox;
 import edu.kit.rose.infrastructure.SimpleDualSetObservable;
 import edu.kit.rose.infrastructure.SortedBox;
+import edu.kit.rose.infrastructure.UnitObserver;
 import edu.kit.rose.model.plausibility.criteria.CriteriaManager;
+import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterion;
+import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterionType;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.elements.Connection;
 import edu.kit.rose.model.roadsystem.elements.Connector;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Group;
 import edu.kit.rose.model.roadsystem.elements.Segment;
+import edu.kit.rose.model.roadsystem.elements.SegmentFactory;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultUndirectedGraph;
 
@@ -32,6 +41,7 @@ class GraphRoadSystem extends SimpleDualSetObservable<Element, Connection, RoadS
   private final TimeSliceSetting timeSliceSetting;
   private final Graph<Segment, Connection> segmentConnectionGraph;
   private final List<Group> groups;
+  private final List<Element> elements;
 
   /**
    * Constructor.
@@ -48,33 +58,55 @@ class GraphRoadSystem extends SimpleDualSetObservable<Element, Connection, RoadS
     this.timeSliceSetting = timeSliceSetting;
     this.segmentConnectionGraph = new DefaultUndirectedGraph<>(Connection.class);
     this.groups = new LinkedList<>();
+    this.elements = new LinkedList<>();
   }
 
   @Override
   public Box<Element> getElements() {
-    List<Element> elements = new LinkedList<>(segmentConnectionGraph.vertexSet());
-    elements.addAll(groups);
     return new SimpleBox<>(elements);
   }
 
   @Override
   public Box<Element> getElementsByName(String name) {
-    return null;
+    return new SimpleBox<>(
+        elements.stream().filter(e -> e.getName().startsWith(name)).collect(Collectors.toList()));
   }
 
   @Override
   public Segment createSegment(SegmentType segmentType) {
-    return null;
+    var segment = SegmentFactory.createSegment(segmentType);
+    elements.add(segment);
+    segmentConnectionGraph.addVertex(segment);
+    subscribers.forEach(s -> s.notifyAddition(segment));
+    criteriaManager.getCriteria().forEach(segment::addSubscriber);
+    segment.notifySubscribers(); //get segment checked by criteria
+    return segment;
   }
 
   @Override
-  public Group createGroup(Collection<Element> includedElements) {
-    return null;
+  public Group createGroup(Set<Element> includedElements) {
+    var group = new Group(includedElements);
+    elements.add(group);
+    groups.add(group);
+    subscribers.forEach(s -> s.notifyAddition(group));
+    return group;
   }
 
   @Override
   public void removeElement(Element element) {
-
+    elements.remove(element);
+    if (element.isContainer()) {
+      var group = (Group) element;
+      groups.remove(group);
+      group.getElements().forEach(this::removeElement);
+    } else {
+      var segment = (Segment) element;
+      var connectionsToSegment = segmentConnectionGraph.edgesOf(segment);
+      segmentConnectionGraph.removeVertex(segment);
+      subscribers.forEach(s -> connectionsToSegment.forEach(s::notifyRemovalSecond));
+      criteriaManager.getCriteria().forEach(segment::removeSubscriber);
+    }
+    subscribers.forEach(s -> s.notifyRemoval(element));
   }
 
   @Override

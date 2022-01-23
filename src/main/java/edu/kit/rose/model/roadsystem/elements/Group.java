@@ -5,6 +5,7 @@ import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.infrastructure.UnitObserver;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import java.util.Iterator;
+import java.util.Set;
 
 /**
  * A container tha holds multiple {@link Element}s.
@@ -12,6 +13,10 @@ import java.util.Iterator;
  * (see: Pflichtenheft: "Gruppe")
  */
 public class Group implements Element, Iterable<Element> {
+
+  public Group(Set<Element> elements) {
+    //TODO: implement
+  }
 
   @Override
   public Iterator<Element> iterator() {

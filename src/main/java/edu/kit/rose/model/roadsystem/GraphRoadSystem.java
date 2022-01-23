@@ -3,6 +3,7 @@ package edu.kit.rose.model.roadsystem;
 import edu.kit.rose.infrastructure.Box;
 import edu.kit.rose.infrastructure.DualSetObserver;
 import edu.kit.rose.infrastructure.Movement;
+import edu.kit.rose.infrastructure.SimpleBox;
 import edu.kit.rose.infrastructure.SimpleDualSetObservable;
 import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.model.plausibility.criteria.CriteriaManager;
@@ -10,9 +11,15 @@ import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.elements.Connection;
 import edu.kit.rose.model.roadsystem.elements.Connector;
 import edu.kit.rose.model.roadsystem.elements.Element;
+import edu.kit.rose.model.roadsystem.elements.Group;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+import org.jgrapht.Graph;
+import org.jgrapht.graph.DefaultUndirectedGraph;
 
 /**
  * A Standard implementation of a {@link RoadSystem}
@@ -20,6 +27,11 @@ import java.util.Collection;
  */
 class GraphRoadSystem extends SimpleDualSetObservable<Element, Connection, RoadSystem>
         implements RoadSystem {
+
+  private final CriteriaManager criteriaManager;
+  private final TimeSliceSetting timeSliceSetting;
+  private final Graph<Segment, Connection> segmentConnectionGraph;
+  private final List<Group> groups;
 
   /**
    * Constructor.
@@ -32,12 +44,17 @@ class GraphRoadSystem extends SimpleDualSetObservable<Element, Connection, RoadS
    * @param timeSliceSetting the time slice setinng to use for this GraphRoadSystem.
    */
   public GraphRoadSystem(CriteriaManager criteriaManager, TimeSliceSetting timeSliceSetting) {
-
+    this.criteriaManager = criteriaManager;
+    this.timeSliceSetting = timeSliceSetting;
+    this.segmentConnectionGraph = new DefaultUndirectedGraph<>(Connection.class);
+    this.groups = new LinkedList<>();
   }
 
   @Override
   public Box<Element> getElements() {
-    return null;
+    List<Element> elements = new LinkedList<>(segmentConnectionGraph.vertexSet());
+    elements.addAll(groups);
+    return new SimpleBox<>(elements);
   }
 
   @Override

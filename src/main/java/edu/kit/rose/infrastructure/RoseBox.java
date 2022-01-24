@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class RoseBox<T> implements Box<T> {
 
-  protected final List<T> content;
+  private final List<T> content;
 
   /**
    * Constructor.
@@ -30,7 +30,7 @@ public class RoseBox<T> implements Box<T> {
    * @param content the Elements that are supposed to be in the Box.
    */
   @SafeVarargs
-  public SimpleBox(T... content) {
+  public RoseBox(T... content) {
     this.content = List.of(content);
   }
 
@@ -47,5 +47,9 @@ public class RoseBox<T> implements Box<T> {
   @Override
   public Iterator<T> iterator() {
     return content.iterator();
+  }
+
+  protected List<T> getContent() {
+    return content;
   }
 }

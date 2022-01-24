@@ -15,15 +15,15 @@ import org.junit.jupiter.api.Test;
  * Unit test for {@link SetGroupNameCommand}.
  */
 class SetGroupNameCommandTest {
-  private static final String SETED = "seted";
-  private static final String UNSETED = "unseted";
+  private static final String SET = "set";
+  private static final String UNSET = "unset";
   private AttributeAccessor<String> nameAccessor;
   private Group group;
   private String name;
 
   @BeforeEach
   public void setUp() {
-    this.name = UNSETED;
+    this.name = UNSET;
 
     this.group = new Group() {
       @Override
@@ -58,18 +58,18 @@ class SetGroupNameCommandTest {
 
   @Test
   void execute() {
-    ChangeCommand setGroupNameCommand = new SetGroupNameCommand(this.group, SETED);
+    ChangeCommand setGroupNameCommand = new SetGroupNameCommand(this.group, SET);
     setGroupNameCommand.execute();
 
-    Assertions.assertEquals(SETED, this.name);
+    Assertions.assertEquals(SET, this.name);
   }
 
   @Test
   void unexecute() {
-    ChangeCommand setGroupNameCommand = new SetGroupNameCommand(this.group, SETED);
+    ChangeCommand setGroupNameCommand = new SetGroupNameCommand(this.group, SET);
     setGroupNameCommand.execute();
     setGroupNameCommand.unexecute();
 
-    Assertions.assertEquals(UNSETED, this.name);
+    Assertions.assertEquals(UNSET, this.name);
   }
 }

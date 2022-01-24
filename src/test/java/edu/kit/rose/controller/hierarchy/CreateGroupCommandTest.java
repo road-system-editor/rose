@@ -1,6 +1,9 @@
 package edu.kit.rose.controller.hierarchy;
 
-
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import edu.kit.rose.infrastructure.SimpleBox;
 import edu.kit.rose.infrastructure.SimpleSortedBox;
 import edu.kit.rose.model.Project;
@@ -16,10 +19,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * Unit Test for {@link CreateGroupCommand}.
@@ -94,14 +93,14 @@ class CreateGroupCommandTest {
     when(this.parent1.isContainer()).thenReturn(true);
     when(this.parent2.isContainer()).thenReturn(true);
 
-    doAnswer(e -> this.parent1Elements.add(e.getArgument(0))).
-            when(this.parent1).addElement(any(Element.class));
-    doAnswer(e -> this.parent2Elements.add(e.getArgument(0))).
-            when(this.parent2).addElement(any(Element.class));
-    doAnswer(e -> this.parent1Elements.remove((Element) e.getArgument(0))).
-            when(this.parent1).removeElement(any(Element.class));
-    doAnswer(e -> this.parent2Elements.remove((Element) e.getArgument(0))).
-            when(this.parent2).removeElement(any(Element.class));
+    doAnswer(e -> this.parent1Elements.add(e.getArgument(0)))
+            .when(this.parent1).addElement(any(Element.class));
+    doAnswer(e -> this.parent2Elements.add(e.getArgument(0)))
+            .when(this.parent2).addElement(any(Element.class));
+    doAnswer(e -> this.parent1Elements.remove((Element) e.getArgument(0)))
+            .when(this.parent1).removeElement(any(Element.class));
+    doAnswer(e -> this.parent2Elements.remove((Element) e.getArgument(0)))
+            .when(this.parent2).removeElement(any(Element.class));
 
     this.parent1.addElement(this.element1);
     this.parent2.addElement(this.element2);
@@ -116,15 +115,15 @@ class CreateGroupCommandTest {
       doAnswer(arguments -> this.groupElements.remove((Element) arguments.getArgument(0))).
               when(this.group).removeElement(any(Element.class));
 
-      for(Element element : (Collection<Element>) e.getArgument(0)) {
+      for (Element element : (Collection<Element>) e.getArgument(0)) {
         this.group.addElement(element);
       }
       this.roadElements.add(this.group);
       return this.group;
     }).when(this.roadSystem).createGroup(ArgumentMatchers.<Collection<Element>>any());
 
-    doAnswer(e -> this.roadElements.remove((Element) e.getArgument(0))).
-            when(roadSystem).removeElement(any(Element.class));
+    doAnswer(e -> this.roadElements.remove((Element) e.getArgument(0)))
+            .when(roadSystem).removeElement(any(Element.class));
   }
 
   /**

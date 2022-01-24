@@ -1,5 +1,8 @@
 package edu.kit.rose.controller.hierarchy;
 
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import edu.kit.rose.controller.command.ChangeCommand;
 import edu.kit.rose.infrastructure.SimpleBox;
 import edu.kit.rose.infrastructure.SimpleSortedBox;
@@ -10,12 +13,10 @@ import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Group;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import static org.mockito.Mockito.*;
 
 
 /**
@@ -50,17 +51,23 @@ class AddElementToGroupCommandTest {
     when(this.toGroup.getElements()).thenReturn(new SimpleSortedBox<>(this.elements));
     when(this.fromGroup.getElements()).thenReturn(new SimpleSortedBox<>(this.parentGroupElements));
     when(this.fromGroup.isContainer()).thenReturn(true);
-    doAnswer(e -> this.elements.add(this.element)).when(toGroup).addElement(this.element);
-    doAnswer(e -> this.parentGroupElements.add(this.element)).when(fromGroup).addElement(this.element);
-    doAnswer(e -> this.elements.remove(this.element)).when(toGroup).removeElement(this.element);
-    doAnswer(e -> this.parentGroupElements.remove(this.element)).when(fromGroup).removeElement(this.element);
+
+    doAnswer(e -> this.elements.add(this.element))
+            .when(toGroup).addElement(this.element);
+    doAnswer(e -> this.parentGroupElements.add(this.element))
+            .when(fromGroup).addElement(this.element);
+    doAnswer(e -> this.elements.remove(this.element))
+            .when(toGroup).removeElement(this.element);
+    doAnswer(e -> this.parentGroupElements.remove(this.element))
+            .when(fromGroup).removeElement(this.element);
 
     this.fromGroup.addElement(this.element);
   }
 
   @Test
   void execute() {
-    ChangeCommand addElementCommand = new AddElementToGroupCommand(this.mockProject, this.element, this.toGroup);
+    ChangeCommand addElementCommand =
+            new AddElementToGroupCommand(this.mockProject, this.element, this.toGroup);
     addElementCommand.execute();
 
     Assertions.assertTrue(this.toGroup.getElements().contains(this.element));
@@ -69,7 +76,8 @@ class AddElementToGroupCommandTest {
 
   @Test
   void unexecute() {
-    ChangeCommand addElementCommand = new AddElementToGroupCommand(this.mockProject, this.element, this.toGroup);
+    ChangeCommand addElementCommand =
+            new AddElementToGroupCommand(this.mockProject, this.element, this.toGroup);
     addElementCommand.execute();
     addElementCommand.unexecute();
 

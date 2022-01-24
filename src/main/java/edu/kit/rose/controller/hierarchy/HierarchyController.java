@@ -45,14 +45,14 @@ public interface HierarchyController {
   void setGroupName(Group group, String name);
 
   /**
-   * Adds a biConsumer to the consumer list
+   * Adds a biConsumer to the consumer list.
    *
    * @param consumer to be added
    */
   void addBiConsumer(BiConsumer<Segment, Boolean> consumer);
 
   /**
-   * Removes the biConsumer to the consumer list
+   * Removes the biConsumer to the consumer list.
    *
    * @param consumer to be removed
    */

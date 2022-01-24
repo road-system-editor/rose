@@ -10,7 +10,7 @@ import java.util.List;
  *
  * @param <T> The Type of the Objects in the Box.
  */
-public class SimpleBox<T> implements Box<T> {
+public class RoseBox<T> implements Box<T> {
 
   private final List<T> content;
 
@@ -19,8 +19,18 @@ public class SimpleBox<T> implements Box<T> {
    *
    * @param content the Elements that are supposed to be in the Box.
    */
-  public SimpleBox(Collection<T> content) {
+  public RoseBox(Collection<T> content) {
     this.content = new ArrayList<>(content);
+  }
+
+  /**
+   * Constructor.
+   *
+   * @param content the Elements that are supposed to be in the Box.
+   */
+  @SafeVarargs
+  public RoseBox(T... content) {
+    this.content = List.of(content);
   }
 
   @Override
@@ -36,5 +46,9 @@ public class SimpleBox<T> implements Box<T> {
   @Override
   public Iterator<T> iterator() {
     return content.iterator();
+  }
+
+  protected List<T> getContent() {
+    return content;
   }
 }

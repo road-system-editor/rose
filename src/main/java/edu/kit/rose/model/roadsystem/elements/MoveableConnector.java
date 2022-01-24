@@ -13,9 +13,9 @@ public class MoveableConnector extends Connector {
   /**
    * Constructor.
    *
-   * @param type      the {@link ConnectorType} for this SimpleConnector.
-   * @param position  the {@link Position} that this SimpleConnector is supposed to be at.
-   * @param accessors The {@link AttributeAccessor}s that this SimpleConnector is supposed to have.
+   * @param type      the {@link ConnectorType} for this RoseConnector.
+   * @param position  the {@link Position} that this RoseConnector is supposed to be at.
+   * @param accessors The {@link AttributeAccessor}s that this RoseConnector is supposed to have.
    */
   MoveableConnector(ConnectorType type, Position position,
                     Collection<AttributeAccessor<?>> accessors) {

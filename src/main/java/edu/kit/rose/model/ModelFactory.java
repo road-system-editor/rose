@@ -16,8 +16,8 @@ public class ModelFactory {
    * @param configFile the config file that is to be used to configure the ApplicationDataSystem.
    */
   public ModelFactory(Path configFile) {
-    applicationDataSystem = new SimpleApplicationDataSystem(configFile);
-    project = new SimpleProject(applicationDataSystem.getCriteriaManager());
+    applicationDataSystem = new RoseApplicationDataSystem(configFile);
+    project = new RoseProject(applicationDataSystem.getCriteriaManager());
   }
 
   /**

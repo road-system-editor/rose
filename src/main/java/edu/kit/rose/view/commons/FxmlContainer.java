@@ -21,13 +21,6 @@ public abstract class FxmlContainer extends Pane {
   private LocalizedTextProvider translator;
 
   /**
-   * The Guice injector.
-   */
-  @Inject
-  private Injector injector;
-
-
-  /**
    * Creates a new FXMLPanel and immediately mounts the components specified in the given FXML
    * resource ({@code fxmlResourceName}).
    *
@@ -56,19 +49,25 @@ public abstract class FxmlContainer extends Pane {
 
   /**
    * Initializes the {@link FxmlContainer} and its sub container.
+   *
+   * @param injector the dependency injector.
    */
-  public void init() {
-    initSubContainer();
+  public void init(Injector injector) {
+    injector.injectMembers(this);
+
+    initSubContainer(injector);
     initTranslator();
+
+    updateTranslatableStrings(translator.getSelectedLanguage());
   }
 
-  private void initSubContainer() {
+  private void initSubContainer(Injector injector) {
     Collection<FxmlContainer> fxmlSubContainers = getSubFxmlContainer();
 
     if (fxmlSubContainers != null && injector != null) {
       for (FxmlContainer subContainer : fxmlSubContainers) {
         injector.injectMembers(subContainer);
-        subContainer.init();
+        subContainer.init(injector);
       }
     }
   }

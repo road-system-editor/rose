@@ -2,27 +2,24 @@ package edu.kit.rose.model.roadsystem.elements;
 
 
 import edu.kit.rose.infrastructure.Box;
+import edu.kit.rose.infrastructure.RoseBox;
+import edu.kit.rose.infrastructure.RoseUnitObservable;
 import edu.kit.rose.infrastructure.UnitObservable;
 import edu.kit.rose.infrastructure.UnitObserver;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * A connection between two {@link Connector}s.
  */
-public class Connection implements UnitObservable<Connection> {
+public class Connection extends RoseUnitObservable<Connection> {
 
-  @Override
-  public void addSubscriber(UnitObserver<Connection> observer) {
+  private final Connector connector1;
+  private final Connector connector2;
 
-  }
-
-  @Override
-  public void removeSubscriber(UnitObserver<Connection> observer) {
-
-  }
-
-  @Override
-  public void notifySubscribers() {
-
+  public Connection(Connector connector1, Connector connector2) {
+    this.connector1 = connector1;
+    this.connector2 = connector2;
   }
 
   @Override
@@ -36,7 +33,7 @@ public class Connection implements UnitObservable<Connection> {
    * @return The {@link Connector}s that are connected with this Connection.
    */
   public Box<Connector> getConnectors() {
-    return null;
+    return new RoseBox<>(List.of(connector1, connector2));
   }
 
   /**
@@ -46,6 +43,10 @@ public class Connection implements UnitObservable<Connection> {
    * @return the other connector.
    */
   public Connector getOther(Connector knownConnector) {
-    return null;
+    if (getConnectors().contains(knownConnector)) {
+      return knownConnector.equals(connector1) ? connector2 : connector1;
+    } else {
+      throw new IllegalArgumentException("unknown connector.");
+    }
   }
 }

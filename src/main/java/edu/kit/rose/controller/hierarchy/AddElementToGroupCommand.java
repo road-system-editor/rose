@@ -33,12 +33,14 @@ public class AddElementToGroupCommand implements ChangeCommand {
   @Override
   public void execute() {
     Box<Element> elements = this.project.getRoadSystem().getElements();
-    for (Element auxElement : elements) {
-      if (auxElement.isContainer()) {
-        Group auxGroup = (Group) auxElement;
-        if (auxGroup.contains(this.element)) {
-          auxGroup.removeElement(this.element);
-          this.parent = auxGroup;
+    if (elements != null) {
+      for (Element auxElement : elements) {
+        if (auxElement.isContainer()) {
+          Group auxGroup = (Group) auxElement;
+          if (auxGroup.getElements().contains(this.element)) {
+            auxGroup.removeElement(this.element);
+            this.parent = auxGroup;
+          }
         }
       }
     }

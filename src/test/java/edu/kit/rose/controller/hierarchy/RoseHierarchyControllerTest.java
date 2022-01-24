@@ -6,7 +6,6 @@ import edu.kit.rose.controller.selection.RoseSelectionBuffer;
 import edu.kit.rose.infrastructure.SimpleSortedBox;
 import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.model.Project;
-import edu.kit.rose.model.SimpleProject;
 import edu.kit.rose.model.plausibility.criteria.CriteriaManager;
 import edu.kit.rose.model.roadsystem.GraphRoadSystem;
 import edu.kit.rose.model.roadsystem.RoadSystem;
@@ -21,18 +20,25 @@ import java.util.Collection;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Unit test for {@link RoseHierarchyController}.
  */
 class RoseHierarchyControllerTest {
-  private static final String UNSETED = "unseted";
-  private static final String SETED = "seted";
+  private static final String UNSET = "unset";
+  private static final String SET = "set";
+  @Mock
+  private Project project;
+  @Mock
+  private RoadSystem roadSystem;
   private RoseHierarchyController controller;
   private AttributeAccessor<String> nameAccessor;
-  private Project project;
   private CriteriaManager criteriaManager;
-  private RoadSystem roadSystem;
   private Group createMockGroup;
   private Group group;
   private Element element1;
@@ -41,10 +47,17 @@ class RoseHierarchyControllerTest {
 
   @BeforeEach
   public void setUp() {
-    this.name = UNSETED;
+    this.name = UNSET;
     this.createMockGroup = null;
+    this.project = mock(Project.class);
+    this.roadSystem = mock(RoadSystem.class);
     this.element1 = new Base();
     this.criteriaManager = new CriteriaManager();
+
+    when(this.project.getRoadSystem()).thenReturn(this.roadSystem);
+    this.controller = new RoseHierarchyController(new RoseStorageLock(),
+            new RoseChangeCommandBuffer(), new RoseSelectionBuffer(), this.project);
+
     this.group = new Group() {
       @Override
       public void addElement(Element e) {
@@ -75,36 +88,22 @@ class RoseHierarchyControllerTest {
       }
     };
 
-    this.project = new SimpleProject(criteriaManager) {
-      @Override
-      public RoadSystem getRoadSystem() {
-        return roadSystem;
+    doAnswer(e -> {
+      this.createMockGroup = new Group();
+      return this.group;
+    }).when(this.roadSystem).createGroup(any());
+
+    doAnswer(e -> {
+      if (this.group == e.getArgument(0)) {
+        this.group = null;
       }
-    };
-
-    this.controller = new RoseHierarchyController(new RoseStorageLock(),
-            new RoseChangeCommandBuffer(), new RoseSelectionBuffer(), this.project);
-
-    this.roadSystem = new GraphRoadSystem(criteriaManager, new TimeSliceSetting()) {
-
-      @Override
-      public Group createGroup(Collection<Element> includedElements) {
-        createMockGroup = new Group();
-        return group;
-      }
-
-      @Override
-      public void removeElement(Element e) {
-        if (group == e) {
-          group = null;
-        }
-      }
-    };
+      return 0;
+    }).when(this.roadSystem).removeElement(any());
   }
 
   @Test
   void createGroupTest() {
-    this.controller.createGroup(new ArrayList<>());
+    this.controller.createGroup();
     Assertions.assertNotNull(this.createMockGroup);
   }
 
@@ -123,7 +122,7 @@ class RoseHierarchyControllerTest {
 
   @Test
   void setGroupNameTest() {
-    this.controller.setGroupName(this.group, SETED);
-    Assertions.assertEquals(SETED, this.name);
+    this.controller.setGroupName(this.group, SET);
+    Assertions.assertEquals(SET, this.name);
   }
 }

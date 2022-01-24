@@ -1,6 +1,7 @@
 package edu.kit.rose.controller.hierarchy;
 
 import edu.kit.rose.controller.command.ChangeCommand;
+import edu.kit.rose.infrastructure.Box;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Group;
@@ -50,17 +51,20 @@ public class CreateGroupCommand implements ChangeCommand {
    * puts the parent and child elements is this parentMap
    */
   private void storeParentsForElements() {
-    for (Element roadElement : this.project.getRoadSystem().getElements()) {
-      if (roadElement.isContainer()) {
-        Group auxGroup = (Group) roadElement;
-        ArrayList<Element> child = new ArrayList<>();
-        for (Element element : this.elements) {
-          if (auxGroup.getElements().contains(element)) {
-            child.add(element);
+    Box<Element> auxElements = this.project.getRoadSystem().getElements();
+    if (auxElements != null) {
+      for (Element roadElement : this.project.getRoadSystem().getElements()) {
+        if (roadElement.isContainer()) {
+          Group auxGroup = (Group) roadElement;
+          ArrayList<Element> child = new ArrayList<>();
+          for (Element element : this.elements) {
+            if (auxGroup.getElements().contains(element)) {
+              child.add(element);
+            }
           }
-        }
-        if (!child.isEmpty()) {
-          this.parentMap.put(auxGroup, new ArrayList<>(child));
+          if (!child.isEmpty()) {
+            this.parentMap.put(auxGroup, new ArrayList<>(child));
+          }
         }
       }
     }

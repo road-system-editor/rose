@@ -16,7 +16,7 @@ public interface HierarchyController extends SetObservable<Segment, HierarchyCon
   /**
    * Creates a new group that contains all selected segments in the element hierarchy.
    */
-  void createGroup(List<Element> elements);
+  void createGroup();
 
   /**
    * Deletes a group in the element hierarchy.

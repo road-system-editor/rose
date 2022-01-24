@@ -1,0 +1,10 @@
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.ScrollPane?>
+<?import edu.kit.rose.view.panel.criterion.CriteriaOverviewPanel?>
+<HBox xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml">
+    <ScrollPane HBox.hgrow="ALWAYS">
+        <CriteriaOverviewPanel fx:id="overview"/>
+    </ScrollPane>
+    <ScrollPane fx:id="criterionContainer" HBox.hgrow="ALWAYS"/>
+</HBox>

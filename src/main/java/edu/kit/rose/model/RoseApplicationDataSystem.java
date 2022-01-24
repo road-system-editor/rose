@@ -1,7 +1,7 @@
 package edu.kit.rose.model;
 
 import edu.kit.rose.infrastructure.Box;
-import edu.kit.rose.infrastructure.SimpleBox;
+import edu.kit.rose.infrastructure.RoseBox;
 import edu.kit.rose.infrastructure.UnitObserver;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.model.plausibility.criteria.CriteriaManager;
@@ -16,7 +16,7 @@ import java.util.Set;
  * Provided with a global config file it will write changes in the applicationData to the
  * config file in real time.
  */
-class SimpleApplicationDataSystem implements ApplicationDataSystem {
+class RoseApplicationDataSystem implements ApplicationDataSystem {
 
   private final Set<AttributeType> shownAttributeTypes;
 
@@ -26,7 +26,7 @@ class SimpleApplicationDataSystem implements ApplicationDataSystem {
    *
    * @param configFilePath the Path to a config File containing global Settings.
    */
-  public SimpleApplicationDataSystem(Path configFilePath) {
+  public RoseApplicationDataSystem(Path configFilePath) {
     this.shownAttributeTypes = new HashSet<>(); //fill with standard AttributeTypes
     // or get from config file
   }
@@ -59,7 +59,7 @@ class SimpleApplicationDataSystem implements ApplicationDataSystem {
 
   @Override
   public Box<AttributeType> getShownAttributeTypes() {
-    return new SimpleBox<>(shownAttributeTypes);
+    return new RoseBox<>(shownAttributeTypes);
   }
 
   @Override

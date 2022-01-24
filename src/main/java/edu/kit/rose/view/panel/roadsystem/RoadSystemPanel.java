@@ -65,7 +65,7 @@ public class RoadSystemPanel extends FxmlContainer
    * {@link #setMeasurementController(MeasurementController)}.
    */
   public RoadSystemPanel() {
-    super("road_system_panel.fxml");
+    super("RoadSystemPanel.fxml");
   }
 
   /**

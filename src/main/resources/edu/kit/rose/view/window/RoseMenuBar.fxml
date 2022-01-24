@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<fx:root xmlns="http://javafx.com/javafx"
+         xmlns:fx="http://javafx.com/fxml"
+         type="Pane"
+         fx:id="parentContainer">
+
+    <MenuBar fx:id="menuBar" prefWidth="${parentContainer.width}">
+        <Menu fx:id="project">
+            <MenuItem fx:id="newProject"/>
+            <MenuItem fx:id="loadProject"/>
+            <MenuItem fx:id="exportProject"/>
+            <MenuItem fx:id="saveProject"/>
+            <MenuItem fx:id="saveProjectAs"/>
+            <Menu fx:id="loadProjectBackup">
+                <MenuItem text="Backups will be inserted here"/>
+            </Menu>
+            <SeparatorMenuItem/>
+        </Menu>
+        <Menu fx:id="validation">
+            <MenuItem fx:id="criteria"/>
+        </Menu>
+        <Menu fx:id="measurements">
+            <MenuItem fx:id="measurementsOverview"/>
+        </Menu>
+        <Menu fx:id="language">
+            <MenuItem fx:id="germanLanguage"/>
+            <MenuItem fx:id="englishLanguage"/>
+        </Menu>
+        <Menu fx:id="help">
+            <MenuItem fx:id="shortcuts"/>
+            <MenuItem fx:id="tutorial" disable="true"/>
+        </Menu>
+    </MenuBar>
+</fx:root>

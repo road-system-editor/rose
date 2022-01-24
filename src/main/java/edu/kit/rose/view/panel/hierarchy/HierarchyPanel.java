@@ -1,14 +1,18 @@
 package edu.kit.rose.view.panel.hierarchy;
 
+import com.google.inject.Inject;
+import com.google.inject.Injector;
 import edu.kit.rose.controller.hierarchy.HierarchyController;
 import edu.kit.rose.infrastructure.DualSetObserver;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
+import edu.kit.rose.model.Project;
 import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.elements.Connection;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.view.commons.FxmlContainer;
 import java.util.Collection;
+import java.util.List;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 
@@ -19,8 +23,10 @@ import javafx.scene.control.Button;
 public class HierarchyPanel extends FxmlContainer
     implements DualSetObserver<Element, Connection, RoadSystem> {
 
+  @Inject
   private HierarchyController controller;
-  private RoadSystem roadSystem;
+  @Inject
+  private Project project;
 
   @FXML
   private Button createGroupButton;
@@ -28,29 +34,9 @@ public class HierarchyPanel extends FxmlContainer
 
   /**
    * Creates an empty hierarchy view.
-   * Requires {@link #setTranslator(LocalizedTextProvider)}
-   *        + {@link #setController(HierarchyController)} + {@link #setRoadSystem(RoadSystem)}
    */
   public HierarchyPanel() {
-    super("hierarchy_panel.fxml");
-  }
-
-  /**
-   * Sets the controller that handles interactions with this panel.
-   *
-   * @param controller the controller to use.
-   */
-  public void setController(HierarchyController controller) {
-    this.controller = controller;
-  }
-
-  /**
-   * Sets the road system that this hierarchy panel should display.
-   *
-   * @param roadSystem the {@link RoadSystem} to use.
-   */
-  public void setRoadSystem(RoadSystem roadSystem) {
-    this.roadSystem = roadSystem;
+    super("HierarchyPanel.fxml");
   }
 
   @Override
@@ -85,6 +71,13 @@ public class HierarchyPanel extends FxmlContainer
 
   @Override
   protected Collection<FxmlContainer> getSubFxmlContainer() {
-    return null;
+    return List.of();
+  }
+
+  @Override
+  public void init(Injector injector) {
+    super.init(injector);
+
+    System.out.println("is controller null? " + (controller == null));
   }
 }

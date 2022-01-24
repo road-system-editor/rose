@@ -2,20 +2,16 @@ package edu.kit.rose.view.window;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-import edu.kit.rose.controller.application.ApplicationController;
-import edu.kit.rose.controller.attribute.AttributeController;
-import edu.kit.rose.controller.hierarchy.HierarchyController;
-import edu.kit.rose.controller.measurement.MeasurementController;
-import edu.kit.rose.controller.plausibility.PlausibilityController;
-import edu.kit.rose.controller.roadsystem.RoadSystemController;
-import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
-import edu.kit.rose.model.ApplicationDataSystem;
-import edu.kit.rose.model.Project;
+import edu.kit.rose.controller.navigation.Navigator;
+import edu.kit.rose.view.commons.FxmlUtility;
 import edu.kit.rose.view.panel.hierarchy.HierarchyPanel;
 import edu.kit.rose.view.panel.problem.ProblemOverviewPanel;
 import edu.kit.rose.view.panel.roadsystem.RoadSystemPanel;
 import edu.kit.rose.view.panel.segmentbox.SegmentBoxPanel;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 /**
@@ -23,84 +19,50 @@ import javafx.stage.Stage;
  * This class lays out the contained panels and sets up the menu bar, as specified in PF11.1.2.
  */
 public class MainWindow extends RoseWindow {
-  private final AttributeController attributeController;
-  private final ApplicationController applicationController;
-  private final HierarchyController hierarchyController;
-  private final MeasurementController measurementController;
-  private final PlausibilityController plausibilityController;
-  private final RoadSystemController roadSystemController;
 
-  private final Project project;
-  private final ApplicationDataSystem applicationData;
-
-  /**
-   * The hierarchy overview panel is contained in the main window.
-   */
+  @FXML
+  private RoseMenuBar roseMenuBar;
   @FXML
   private HierarchyPanel hierarchyPanel;
-  /**
-   * The road system editor panel is contained in the main window.
-   */
   @FXML
   private RoadSystemPanel roadSystemPanel;
-  /**
-   * The problem overview panel is contained in the main window.
-   */
   @FXML
   private ProblemOverviewPanel problemOverviewPanel;
-  /**
-   * The segment box panel is contained in the main window.
-   */
   @FXML
   private SegmentBoxPanel segmentBoxPanel;
 
   /**
    * Creates a new main window instance.
    *
-   * @param translator the data source for translated strings.
-   * @param project the project to display.
-   * @param applicationData the application metadata to use for displaying the project.
    * @param stage the primary stage of the JavaFX application.
+   * @param injector the dependency injector.
    */
   @Inject
-  public MainWindow(LocalizedTextProvider translator,
-                    ApplicationController applicationController,
-                    AttributeController attributeController,
-                    HierarchyController hierarchyController,
-                    MeasurementController measurementController,
-                    PlausibilityController plausibilityController,
-                    RoadSystemController roadSystemController,
-                    Project project,
-                    ApplicationDataSystem applicationData,
-                    Stage stage,
+  public MainWindow(Stage stage,
                     Injector injector) {
-    super(translator, stage, injector);
-
-    this.applicationController = applicationController;
-    this.attributeController = attributeController;
-    this.hierarchyController = hierarchyController;
-    this.measurementController = measurementController;
-    this.plausibilityController = plausibilityController;
-    this.roadSystemController = roadSystemController;
-
-    this.project = project;
-    this.applicationData = applicationData;
+    super(stage, injector);
   }
 
   @Override
-  protected void configureStage(Stage stage) {
-    hierarchyPanel.setController(hierarchyController);
-    hierarchyPanel.setRoadSystem(project.getRoadSystem());
+  public void close() {
+    super.close();
+    Platform.exit();
+  }
 
-    roadSystemPanel.setProject(project);
-    roadSystemPanel.setApplicationController(applicationController);
-    roadSystemPanel.setRoadSystemController(roadSystemController);
-    roadSystemPanel.setAttributeController(attributeController);
-    roadSystemPanel.setMeasurementController(measurementController);
+  @Override
+  protected void configureStage(Stage stage, Injector injector) {
+    Parent tree = FxmlUtility.loadFxml(null, this, getClass().getResource("MainWindow.fxml"));
+    var scene = new Scene(tree);
 
-    problemOverviewPanel.setController(plausibilityController);
-    problemOverviewPanel.setManager(project.getPlausibilitySystem().getViolationManager());
+    stage.setScene(scene);
+    stage.setWidth(1280); // TODO magic number
+    stage.setHeight(720);
+    stage.setTitle("ROSE");
 
-    segmentBoxPanel.setController(roadSystemController);
+    this.roseMenuBar.init(injector);
+    this.hierarchyPanel.init(injector);
+    this.roadSystemPanel.init(injector);
+    this.problemOverviewPanel.init(injector);
+    this.segmentBoxPanel.init(injector);
   }
 }

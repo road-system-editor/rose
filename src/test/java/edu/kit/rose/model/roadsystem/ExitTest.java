@@ -4,13 +4,16 @@ import edu.kit.rose.infrastructure.Box;
 import edu.kit.rose.infrastructure.Movement;
 import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
-import edu.kit.rose.model.roadsystem.elements.Exit;
 import edu.kit.rose.model.roadsystem.elements.Connector;
+import edu.kit.rose.model.roadsystem.elements.Exit;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+/**
+ * Tests for the Exit Class.
+ */
 public class ExitTest {
   Exit testExit;
   private static final int xStartCenter = 0;
@@ -22,7 +25,7 @@ public class ExitTest {
   }
 
   /**
-   * Tests if the getPosition function returns the initial location (0,0)
+   * Tests if the getPosition function returns the initial location (0,0).
    */
   @Test
   public void testGetPosition() {
@@ -98,16 +101,16 @@ public class ExitTest {
    */
   @Test
   public void testMove() {
-    int xStart = 0;
-    int yStart = 0;
-    int xMovement = 50;
-    int yMovement = 50;
-    Movement testMovement = new Movement(xMovement, yMovement);
+    int startX = 0;
+    int startY = 0;
+    int movementX = 50;
+    int movementY = 50;
+    Movement testMovement = new Movement(movementX, movementY);
     testExit.move(testMovement);
-    Assertions.assertEquals(xStart + xMovement, testExit.getCenter().getX());
-    Assertions.assertEquals(yStart + yMovement, testExit.getCenter().getY());
-    Assertions.assertEquals(xStart + xMovement, testExit.getCenter().getX());
-    Assertions.assertEquals(yStart + yMovement, testExit.getCenter().getY());
+    Assertions.assertEquals(startX + movementX, testExit.getCenter().getX());
+    Assertions.assertEquals(startY + movementY, testExit.getCenter().getY());
+    Assertions.assertEquals(startX + movementX, testExit.getCenter().getX());
+    Assertions.assertEquals(startY + movementY, testExit.getCenter().getY());
   }
 
   /**
@@ -115,32 +118,32 @@ public class ExitTest {
    */
   @Test
   public void testMoveConnectors() {
-    int xStartEntry = -50;
-    int yStartEntry = 0;
-    int xStartExit = 50;
-    int yStartExit = 0;
-    int xStartRamp = 0;
-    int yStartRamp = -50;
-    int xMovement = 50;
-    int yMovement = 50;
-    Movement testMovement = new Movement(xMovement, yMovement);
+    final int startEntryX = -50;
+    final int startEntryY = 0;
+    final int startExitX = 50;
+    final int startExitY = 0;
+    final int startRampX = 0;
+    final int startRampY = -50;
+    final int movementX = 50;
+    final int movementY = 50;
+    Movement testMovement = new Movement(movementX, movementY);
     testExit.move(testMovement);
-    Assertions.assertEquals(xStartEntry + xMovement,
+    Assertions.assertEquals(startEntryX + movementX,
         testExit.getEntry().getPosition().getX());
-    Assertions.assertEquals(yStartEntry + yMovement,
+    Assertions.assertEquals(startEntryY + movementY,
         testExit.getEntry().getPosition().getY());
-    Assertions.assertEquals(xStartExit + xMovement,
+    Assertions.assertEquals(startExitX + movementX,
         testExit.getExit().getPosition().getX());
-    Assertions.assertEquals(yStartExit + yMovement,
+    Assertions.assertEquals(startExitY + movementY,
         testExit.getExit().getPosition().getY());
-    Assertions.assertEquals(xStartRamp + xMovement,
+    Assertions.assertEquals(startRampX + movementX,
         testExit.getRamp().getPosition().getX());
-    Assertions.assertEquals(yStartRamp + yMovement,
+    Assertions.assertEquals(startRampY + movementY,
         testExit.getRamp().getPosition().getY());
   }
 
   /**
-   * Tests the Standard Constructor
+   * Tests the Standard Constructor.
    */
   @Test
   public void testStandardConstructor() {

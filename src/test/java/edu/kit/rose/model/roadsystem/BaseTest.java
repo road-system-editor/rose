@@ -4,12 +4,10 @@ import edu.kit.rose.infrastructure.Box;
 import edu.kit.rose.infrastructure.Movement;
 import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
-import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.elements.Base;
 import edu.kit.rose.model.roadsystem.elements.Connector;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -28,7 +26,7 @@ public class BaseTest {
   }
 
   /**
-   * Tests if the getPosition function returns the initial location (0,0)
+   * Tests if the getPosition function returns the initial location (0,0).
    */
   @Test
   public void testGetPosition() {
@@ -102,16 +100,16 @@ public class BaseTest {
    */
   @Test
   public void testMove() {
-    int xStart = 0;
-    int yStart = 0;
-    int xMovement = 50;
-    int yMovement = 50;
-    Movement testMovement = new Movement(xMovement, yMovement);
+    int startX = 0;
+    int startY = 0;
+    int movementX = 50;
+    int movementY = 50;
+    Movement testMovement = new Movement(movementX, movementY);
     testBase.move(testMovement);
-    Assertions.assertEquals(xStart + xMovement, testBase.getCenter().getX());
-    Assertions.assertEquals(yStart + yMovement, testBase.getCenter().getY());
-    Assertions.assertEquals(xStart + xMovement, testBase.getCenter().getX());
-    Assertions.assertEquals(yStart + yMovement, testBase.getCenter().getY());
+    Assertions.assertEquals(startX + movementX, testBase.getCenter().getX());
+    Assertions.assertEquals(startY + movementY, testBase.getCenter().getY());
+    Assertions.assertEquals(startX + movementX, testBase.getCenter().getX());
+    Assertions.assertEquals(startY + movementY, testBase.getCenter().getY());
   }
 
   /**
@@ -119,26 +117,26 @@ public class BaseTest {
    */
   @Test
   public void testMoveConnectors() {
-    int xStartEntry = -50;
-    int yStartEntry = 0;
-    int xStartExit = 50;
-    int yStartExit = 0;
-    int xMovement = 50;
-    int yMovement = 50;
-    Movement testMovement = new Movement(xMovement, yMovement);
+    final int startEntryX = -50;
+    final int startEntryY = 0;
+    final int startExitX = 50;
+    final int startExitY = 0;
+    final int movementX = 50;
+    final int movementY = 50;
+    Movement testMovement = new Movement(movementX, movementY);
     testBase.move(testMovement);
-    Assertions.assertEquals(xStartEntry + xMovement,
+    Assertions.assertEquals(startEntryX + movementX,
         testBase.getEntry().getPosition().getX());
-    Assertions.assertEquals(yStartEntry + yMovement,
+    Assertions.assertEquals(startEntryY + movementY,
         testBase.getEntry().getPosition().getY());
-    Assertions.assertEquals(xStartExit + xMovement,
+    Assertions.assertEquals(startExitX + movementX,
         testBase.getExit().getPosition().getX());
-    Assertions.assertEquals(yStartExit + yMovement,
+    Assertions.assertEquals(startExitY + movementY,
         testBase.getExit().getPosition().getY());
   }
 
   /**
-   * Tests the Standard Constructor
+   * Tests the Standard Constructor.
    */
   @Test
   public void testStandardConstructor() {

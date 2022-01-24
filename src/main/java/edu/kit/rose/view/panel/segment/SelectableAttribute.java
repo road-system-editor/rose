@@ -20,24 +20,21 @@ import javafx.scene.control.ListCell;
  *
  * @param <T> the java type of the attribute value.
  */
-class SelectableAttribute<T> extends EditableAttribute<T> {
+abstract class SelectableAttribute<T> extends EditableAttribute<T> {
   
   private final ComboBox<T> inputField;
   
   private final Collection<T> options;
-
-  private final Function<T, String> localizer;
 
   /**
    * Creates a new selectable attribute editor for the given {@code attribute} with the given
    * {@code options}.
    */
   SelectableAttribute(AttributeAccessor<T> attribute, AttributeController controller,
-                      Collection<T> options, Function<T, String> localizer) {
+                      Collection<T> options) {
     super(attribute, controller);
     this.options = options;
     this.inputField = new ComboBox<>();
-    this.localizer = localizer;
   }
 
   @Override
@@ -53,7 +50,7 @@ class SelectableAttribute<T> extends EditableAttribute<T> {
         if (item == null) {
           setText(INHOMOGENEOUS_VALUE_PLACEHOLDER);
         } else {
-          setText(localizer.apply(item));
+          setText(localizeOption(item));
         }
       }
     });
@@ -78,4 +75,12 @@ class SelectableAttribute<T> extends EditableAttribute<T> {
   public void notifyChange(AttributeAccessor<T> unit) {
 
   }
+
+  /**
+   * Create a localized description of the given {@code option}.
+   *
+   * @param option the selectable option to create a localized description for, may not be null.
+   * @return the localized description of the option.
+   */
+  protected abstract String localizeOption(T option);
 }

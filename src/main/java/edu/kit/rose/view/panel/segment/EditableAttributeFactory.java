@@ -2,6 +2,7 @@ package edu.kit.rose.view.panel.segment;
 
 import edu.kit.rose.controller.attribute.AttributeController;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
+import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import java.util.List;
 
 /**
@@ -27,24 +28,14 @@ class EditableAttributeFactory {
    * @param attribute the attribute to create an editable attribute component for.
    * @return the created editable attribute component.
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({"unchecked", "UnnecessaryDefault"})
   public EditableAttribute<?> forAttribute(AttributeAccessor<?> attribute) {
-    switch (attribute.getAttributeType()) {
-      case NAME:
-        return new StringAttribute((AttributeAccessor<String>) attribute, controller);
-      case SLOPE:
-        return new FractionalAttribute((AttributeAccessor<Double>) attribute, controller);
-      case CONURBATION:
-        return new SelectableAttribute<>((AttributeAccessor<Boolean>) attribute, controller,
-            List.of(true, false), null); //TODO add localizer
-      case MAX_SPEED:
-      case MAX_SPEED_RAMP:
-      case LANE_COUNT:
-      case LANE_COUNT_RAMP:
-      case LENGTH:
-        return new IntegerAttribute((AttributeAccessor<Integer>) attribute, controller);
-      default:
-        return null;
-    }
+    return switch (attribute.getAttributeType().getDataType()) {
+      case STRING -> new StringAttribute((AttributeAccessor<String>) attribute, controller);
+      case FRACTIONAL -> new FractionalAttribute((AttributeAccessor<Double>) attribute, controller);
+      case BOOLEAN -> new BooleanAttribute((AttributeAccessor<Boolean>) attribute, controller);
+      case INTEGER -> new IntegerAttribute((AttributeAccessor<Integer>) attribute, controller);
+      default -> throw new IllegalArgumentException("unknown data type");
+    };
   }
 }

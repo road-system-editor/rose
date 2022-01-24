@@ -3,7 +3,6 @@ package edu.kit.rose.model.roadsystem;
 import edu.kit.rose.infrastructure.Box;
 import edu.kit.rose.infrastructure.DualSetObserver;
 import edu.kit.rose.infrastructure.Movement;
-import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.infrastructure.RoseBox;
 import edu.kit.rose.infrastructure.RoseDualSetObservable;
 import edu.kit.rose.infrastructure.RoseSortedBox;
@@ -16,18 +15,19 @@ import edu.kit.rose.model.roadsystem.elements.Connector;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Group;
 import edu.kit.rose.model.roadsystem.elements.Segment;
+import edu.kit.rose.model.roadsystem.elements.SegmentFactory;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultUndirectedGraph;
 
@@ -41,8 +41,11 @@ class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, RoadSys
   private final CriteriaManager criteriaManager;
   private final TimeSliceSetting timeSliceSetting;
   private final Graph<Segment, Connection> segmentConnectionGraph;
-  private final List<Group> groups;
-  private final List<Element> elements;
+  private final List<Group> groups; //all groups.
+
+  // stored for easy and performant access.
+  private final List<Element> elements; //all elements (including groups).
+  private final Map<Connector, Segment> connectorSegmentMap;
 
   /**
    * Constructor.
@@ -60,6 +63,7 @@ class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, RoadSys
     this.segmentConnectionGraph = new DefaultUndirectedGraph<>(Connection.class);
     this.groups = new LinkedList<>();
     this.elements = new LinkedList<>();
+    this.connectorSegmentMap = new HashMap<>();
   }
 
   @Override
@@ -77,6 +81,7 @@ class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, RoadSys
   public Segment createSegment(SegmentType segmentType) {
     var segment = SegmentFactory.createSegment(segmentType);
     elements.add(segment);
+    segment.getConnectors().forEach(c -> connectorSegmentMap.put(c, segment));
     segmentConnectionGraph.addVertex(segment);
     subscribers.forEach(s -> s.notifyAddition(segment));
     criteriaManager.getCriteria().forEach(segment::addSubscriber);
@@ -95,25 +100,28 @@ class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, RoadSys
 
   @Override
   public void removeElement(Element element) {
-    elements.remove(element);
     if (element.isContainer()) {
       removeGroup((Group) element);
     } else {
       removeSegment((Segment) element);
     }
-    subscribers.forEach(s -> s.notifyRemoval(element));
   }
 
   private void removeSegment(Segment segment) {
+    elements.remove(segment);
     var connectionsToSegment = segmentConnectionGraph.edgesOf(segment);
+    segment.getConnectors().forEach(connectorSegmentMap::remove);
     segmentConnectionGraph.removeVertex(segment);
     subscribers.forEach(s -> connectionsToSegment.forEach(s::notifyRemovalSecond));
     criteriaManager.getCriteria().forEach(segment::removeSubscriber);
+    subscribers.forEach(s -> s.notifyRemoval(segment));
   }
 
   private void removeGroup(Group group) {
-    groups.remove(group);
     group.getElements().forEach(this::removeElement);
+    elements.remove(group);
+    groups.remove(group);
+    subscribers.forEach(s -> s.notifyRemoval(group));
   }
 
   @Override
@@ -186,6 +194,7 @@ class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, RoadSys
 
   @Override
   public void connectConnectors(Connector segment1Connector, Connector segment2Connector) {
+
   }
 
   @Override

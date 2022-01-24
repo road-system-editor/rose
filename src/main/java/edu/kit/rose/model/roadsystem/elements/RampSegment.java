@@ -15,43 +15,55 @@ abstract class RampSegment extends HighwaySegment {
   private int nrOfRampLanes = 1;
   private int rampSpeedLimit = 100;
 
-  private Connector rampConnector;
+  protected Connector rampConnector;
 
   public RampSegment(SegmentType segmentType) {
     super(segmentType);
-    initRamp();
+    init();
     connectors.add(rampConnector);
   }
 
   public RampSegment(SegmentType segmentType, String name) {
     super(segmentType, name);
-    initRamp();
+    init();
   }
 
-  private void initRamp() {
-    AttributeAccessor<String> nrOfRampLanesAccessor = new AttributeAccessor<>();
+  private void init() {
+    AttributeAccessor<Integer> nrOfRampLanesAccessor =
+        new AttributeAccessor<>(AttributeType.LANE_COUNT_RAMP, () -> nrOfRampLanes,
+            s -> nrOfRampLanes = s);
     attributeAccessors.add(nrOfRampLanesAccessor);
-    AttributeAccessor<String> rampSpeedLimitAccessor = new AttributeAccessor<>();
+    AttributeAccessor<Integer> rampSpeedLimitAccessor =
+        new AttributeAccessor<>(AttributeType.MAX_SPEED_RAMP,
+            () -> rampSpeedLimit,
+              s -> rampSpeedLimit = s);
     attributeAccessors.add(rampSpeedLimitAccessor);
-    //TODO: Redo when AttributeAccessors are implemented
 
     Position rampConnectorPosition = new Position(this.getCenter().getX(),
         this.getCenter().getY() - INITIAL_RAMP_DISTANCE_TO_CENTER);
 
     List<AttributeAccessor<?>> rampAttributesList =
         Arrays.asList(nrOfRampLanesAccessor, rampSpeedLimitAccessor);
-
-    switch (getSegmentType()) {
-      case ENTRANCE -> this.rampConnector = new Connector(ConnectorType.ENTRY,
-          rampConnectorPosition, rampAttributesList);
-      case EXIT -> this.rampConnector = new Connector(ConnectorType.EXIT,
-          rampConnectorPosition, rampAttributesList);
-      default -> throw new IllegalArgumentException("Illegal SegmentType");
-    }
+    initRamp(rampAttributesList, rampConnectorPosition);
 
     this.connectors.add(rampConnector);
   }
 
+  protected abstract void initRamp(List<AttributeAccessor<?>> rampAttributesList,
+                                   Position rampPosition);
+
+  @Override
+  protected void initConnectors(List<AttributeAccessor<?>> entryAttributesList,
+                      List<AttributeAccessor<?>> exitAttributesList) {
+    this.entryConnector = new Connector(ConnectorType.ENTRY,
+        new Position(getCenter().getX() - INITIAL_CONNECTOR_DISTANCE_TO_CENTER,
+            getCenter().getY()),
+        entryAttributesList);
+    this.exitConnector = new Connector(ConnectorType.EXIT,
+        new Position(getCenter().getX() + INITIAL_CONNECTOR_DISTANCE_TO_CENTER,
+            getCenter().getY()),
+        exitAttributesList);
+  }
 
   /**
    * Returns the ramp {@link Connector} of the RampSegment.

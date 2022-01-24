@@ -1,9 +1,12 @@
 package edu.kit.rose.model.roadsystem.elements;
 
 
+import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.infrastructure.UnitObserver;
+import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -45,5 +48,20 @@ public class Base extends HighwaySegment implements Segment {
   @Override
   public void notifySubscribers() {
     observers.forEach(o -> o.notifyChange(this));
+  }
+
+  @Override
+  void initConnectors(List<AttributeAccessor<?>> entryAttributesList,
+                      List<AttributeAccessor<?>> exitAttributesList) {
+    this.entryConnector = new MovableConnector(ConnectorType.ENTRY,
+        new Position(getCenter().getX() - INITIAL_CONNECTOR_DISTANCE_TO_CENTER,
+            getCenter().getY()),
+        entryAttributesList);
+    this.exitConnector = new MovableConnector(ConnectorType.EXIT,
+        new Position(getCenter().getX() + INITIAL_CONNECTOR_DISTANCE_TO_CENTER,
+            getCenter().getY()),
+        exitAttributesList);
+    connectors.add(entryConnector);
+    connectors.add(exitConnector);
   }
 }

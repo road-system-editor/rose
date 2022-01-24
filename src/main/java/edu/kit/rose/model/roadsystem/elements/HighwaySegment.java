@@ -7,6 +7,7 @@ import edu.kit.rose.infrastructure.RoseBox;
 import edu.kit.rose.infrastructure.RoseSortedBox;
 import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
+import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.measurements.Measurement;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,18 +15,22 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+
 /**
  * A base Class for a {@link Segment} that implements the basic functionality all Segments share.
  */
 public abstract class HighwaySegment implements Segment {
 
-  private static final int INITIAL_CONNECTOR_DISTANCE_TO_CENTER = 50;
+  protected static final int INITIAL_CONNECTOR_DISTANCE_TO_CENTER = 50;
 
-  protected final Set<AttributeAccessor<?>> attributeAccessors = new HashSet<>();
+  protected final ArrayList<AttributeAccessor<?>> attributeAccessors =
+      new ArrayList<>();
   protected final Set<Connector> connectors = new HashSet<>();
   protected final Set<Measurement<?>> measurements = new HashSet<>();
 
   private final SegmentType segmentType;
+  private final Position center = new Position(0, 0);
+  private final Long creationTime;
 
   private String name;
   private int length = 2 * INITIAL_CONNECTOR_DISTANCE_TO_CENTER;
@@ -34,12 +39,10 @@ public abstract class HighwaySegment implements Segment {
   private int nrOfExitLanes = 1;
   private boolean conurbation = false;
   private int speedLimit = 100;
-  private Position center = new Position(0, 0);
 
-  private Connector entryConnector;
-  private Connector exitConnector;
+  protected Connector entryConnector;
+  protected Connector exitConnector;
 
-  private final Long creationTime;
 
 
   HighwaySegment(SegmentType segmentType) {
@@ -56,22 +59,34 @@ public abstract class HighwaySegment implements Segment {
   private void init() {
 
     //Create all AttributeAccessors.
-    AttributeAccessor<String> nameAccessor = new AttributeAccessor<>();
+    AttributeAccessor<String> nameAccessor =
+        new AttributeAccessor<>(AttributeType.NAME, () -> name,
+            s -> name = s);
     attributeAccessors.add(nameAccessor);
-    AttributeAccessor<Integer> lengthAccessor = new AttributeAccessor<>();
+    AttributeAccessor<Integer> lengthAccessor =
+        new AttributeAccessor<>(AttributeType.LENGTH, () -> length,
+            s -> length = s);
     attributeAccessors.add(lengthAccessor);
-    AttributeAccessor<Integer> pitchAccessor = new AttributeAccessor<>();
+    AttributeAccessor<Integer> pitchAccessor =
+        new AttributeAccessor<>(AttributeType.SLOPE, () -> pitch,
+            s -> pitch = s);
     attributeAccessors.add(pitchAccessor);
-    AttributeAccessor<Integer> nrOfEntryLanesAccessor = new AttributeAccessor<>();
+    AttributeAccessor<Integer> nrOfEntryLanesAccessor =
+        new AttributeAccessor<>(AttributeType.LANE_COUNT, () -> nrOfEntryLanes,
+            s -> nrOfEntryLanes = s);
     attributeAccessors.add(nrOfEntryLanesAccessor);
-    AttributeAccessor<Integer> nrOfExitLanesAccessor = new AttributeAccessor<>();
+    AttributeAccessor<Integer> nrOfExitLanesAccessor =
+        new AttributeAccessor<>(AttributeType.LANE_COUNT, () -> nrOfExitLanes,
+            s -> nrOfExitLanes = s);
     attributeAccessors.add(nrOfExitLanesAccessor);
-    AttributeAccessor<Boolean> conurbationAccessor = new AttributeAccessor<>();
+    AttributeAccessor<Boolean> conurbationAccessor =
+        new AttributeAccessor<>(AttributeType.CONURBATION, () -> conurbation,
+            s -> conurbation = s);
     attributeAccessors.add(conurbationAccessor);
-    AttributeAccessor<Integer> speedLimitAccessor = new AttributeAccessor<>();
+    AttributeAccessor<Integer> speedLimitAccessor =
+        new AttributeAccessor<>(AttributeType.MAX_SPEED, () -> speedLimit,
+            s -> speedLimit = s);
     attributeAccessors.add(speedLimitAccessor);
-
-    //TODO: Redo when AttributeAccessors are implemented
 
     List<AttributeAccessor<?>> entryAttributesList =
         Arrays.asList(lengthAccessor, nrOfEntryLanesAccessor);
@@ -80,32 +95,12 @@ public abstract class HighwaySegment implements Segment {
         Arrays.asList(lengthAccessor, nrOfExitLanesAccessor);
 
     initConnectors(entryAttributesList, exitAttributesList);
-  }
-
-  private void initConnectors(List<AttributeAccessor<?>> entryAttributesList,
-                              List<AttributeAccessor<?>> exitAttributesList) {
-    if (this.getSegmentType() == SegmentType.BASE) {
-      this.entryConnector = new MovableConnector(ConnectorType.ENTRY,
-          new Position(center.getX() - INITIAL_CONNECTOR_DISTANCE_TO_CENTER,
-              center.getY()),
-          entryAttributesList);
-      this.exitConnector = new MovableConnector(ConnectorType.EXIT,
-          new Position(center.getX() + INITIAL_CONNECTOR_DISTANCE_TO_CENTER,
-              center.getY()),
-          exitAttributesList);
-    } else {
-      this.entryConnector = new Connector(ConnectorType.ENTRY,
-          new Position(center.getX() - INITIAL_CONNECTOR_DISTANCE_TO_CENTER,
-              center.getY()),
-          entryAttributesList);
-      this.exitConnector = new Connector(ConnectorType.EXIT,
-          new Position(center.getX() + INITIAL_CONNECTOR_DISTANCE_TO_CENTER,
-              center.getY()),
-          exitAttributesList);
-    }
     connectors.add(entryConnector);
     connectors.add(exitConnector);
   }
+
+  abstract void initConnectors(List<AttributeAccessor<?>> entryAttributesList,
+                              List<AttributeAccessor<?>> exitAttributesList);
 
   /**
    * Provides the entry Connector for this Segment.

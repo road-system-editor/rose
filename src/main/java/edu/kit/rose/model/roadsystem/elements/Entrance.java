@@ -8,6 +8,7 @@ import edu.kit.rose.infrastructure.UnitObserver;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.measurements.Measurement;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -51,5 +52,10 @@ public class Entrance extends RampSegment {
   @Override
   public void notifySubscribers() {
     observers.forEach(o -> o.notifyChange(this));
+  }
+
+  @Override
+  protected void initRamp(List<AttributeAccessor<?>> rampAttributesList, Position rampPosition) {
+    this.rampConnector = new Connector(ConnectorType.RAMP_ENTRY, rampPosition, rampAttributesList);
   }
 }

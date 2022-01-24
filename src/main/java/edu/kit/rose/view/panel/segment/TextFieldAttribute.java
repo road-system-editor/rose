@@ -19,7 +19,7 @@ public abstract class TextFieldAttribute<T> extends EditableAttribute<T> {
    */
   private boolean inhomogeneousInsertion = false;
 
-  private final TextField inputField;
+  private TextField inputField; //TODO make final and init immediately
 
   /**
    * Creates an editable attribute component for a given attribute accessor.
@@ -27,7 +27,6 @@ public abstract class TextFieldAttribute<T> extends EditableAttribute<T> {
   protected TextFieldAttribute(AttributeAccessor<T> attribute,
                                AttributeController controller) {
     super(attribute, controller);
-    this.inputField = new TextField();
   }
 
   /**
@@ -50,6 +49,7 @@ public abstract class TextFieldAttribute<T> extends EditableAttribute<T> {
 
   @Override
   protected Node createInputField() {
+    inputField = new TextField();
     updateInputField();
 
     inputField.textProperty().addListener(this::onInputFieldUpdate);

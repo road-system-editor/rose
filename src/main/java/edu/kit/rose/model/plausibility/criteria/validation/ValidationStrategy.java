@@ -10,6 +10,17 @@ package edu.kit.rose.model.plausibility.criteria.validation;
  */
 abstract class ValidationStrategy<T> {
 
+  protected final ValidationType validationType;
+
+  /**
+   * Constructor.
+   *
+   * @param validationType the validationType of the ValidationStrategy.
+   */
+  public ValidationStrategy(ValidationType validationType) {
+    this.validationType = validationType;
+  }
+
   /**
    * Validates if the two given values are a legal combination in sense of the ValidationStrategy.
    *

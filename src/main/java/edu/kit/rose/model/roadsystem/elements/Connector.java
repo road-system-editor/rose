@@ -9,6 +9,7 @@ import edu.kit.rose.infrastructure.UnitObservable;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
 * A Connector is part of a {@link edu.kit.rose.model.roadsystem.elements.Segment}
@@ -20,7 +21,7 @@ public class Connector extends RoseUnitObservable<Connector>
           implements UnitObservable<Connector> {
   private final ConnectorType type;
   private final Position position;
-  private final Collection<AttributeAccessor<?>> accessors;
+  private final List<AttributeAccessor<?>> accessors;
 
   /**
    * Constructor.
@@ -29,7 +30,7 @@ public class Connector extends RoseUnitObservable<Connector>
    * @param position  the {@link Position} that this Connector is supposed to be at.
    * @param accessors The {@link AttributeAccessor}s that this Connector is supposed to have.
    */
-  Connector(ConnectorType type, Position position, Collection<AttributeAccessor<?>> accessors) {
+  Connector(ConnectorType type, Position position, List<AttributeAccessor<?>> accessors) {
     this.type = type;
     this.position = position;
     this.accessors = accessors;
@@ -44,6 +45,11 @@ public class Connector extends RoseUnitObservable<Connector>
     return new Position(this.position.getX(), this.position.getY());
   }
 
+
+  protected Position getPositionInstance() {
+    return this.position;
+  }
+
   /**
    * Gives the {@link AttributeAccessor}s to the Attributes that are specific for this Connector.
    * The referenced Attributes are part of the Segment this Connector is part of, though only the
@@ -55,7 +61,7 @@ public class Connector extends RoseUnitObservable<Connector>
    *      Connector.
    */
   public SortedBox<AttributeAccessor<?>> getAttributeAccessors() {
-    return null;
+    return new RoseSortedBox<>(this.accessors);
   }
 
   /**
@@ -78,9 +84,9 @@ public class Connector extends RoseUnitObservable<Connector>
    * @param movement the movement that is to be applied.
    */
   void move(Movement movement) {
-
     this.position.setX(this.position.getX() + movement.getX());
     this.position.setY(this.position.getY() + movement.getY());
     notifySubscribers();
   }
+
 }

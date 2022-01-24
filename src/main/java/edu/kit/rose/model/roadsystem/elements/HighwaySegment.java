@@ -3,15 +3,13 @@ package edu.kit.rose.model.roadsystem.elements;
 import edu.kit.rose.infrastructure.Box;
 import edu.kit.rose.infrastructure.Movement;
 import edu.kit.rose.infrastructure.Position;
-import edu.kit.rose.infrastructure.SimpleBox;
-import edu.kit.rose.infrastructure.SimpleSortedBox;
+import edu.kit.rose.infrastructure.RoseBox;
+import edu.kit.rose.infrastructure.RoseSortedBox;
 import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.measurements.Measurement;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -87,11 +85,11 @@ public abstract class HighwaySegment implements Segment {
   private void initConnectors(List<AttributeAccessor<?>> entryAttributesList,
                               List<AttributeAccessor<?>> exitAttributesList) {
     if (this.getSegmentType() == SegmentType.BASE) {
-      this.entryConnector = new MoveableConnector(ConnectorType.ENTRY,
+      this.entryConnector = new MovableConnector(ConnectorType.ENTRY,
           new Position(center.getX() - INITIAL_CONNECTOR_DISTANCE_TO_CENTER,
               center.getY()),
           entryAttributesList);
-      this.exitConnector = new MoveableConnector(ConnectorType.EXIT,
+      this.exitConnector = new MovableConnector(ConnectorType.EXIT,
           new Position(center.getX() + INITIAL_CONNECTOR_DISTANCE_TO_CENTER,
               center.getY()),
           exitAttributesList);
@@ -129,7 +127,7 @@ public abstract class HighwaySegment implements Segment {
 
   @Override
   public SortedBox<AttributeAccessor<?>> getAttributeAccessors() {
-    return new SimpleSortedBox<>(new ArrayList<>(this.attributeAccessors));
+    return new RoseSortedBox<>(new ArrayList<>(this.attributeAccessors));
   }
 
   @Override
@@ -149,12 +147,12 @@ public abstract class HighwaySegment implements Segment {
 
   @Override
   public SortedBox<Measurement<?>> getMeasurements() {
-    return new SimpleSortedBox<>(new ArrayList<>(this.measurements));
+    return new RoseSortedBox<>(new ArrayList<>(this.measurements));
   }
 
   @Override
   public Box<Connector> getConnectors() {
-    return new SimpleBox<>(new ArrayList<>(this.connectors));
+    return new RoseBox<>(new ArrayList<>(this.connectors));
   }
 
   @Override

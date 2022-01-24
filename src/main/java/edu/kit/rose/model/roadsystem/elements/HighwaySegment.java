@@ -15,13 +15,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-
 /**
  * A base Class for a {@link Segment} that implements the basic functionality all Segments share.
  */
 public abstract class HighwaySegment implements Segment {
 
-  protected static final int INITIAL_CONNECTOR_DISTANCE_TO_CENTER = 50;
+  private static final int INITIAL_CONNECTOR_DISTANCE_TO_CENTER = 50;
 
   protected final ArrayList<AttributeAccessor<?>> attributeAccessors =
       new ArrayList<>();
@@ -40,8 +39,8 @@ public abstract class HighwaySegment implements Segment {
   private boolean conurbation = false;
   private int speedLimit = 100;
 
-  protected Connector entryConnector;
-  protected Connector exitConnector;
+  private Connector entryConnector;
+  private Connector exitConnector;
 
 
 
@@ -95,8 +94,6 @@ public abstract class HighwaySegment implements Segment {
         Arrays.asList(lengthAccessor, nrOfExitLanesAccessor);
 
     initConnectors(entryAttributesList, exitAttributesList);
-    connectors.add(entryConnector);
-    connectors.add(exitConnector);
   }
 
   abstract void initConnectors(List<AttributeAccessor<?>> entryAttributesList,

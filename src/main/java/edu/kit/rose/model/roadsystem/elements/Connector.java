@@ -25,9 +25,9 @@ public class Connector extends RoseUnitObservable<Connector>
   /**
    * Constructor.
    *
-   * @param type      the {@link ConnectorType} for this RoseConnector.
-   * @param position  the {@link Position} that this RoseConnector is supposed to be at.
-   * @param accessors The {@link AttributeAccessor}s that this RoseConnector is supposed to have.
+   * @param type      the {@link ConnectorType} for this Connector.
+   * @param position  the {@link Position} that this Connector is supposed to be at.
+   * @param accessors The {@link AttributeAccessor}s that this Connector is supposed to have.
    */
   Connector(ConnectorType type, Position position, Collection<AttributeAccessor<?>> accessors) {
     this.type = type;

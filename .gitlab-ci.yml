@@ -1,27 +1,15 @@
 image: gradle:alpine
 
 stages:
-  - build
   - test
 
-build:
-  stage: build
+check:
+  stage: test
   needs: []
-  script: gradle --build-cache assemble
+  script: gradle --build-cache check
   cache:
     key: "$CI_COMMIT_REF_NAME"
     policy: push
-    paths:
-      - build
-      - .gradle
-
-test:
-  stage: test
-  needs: ["build"]
-  script: gradle test
-  cache:
-    key: "$CI_COMMIT_REF_NAME"
-    policy: pull
     paths:
       - build
       - .gradle
@@ -29,35 +17,5 @@ test:
     when: always
     paths:
       - build/reports/tests/test/
-
-checkstyle:
-  stage: test
-  needs: []
-  script: gradle checkstyleMain
-  cache:
-    key: "$CI_COMMIT_REF_NAME"
-    policy: pull
-    paths:
-      - build
-      - .gradle
-  artifacts:
-    when: always
-    paths:
-      - build/reports/checkstyle/
-  allow_failure: false
-
-checkstyle_test:
-  stage: test
-  needs: []
-  script: gradle checkstyleTest
-  cache:
-    key: "$CI_COMMIT_REF_NAME"
-    policy: pull
-    paths:
-      - build
-      - .gradle
-  artifacts:
-    when: always
-    paths:
       - build/reports/checkstyle/
   allow_failure: false

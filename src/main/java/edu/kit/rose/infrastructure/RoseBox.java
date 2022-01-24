@@ -23,6 +23,16 @@ public class RoseBox<T> implements Box<T> {
     this.content = new ArrayList<>(content);
   }
 
+  /**
+   * Constructor.
+   *
+   * @param content the Elements that are supposed to be in the Box.
+   */
+  @SafeVarargs
+  public RoseBox(T... content) {
+    this.content = List.of(content);
+  }
+
   @Override
   public int getSize() {
     return content.size();
@@ -36,5 +46,9 @@ public class RoseBox<T> implements Box<T> {
   @Override
   public Iterator<T> iterator() {
     return content.iterator();
+  }
+
+  protected List<T> getContent() {
+    return content;
   }
 }

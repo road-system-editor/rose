@@ -194,17 +194,21 @@ class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, RoadSys
 
   @Override
   public void connectConnectors(Connector segment1Connector, Connector segment2Connector) {
-
+    segmentConnectionGraph.addEdge(
+        connectorSegmentMap.get(segment1Connector),
+        connectorSegmentMap.get(segment2Connector),
+        new Connection(segment1Connector, segment2Connector)
+    );
   }
 
   @Override
   public void disconnectConnection(Connection connection) {
-
+    segmentConnectionGraph.removeEdge(connection);
   }
 
   @Override
   public void disconnectFromAll(Segment segment) {
-
+    getConnections(segment).forEach(segmentConnectionGraph::removeEdge);
   }
 
   @Override

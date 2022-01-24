@@ -3,6 +3,7 @@ package edu.kit.rose.controller.hierarchy;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
 import edu.kit.rose.controller.command.ChangeCommand;
 import edu.kit.rose.infrastructure.SimpleBox;
 import edu.kit.rose.infrastructure.SimpleSortedBox;

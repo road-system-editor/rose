@@ -4,6 +4,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
 import edu.kit.rose.infrastructure.SimpleBox;
 import edu.kit.rose.infrastructure.SimpleSortedBox;
 import edu.kit.rose.model.Project;
@@ -110,10 +111,10 @@ class CreateGroupCommandTest {
 
       when(this.group.getElements()).thenReturn(new SimpleSortedBox<>(this.groupElements));
 
-      doAnswer(arguments -> this.groupElements.add(arguments.getArgument(0))).
-              when(this.group).addElement(any(Element.class));
-      doAnswer(arguments -> this.groupElements.remove((Element) arguments.getArgument(0))).
-              when(this.group).removeElement(any(Element.class));
+      doAnswer(arguments -> this.groupElements.add(arguments.getArgument(0)))
+              .when(this.group).addElement(any(Element.class));
+      doAnswer(arguments -> this.groupElements.remove((Element) arguments.getArgument(0)))
+              .when(this.group).removeElement(any(Element.class));
 
       for (Element element : (Collection<Element>) e.getArgument(0)) {
         this.group.addElement(element);

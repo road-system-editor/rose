@@ -1,16 +1,14 @@
 package edu.kit.rose.infrastructure;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
 /**
- * A standard implementation of a {@link Box}.
+ * A standard implementation for a SortedBox.
  *
  * @param <T> The Type of the Objects in the Box.
  */
-public class SimpleBox<T> implements Box<T> {
+public class RoseSortedBox<T> implements SortedBox<T> {
 
   private final List<T> content;
 
@@ -19,8 +17,8 @@ public class SimpleBox<T> implements Box<T> {
    *
    * @param content the Elements that are supposed to be in the Box.
    */
-  public SimpleBox(Collection<T> content) {
-    this.content = new ArrayList<>(content);
+  public RoseSortedBox(List<T> content) {
+    this.content = content;
   }
 
   @Override
@@ -31,6 +29,11 @@ public class SimpleBox<T> implements Box<T> {
   @Override
   public boolean contains(T t) {
     return content.contains(t);
+  }
+
+  @Override
+  public T get(int index) {
+    return content.get(index);
   }
 
   @Override

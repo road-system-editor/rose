@@ -1,7 +1,7 @@
 package edu.kit.rose.model.roadsystem.elements;
 
 import edu.kit.rose.infrastructure.Position;
-import edu.kit.rose.infrastructure.SimpleBox;
+import edu.kit.rose.infrastructure.RoseBox;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

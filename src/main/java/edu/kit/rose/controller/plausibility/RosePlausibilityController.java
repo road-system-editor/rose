@@ -1,15 +1,12 @@
 package edu.kit.rose.controller.plausibility;
 
-import edu.kit.rose.controller.command.ChangeCommandBuffer;
 import edu.kit.rose.controller.commons.Controller;
 import edu.kit.rose.controller.commons.StorageLock;
-import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.model.ApplicationDataSystem;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.plausibility.criteria.CompatibilityCriterion;
-import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterion;
 import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterionType;
-import edu.kit.rose.model.plausibility.criteria.validation.OperatorType;
+import edu.kit.rose.model.plausibility.criteria.validation.ValidationType;
 import edu.kit.rose.model.plausibility.violation.Violation;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
@@ -65,7 +62,7 @@ public class RosePlausibilityController extends Controller implements Plausibili
 
   @Override
   public void setCompatibilityCriterionOperatorType(CompatibilityCriterion criterion,
-                                                    OperatorType operatorType) {
+                                                    ValidationType validationType) {
 
   }
 

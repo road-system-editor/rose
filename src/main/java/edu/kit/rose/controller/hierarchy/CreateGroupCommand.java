@@ -33,6 +33,7 @@ public class CreateGroupCommand implements ChangeCommand {
   @Override
   public void execute() {
     this.storeParentsForElements();
+    this.removeChildrenFromParents();
     this.group = this.project.getRoadSystem().createGroup(this.elements);
   }
 
@@ -54,7 +55,7 @@ public class CreateGroupCommand implements ChangeCommand {
         Group auxGroup = (Group) roadElement;
         ArrayList<Element> child = new ArrayList<>();
         for (Element element : this.elements) {
-          if (auxGroup.contains(element)) {
+          if (auxGroup.getElements().contains(element)) {
             child.add(element);
           }
         }
@@ -73,6 +74,18 @@ public class CreateGroupCommand implements ChangeCommand {
     for (var entry : this.parentMap.entrySet()) {
       for (Element element : entry.getValue()) {
         entry.getKey().addElement(element);
+      }
+    }
+  }
+
+  /**
+   * Goes Throw the parentMap and removes elements back
+   * to its parents.
+   */
+  private void removeChildrenFromParents() {
+    for (var entry : this.parentMap.entrySet()) {
+      for (Element element : entry.getValue()) {
+        entry.getKey().removeElement(element);
       }
     }
   }

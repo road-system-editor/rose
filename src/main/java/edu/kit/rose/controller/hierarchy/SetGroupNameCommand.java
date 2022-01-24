@@ -39,12 +39,8 @@ public class SetGroupNameCommand implements ChangeCommand {
   private void setNameToGroup(String name) {
     for (AttributeAccessor<?> attribute : this.group.getAttributeAccessors()) {
       if (attribute.getAttributeType().equals(AttributeType.NAME)) {
-        try {
-          AttributeAccessor<String> nameAttribute = (AttributeAccessor<String>) attribute;
-          nameAttribute.setValue(name);
-        } catch (ClassCastException e) {
-          return;
-        }
+        AttributeAccessor<String> nameAttribute = (AttributeAccessor<String>) attribute;
+        nameAttribute.setValue(name);
         return;
       }
     }

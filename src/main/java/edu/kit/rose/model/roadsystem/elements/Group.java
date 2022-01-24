@@ -1,11 +1,14 @@
 package edu.kit.rose.model.roadsystem.elements;
 
 import edu.kit.rose.infrastructure.Box;
+import edu.kit.rose.infrastructure.RoseSortedBox;
 import edu.kit.rose.infrastructure.RoseUnitObservable;
 import edu.kit.rose.infrastructure.SortedBox;
-import edu.kit.rose.infrastructure.UnitObserver;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
+import edu.kit.rose.model.roadsystem.attributes.AttributeType;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * A container tha holds multiple {@link Element}s.
@@ -14,9 +17,13 @@ import java.util.Iterator;
  */
 public class Group extends RoseUnitObservable<Element> implements Element, Iterable<Element> {
 
+  private final List<Element> elements = new ArrayList<>();
+  private String name;
+  private String comment;
+
   @Override
   public Iterator<Element> iterator() {
-    return null;
+    return elements.iterator();
   }
 
   /**
@@ -25,7 +32,9 @@ public class Group extends RoseUnitObservable<Element> implements Element, Itera
    * @param element The {@link Element} that shall be added to the Group.
    */
   public void addElement(Element element) {
-
+    if (element != null && !elements.contains(element)) {
+      elements.add(element);
+    }
   }
 
   /**
@@ -34,7 +43,7 @@ public class Group extends RoseUnitObservable<Element> implements Element, Itera
    * @param element The {@link Element} that shall be removed from the Group.
    */
   public void removeElement(Element element) {
-
+    elements.remove(element);
   }
 
   /**
@@ -43,7 +52,7 @@ public class Group extends RoseUnitObservable<Element> implements Element, Itera
    * @return a {@link Box} of all {@link Element}s in the Group.
    */
   public SortedBox<Element> getElements() {
-    return null;
+    return new RoseSortedBox<>(elements);
   }
 
   /**
@@ -53,41 +62,36 @@ public class Group extends RoseUnitObservable<Element> implements Element, Itera
    * @return True if the given element is in the Group.
    */
   public boolean contains(Element element) {
-    return false;
+    return elements.contains(element);
   }
 
   @Override
   public SortedBox<AttributeAccessor<?>> getAttributeAccessors() {
-    return null;
+    return new RoseSortedBox<>(
+        List.of(
+            new AttributeAccessor<>(
+                AttributeType.NAME,
+                () -> this.name,
+                name -> this.name = name),
+            new AttributeAccessor<>(
+                AttributeType.COMMENT,
+                () -> this.comment,
+                comment -> this.comment = comment)
+        ));
   }
 
   @Override
   public String getName() {
-    return null;
+    return name;
   }
 
   @Override
   public boolean isContainer() {
-    return false;
-  }
-
-  @Override
-  public void notifySubscribers() {
-
+    return true;
   }
 
   @Override
   public Element getThis() {
     return this;
-  }
-
-  @Override
-  public void addSubscriber(UnitObserver<Element> observer) {
-
-  }
-
-  @Override
-  public void removeSubscriber(UnitObserver<Element> observer) {
-
   }
 }

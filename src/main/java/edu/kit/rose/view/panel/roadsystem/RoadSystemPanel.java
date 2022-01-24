@@ -10,7 +10,7 @@ import edu.kit.rose.infrastructure.Box;
 import edu.kit.rose.infrastructure.DualSetObserver;
 import edu.kit.rose.infrastructure.Movement;
 import edu.kit.rose.infrastructure.Position;
-import edu.kit.rose.infrastructure.SimpleSortedBox;
+import edu.kit.rose.infrastructure.RoseSortedBox;
 import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.infrastructure.UnitObserver;
 import edu.kit.rose.infrastructure.language.Language;
@@ -120,7 +120,7 @@ public class RoadSystemPanel extends FxmlContainer
 
       @Override
       public SortedBox<AttributeAccessor<?>> getAttributeAccessors() {
-        return new SimpleSortedBox<>(List.of(
+        return new RoseSortedBox<>(List.of(
             new AttributeAccessor<>(AttributeType.LANE_COUNT, () -> this.laneCount,
                 newLaneCount -> {
                   this.laneCount = newLaneCount;

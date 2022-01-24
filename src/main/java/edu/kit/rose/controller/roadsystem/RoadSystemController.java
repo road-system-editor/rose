@@ -12,7 +12,6 @@ import edu.kit.rose.model.roadsystem.elements.SegmentType;
  * Provides the functionality for managing roadsystems
  * and the street segments.
  *
- * @author ROSE Team
  */
 public interface RoadSystemController extends SetObservable<Segment, RoadSystemController> {
 
@@ -32,36 +31,35 @@ public interface RoadSystemController extends SetObservable<Segment, RoadSystemC
   void setEditorPosition(Position position);
 
   /**
-   * Creates a new street segment of a given type.
+   * Creates a new Segment of a given {@link SegmentType}.
    *
    * @param segmentType the type of the street segment to create
    */
   void createStreetSegment(SegmentType segmentType);
 
   /**
-   * Deletes an existing street segment.
+   * Deletes an existing street {@link Segment}.
    *
    * @param segment the street segment to delete
    */
   void deleteStreetSegment(Segment segment);
 
   /**
-   * Stores the starting position of the street segement which
-   * will be dragged.
+   * Stores the starting {@link Position} of the {@link Segment} which will be dragged.
    *
    * @param segmentPosition the current position of the segment
    */
   void beginDragStreetSegment(Position segmentPosition);
 
   /**
-   * Stores the end position of the street segment which was dragged.
+   * Stores the end {@link Position} of the {@link Segment} which was dragged.
    *
    * @param segmentPosition the final position of the segment
    */
   void endDragStreetSegment(Position segmentPosition);
 
   /**
-   * Toggles the selection status of a segment.
+   * Toggles the selection status of a {@link Segment}.
    *
    * @param segment the segment whose selection status gets toggle
    */

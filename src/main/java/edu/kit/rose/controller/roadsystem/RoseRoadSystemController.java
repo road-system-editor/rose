@@ -16,7 +16,6 @@ import edu.kit.rose.model.roadsystem.elements.SegmentType;
  * Provides the functionality for managing roadsystems
  * and the street segments.
  *
- * @author ROSE Team
  */
 public class RoseRoadSystemController extends Controller
     implements RoadSystemController,

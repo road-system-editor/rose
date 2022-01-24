@@ -3,11 +3,8 @@ package edu.kit.rose.controller.hierarchy;
 import edu.kit.rose.infrastructure.SimpleSortedBox;
 import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.model.Project;
-import edu.kit.rose.model.SimpleProject;
 import edu.kit.rose.model.plausibility.criteria.CriteriaManager;
-import edu.kit.rose.model.roadsystem.GraphRoadSystem;
 import edu.kit.rose.model.roadsystem.RoadSystem;
-import edu.kit.rose.model.roadsystem.TimeSliceSetting;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.elements.Base;
@@ -20,36 +17,47 @@ import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
+import org.mockito.Mock;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 
 /**
  * Unit test for {@link DeleteGroupCommand}.
  */
 class DeleteGroupCommandTest {
   private static final int EXPECTED_NUMBER_OF_ELEMENTS = 2;
-  private static final String UNSETED = "unseted";
-  private static final String SETED = "seted";
+  @Mock
+  private RoadSystem roadSystem;
+  @Mock
+  private Project project;
+  private static final String UNSET = "unset";
+  private static final String SET = "set";
   private List<Element> elements;
   private Element element1;
   private Element element2;
-  private RoadSystem roadSystem;
-  private CriteriaManager criteriaManager;
   private Group mockGroup;
   private Group group;
-  private Project project;
   private AttributeAccessor<String> accessor;
   private String name;
 
 
   @BeforeEach
   public void setUp() {
-    this.name = UNSETED;
+    this.name = UNSET;
     this.elements = new ArrayList<>();
     this.element1 = new Base();
     this.element2 = new Base();
     this.elements.add(element1);
     this.elements.add(element2);
-    this.criteriaManager = new CriteriaManager();
-    this.name = UNSETED;
+    this.name = UNSET;
+    this.project = mock(Project.class);
+    this.roadSystem = mock(RoadSystem.class);
+
+    when(project.getRoadSystem()).thenReturn(this.roadSystem);
     this.mockGroup = new Group() {
       private final List<Element> auxElements = new ArrayList<>();
 
@@ -88,7 +96,7 @@ class DeleteGroupCommandTest {
 
       @Override
       public void setValue(String str) {
-        name = SETED;
+        name = SET;
       }
 
       @Override
@@ -97,28 +105,16 @@ class DeleteGroupCommandTest {
       }
     };
 
-    this.project = new SimpleProject(criteriaManager) {
-      @Override
-      public RoadSystem getRoadSystem() {
-        return roadSystem;
-      }
-    };
+    doAnswer(e -> {
+      mockGroup.removeElement(element1);
+      mockGroup.removeElement(element2);
+      group = mockGroup;
+      ArrayList<Element> list = e.getArgument(0);
+      list.forEach(group::addElement);
+      return group;
+    }).when(this.roadSystem).createGroup(ArgumentMatchers.<Collection<Element>>any());
 
-    this.roadSystem = new GraphRoadSystem(this.criteriaManager, new TimeSliceSetting()) {
-      @Override
-      public Group createGroup(Collection<Element> includedElements) {
-        mockGroup.removeElement(element1);
-        mockGroup.removeElement(element2);
-        group = mockGroup;
-        includedElements.forEach(group::addElement);
-        return group;
-      }
-
-      @Override
-      public void removeElement(Element element) {
-        group = null;
-      }
-    };
+    doAnswer(e -> this.group = null).when(this.roadSystem).removeElement(any());
   }
 
   @Test
@@ -136,7 +132,7 @@ class DeleteGroupCommandTest {
 
     Assertions.assertEquals(this.mockGroup, this.group);
     // checks if the unexecute method sets the same name as on removed group
-    Assertions.assertEquals(SETED, this.name);
+    Assertions.assertEquals(SET, this.name);
 
     SortedBox<Element> groupElements = this.group.getElements();
     SortedBox<Element> expectedElements = new SimpleSortedBox<>(this.elements);

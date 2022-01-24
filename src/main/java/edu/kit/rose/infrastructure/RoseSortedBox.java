@@ -21,14 +21,14 @@ public class RoseSortedBox<T> implements SortedBox<T> {
     this.content = content;
   }
 
-  @Override
-  public int getSize() {
-    return content.size();
-  }
-
-  @Override
-  public boolean contains(T t) {
-    return content.contains(t);
+  /**
+   * Constructor.
+   *
+   * @param content the Elements that are supposed to be in the Box.
+   */
+  @SafeVarargs
+  public SimpleSortedBox(T... content) {
+    super(content);
   }
 
   @Override

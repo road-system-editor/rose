@@ -1,7 +1,6 @@
 <?import javafx.scene.layout.Pane?>
-
-<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.control.Button?>
 <fx:root xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml" type="Pane">
-    <StackPane fx:id="stackPane"/>
+    <Button text="measurement panel"/>
 </fx:root>

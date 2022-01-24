@@ -2,7 +2,6 @@ package edu.kit.rose.view.window;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-import edu.kit.rose.controller.navigation.Navigator;
 import edu.kit.rose.view.commons.FxmlUtility;
 import edu.kit.rose.view.panel.hierarchy.HierarchyPanel;
 import edu.kit.rose.view.panel.problem.ProblemOverviewPanel;

@@ -1,19 +1,14 @@
 package edu.kit.rose.view.panel.segment;
 
 import edu.kit.rose.controller.attribute.AttributeController;
-import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
-import edu.kit.rose.view.commons.FxmlContainer;
-import edu.kit.rose.view.commons.UnmountUtility;
-import java.util.Collection;
-import javafx.scene.Node;
-import javafx.scene.control.TextField;
 
 /**
  * This is the {@link EditableAttribute} implementation for the
  * {@link edu.kit.rose.model.roadsystem.DataType} {@code STRING}.
  */
-class StringAttribute extends EditableAttribute<String> {
+class StringAttribute extends TextFieldAttribute<String> {
+
   /**
    * Creates a new string attribute editor for the given {@code attribute}.
    *
@@ -22,30 +17,17 @@ class StringAttribute extends EditableAttribute<String> {
    */
   StringAttribute(AttributeAccessor<String> attribute, AttributeController controller) {
     super(attribute, controller);
-    UnmountUtility.subscribeUntilUnmount(this, this, attribute);
   }
 
   @Override
-  protected Node createInputField() {
-    TextField tf = new TextField();
-    tf.textProperty().setValue(getAttribute().getValue());
-    tf.textProperty().addListener(
-        (observable, oldVal, newVal) -> getController().setAttribute(getAttribute(), newVal));
-    return new TextField();
+  protected boolean validate(String input) {
+    return true;
   }
 
   @Override
-  protected void updateTranslatableStrings(Language newLang) {
-
+  protected String parse(String input) {
+    return input;
   }
 
-  @Override
-  protected Collection<FxmlContainer> getSubFxmlContainer() {
-    return null;
-  }
 
-  @Override
-  public void notifyChange(AttributeAccessor<String> unit) {
-
-  }
 }

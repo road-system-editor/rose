@@ -16,7 +16,7 @@ import javafx.scene.control.TabPane;
  * A measurement panel allows the user to see and configure time-dependant measurements for a given
  * segment.
  */
-class MeasurementPanel extends FxmlContainer {
+public class MeasurementPanel extends FxmlContainer {
   private TabPane tabPane;
   private MeasurementController controller;
   private TimeSliceSetting timeSliceSetting;
@@ -26,7 +26,7 @@ class MeasurementPanel extends FxmlContainer {
    * Creates an empty measurement panel.
    */
   public MeasurementPanel() {
-    super("measurement_panel");
+    super("MeasurementPanel.fxml");
   }
 
   /**
@@ -61,12 +61,5 @@ class MeasurementPanel extends FxmlContainer {
   @Override
   protected Collection<FxmlContainer> getSubFxmlContainer() {
     return null;
-  }
-
-  /**
-   * Sets the controller that handles measurement value updates.
-   */
-  public void setController(MeasurementController controller) {
-    this.controller = controller;
   }
 }

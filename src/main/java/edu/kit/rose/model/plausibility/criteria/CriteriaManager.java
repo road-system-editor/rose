@@ -1,10 +1,13 @@
 package edu.kit.rose.model.plausibility.criteria;
 
+
 import edu.kit.rose.infrastructure.SetObservable;
-import edu.kit.rose.infrastructure.SetObserver;
+import edu.kit.rose.infrastructure.SimpleSetObservable;
+import edu.kit.rose.infrastructure.SimpleSortedBox;
 import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.infrastructure.UnitObserver;
 import edu.kit.rose.model.plausibility.violation.ViolationManager;
+import java.util.ArrayList;
 
 /**
  * A CriteriaManager holds {@link PlausibilityCriterion}s .
@@ -12,31 +15,26 @@ import edu.kit.rose.model.plausibility.violation.ViolationManager;
  * Provided with a {@link edu.kit.rose.model.roadsystem.RoadSystem} it will set up created
  * Criteria to observe the appropriate {@link edu.kit.rose.model.roadsystem.elements.Segment}s.
  */
-public class CriteriaManager implements SetObservable<PlausibilityCriterion, CriteriaManager>,
-    UnitObserver<PlausibilityCriterion> {
+public class CriteriaManager extends SimpleSetObservable<PlausibilityCriterion, CriteriaManager>
+        implements SetObservable<PlausibilityCriterion, CriteriaManager>,
+        UnitObserver<PlausibilityCriterion> {
 
-  @Override
-  public void addSubscriber(SetObserver<PlausibilityCriterion, CriteriaManager> setObserver) {
+  private ViolationManager violationManager;
+  private final ArrayList<PlausibilityCriterion> criterion;
 
-  }
-
-  @Override
-  public void removeSubscriber(SetObserver<PlausibilityCriterion, CriteriaManager> setObserver) {
-
+  public CriteriaManager() {
+    this.criterion = new ArrayList<>();
   }
 
   /**
    * Sets the {@link ViolationManager} that will receive the
    * {@link edu.kit.rose.model.plausibility.violation.Violation}s
    * of {@link PlausibilityCriterion} in this CriteriaManager.
-   * Sets the {@link ViolationManager} that will receive the
-   * {@link edu.kit.rose.model.plausibility.violation.Violation}s of
-   * {@link PlausibilityCriterion} in this CriteriaManager.
    *
    * @param violationManager the violationManager this CriteriaManager is supposed to use.
    */
   public void setViolationManager(ViolationManager violationManager) {
-
+    this.violationManager = violationManager;
   }
 
   /**
@@ -47,7 +45,7 @@ public class CriteriaManager implements SetObservable<PlausibilityCriterion, Cri
    *        that this CriteriaManager contains.
    */
   public SortedBox<PlausibilityCriterion> getCriteria() {
-    return null;
+    return new SimpleSortedBox<>(this.criterion);
   }
 
   /**
@@ -58,7 +56,14 @@ public class CriteriaManager implements SetObservable<PlausibilityCriterion, Cri
    * @return a {@link SortedBox} containing all {@link PlausibilityCriterion} of the given type.
    */
   public SortedBox<PlausibilityCriterion> getCriteriaOfType(PlausibilityCriterionType type) {
-    return null;
+    ArrayList<PlausibilityCriterion> typeCriteria = new ArrayList<>();
+
+    for (PlausibilityCriterion criteria : this.criterion) {
+      if (criteria.getType().equals(type)) {
+        typeCriteria.add(criteria);
+      }
+    }
+    return new SimpleSortedBox<>(typeCriteria);
   }
 
   /**
@@ -67,6 +72,14 @@ public class CriteriaManager implements SetObservable<PlausibilityCriterion, Cri
    * @param type The Type of the new {@link PlausibilityCriterion}.
    */
   public void createCriterionOfType(PlausibilityCriterionType type) {
+    PlausibilityCriterion newCriteria = switch (type) {
+      case VALUE -> CriterionFactory.createValueCriterion();
+      case COMPLETENESS -> CriterionFactory.createCompletenessCriterion();
+      case COMPATIBILITY -> CriterionFactory.createCompatibilityCriterion();
+    };
+
+    this.criterion.add(newCriteria);
+    subscribers.forEach(e -> e.notifyAddition(newCriteria));
   }
 
   /**
@@ -75,14 +88,16 @@ public class CriteriaManager implements SetObservable<PlausibilityCriterion, Cri
    * @param criteria the Criterion to remove.
    */
   public void removeCriterion(PlausibilityCriterion criteria) {
-
+    this.criterion.remove(criteria);
+    subscribers.forEach(e -> e.notifyRemoval(criteria));
   }
 
   /**
    * Removes all {@link PlausibilityCriterion} from this CriterionManager.
    */
   public void removeAllCriteria() {
-
+    subscribers.forEach(e -> this.criterion.forEach(e::notifyRemoval));
+    this.criterion.clear();
   }
 
   /**
@@ -92,12 +107,12 @@ public class CriteriaManager implements SetObservable<PlausibilityCriterion, Cri
    * @param type the type of {@link PlausibilityCriterion} to remove.
    */
   public void removeAllCriteriaOfType(PlausibilityCriterionType type) {
-
-  }
-
-  @Override
-  public void notifySubscribers() {
-
+    for (PlausibilityCriterion criteria : this.criterion) {
+      if (criteria.getType() == type) {
+        subscribers.forEach(e -> e.notifyRemoval(criteria));
+        this.criterion.remove(criteria);
+      }
+    }
   }
 
   @Override

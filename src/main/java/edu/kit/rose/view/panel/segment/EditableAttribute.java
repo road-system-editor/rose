@@ -6,7 +6,7 @@ import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.view.commons.EnumLocalizationUtility;
 import edu.kit.rose.view.commons.FxmlContainer;
-import edu.kit.rose.view.commons.UnmountUtility;
+import java.util.Objects;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
@@ -37,9 +37,10 @@ abstract class EditableAttribute<T> extends FxmlContainer
    */
   protected EditableAttribute(AttributeAccessor<T> attribute, AttributeController controller) {
     super("EditableAttribute.fxml");
-    this.attribute = attribute;
-    this.controller = controller;
-    UnmountUtility.subscribeUntilUnmount(this, this, attribute);
+    this.attribute = Objects.requireNonNull(attribute);
+    this.controller = Objects.requireNonNull(controller);
+    //UnmountUtility.subscribeUntilUnmount(this, this, attribute); TODO run later bc this is not
+    // mounted yet
     layout.getChildren().add(createInputField());
   }
 

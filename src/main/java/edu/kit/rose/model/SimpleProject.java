@@ -9,7 +9,7 @@ import java.nio.file.Path;
 /**
  * A standard implementation for {@link Project}.
  */
-public class SimpleProject implements Project {
+class SimpleProject implements Project {
 
   /**
    * Constructor.

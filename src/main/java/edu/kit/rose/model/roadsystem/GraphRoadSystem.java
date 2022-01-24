@@ -1,7 +1,6 @@
 package edu.kit.rose.model.roadsystem;
 
 import edu.kit.rose.infrastructure.Box;
-import edu.kit.rose.infrastructure.DualSetObserver;
 import edu.kit.rose.infrastructure.Movement;
 import edu.kit.rose.infrastructure.RoseBox;
 import edu.kit.rose.infrastructure.RoseDualSetObservable;
@@ -46,6 +45,7 @@ class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, RoadSys
   // stored for easy and performant access.
   private final List<Element> elements; //all elements (including groups).
   private final Map<Connector, Segment> connectorSegmentMap;
+  private final Map<Connector, Connection> connectorConnectionMap;
 
   /**
    * Constructor.
@@ -64,6 +64,7 @@ class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, RoadSys
     this.groups = new LinkedList<>();
     this.elements = new LinkedList<>();
     this.connectorSegmentMap = new HashMap<>();
+    this.connectorConnectionMap = new HashMap<>();
   }
 
   @Override
@@ -86,6 +87,10 @@ class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, RoadSys
     subscribers.forEach(s -> s.notifyAddition(segment));
     criteriaManager.getCriteria().forEach(segment::addSubscriber);
     segment.notifySubscribers(); //get segment checked by criteria
+    segment.getConnectors().forEach(c -> {
+      connectorConnectionMap.put(c, null);
+      c.addSubscriber(this);
+    });
     return segment;
   }
 
@@ -115,6 +120,10 @@ class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, RoadSys
     subscribers.forEach(s -> connectionsToSegment.forEach(s::notifyRemovalSecond));
     criteriaManager.getCriteria().forEach(segment::removeSubscriber);
     subscribers.forEach(s -> s.notifyRemoval(segment));
+    segment.getConnectors().forEach(c -> {
+      connectorConnectionMap.remove(c);
+      c.removeSubscriber(this);
+    });
   }
 
   private void removeGroup(Group group) {
@@ -194,46 +203,70 @@ class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, RoadSys
 
   @Override
   public void connectConnectors(Connector segment1Connector, Connector segment2Connector) {
+    var connection = new Connection(segment1Connector, segment2Connector);
     segmentConnectionGraph.addEdge(
         connectorSegmentMap.get(segment1Connector),
         connectorSegmentMap.get(segment2Connector),
-        new Connection(segment1Connector, segment2Connector)
+        connection
     );
+    connectorConnectionMap.put(segment1Connector, connection);
+    connectorConnectionMap.put(segment2Connector, connection);
   }
 
   @Override
   public void disconnectConnection(Connection connection) {
     segmentConnectionGraph.removeEdge(connection);
+    connection.getConnectors().forEach(c -> connectorConnectionMap.put(c, null));
   }
 
   @Override
   public void disconnectFromAll(Segment segment) {
-    getConnections(segment).forEach(segmentConnectionGraph::removeEdge);
+    getConnections(segment).forEach(this::disconnectConnection);
   }
 
   @Override
   public Box<Segment> getAdjacentSegments(Segment segment) {
-    return null;
+    var connectors = segment.getConnectors();
+    return new SimpleBox<>(
+        getConnectionsSet(segment).stream()
+            .map(connection -> {
+              var connector1 = connection.getConnectors().get(0);
+              var connector2 = connection.getOther(connector1);
+              return connectorSegmentMap.get(connectors.contains(connector1)
+                  ? connector2 : connector1);
+            })
+            .collect(Collectors.toList())
+    );
   }
 
   @Override
   public Box<Element> getRootElements() {
-    return null;
+    return new SimpleBox<>(
+        elements.stream()
+            .filter(e -> groups.stream()
+                .anyMatch(g -> g.contains(e)))
+            .collect(Collectors.toList())
+    );
   }
 
   @Override
   public Box<Connection> getConnections(Segment segment) {
-    return null;
+    return new SimpleBox<>(getConnectionsSet(segment));
   }
+
 
   @Override
   public Box<Connection> getConnections(Segment segment1, Segment segment2) {
-    return null;
+    return new SimpleBox<>(segmentConnectionGraph.getAllEdges(segment1, segment2));
+  }
+
+  private Set<Connection> getConnectionsSet(Segment segment) {
+    return segmentConnectionGraph.edgesOf(segment);
   }
 
   @Override
   public Connection getConnection(Connector connector) {
-    return null;
+    return connectorConnectionMap.get(connector);
   }
 
 
@@ -272,27 +305,15 @@ class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, RoadSys
   }
 
   @Override
-  public void addSubscriber(DualSetObserver<Element, Connection, RoadSystem> observer) {
-
-  }
-
-  @Override
-  public void removeSubscriber(DualSetObserver<Element, Connection, RoadSystem> observer) {
-
-  }
-
-  @Override
-  public void notifySubscribers() {
-
-  }
-
-  @Override
   public RoadSystem getThis() {
     return this;
   }
 
   @Override
   public void notifyChange(Connector unit) {
-
+    var connection = connectorConnectionMap.get(unit);
+    if (connection != null) {
+      disconnectConnection(connection);
+    }
   }
 }

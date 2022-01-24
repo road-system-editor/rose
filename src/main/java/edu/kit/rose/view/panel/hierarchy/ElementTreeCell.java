@@ -5,26 +5,20 @@ import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Group;
 import edu.kit.rose.model.roadsystem.elements.Segment;
-import javafx.geometry.Insets;
-import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.ListCell;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
-import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DataFormat;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.Background;
 
 /**
  * This class is a {@link javafx.scene.control.ListView} cell,
  * that displays a {@link Group}.
  */
-public class ElementListCell extends TreeCell<Element> {
+public class ElementTreeCell extends TreeCell<Element> {
 
   private final LocalizedTextProvider translator;
   private final HierarchyController hierarchyController;
@@ -32,12 +26,12 @@ public class ElementListCell extends TreeCell<Element> {
   private ElementView<? extends Element> elementView;
 
   /**
-   * Creates a new {@link ElementListCell}.
+   * Creates a new {@link ElementTreeCell}.
    *
    * @param hierarchyController the hierarchy controller
-   * @param translator the translator
+   * @param translator          the translator
    */
-  public ElementListCell(
+  public ElementTreeCell(
       HierarchyController hierarchyController, LocalizedTextProvider translator) {
     this.hierarchyController = hierarchyController;
     this.translator = translator;
@@ -72,14 +66,63 @@ public class ElementListCell extends TreeCell<Element> {
     setGraphic(new SegmentView(translator, (Segment) element, hierarchyController));
   }
 
+  public static TreeItem<Element> dragItem;
+  public static final DataFormat DATA_FORMAT
+      = new DataFormat("application/rose-hierarchy-element-drag");
+
+
   private void onDragDetected(MouseEvent mouseEvent) {
+    dragItem = getTreeItem();
+
+    if (dragItem == null) {
+      return;
+    }
+
+    Dragboard dragboard = startDragAndDrop(TransferMode.MOVE);
+
+    ClipboardContent content = new ClipboardContent();
+    content.put(DATA_FORMAT, "ElementListCell-Element");
+
+    dragboard.setContent(content);
+    dragboard.setDragView(snapshot(null, null));
+
+    mouseEvent.consume();
   }
 
   private void onDragOver(DragEvent dragEvent) {
+    if (!dragEvent.getDragboard()
+        .hasContent(DATA_FORMAT) || getItem() == null || !getItem().isContainer()) {
+      return;
+    }
 
+    TreeItem<Element> itemToPlaceOn = getTreeItem();
+
+    if (itemToPlaceOn == null || itemToPlaceOn == dragItem) {
+      return;
+    }
+
+    if (dragItem.getParent() == null) {
+      return;
+    }
+
+    dragEvent.acceptTransferModes(TransferMode.MOVE);
   }
 
   private void onDragDropped(DragEvent dragEvent) {
+    if (!dragEvent.getDragboard()
+        .hasContent(DATA_FORMAT) || getItem() == null || !getItem().isContainer()) {
+      return;
+    }
+
+    TreeItem<Element> itemToPlaceOn = getTreeItem();
+
+    TreeItem<Element> draggedItemParent = dragItem.getParent();
+    draggedItemParent.getChildren().remove(dragItem);
+
+    itemToPlaceOn.getChildren().add(dragItem);
+    dragItem = null;
+
+    dragEvent.setDropCompleted(true);
 
   }
 

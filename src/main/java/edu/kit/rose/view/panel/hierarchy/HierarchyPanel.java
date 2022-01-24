@@ -9,6 +9,9 @@ import edu.kit.rose.model.Project;
 import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.elements.Connection;
 import edu.kit.rose.model.roadsystem.elements.Element;
+import edu.kit.rose.model.roadsystem.elements.Entrance;
+import edu.kit.rose.model.roadsystem.elements.Group;
+import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.view.commons.FxmlContainer;
 import edu.kit.rose.view.commons.SearchBar;
 import java.util.Collection;
@@ -17,6 +20,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 
 
@@ -51,13 +56,56 @@ public class HierarchyPanel extends FxmlContainer
     rootItem = new TreeItem<>(null);
 
     setUp();
+
+    Group g = new Group();
+    Segment s = new Entrance();
+
+    TreeItem<Element> g1 = new TreeItem<>(g);
+    TreeItem<Element> g2 = new TreeItem<>(s);
+    g1.getChildren().add(g2);
+
+    Group gi = new Group();
+    TreeItem<Element> g3 = new TreeItem<>(gi);
+    rootItem.getChildren().add(g3);
+
+    rootItem.getChildren().add(g1);
+
   }
 
   private void setUp() {
     elementsListView
-        .setCellFactory(elementsTree -> new ElementListCell(controller, getTranslator()));
+        .setCellFactory(elementsTree -> new ElementTreeCell(controller, getTranslator()));
     elementsListView.setShowRoot(false);
     elementsListView.setRoot(rootItem);
+
+    elementsListView.setOnDragOver(this::onDragOver);
+    elementsListView.setOnDragDropped(this::onDragDropped);
+  }
+
+  private void onDragOver(DragEvent dragEvent) {
+    if (!dragEvent.getDragboard().hasContent(ElementTreeCell.DATA_FORMAT)) {
+      return;
+    }
+
+    if (rootItem == ElementTreeCell.dragItem) {
+      return;
+    }
+
+    dragEvent.acceptTransferModes(TransferMode.MOVE);
+  }
+
+  private void onDragDropped(DragEvent dragEvent) {
+    if (!dragEvent.getDragboard().hasContent(ElementTreeCell.DATA_FORMAT)) {
+      return;
+    }
+
+    TreeItem<Element> draggedItemParent = ElementTreeCell.dragItem.getParent();
+    draggedItemParent.getChildren().remove(ElementTreeCell.dragItem);
+
+    rootItem.getChildren().add(ElementTreeCell.dragItem);
+    ElementTreeCell.dragItem = null;
+
+    dragEvent.setDropCompleted(true);
   }
 
   @Override

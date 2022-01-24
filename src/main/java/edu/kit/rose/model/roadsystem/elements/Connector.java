@@ -2,8 +2,8 @@ package edu.kit.rose.model.roadsystem.elements;
 
 import edu.kit.rose.infrastructure.Movement;
 import edu.kit.rose.infrastructure.Position;
-import edu.kit.rose.infrastructure.SimpleSortedBox;
-import edu.kit.rose.infrastructure.SimpleUnitObservable;
+import edu.kit.rose.infrastructure.RoseSortedBox;
+import edu.kit.rose.infrastructure.RoseUnitObservable;
 import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.infrastructure.UnitObservable;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
@@ -16,7 +16,7 @@ import java.util.Collection;
 * of the same (see Pflichtenheft: Straßensegment). A Connector can also be part of a
 * {@link Connection}.
 */
-public class Connector extends SimpleUnitObservable<Connector>
+public class Connector extends RoseUnitObservable<Connector>
           implements UnitObservable<Connector> {
   private final ConnectorType type;
   private final Position position;
@@ -25,9 +25,9 @@ public class Connector extends SimpleUnitObservable<Connector>
   /**
    * Constructor.
    *
-   * @param type      the {@link ConnectorType} for this SimpleConnector.
-   * @param position  the {@link Position} that this SimpleConnector is supposed to be at.
-   * @param accessors The {@link AttributeAccessor}s that this SimpleConnector is supposed to have.
+   * @param type      the {@link ConnectorType} for this RoseConnector.
+   * @param position  the {@link Position} that this RoseConnector is supposed to be at.
+   * @param accessors The {@link AttributeAccessor}s that this RoseConnector is supposed to have.
    */
   Connector(ConnectorType type, Position position, Collection<AttributeAccessor<?>> accessors) {
     this.type = type;
@@ -55,7 +55,7 @@ public class Connector extends SimpleUnitObservable<Connector>
    *        Connector.
    */
   public SortedBox<AttributeAccessor<?>> getAttributeAccessors() {
-    return new SimpleSortedBox<>(new ArrayList<>(this.accessors));
+    return new RoseSortedBox<>(new ArrayList<>(this.accessors));
   }
 
   /**

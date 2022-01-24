@@ -23,7 +23,7 @@ public class RoseBoxTest {
     for (int i = 0; i < numberOfElements; i++) {
       testArrayList.add(i);
     }
-    box = new SimpleBox<>(testArrayList);
+    box = new RoseBox<>(testArrayList);
   }
 
   @Test

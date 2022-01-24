@@ -27,6 +27,7 @@ public class RoseHierarchyController extends Controller
   private final ChangeCommandBuffer changeCommandBuffer;
   private final Project project;
   private final List<SetObserver<Segment, HierarchyController>> observers;
+  private final SelectionBuffer selectionBuffer;
 
   /**
    * Creates a new {@link RoseHierarchyController}.
@@ -40,14 +41,16 @@ public class RoseHierarchyController extends Controller
                                  SelectionBuffer selectionBuffer, Project project) {
     super(storageLock);
     this.changeCommandBuffer = changeCommandBuffer;
+    this.selectionBuffer = selectionBuffer;
     selectionBuffer.addSubscriber(this);
     this.project = project;
     this.observers = new ArrayList<>();
   }
 
   @Override
-  public void createGroup(List<Element> elements) {
-    ChangeCommand createGroupCommand = new CreateGroupCommand(this.project, elements);
+  public void createGroup() {
+    ChangeCommand createGroupCommand = new CreateGroupCommand(this.project,
+            this.selectionBuffer.getSelectedSegments());
     addAndExecute(createGroupCommand);
   }
 
@@ -59,7 +62,7 @@ public class RoseHierarchyController extends Controller
 
   @Override
   public void addElementToGroup(Element element, Group group) {
-    ChangeCommand addElementCommand = new AddElementToGroupCommand(element, group);
+    ChangeCommand addElementCommand = new AddElementToGroupCommand(this.project, element, group);
     addAndExecute(addElementCommand);
   }
 

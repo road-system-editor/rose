@@ -8,9 +8,8 @@ import java.util.List;
  *
  * @param <T> The Type of the Objects in the Box.
  */
-public class SimpleSortedBox<T> implements SortedBox<T> {
+public class SimpleSortedBox<T> extends SimpleBox<T> implements SortedBox<T> {
 
-  private final List<T> content;
 
   /**
    * Constructor.
@@ -18,17 +17,17 @@ public class SimpleSortedBox<T> implements SortedBox<T> {
    * @param content the Elements that are supposed to be in the Box.
    */
   public SimpleSortedBox(List<T> content) {
-    this.content = content;
+    super(content);
   }
 
-  @Override
-  public int getSize() {
-    return content.size();
-  }
-
-  @Override
-  public boolean contains(T t) {
-    return content.contains(t);
+  /**
+   * Constructor.
+   *
+   * @param content the Elements that are supposed to be in the Box.
+   */
+  @SafeVarargs
+  public SimpleSortedBox(T... content) {
+    super(content);
   }
 
   @Override

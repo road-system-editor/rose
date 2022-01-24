@@ -2,6 +2,7 @@ package edu.kit.rose.infrastructure;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
  */
 public class SimpleBox<T> implements Box<T> {
 
-  private final List<T> content;
+  protected final List<T> content;
 
   /**
    * Constructor.
@@ -21,6 +22,16 @@ public class SimpleBox<T> implements Box<T> {
    */
   public SimpleBox(Collection<T> content) {
     this.content = new ArrayList<>(content);
+  }
+
+  /**
+   * Constructor.
+   *
+   * @param content the Elements that are supposed to be in the Box.
+   */
+  @SafeVarargs
+  public SimpleBox(T... content) {
+    this.content = List.of(content);
   }
 
   @Override

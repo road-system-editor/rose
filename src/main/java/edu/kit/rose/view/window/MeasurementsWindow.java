@@ -6,10 +6,17 @@ import edu.kit.rose.controller.measurement.MeasurementController;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.roadsystem.measurements.MeasurementType;
+import edu.kit.rose.view.commons.EnumLocalizationUtility;
+import edu.kit.rose.view.commons.FxmlUtility;
 import edu.kit.rose.view.panel.measurement.MeasurementOverviewPanel;
 import edu.kit.rose.view.panel.measurement.TimeSliceSettingPanel;
 import java.util.List;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.stage.Stage;
 
@@ -19,11 +26,13 @@ import javafx.stage.Stage;
  * This class is responsible for laying it's contained panels and mediating between
  */
 public class MeasurementsWindow extends RoseWindow {
-  private MeasurementController measurementController;
+  @Inject
   private Project project;
+
   /**
    * The interval settings panel is contained in the measurements window.
    */
+  @FXML
   private TimeSliceSettingPanel timeSliceSetting;
   /**
    * The measurement overview panels are contained in a tabbed layout in the measurements window.
@@ -42,27 +51,38 @@ public class MeasurementsWindow extends RoseWindow {
   /**
    * Creates a new measurements window instance.
    *
-   * @param translator the data source for translated strings.
-   * @param controller the controller to handle measurement changes.
-   * @param project the project that contains the measurements to display.
    * @param injector the injector for dependency injection
    */
   @Inject
-  public MeasurementsWindow(LocalizedTextProvider translator, MeasurementController controller,
-                            Project project, Injector injector) {
-    super(translator, injector);
-    this.measurementController = controller;
-    this.project = project;
+  public MeasurementsWindow(Injector injector) {
+    super(injector);
   }
 
   @Override
-  protected void configureStage(Stage stage) {
-    // fxml loading
-    timeSliceSetting.setController(controller);
-    timeSliceSetting.setTimeSliceSetting(project.getRoadSystem().getTimeSliceSetting());
+  protected void configureStage(Stage stage, Injector injector) {
+    Parent tree = FxmlUtility.loadFxml(null, this,
+        getClass().getResource("MeasurementsWindow.fxml"));
+    var scene = new Scene(tree);
 
-    MeasurementOverviewPanel demandPanel = new MeasurementOverviewPanel(getTranslator(), controller,
-        null /* TODO project.getRoadSystem()*/, MeasurementType.DEMAND);
-    measurementOverviews.add(demandPanel);
+    stage.setScene(scene);
+    stage.setWidth(640); // TODO magic numbers
+    stage.setHeight(360);
+
+    getTranslator().subscribeToOnLanguageChanged(lang -> updateTranslatableStrings(stage));
+    updateTranslatableStrings(stage);
+
+    timeSliceSetting.init(injector);
+
+    // TODO add tabs with measurement tables
+    for (var type : MeasurementType.values()) {
+      String title = EnumLocalizationUtility.localizeMeasurementTypeTitle(getTranslator(), type);
+      Node content = new Button(String.format("table for %s goes here!", title));
+      tabs.getTabs().add(new Tab(title, content));
+    }
+  }
+
+  private void updateTranslatableStrings(Stage stage) {
+    stage.setTitle(getTranslator().getLocalizedText("view.window.measurements.title"));
+    // TODO translate tab titles too
   }
 }

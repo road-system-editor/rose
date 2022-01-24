@@ -36,7 +36,7 @@ public class ProblemOverviewPanel extends FxmlContainer
    *        + {@link #setManager(ViolationManager)}
    */
   public ProblemOverviewPanel() {
-    super("problem_overview_panel.fxml");
+    super("ProblemOverviewPanel.fxml");
   }
 
   /**

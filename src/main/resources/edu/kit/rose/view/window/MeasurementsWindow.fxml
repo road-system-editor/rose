@@ -1,0 +1,17 @@
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.BorderPane?>
+<?import edu.kit.rose.view.commons.SearchBar?>
+<?import edu.kit.rose.view.panel.measurement.TimeSliceSettingPanel?>
+<?import javafx.scene.control.TabPane?>
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml">
+    <top>
+        <HBox>
+            <SearchBar fx:id="searchBar"/>
+            <TimeSliceSettingPanel fx:id="timeSliceSetting"/>
+        </HBox>
+    </top>
+    <center>
+        <TabPane fx:id="tabs"/>
+    </center>
+</BorderPane>

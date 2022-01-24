@@ -10,8 +10,8 @@ import edu.kit.rose.model.Project;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Group;
 import edu.kit.rose.model.roadsystem.elements.Segment;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Provides the functionality to manage the element
@@ -26,7 +26,7 @@ public class RoseHierarchyController extends Controller
    */
   private final ChangeCommandBuffer changeCommandBuffer;
   private final Project project;
-  private final List<SetObserver<Segment, HierarchyController>> observers;
+  private final Set<SetObserver<Segment, HierarchyController>> observers;
   private final SelectionBuffer selectionBuffer;
 
   /**
@@ -44,7 +44,7 @@ public class RoseHierarchyController extends Controller
     this.selectionBuffer = selectionBuffer;
     selectionBuffer.addSubscriber(this);
     this.project = project;
-    this.observers = new ArrayList<>();
+    this.observers = new HashSet<>();
   }
 
   @Override
@@ -74,9 +74,7 @@ public class RoseHierarchyController extends Controller
 
   @Override
   public void addSubscriber(SetObserver<Segment, HierarchyController> observer) {
-    if (!this.observers.contains(observer)) {
-      this.observers.add(observer);
-    }
+    this.observers.add(observer);
   }
 
   @Override

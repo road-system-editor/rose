@@ -45,6 +45,7 @@ import java.util.stream.StreamSupport;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultUndirectedGraph;
 
+
 /**
  * A Standard implementation of a {@link RoadSystem}
  * using a Graph for holding the connections between the {@link Segment}s.
@@ -152,15 +153,20 @@ class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, RoadSys
   }
 
   private void removeSegment(Segment segment) {
+    elements.remove(segment);
     var connectionsToSegment = segmentConnectionGraph.edgesOf(segment);
+    segment.getConnectors().forEach(connectorSegmentMap::remove);
     segmentConnectionGraph.removeVertex(segment);
     subscribers.forEach(s -> connectionsToSegment.forEach(s::notifyRemovalSecond));
     criteriaManager.getCriteria().forEach(segment::removeSubscriber);
+    subscribers.forEach(s -> s.notifyRemoval(segment));
   }
 
   private void removeGroup(Group group) {
-    groups.remove(group);
     group.getElements().forEach(this::removeElement);
+    elements.remove(group);
+    groups.remove(group);
+    subscribers.forEach(s -> s.notifyRemoval(group));
   }
 
   @Override

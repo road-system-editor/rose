@@ -337,7 +337,7 @@ class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, RoadSys
 
   @Override
   public TimeSliceSetting getTimeSliceSetting() {
-    return null;
+    return this.timeSliceSetting;
   }
 
   @Override

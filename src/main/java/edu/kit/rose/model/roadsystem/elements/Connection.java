@@ -35,7 +35,7 @@ public class Connection extends RoseUnitObservable<Connection> {
    * @return The {@link Connector}s that are connected with this Connection.
    */
   public SortedBox<Connector> getConnectors() {
-    return new RoseSortedBox<>(List.of(connector1, connector2));
+    return new RoseSortedBox<>(connector1, connector2);
   }
 
   /**

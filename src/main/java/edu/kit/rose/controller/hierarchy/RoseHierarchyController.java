@@ -12,6 +12,7 @@ import edu.kit.rose.model.roadsystem.elements.Group;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.BiConsumer;
 
 /**
  * Provides the functionality to manage the element
@@ -21,13 +22,16 @@ public class RoseHierarchyController extends Controller
     implements HierarchyController,
     SetObserver<Segment, SelectionBuffer> {
 
+  private static final Boolean SELECTED = true;
+  private static final Boolean UNSELECTED = false;
+
   /**
    * The container for selected segments.
    */
   private final ChangeCommandBuffer changeCommandBuffer;
   private final Project project;
-  private final Set<SetObserver<Segment, HierarchyController>> observers;
   private final SelectionBuffer selectionBuffer;
+  private final Set<BiConsumer<Segment, Boolean>> consumers;
 
   /**
    * Creates a new {@link RoseHierarchyController}.
@@ -44,7 +48,7 @@ public class RoseHierarchyController extends Controller
     this.selectionBuffer = selectionBuffer;
     selectionBuffer.addSubscriber(this);
     this.project = project;
-    this.observers = new HashSet<>();
+    this.consumers = new HashSet<>();
   }
 
   @Override
@@ -72,34 +76,25 @@ public class RoseHierarchyController extends Controller
     addAndExecute(setGroupNamCommand);
   }
 
+
   @Override
-  public void addSubscriber(SetObserver<Segment, HierarchyController> observer) {
-    this.observers.add(observer);
+  public void addBiConsumer(BiConsumer<Segment, Boolean> consumer) {
+    this.consumers.add(consumer);
   }
 
   @Override
-  public void removeSubscriber(SetObserver<Segment, HierarchyController> observer) {
-    this.observers.remove(observer);
-  }
-
-  @Override
-  public void notifySubscribers() {
-    observers.forEach(e -> e.notifyChange(this));
-  }
-
-  @Override
-  public HierarchyController getThis() {
-    return this;
+  public void removeBiConsumer(BiConsumer<Segment, Boolean> consumer) {
+    this.consumers.remove(consumer);
   }
 
   @Override
   public void notifyAddition(Segment unit) {
-    observers.forEach(e -> e.notifyAddition(unit));
+    consumers.forEach(e -> e.accept(unit, SELECTED));
   }
 
   @Override
   public void notifyRemoval(Segment unit) {
-    observers.forEach(e -> e.notifyRemoval(unit));
+    consumers.forEach(e -> e.accept(unit, UNSELECTED));
   }
 
   @Override
@@ -111,4 +106,5 @@ public class RoseHierarchyController extends Controller
     this.changeCommandBuffer.addCommand(command);
     command.execute();
   }
+
 }

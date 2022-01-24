@@ -4,19 +4,24 @@ import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
+import org.mockito.Mockito;
 
 /**
  * Tests the {@link Group} class.
  */
 public class GroupTest {
 
-  @Mock
   private Element element;
 
-  @Mock
   private Segment segment;
+
+  @BeforeEach
+  private void setUp() {
+    element = Mockito.mock(Element.class);
+    segment = Mockito.mock(Segment.class);
+  }
 
   @Test
   public void testAddElement() {

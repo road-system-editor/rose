@@ -4,6 +4,7 @@ import edu.kit.rose.infrastructure.Box;
 import edu.kit.rose.infrastructure.Movement;
 import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
+import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.elements.Connector;
 import edu.kit.rose.model.roadsystem.elements.Entrance;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
@@ -58,7 +59,7 @@ public class EntranceTest {
   public void testAttributeAccessors() {
     SortedBox<AttributeAccessor<?>> attributeAccessors = testEntrance.getAttributeAccessors();
     Assertions.assertEquals(9, attributeAccessors.getSize());
-    /*Assertions.assertEquals(AttributeType.NAME, attributeAccessors.get(0).getAttributeType());
+    Assertions.assertEquals(AttributeType.NAME, attributeAccessors.get(0).getAttributeType());
     Assertions.assertEquals(AttributeType.LENGTH, attributeAccessors.get(1).getAttributeType());
     Assertions.assertEquals(AttributeType.SLOPE, attributeAccessors.get(2).getAttributeType());
     Assertions.assertEquals(AttributeType.LANE_COUNT, attributeAccessors.get(3).getAttributeType());
@@ -66,8 +67,7 @@ public class EntranceTest {
     Assertions.assertEquals(AttributeType.CONURBATION,
         attributeAccessors.get(5).getAttributeType());
     Assertions.assertEquals(AttributeType.MAX_SPEED, attributeAccessors.get(6).getAttributeType()
-    );*/
-    //TODO: use after attributeAccessor is implemented.
+    );
   }
 
   /**

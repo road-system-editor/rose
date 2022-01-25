@@ -56,7 +56,8 @@ public class Exit extends RampSegment {
   }
 
   @Override
-  protected void initRamp(List<AttributeAccessor<?>> rampAttributesList, Position rampPosition) {
+  protected void initRampConnector(List<AttributeAccessor<?>> rampAttributesList,
+                              Position rampPosition) {
     this.rampConnector = new Connector(ConnectorType.RAMP_EXIT,
         rampPosition, rampAttributesList);
   }

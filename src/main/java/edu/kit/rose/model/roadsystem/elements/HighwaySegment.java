@@ -20,7 +20,7 @@ import java.util.Set;
  */
 public abstract class HighwaySegment implements Segment {
 
-  private static final int INITIAL_CONNECTOR_DISTANCE_TO_CENTER = 50;
+  protected static final int INITIAL_CONNECTOR_DISTANCE_TO_CENTER = 50;
 
   protected final ArrayList<AttributeAccessor<?>> attributeAccessors =
       new ArrayList<>();
@@ -31,6 +31,9 @@ public abstract class HighwaySegment implements Segment {
   private final Position center = new Position(0, 0);
   private final Long creationTime;
 
+  protected Connector entryConnector;
+  protected Connector exitConnector;
+
   private String name;
   private int length = 2 * INITIAL_CONNECTOR_DISTANCE_TO_CENTER;
   private int pitch = 0;
@@ -39,8 +42,6 @@ public abstract class HighwaySegment implements Segment {
   private boolean conurbation = false;
   private int speedLimit = 100;
 
-  private Connector entryConnector;
-  private Connector exitConnector;
 
 
 
@@ -53,6 +54,8 @@ public abstract class HighwaySegment implements Segment {
     this.segmentType = segmentType;
     this.name = name;
     init();
+    connectors.add(entryConnector);
+    connectors.add(exitConnector);
   }
 
   private void init() {

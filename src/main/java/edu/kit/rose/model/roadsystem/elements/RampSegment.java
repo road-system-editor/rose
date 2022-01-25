@@ -18,17 +18,17 @@ abstract class RampSegment extends HighwaySegment {
   protected Connector rampConnector;
 
   public RampSegment(SegmentType segmentType) {
-    super(segmentType);
-    init();
-    connectors.add(rampConnector);
+    this(segmentType, segmentType.name());
   }
 
   public RampSegment(SegmentType segmentType, String name) {
     super(segmentType, name);
-    init();
+    initRamp();
+    connectors.add(rampConnector);
   }
 
-  private void init() {
+
+  private void initRamp() {
     AttributeAccessor<Integer> nrOfRampLanesAccessor =
         new AttributeAccessor<>(AttributeType.LANE_COUNT_RAMP, () -> nrOfRampLanes,
             s -> nrOfRampLanes = s);
@@ -44,12 +44,13 @@ abstract class RampSegment extends HighwaySegment {
 
     List<AttributeAccessor<?>> rampAttributesList =
         Arrays.asList(nrOfRampLanesAccessor, rampSpeedLimitAccessor);
-    initRamp(rampAttributesList, rampConnectorPosition);
+
+    initRampConnector(rampAttributesList, rampConnectorPosition);
 
     this.connectors.add(rampConnector);
   }
 
-  protected abstract void initRamp(List<AttributeAccessor<?>> rampAttributesList,
+  protected abstract void initRampConnector(List<AttributeAccessor<?>> rampAttributesList,
                                    Position rampPosition);
 
   @Override

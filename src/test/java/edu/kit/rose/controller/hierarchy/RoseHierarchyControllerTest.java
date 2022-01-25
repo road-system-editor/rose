@@ -76,7 +76,7 @@ class RoseHierarchyControllerTest {
 
 
     this.nameAccessor = new AttributeAccessor<String>(AttributeType.NAME,
-            mock(Supplier.class), mock(Consumer.class) ) {
+            mock(Supplier.class), mock(Consumer.class)) {
       @Override
       public AttributeType getAttributeType() {
         return AttributeType.NAME;

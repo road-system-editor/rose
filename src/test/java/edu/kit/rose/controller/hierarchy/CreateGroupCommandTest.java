@@ -112,7 +112,7 @@ class CreateGroupCommandTest {
       this.group = mock(Group.class);
 
       when(this.group.getElements())
-              .thenAnswer(z -> {return new RoseSortedBox<>(this.groupElements);});
+              .thenAnswer(z -> new RoseSortedBox<>(this.groupElements));
 
       doAnswer(arguments -> this.groupElements.add(arguments.getArgument(0)))
               .when(this.group).addElement(any(Element.class));

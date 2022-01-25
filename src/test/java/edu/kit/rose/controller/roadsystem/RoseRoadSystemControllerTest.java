@@ -2,15 +2,19 @@ package edu.kit.rose.controller.roadsystem;
 
 import edu.kit.rose.controller.command.ChangeCommandBuffer;
 import edu.kit.rose.controller.commons.StorageLock;
+import edu.kit.rose.controller.navigation.Navigator;
 import edu.kit.rose.controller.selection.SelectionBuffer;
 import edu.kit.rose.infrastructure.Position;
+import edu.kit.rose.infrastructure.RoseBox;
 import edu.kit.rose.infrastructure.UnitObserver;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.ZoomSetting;
 import edu.kit.rose.model.roadsystem.RoadSystem;
+import edu.kit.rose.model.roadsystem.elements.Connector;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,6 +29,7 @@ public class RoseRoadSystemControllerTest {
 
   private ChangeCommandBuffer changeCommandBuffer;
   private StorageLock storageLock;
+  private Navigator navigator;
   private SelectionBuffer selectionBuffer;
   private Project project;
 
@@ -35,6 +40,7 @@ public class RoseRoadSystemControllerTest {
   private void setUp() {
     changeCommandBuffer = Mockito.mock(ChangeCommandBuffer.class);
     storageLock = Mockito.mock(StorageLock.class);
+    navigator = Mockito.mock(Navigator.class);
     selectionBuffer = Mockito.mock(SelectionBuffer.class);
     project = Mockito.mock(Project.class);
 
@@ -42,6 +48,7 @@ public class RoseRoadSystemControllerTest {
     roadSystemController = new RoseRoadSystemController(
         changeCommandBuffer,
         storageLock,
+        navigator,
         selectionBuffer,
         project);
   }
@@ -118,15 +125,6 @@ public class RoseRoadSystemControllerTest {
     Assertions.assertTrue(called.get());
   }
 
-  @Test
-  public void testBeginDragStreetSegment() {
-
-  }
-
-  @Test
-  public void testEndDragStreetSegment() {
-
-  }
 
   @Test
   public void testDragStreetSegment() {
@@ -167,17 +165,36 @@ public class RoseRoadSystemControllerTest {
 
   @Test
   public void testSelectSegmentsInRectangle() {
+    AtomicReference<Boolean> called = new AtomicReference<>(false);
 
-  }
+    Connector segmentInRangeConnector = Mockito.mock(Connector.class);
+    Mockito.when(segmentInRangeConnector.getPosition())
+            .thenReturn(new Position(10, 10));
+    Segment segmentInRange = Mockito.mock(Segment.class);
 
-  @Test
-  public void testBeginDragSegmentEnd() {
+    Mockito.when(segmentInRange.getConnectors())
+        .thenReturn(new RoseBox<Connector>(List.of(segmentInRangeConnector)));
 
-  }
 
-  @Test
-  public void testEndDragSegmentEnd() {
+    Connector segmentOutRangeConnector = Mockito.mock(Connector.class);
+    Mockito.when(segmentInRangeConnector.getPosition())
+        .thenReturn(new Position(20, 20));
+    Segment segmentOutRange = Mockito.mock(Segment.class);
 
+    Mockito.when(segmentOutRange.getConnectors())
+        .thenReturn(new RoseBox<Connector>(List.of(segmentOutRangeConnector)));
+
+    Mockito.doAnswer(invocation ->  {
+      Assertions.assertEquals(segmentInRange, invocation.getArgument(0));
+      called.set(true);
+      return null;
+    }).when(selectionBuffer).addSegmentSelection(Mockito.any(Segment.class));
+
+    roadSystemController.selectSegmentsInRectangle(
+        new Position(0, 0),
+        new Position(15, 15));
+
+    Assertions.assertTrue(called.get());
   }
 
   @Test

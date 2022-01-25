@@ -6,9 +6,11 @@ import edu.kit.rose.infrastructure.RoseUnitObservable;
 import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
+import java.lang.runtime.ObjectMethods;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A container tha holds multiple {@link Element}s.
@@ -49,8 +51,13 @@ public class Group extends RoseUnitObservable<Element> implements Element, Itera
    *
    * @param element The {@link Element} that shall be added to the Group.
    */
-  public void addElement(Element element) {
-    if (element != null && !elements.contains(element)) {
+  public void addElement(Element element) throws IllegalArgumentException {
+    if (element == null) {
+      throw new IllegalArgumentException(
+          "The parameter element may not be null on Group.addElement");
+    }
+
+    if (!elements.contains(element)) {
       elements.add(element);
     }
   }

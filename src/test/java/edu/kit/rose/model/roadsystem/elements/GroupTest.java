@@ -23,7 +23,7 @@ public class GroupTest {
     segment = Mockito.mock(Segment.class);
   }
 
-  @Test
+  @Test()
   public void testAddElement() {
     Group g = new Group();
 
@@ -35,9 +35,7 @@ public class GroupTest {
     Assertions.assertEquals(element, g.getElements().get(0));
     Assertions.assertEquals(1, g.getElements().getSize());
 
-    g.addElement(null);
-    Assertions.assertEquals(element, g.getElements().get(0));
-    Assertions.assertEquals(1, g.getElements().getSize());
+    Assertions.assertThrows(IllegalArgumentException.class, () -> g.addElement(null));
   }
 
   @Test

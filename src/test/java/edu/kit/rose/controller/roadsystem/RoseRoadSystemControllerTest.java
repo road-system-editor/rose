@@ -167,7 +167,7 @@ public class RoseRoadSystemControllerTest {
     Mockito.doAnswer(invocation -> {
       if (segment == invocation.getArgument(0)) {
         called.set(true);
-        selectedFlag.set(selectedFlag.get());
+        selectedFlag.set(!selectedFlag.get());
       }
       return null;
     }).when(selectionBuffer).toggleSegmentSelection(Mockito.any(Segment.class));

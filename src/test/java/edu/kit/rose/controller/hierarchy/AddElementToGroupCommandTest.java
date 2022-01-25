@@ -5,8 +5,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import edu.kit.rose.controller.command.ChangeCommand;
-import edu.kit.rose.infrastructure.SimpleBox;
-import edu.kit.rose.infrastructure.SimpleSortedBox;
+import edu.kit.rose.infrastructure.RoseBox;
+import edu.kit.rose.infrastructure.RoseSortedBox;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.elements.Base;
@@ -47,10 +47,12 @@ class AddElementToGroupCommandTest {
     this.mockRoadSystem = mock(RoadSystem.class);
 
     when(this.mockProject.getRoadSystem()).thenReturn(this.mockRoadSystem);
-    when(this.mockRoadSystem.getElements()).thenReturn(new SimpleBox<>(List.of(this.fromGroup)));
+    when(this.mockRoadSystem.getElements()).thenReturn(new RoseBox<>(List.of(this.fromGroup)));
 
-    when(this.toGroup.getElements()).thenReturn(new SimpleSortedBox<>(this.elements));
-    when(this.fromGroup.getElements()).thenReturn(new SimpleSortedBox<>(this.parentGroupElements));
+    when(this.toGroup.getElements())
+            .thenAnswer(e -> new RoseSortedBox<>(this.elements));
+    when(this.fromGroup.getElements())
+            .thenAnswer(e -> new RoseSortedBox<>(this.parentGroupElements));
     when(this.fromGroup.isContainer()).thenReturn(true);
 
     doAnswer(e -> this.elements.add(this.element))

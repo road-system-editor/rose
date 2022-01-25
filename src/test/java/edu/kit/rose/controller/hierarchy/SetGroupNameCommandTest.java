@@ -1,12 +1,16 @@
 package edu.kit.rose.controller.hierarchy;
 
+import static org.mockito.Mockito.mock;
+
 import edu.kit.rose.controller.command.ChangeCommand;
-import edu.kit.rose.infrastructure.SimpleSortedBox;
+import edu.kit.rose.infrastructure.RoseSortedBox;
 import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.elements.Group;
 import java.util.ArrayList;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,7 +34,7 @@ class SetGroupNameCommandTest {
       public SortedBox<AttributeAccessor<?>> getAttributeAccessors() {
         ArrayList<AttributeAccessor<?>> list = new ArrayList<>();
         list.add(nameAccessor);
-        return new SimpleSortedBox<>(list);
+        return new RoseSortedBox<>(list);
       }
 
       @Override
@@ -39,7 +43,8 @@ class SetGroupNameCommandTest {
       }
     };
 
-    this.nameAccessor = new AttributeAccessor<>() {
+    this.nameAccessor = new AttributeAccessor<String>(AttributeType.NAME,
+            mock(Supplier.class), mock(Consumer.class)) {
       @Override
       public AttributeType getAttributeType() {
         return AttributeType.NAME;

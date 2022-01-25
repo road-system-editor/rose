@@ -5,7 +5,7 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import edu.kit.rose.infrastructure.SimpleSortedBox;
+import edu.kit.rose.infrastructure.RoseSortedBox;
 import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.roadsystem.RoadSystem;
@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -65,12 +67,12 @@ class DeleteGroupCommandTest {
       public SortedBox<AttributeAccessor<?>> getAttributeAccessors() {
         List<AttributeAccessor<?>> list = new ArrayList<>();
         list.add(accessor);
-        return new SimpleSortedBox<>(list);
+        return new RoseSortedBox<>(list);
       }
 
       @Override
       public SortedBox<Element> getElements() {
-        return new SimpleSortedBox<>(this.auxElements);
+        return new RoseSortedBox<>(this.auxElements);
       }
 
       @Override
@@ -88,7 +90,8 @@ class DeleteGroupCommandTest {
     this.group.addElement(element1);
     this.group.addElement(element2);
 
-    this.accessor = new AttributeAccessor<>() {
+    this.accessor = new AttributeAccessor<String>(AttributeType.NAME,
+            mock(Supplier.class), mock(Consumer.class)) {
       @Override
       public AttributeType getAttributeType() {
         return AttributeType.NAME;
@@ -135,7 +138,7 @@ class DeleteGroupCommandTest {
     Assertions.assertEquals(SET, this.name);
 
     SortedBox<Element> groupElements = this.group.getElements();
-    SortedBox<Element> expectedElements = new SimpleSortedBox<>(this.elements);
+    SortedBox<Element> expectedElements = new RoseSortedBox<>(this.elements);
 
     Assertions.assertEquals(EXPECTED_NUMBER_OF_ELEMENTS, groupElements.getSize());
 

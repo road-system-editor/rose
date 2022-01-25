@@ -5,8 +5,8 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import edu.kit.rose.infrastructure.SimpleBox;
-import edu.kit.rose.infrastructure.SimpleSortedBox;
+import edu.kit.rose.infrastructure.RoseBox;
+import edu.kit.rose.infrastructure.RoseSortedBox;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.elements.Base;
@@ -88,9 +88,11 @@ class CreateGroupCommandTest {
     this.roadElements.add(this.parent2);
 
     when(this.project.getRoadSystem()).thenReturn(this.roadSystem);
-    when(this.roadSystem.getElements()).thenReturn(new SimpleBox<>(this.roadElements));
-    when(this.parent1.getElements()).thenReturn(new SimpleSortedBox<>(this.parent1Elements));
-    when(this.parent2.getElements()).thenReturn(new SimpleSortedBox<>(this.parent2Elements));
+    when(this.roadSystem.getElements()).thenReturn(new RoseBox<>(this.roadElements));
+    when(this.parent1.getElements())
+            .thenAnswer(e -> new RoseSortedBox<>(this.parent1Elements));
+    when(this.parent2.getElements())
+            .thenAnswer(e -> new RoseSortedBox<>(this.parent2Elements));
     when(this.parent1.isContainer()).thenReturn(true);
     when(this.parent2.isContainer()).thenReturn(true);
 
@@ -109,7 +111,8 @@ class CreateGroupCommandTest {
     doAnswer(e -> {
       this.group = mock(Group.class);
 
-      when(this.group.getElements()).thenReturn(new SimpleSortedBox<>(this.groupElements));
+      when(this.group.getElements())
+              .thenAnswer(z -> {return new RoseSortedBox<>(this.groupElements);});
 
       doAnswer(arguments -> this.groupElements.add(arguments.getArgument(0)))
               .when(this.group).addElement(any(Element.class));
@@ -137,7 +140,7 @@ class CreateGroupCommandTest {
     command.execute();
 
     Assertions.assertTrue(this.group.getElements().contains(this.element1));
-    Assertions.assertTrue(this.group.getElements().contains(this.element2));
+    Assertions.assertTrue(this.group.getElements().contains(this.element1));
 
     Assertions.assertFalse(this.parent1.getElements().contains(this.element1));
     Assertions.assertFalse(this.parent2.getElements().contains(this.element2));

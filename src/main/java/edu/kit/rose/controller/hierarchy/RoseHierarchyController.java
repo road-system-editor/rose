@@ -41,10 +41,12 @@ public class RoseHierarchyController extends Controller
    * @param changeCommandBuffer the buffer for change commands
    * @param selectionBuffer     the container that stores selected segments
    * @param project             the model facade for project data
+   * @param navigator           the navigator for the controller
    */
   public RoseHierarchyController(StorageLock storageLock, ChangeCommandBuffer changeCommandBuffer,
-                                 SelectionBuffer selectionBuffer, Project project) {
-    super(storageLock);
+                                 SelectionBuffer selectionBuffer, Project project,
+                                 Navigator navigator) {
+    super(storageLock, navigator);
     this.changeCommandBuffer = changeCommandBuffer;
     this.selectionBuffer = selectionBuffer;
     selectionBuffer.addSubscriber(this);

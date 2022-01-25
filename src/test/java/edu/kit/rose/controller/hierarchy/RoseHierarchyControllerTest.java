@@ -7,8 +7,9 @@ import static org.mockito.Mockito.when;
 
 import edu.kit.rose.controller.command.RoseChangeCommandBuffer;
 import edu.kit.rose.controller.commons.RoseStorageLock;
+import edu.kit.rose.controller.navigation.Navigator;
 import edu.kit.rose.controller.selection.RoseSelectionBuffer;
-import edu.kit.rose.infrastructure.SimpleSortedBox;
+import edu.kit.rose.infrastructure.RoseSortedBox;
 import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.plausibility.criteria.CriteriaManager;
@@ -19,6 +20,8 @@ import edu.kit.rose.model.roadsystem.elements.Base;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Group;
 import java.util.ArrayList;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -54,7 +57,8 @@ class RoseHierarchyControllerTest {
 
     when(this.project.getRoadSystem()).thenReturn(this.roadSystem);
     this.controller = new RoseHierarchyController(new RoseStorageLock(),
-            new RoseChangeCommandBuffer(), new RoseSelectionBuffer(), this.project);
+            new RoseChangeCommandBuffer(), new RoseSelectionBuffer(), this.project,
+            mock(Navigator.class));
 
     this.group = new Group() {
       @Override
@@ -66,11 +70,13 @@ class RoseHierarchyControllerTest {
       public SortedBox<AttributeAccessor<?>> getAttributeAccessors() {
         ArrayList<AttributeAccessor<?>> list = new ArrayList<>();
         list.add(nameAccessor);
-        return new SimpleSortedBox<>(list);
+        return new RoseSortedBox<AttributeAccessor<?>>(list);
       }
     };
 
-    this.nameAccessor = new AttributeAccessor<>() {
+
+    this.nameAccessor = new AttributeAccessor<String>(AttributeType.NAME,
+            mock(Supplier.class), mock(Consumer.class) ) {
       @Override
       public AttributeType getAttributeType() {
         return AttributeType.NAME;

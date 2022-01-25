@@ -18,8 +18,26 @@ import java.util.List;
 public class Group extends RoseUnitObservable<Element> implements Element, Iterable<Element> {
 
   private final List<Element> elements = new ArrayList<>();
+  private final SortedBox<AttributeAccessor<?>> accessors;
   private String name;
   private String comment;
+
+  /**
+   * Creates a new instance of the {@link Group} class.
+   */
+  public Group() {
+    accessors = new RoseSortedBox<>(
+        List.of(
+            new AttributeAccessor<>(
+                AttributeType.NAME,
+                () -> this.name,
+                name -> this.name = name),
+            new AttributeAccessor<>(
+                AttributeType.COMMENT,
+                () -> this.comment,
+                comment -> this.comment = comment)
+        ));
+  }
 
   @Override
   public Iterator<Element> iterator() {
@@ -67,17 +85,7 @@ public class Group extends RoseUnitObservable<Element> implements Element, Itera
 
   @Override
   public SortedBox<AttributeAccessor<?>> getAttributeAccessors() {
-    return new RoseSortedBox<>(
-        List.of(
-            new AttributeAccessor<>(
-                AttributeType.NAME,
-                () -> this.name,
-                name -> this.name = name),
-            new AttributeAccessor<>(
-                AttributeType.COMMENT,
-                () -> this.comment,
-                comment -> this.comment = comment)
-        ));
+    return accessors;
   }
 
   @Override

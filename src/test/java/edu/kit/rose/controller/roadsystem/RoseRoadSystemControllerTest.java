@@ -4,13 +4,16 @@ import edu.kit.rose.controller.command.ChangeCommandBuffer;
 import edu.kit.rose.controller.commons.StorageLock;
 import edu.kit.rose.controller.navigation.Navigator;
 import edu.kit.rose.controller.selection.SelectionBuffer;
+import edu.kit.rose.infrastructure.Movement;
 import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.infrastructure.RoseBox;
 import edu.kit.rose.infrastructure.UnitObserver;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.ZoomSetting;
 import edu.kit.rose.model.roadsystem.RoadSystem;
+import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.elements.Connector;
+import edu.kit.rose.model.roadsystem.elements.ConnectorType;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
@@ -128,7 +131,30 @@ public class RoseRoadSystemControllerTest {
 
   @Test
   public void testDragStreetSegment() {
+    final Position initialPosition = new Position(10, 10);
+    final Position endPosition = new Position(20, 20);
 
+    AtomicReference<Integer> centerPositionX = new AtomicReference<>(0);
+    AtomicReference<Integer> centerPositionY = new AtomicReference<>(0);
+
+    Segment segment = Mockito.mock(Segment.class);
+    Mockito.doAnswer(invocation -> {
+      Movement movement = invocation.getArgument(0);
+      centerPositionX.set(centerPositionX.get() + movement.getX());
+      centerPositionY.set(centerPositionY.get() + movement.getY());
+      return null;
+    }).when(segment).move(Mockito.any(Movement.class));
+
+    Mockito.when(segment.getCenter()).thenReturn(new Position(
+        centerPositionX.get(),
+        centerPositionY.get()));
+
+    roadSystemController.beginDragStreetSegment(initialPosition);
+
+    roadSystemController.endDragStreetSegment(endPosition);
+
+    Assertions.assertEquals(10, segment.getCenter().getX());
+    Assertions.assertEquals(10, segment.getCenter().getY());
   }
 
   @Test
@@ -200,5 +226,14 @@ public class RoseRoadSystemControllerTest {
   @Test
   public void testDragSegmentEnd() {
 
+    /*final Position initialPosition = new Position(10, 10);
+    final Position finalPosition = new Position(20, 20);
+
+    Connector connector = Mockito.mock(Connector.class);
+
+    roadSystemController.beginDragSegmentEnd(connector, initialPosition);
+    roadSystemController.endDragSegmentEnd(finalPosition);
+
+    Assertions.assertEquals(10, connector.);*/
   }
 }

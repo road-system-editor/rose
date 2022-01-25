@@ -15,12 +15,12 @@ class EqualsValidationStrategy<T> extends ValidationStrategy<T> {
   }
 
   @Override
-  boolean validate(Object first, Object second) {
+  public boolean validate(Object first, Object second) {
     return first.equals(second);
   }
 
   @Override
-  boolean validate(T first, T second, double legalDiscrepancy) {
-    return first.equals(second);
+  public boolean validate(T first, T second, double legalDiscrepancy) {
+    return this.validate(first, second);
   }
 }

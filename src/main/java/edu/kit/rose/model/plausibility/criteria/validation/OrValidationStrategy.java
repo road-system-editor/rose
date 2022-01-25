@@ -2,10 +2,8 @@ package edu.kit.rose.model.plausibility.criteria.validation;
 
 /**
  * An Operator describing the logical OR function for two booleans.
- *
- * @param <T> The Type that this ValidationStrategy is applied to.
  */
-class OrValidationStrategy<T> extends ValidationStrategy<T> {
+class OrValidationStrategy extends ValidationStrategy<Boolean> {
 
   /**
    * Standard Constructor.
@@ -15,23 +13,12 @@ class OrValidationStrategy<T> extends ValidationStrategy<T> {
   }
 
   @Override
-  boolean validate(T first, T second) {
-
-    Boolean one = false;
-    Boolean two = false;
-
-    try {
-      one = (Boolean) first;
-      two = (Boolean) second;
-    } catch (ClassCastException classCastException) {
-      classCastException.printStackTrace();
-    }
-
-    return one || two;
+  public boolean validate(Boolean first, Boolean second) {
+    return Boolean.logicalOr(first, second);
   }
 
   @Override
-  boolean validate(T first, T second, double legalDiscrepancy) {
-    return validate(first, second);
+  public boolean validate(Boolean first, Boolean second, double legalDiscrepancy) {
+    return this.validate(first, second);
   }
 }

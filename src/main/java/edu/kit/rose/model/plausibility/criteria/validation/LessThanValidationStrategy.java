@@ -5,7 +5,7 @@ package edu.kit.rose.model.plausibility.criteria.validation;
  *
  * @param <T> The Type that this ValidationStrategy is applied to.
  */
-class LessThanValidationStrategy<T extends Comparable<T>> extends ValidationStrategy<T> {
+class LessThanValidationStrategy<T extends Number> extends ValidationStrategy<T> {
 
   /**
    * Standard Constructor.
@@ -15,20 +15,21 @@ class LessThanValidationStrategy<T extends Comparable<T>> extends ValidationStra
   }
 
   @Override
-  boolean validate(T first, T second) {
-    int result = first.compareTo(second);
-    return result < 0;
+  public boolean validate(T first, T second) {
+    int result = Double.compare(first.doubleValue(), second.doubleValue());
+    return result == 0;
   }
 
   @Override
-  boolean validate(T first, T second, double legalDiscrepancy) {
+  public boolean validate(T first, T second, double legalDiscrepancy) {
 
     double discrepancy;
-    if (first.compareTo(second) < 0) {
-      discrepancy = (Double) first - (Double) second;
+    if (Double.compare(first.doubleValue(), second.doubleValue()) > 0) {
+      discrepancy = first.doubleValue() - second.doubleValue();
     } else {
-      discrepancy = (Double) second - (Double) first;
+      discrepancy = second.doubleValue() - first.doubleValue();
     }
+    discrepancy = Math.abs(discrepancy);
     return discrepancy < legalDiscrepancy;
   }
 }

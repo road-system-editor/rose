@@ -27,7 +27,7 @@ public abstract class Controller {
   /**
    * Initializes the {@link Controller} with a {@link Navigator}.
    *
-   * @param navigator the navigator for the controller
+   * @param navigator the navigator for the controller.
    */
   public final void initialize(Navigator navigator) {
     this.navigator = navigator;

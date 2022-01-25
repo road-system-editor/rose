@@ -15,12 +15,12 @@ class NotEqualsValidationStrategy<T> extends ValidationStrategy<T> {
   }
 
   @Override
-  boolean validate(Object first, Object second) {
+  public boolean validate(Object first, Object second) {
     return !first.equals(second);
   }
 
   @Override
-  boolean validate(T first, T second, double legalDiscrepancy) {
-    return validate(first, second);
+  public boolean validate(T first, T second, double legalDiscrepancy) {
+    return this.validate(first, second);
   }
 }

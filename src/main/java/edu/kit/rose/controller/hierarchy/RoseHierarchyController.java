@@ -4,6 +4,7 @@ import edu.kit.rose.controller.command.ChangeCommand;
 import edu.kit.rose.controller.command.ChangeCommandBuffer;
 import edu.kit.rose.controller.commons.Controller;
 import edu.kit.rose.controller.commons.StorageLock;
+import edu.kit.rose.controller.navigation.Navigator;
 import edu.kit.rose.controller.selection.SelectionBuffer;
 import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.model.Project;

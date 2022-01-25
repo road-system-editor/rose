@@ -93,5 +93,4 @@ public enum AttributeType {
   public boolean isBulkable() {
     return this.isBulkable;
   }
-
 }

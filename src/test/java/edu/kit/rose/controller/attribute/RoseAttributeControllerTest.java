@@ -2,6 +2,7 @@ package edu.kit.rose.controller.attribute;
 
 import edu.kit.rose.controller.command.RoseChangeCommandBuffer;
 import edu.kit.rose.controller.commons.RoseStorageLock;
+import edu.kit.rose.controller.navigation.Navigator;
 import edu.kit.rose.model.ApplicationDataSystem;
 import edu.kit.rose.model.ModelFactory;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
@@ -9,6 +10,7 @@ import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 /**
  * Tests the {@link RoseAttributeController} class.
@@ -28,18 +30,13 @@ public class RoseAttributeControllerTest {
     var modelFactory = new ModelFactory(null);
     applicationDataSystem = modelFactory.createApplicationDataSystem();
     attributeController = new RoseAttributeController(new RoseChangeCommandBuffer(),
-        new RoseStorageLock(), modelFactory.createProject(), applicationDataSystem);
-    accessor = new AttributeAccessor<>() {
-      @Override
-      public void setValue(Integer value) {
-        testInt = value;
-      }
-
-      @Override
-      public Integer getValue() {
-        return testInt;
-      }
-    };
+        new RoseStorageLock(), Mockito.mock(Navigator.class), modelFactory.createProject(),
+        applicationDataSystem);
+    accessor = new AttributeAccessor<>(
+        AttributeType.LANE_COUNT,
+        () -> testInt,
+        newValue -> testInt = newValue
+    );
     testInt = INITIAL_VALUE;
   }
 

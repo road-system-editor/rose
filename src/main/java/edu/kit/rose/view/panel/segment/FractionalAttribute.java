@@ -2,22 +2,20 @@ package edu.kit.rose.view.panel.segment;
 
 import edu.kit.rose.controller.attribute.AttributeController;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
-import edu.kit.rose.view.commons.FxmlContainer;
-import java.util.Collection;
-import javafx.scene.Node;
-import javafx.scene.control.TextField;
-
-
+import java.util.regex.Pattern;
 
 /**
  * This is the {@link EditableAttribute} implementation for the
  * {@link edu.kit.rose.model.roadsystem.DataType} {@code FRACTIONAL}.
  */
-class FractionalAttribute extends EditableAttribute<Double> {
+class FractionalAttribute extends TextFieldAttribute<Double> {
+
+  private static final Pattern INPUT_PATTERN = Pattern.compile("^[+-]?[0-9]*\\.?[0-9]+$");
+
   /**
    * Creates a new fractional attribute editor for the given {@code attribute}.
    *
-   * @param attribute the attribute to display.
+   * @param attribute  the attribute to display.
    * @param controller the controller that should handle attribute value updates.
    */
   FractionalAttribute(AttributeAccessor<Double> attribute, AttributeController controller) {
@@ -25,17 +23,21 @@ class FractionalAttribute extends EditableAttribute<Double> {
   }
 
   @Override
-  public void notifyChange(AttributeAccessor<Double> unit) {
+  protected boolean validate(String input) {
+    if (!INPUT_PATTERN.matcher(input).matches()) {
+      return false;
+    }
 
+    try {
+      Double.parseDouble(input);
+      return true;
+    } catch (NumberFormatException e) {
+      return false;
+    }
   }
 
   @Override
-  protected Node createInputField() {
-    return new TextField();
-  }
-
-  @Override
-  protected Collection<FxmlContainer> getSubFxmlContainer() {
-    return null;
+  protected Double parse(String input) {
+    return Double.parseDouble(input);
   }
 }

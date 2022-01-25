@@ -18,7 +18,7 @@ public abstract class Controller {
   /**
    * Creates a new instance of the {@link Controller} class.
    *
-   * @param storageLock the {@link StorageLock} instance of the controller
+   * @param storageLock the {@link StorageLock} instance of the controller.
    */
   protected Controller(StorageLock storageLock) {
     this.storageLock = storageLock;

@@ -2,16 +2,17 @@ package edu.kit.rose.view.panel.segment;
 
 import edu.kit.rose.controller.attribute.AttributeController;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
-import edu.kit.rose.view.commons.FxmlContainer;
-import java.util.Collection;
-import javafx.scene.Node;
+import java.util.regex.Pattern;
 
 
 /**
  * This is the {@link EditableAttribute} implementation for the
  * {@link edu.kit.rose.model.roadsystem.DataType} {@code INTEGER}.
  */
-class IntegerAttribute extends EditableAttribute<Integer> {
+class IntegerAttribute extends TextFieldAttribute<Integer> {
+
+  private static final Pattern INPUT_PATTERN = Pattern.compile("^[+-]?[0-9]*$");
+
   /**
    * Creates a new integer attribute editor for the given {@code attribute}.
    *
@@ -23,17 +24,21 @@ class IntegerAttribute extends EditableAttribute<Integer> {
   }
 
   @Override
-  protected Node createInputField() {
-    return null;
+  protected boolean validate(String input) {
+    if (!INPUT_PATTERN.matcher(input).matches()) {
+      return false;
+    }
+
+    try {
+      Integer.parseInt(input);
+      return true;
+    } catch (NumberFormatException e) {
+      return false;
+    }
   }
 
   @Override
-  public void notifyChange(AttributeAccessor<Integer> unit) {
-
-  }
-
-  @Override
-  protected Collection<FxmlContainer> getSubFxmlContainer() {
-    return null;
+  protected Integer parse(String input) {
+    return Integer.parseInt(input);
   }
 }

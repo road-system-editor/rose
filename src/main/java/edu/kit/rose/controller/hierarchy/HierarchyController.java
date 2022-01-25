@@ -49,12 +49,12 @@ public interface HierarchyController {
    *
    * @param consumer to be added
    */
-  void addBiConsumer(BiConsumer<Segment, Boolean> consumer);
+  void addSubscription(BiConsumer<Segment, Boolean> consumer);
 
   /**
    * Removes the biConsumer to the consumer list.
    *
    * @param consumer to be removed
    */
-  void removeBiConsumer(BiConsumer<Segment, Boolean> consumer);
+  void removeSubscription(BiConsumer<Segment, Boolean> consumer);
 }

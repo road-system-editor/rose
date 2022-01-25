@@ -121,14 +121,14 @@ class DeleteGroupCommandTest {
   }
 
   @Test
-  void execute() {
+  void testExecute() {
     DeleteGroupCommand command = new DeleteGroupCommand(this.project, this.group);
     command.execute();
     Assertions.assertNull(this.group);
   }
 
   @Test
-  void unexecute() {
+  void testUnexecute() {
     DeleteGroupCommand command = new DeleteGroupCommand(this.project, this.group);
     command.execute();
     command.unexecute();

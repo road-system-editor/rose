@@ -135,7 +135,7 @@ class CreateGroupCommandTest {
    * from previous parents and that the created group contains this elements.
    */
   @Test
-  void executeTest() {
+  void testExecuteTest() {
     CreateGroupCommand command = new CreateGroupCommand(this.project, this.elements);
     command.execute();
 
@@ -151,7 +151,7 @@ class CreateGroupCommandTest {
    * previous parents and checks if the group is removed from the roadsystem.
    */
   @Test
-  public void unexecuteTest() {
+  public void testUnexecuteTest() {
     CreateGroupCommand command = new CreateGroupCommand(this.project, this.elements);
     command.execute();
     command.unexecute();

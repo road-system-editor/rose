@@ -53,7 +53,7 @@ public class CreateGroupCommand implements ChangeCommand {
   private void storeParentsForElements() {
     Box<Element> auxElements = this.project.getRoadSystem().getElements();
     if (auxElements != null) {
-      for (Element roadElement : this.project.getRoadSystem().getElements()) {
+      for (Element roadElement : auxElements) {
         if (roadElement.isContainer()) {
           Group auxGroup = (Group) roadElement;
           ArrayList<Element> child = new ArrayList<>();

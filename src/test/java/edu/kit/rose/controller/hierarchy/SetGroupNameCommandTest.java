@@ -62,7 +62,7 @@ class SetGroupNameCommandTest {
   }
 
   @Test
-  void execute() {
+  void testExecute() {
     ChangeCommand setGroupNameCommand = new SetGroupNameCommand(this.group, SET);
     setGroupNameCommand.execute();
 
@@ -70,7 +70,7 @@ class SetGroupNameCommandTest {
   }
 
   @Test
-  void unexecute() {
+  void testUnexecute() {
     ChangeCommand setGroupNameCommand = new SetGroupNameCommand(this.group, SET);
     setGroupNameCommand.execute();
     setGroupNameCommand.unexecute();

@@ -68,7 +68,7 @@ class AddElementToGroupCommandTest {
   }
 
   @Test
-  void execute() {
+  void testExecute() {
     ChangeCommand addElementCommand =
             new AddElementToGroupCommand(this.mockProject, this.element, this.toGroup);
     addElementCommand.execute();
@@ -78,7 +78,7 @@ class AddElementToGroupCommandTest {
   }
 
   @Test
-  void unexecute() {
+  void testUnexecute() {
     ChangeCommand addElementCommand =
             new AddElementToGroupCommand(this.mockProject, this.element, this.toGroup);
     addElementCommand.execute();

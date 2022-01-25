@@ -81,12 +81,12 @@ public class RoseHierarchyController extends Controller
 
 
   @Override
-  public void addBiConsumer(BiConsumer<Segment, Boolean> consumer) {
+  public void addSubscription(BiConsumer<Segment, Boolean> consumer) {
     this.consumers.add(consumer);
   }
 
   @Override
-  public void removeBiConsumer(BiConsumer<Segment, Boolean> consumer) {
+  public void removeSubscription(BiConsumer<Segment, Boolean> consumer) {
     this.consumers.remove(consumer);
   }
 

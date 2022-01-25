@@ -93,7 +93,7 @@ public class GroupTest {
   public void testGetThis() {
     Group group = new Group();
 
-    Assertions.assertEquals(group, group.getThis());
+    Assertions.assertSame(group, group.getThis());
   }
 
   @Test

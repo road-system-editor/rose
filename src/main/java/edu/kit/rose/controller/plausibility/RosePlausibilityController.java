@@ -21,6 +21,8 @@ import edu.kit.rose.model.roadsystem.elements.SegmentType;
  * the plausibility criteria.
  */
 public class RosePlausibilityController extends Controller implements PlausibilityController {
+  private Project project;
+  private ApplicationDataSystem applicationDataSystem;
 
   /**
    * Creates a new {@link RosePlausibilityController}.

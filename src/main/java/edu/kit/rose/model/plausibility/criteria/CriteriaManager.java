@@ -7,6 +7,7 @@ import edu.kit.rose.infrastructure.SimpleSortedBox;
 import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.infrastructure.UnitObserver;
 import edu.kit.rose.model.plausibility.violation.ViolationManager;
+import edu.kit.rose.model.roadsystem.RoadSystem;
 import java.util.ArrayList;
 
 /**
@@ -21,9 +22,20 @@ public class CriteriaManager extends SimpleSetObservable<PlausibilityCriterion, 
 
   private ViolationManager violationManager;
   private final ArrayList<PlausibilityCriterion> criterion;
+  private final CritrionFactory criterionFactory;
 
-  public CriteriaManager() {
+  /**
+   * Constructor.
+   *
+   * @param roadSystem        the road system whose elements
+   *                          will be observed by created criteria
+   * @param violationManager  the violation manager that will receive the
+   *                          {@link edu.kit.rose.model.plausibility.violation.Violation}s
+   *                          of {@link PlausibilityCriterion} in this CriteriaManager.
+   */
+  public CriteriaManager(RoadSystem roadSystem, ViolationManager violationManager) {
     this.criterion = new ArrayList<>();
+    this.criterionFactory = new CriterionFactory(roadSystem, violationManager);
   }
 
   /**
@@ -122,6 +134,6 @@ public class CriteriaManager extends SimpleSetObservable<PlausibilityCriterion, 
 
   @Override
   public void notifyChange(PlausibilityCriterion unit) {
-
+    this.notifySubscribers();
   }
 }

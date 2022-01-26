@@ -1,27 +1,56 @@
 package edu.kit.rose.model.plausibility.criteria;
 
 import edu.kit.rose.infrastructure.Box;
-import edu.kit.rose.infrastructure.SetObserver;
+import edu.kit.rose.infrastructure.SimpleSetObservable;
+import edu.kit.rose.infrastructure.SimpleSortedBox;
 import edu.kit.rose.infrastructure.SortedBox;
-import edu.kit.rose.infrastructure.UnitObserver;
+import edu.kit.rose.model.plausibility.criteria.validation.EqualsValidationStrategy;
+import edu.kit.rose.model.plausibility.criteria.validation.LessThanValidationStrategy;
+import edu.kit.rose.model.plausibility.criteria.validation.NorValidationStrategy;
+import edu.kit.rose.model.plausibility.criteria.validation.NotEqualsValidationStrategy;
 import edu.kit.rose.model.plausibility.criteria.validation.OperatorType;
+import edu.kit.rose.model.plausibility.criteria.validation.OrValidationStrategy;
+import edu.kit.rose.model.plausibility.criteria.validation.ValidationStrategy;
+import edu.kit.rose.model.plausibility.violation.Violation;
+import edu.kit.rose.model.plausibility.violation.ViolationManager;
 import edu.kit.rose.model.roadsystem.RoadSystem;
+import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
+import java.security.InvalidParameterException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Modells a Compatiblity Criterion. See Pflichtenheft: "Kompatibilitätskriterium"
  */
-public class CompatibilityCriterion implements PlausibilityCriterion {
+public class CompatibilityCriterion extends SimpleSetObservable<SegmentType,
+        PlausibilityCriterion> implements PlausibilityCriterion {
+  private static final boolean USE_DISCREPANCY = true;
+  private static final boolean NOT_USE_DISCREPANCY = false;
+  private String name;
+  private AttributeType attributeType;
+  private OperatorType operatorType;
+  private double discrepancy;
+  private final Set<SegmentType> segmentTypes;
+  private final RoadSystem roadSystem;
+  private final ViolationManager violationManager;
 
   /**
    * Constructor.
    *
    * @param roadSystem The Roadsystem this Criterion applied to.
    */
-  CompatibilityCriterion(RoadSystem roadSystem) {
-
+  CompatibilityCriterion(RoadSystem roadSystem, ViolationManager violationManager) {
+    this.name = "";
+    this.discrepancy = 0;
+    this.segmentTypes = new HashSet<>();
+    this.violationManager = violationManager;
+    this.roadSystem = roadSystem;
   }
 
   /**
@@ -30,7 +59,7 @@ public class CompatibilityCriterion implements PlausibilityCriterion {
    * @return the AttributeType that this Criterion is checking.
    */
   public AttributeType getAttributeType() {
-    return null;
+    return this.attributeType;
   }
 
   /**
@@ -39,7 +68,7 @@ public class CompatibilityCriterion implements PlausibilityCriterion {
    * @param attributeType the AttributeType that this Criterion is supposed to check.
    */
   public void setAttributeType(AttributeType attributeType) {
-
+    this.attributeType = attributeType;
   }
 
   /**
@@ -48,7 +77,7 @@ public class CompatibilityCriterion implements PlausibilityCriterion {
    * @return the type of Operator this Criterion is using.
    */
   public OperatorType getOperatorType() {
-    return null;
+    return this.operatorType;
   }
 
   /**
@@ -57,7 +86,7 @@ public class CompatibilityCriterion implements PlausibilityCriterion {
    * @param operatorType the Type of Operator this Criterion is supposed to use.
    */
   public void setOperatorType(OperatorType operatorType) {
-
+    this.operatorType = operatorType;
   }
 
   /**
@@ -68,7 +97,8 @@ public class CompatibilityCriterion implements PlausibilityCriterion {
    * @return containing all {@link OperatorType}s that are compatible with this criterion.
    */
   public SortedBox<OperatorType> getCompatibleOperatorTypes() {
-    return null;
+    return new SimpleSortedBox<>(Arrays.stream(OperatorType.values()).filter(e -> e.getCompatible()
+            .contains(this.attributeType.getDataType())).collect(Collectors.toList()));
   }
 
   /**
@@ -77,7 +107,7 @@ public class CompatibilityCriterion implements PlausibilityCriterion {
    * @return the legal discrepancy numeric values can have to be accepted by this criterion.
    */
   public double getLegalDiscrepancy() {
-    return 0;
+    return this.discrepancy;
   }
 
   /**
@@ -88,17 +118,17 @@ public class CompatibilityCriterion implements PlausibilityCriterion {
    *                    by this criterion.
    */
   public void setLegalDiscrepancy(double discrepancy) {
-
+    this.discrepancy = discrepancy;
   }
 
   @Override
   public String getName() {
-    return null;
+    return this.name;
   }
 
   @Override
   public void setName(String name) {
-
+    this.name = name;
   }
 
   @Override
@@ -108,41 +138,146 @@ public class CompatibilityCriterion implements PlausibilityCriterion {
 
   @Override
   public PlausibilityCriterionType getType() {
-    return null;
+    return PlausibilityCriterionType.COMPATIBILITY;
   }
 
   @Override
   public void addSegmentType(SegmentType type) {
-
+    this.segmentTypes.add(type);
   }
 
   @Override
   public void removeSegmentType(SegmentType type) {
-
+    this.segmentTypes.remove(type);
   }
 
   @Override
   public void notifyChange(Segment unit) {
+    ArrayList<Segment> invalidSegments;
+    if (!this.operatorType.equals(OperatorType.DEFAULT)) {
+      ValidationStrategy strategy;
+      boolean valid = false;
 
-  }
-
-  @Override
-  public void addSubscriber(SetObserver<SegmentType, PlausibilityCriterion> observer) {
-
-  }
-
-  @Override
-  public void removeSubscriber(SetObserver<SegmentType, PlausibilityCriterion> observer) {
-
-  }
-
-  @Override
-  public void notifySubscribers() {
-
+      switch (this.operatorType) {
+        case EQUALS -> {
+          strategy = new EqualsValidationStrategy<>();
+          invalidSegments = getInvalidSegments(strategy, unit, NOT_USE_DISCREPANCY);
+        }
+        case LESS_THAN -> {
+          strategy = new LessThanValidationStrategy<>();
+          invalidSegments = getInvalidSegments(strategy, unit, USE_DISCREPANCY);
+        }
+        case NOR -> {
+          strategy = new NorValidationStrategy<>();
+          invalidSegments = getInvalidSegments(strategy, unit, NOT_USE_DISCREPANCY);
+        }
+        case NOT_EQUALS -> {
+          strategy = new NotEqualsValidationStrategy<>();
+          invalidSegments = getInvalidSegments(strategy, unit, NOT_USE_DISCREPANCY);
+        }
+        case OR -> {
+          strategy = new OrValidationStrategy<>();
+          invalidSegments = getInvalidSegments(strategy, unit, NOT_USE_DISCREPANCY);
+        }
+        default -> throw new InvalidParameterException("invalid operator type");
+      }
+      if (!invalidSegments.isEmpty()) {
+        invalidSegments.add(unit);
+        this.violationManager.addViolation(new Violation(this, invalidSegments));
+      }
+    }
   }
 
   @Override
   public PlausibilityCriterion getThis() {
     return this;
+  }
+
+  private ArrayList<Segment> getInvalidSegments(ValidationStrategy strategy,
+                                                Segment segment, boolean useDiscrepancy) {
+    ArrayList<Segment> invalidSegments = new ArrayList<>();
+    Box<Segment> adjacentSegments = this.roadSystem.getAdjacentSegments(segment);
+    AttributeAccessor<?> segmentAccessor =
+            getAccessorOfType(segment.getAttributeAccessors(), this.attributeType);
+
+
+    for (Segment adjacentSegment : adjacentSegments) {
+      AttributeAccessor<?> adjacentAccessor =
+              getAccessorOfType(adjacentSegment.getAttributeAccessors(), this.attributeType);
+      if (!checkValid(strategy, segmentAccessor, adjacentAccessor, useDiscrepancy)) {
+        invalidSegments.add(adjacentSegment);
+      }
+    }
+    return invalidSegments;
+  }
+
+  private AttributeAccessor<?> getAccessorOfType(SortedBox<AttributeAccessor<?>> accessors,
+                                                 AttributeType type) {
+    for (AttributeAccessor<?> accessor : accessors) {
+      if (accessor.getAttributeType().equals(type)) {
+        return accessor;
+      }
+    }
+    throw new IllegalArgumentException("the segment does not have such attribute type");
+  }
+
+  /**
+   * Checks the data type of attribute type use for this criterion
+   * and casts the right data types to strategy and accessors.
+   *
+   * @param strategy        the strategy to be validated
+   * @param accessor1       first accessor to be checked
+   * @param accessor2       second accessor to be checked
+   * @param useDiscrepancy  true the strategy requires discrepancy
+   *                        and false otherwise
+   * @return                true if the accessors are valid to each other according
+   *                        to validation strategy and false otherwise
+   */
+  private boolean checkValid(ValidationStrategy strategy,
+                             AttributeAccessor accessor1, AttributeAccessor accessor2,
+                             boolean useDiscrepancy) {
+    switch (this.attributeType.getDataType()) {
+      case BOOLEAN -> {
+        AttributeAccessor<Boolean> auxAccessor1 = (AttributeAccessor<Boolean>) accessor1;
+        AttributeAccessor<Boolean> auxAccessor2 = (AttributeAccessor<Boolean>) accessor2;
+        ValidationStrategy<Boolean> auxStrategy = (ValidationStrategy<Boolean>) strategy;
+        if (useDiscrepancy) {
+          return auxStrategy.validate(auxAccessor1.getValue(),
+                  auxAccessor2.getValue(), this.discrepancy);
+        }
+        return auxStrategy.validate(auxAccessor1.getValue(), auxAccessor2.getValue());
+      }
+      case STRING -> {
+        AttributeAccessor<String> auxAccessor1 = (AttributeAccessor<String>) accessor1;
+        AttributeAccessor<String> auxAccessor2 = (AttributeAccessor<String>) accessor2;
+        ValidationStrategy<String> auxStrategy = (ValidationStrategy<String>) strategy;
+        if (useDiscrepancy) {
+          return auxStrategy.validate(auxAccessor1.getValue(),
+                  auxAccessor2.getValue(), this.discrepancy);
+        }
+        return auxStrategy.validate(auxAccessor1.getValue(), auxAccessor2.getValue());
+      }
+      case INTEGER -> {
+        AttributeAccessor<Integer> auxAccessor1 = (AttributeAccessor<Integer>) accessor1;
+        AttributeAccessor<Integer> auxAccessor2 = (AttributeAccessor<Integer>) accessor2;
+        ValidationStrategy<Integer> auxStrategy = (ValidationStrategy<Integer>) strategy;
+        if (useDiscrepancy) {
+          return auxStrategy.validate(auxAccessor1.getValue(),
+                  auxAccessor2.getValue(), this.discrepancy);
+        }
+        return auxStrategy.validate(auxAccessor1.getValue(), auxAccessor2.getValue());
+      }
+      case FRACTIONAL -> {
+        AttributeAccessor<Double> auxAccessor1 = (AttributeAccessor<Double>) accessor1;
+        AttributeAccessor<Double> auxAccessor2 = (AttributeAccessor<Double>) accessor2;
+        ValidationStrategy<Double> auxStrategy = (ValidationStrategy<Double>) strategy;
+        if (useDiscrepancy) {
+          return auxStrategy.validate(auxAccessor1.getValue(),
+                  auxAccessor2.getValue(), this.discrepancy);
+        }
+        return auxStrategy.validate(auxAccessor1.getValue(), auxAccessor2.getValue());
+      }
+      default -> throw new IllegalArgumentException("no such data type found");
+    }
   }
 }

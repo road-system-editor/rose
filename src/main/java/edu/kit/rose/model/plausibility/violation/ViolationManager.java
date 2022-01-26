@@ -20,7 +20,7 @@ public class ViolationManager
    *
    * @param violation The {@link Violation} to add.
    */
-  void addViolation(Violation violation) {
+  public void addViolation(Violation violation) {
 
   }
 
@@ -29,7 +29,7 @@ public class ViolationManager
    *
    * @param violation The {@link Violation} to remove.
    */
-  void removeViolation(Violation violation) {
+  public void removeViolation(Violation violation) {
 
   }
 
@@ -42,7 +42,7 @@ public class ViolationManager
    * @param offendingSegments The {@link Segment}s that cause the {@link Violation}
    * @return the violation agoinst the given Criterion by the given Segments.
    */
-  Violation getViolation(PlausibilityCriterion criterion, Collection<Segment> offendingSegments) {
+  public Violation getViolation(PlausibilityCriterion criterion, Collection<Segment> offendingSegments) {
     return null;
   }
 

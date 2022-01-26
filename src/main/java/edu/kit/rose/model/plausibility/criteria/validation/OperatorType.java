@@ -27,7 +27,7 @@ public enum OperatorType {
    *
    * @return All {@link DataType}s that are compatible with this OperatorType.
    */
-  Collection<DataType> getCompatible() {
+  public Collection<DataType> getCompatible() {
     return null;
   }
 

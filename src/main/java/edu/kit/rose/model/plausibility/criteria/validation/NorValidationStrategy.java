@@ -5,14 +5,14 @@ package edu.kit.rose.model.plausibility.criteria.validation;
  *
  * @param <T> The Type that this ValidationStrategy is applied to.
  */
-class NorValidationStrategy<T> extends ValidationStrategy<T> {
+public class NorValidationStrategy<T> extends ValidationStrategy<T> {
   @Override
-  boolean validate(Object first, Object second) {
+  public boolean validate(Object first, Object second) {
     return false;
   }
 
   @Override
-  boolean validate(T first, T second, double legalDiscrepancy) {
+  public boolean validate(T first, T second, double legalDiscrepancy) {
     return false;
   }
 }

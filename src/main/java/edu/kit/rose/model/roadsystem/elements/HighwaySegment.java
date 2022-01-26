@@ -4,8 +4,8 @@ import edu.kit.rose.infrastructure.Box;
 import edu.kit.rose.infrastructure.Movement;
 import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.infrastructure.RoseBox;
+import edu.kit.rose.infrastructure.RoseSetObservable;
 import edu.kit.rose.infrastructure.RoseSortedBox;
-import edu.kit.rose.infrastructure.RoseUnitObservable;
 import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
@@ -19,7 +19,9 @@ import java.util.Set;
 /**
  * A base Class for a {@link Segment} that implements the basic functionality all Segments share.
  */
-public abstract class HighwaySegment extends RoseUnitObservable<Element> implements Segment {
+public abstract class HighwaySegment
+    extends RoseSetObservable<Element, Element>
+    implements Segment {
 
   protected static final int INITIAL_CONNECTOR_DISTANCE_TO_CENTER = 50;
 

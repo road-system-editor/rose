@@ -6,6 +6,7 @@ import edu.kit.rose.infrastructure.RoseUnitObservable;
 import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -18,7 +19,7 @@ import java.util.Set;
  */
 public class Group extends RoseUnitObservable<Element> implements Element, Iterable<Element> {
 
-  private final Set<Element> elements = new HashSet<>();
+  private final Set<Element> elements;
   private final SortedBox<AttributeAccessor<?>> accessors;
   private String name;
   private String comment;
@@ -27,6 +28,14 @@ public class Group extends RoseUnitObservable<Element> implements Element, Itera
    * Creates a new instance of the {@link Group} class.
    */
   public Group() {
+    this(new HashSet<>());
+  }
+
+  /**
+   * Creates a new instance of the {@link Group} class.
+   */
+  public Group(Set<Element> elements) {
+    this.elements = elements;
     accessors = new RoseSortedBox<>(
         List.of(
             new AttributeAccessor<>(
@@ -38,10 +47,6 @@ public class Group extends RoseUnitObservable<Element> implements Element, Itera
                 () -> this.comment,
                 comment -> this.comment = comment)
         ));
-  }
-
-  public Group(Set<Element> elements) {
-    //TODO: implement
   }
 
   @Override
@@ -77,7 +82,7 @@ public class Group extends RoseUnitObservable<Element> implements Element, Itera
    * @return a {@link Box} of all {@link Element}s in the Group.
    */
   public SortedBox<Element> getElements() {
-    return new RoseSortedBox<>(elements);
+    return new RoseSortedBox<>(new ArrayList<>(elements));
   }
 
   /**

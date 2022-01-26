@@ -73,6 +73,21 @@ public class Base implements Segment {
   }
 
   @Override
+  public void rotate(int degrees) {
+
+  }
+
+  @Override
+  public int getRotation() {
+    return 0;
+  }
+
+  @Override
+  public Position getRotatedConnectorPosition(Connector connector) {
+    return null;
+  }
+
+  @Override
   public int compareTo(Segment o) {
     return 0;
   }

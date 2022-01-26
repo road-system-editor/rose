@@ -153,18 +153,12 @@ public interface RoadSystem
   void moveSegments(Collection<Segment> segments, Movement movement);
 
   /**
-   * Rotates the given {@link Segment} on its current {@link edu.kit.rose.infrastructure.Position}.
+   * Rotates the given {@link Segment} on its current {@link edu.kit.rose.infrastructure.Position}
+   * by a given amount of degrees.
    *
    * @param segment the {@link Segment} to rotate.
    */
-  void rotateSegment(Segment segment);
-
-  /**
-   * Rotates the given {@link Segment}s on its current {@link edu.kit.rose.infrastructure.Position}.
-   *
-   * @param segments the {@link Segment}s to rotate.
-   */
-  void rotateSegments(Collection<Segment> segments);
+  void rotateSegment(Segment segment, int degrees);
 
   /**
    * Provides the {@link TimeSliceSetting} this RoadSystem uses.

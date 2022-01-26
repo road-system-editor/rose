@@ -290,26 +290,16 @@ class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, RoadSys
 
   /**
    * Rotates the given {@link Segment} on its current {@link edu.kit.rose.infrastructure.Position}
-   * by 15 degrees.
-   * Uses the center of the segment as a center of rotation.
+   * by a given amount of degrees.
+   * Disconnects the segment.
    *
    * @param segment the {@link Segment} to rotate.
+   * @param degrees the degrees the segment is to be rotated by.
    */
   @Override
-  public void rotateSegment(Segment segment) {
-    //TODO: math
-  }
-
-  /**
-   * Rotates the given {@link Segment}s on its current {@link edu.kit.rose.infrastructure.Position}
-   * by 15 degrees.
-   * Uses the average center of the segments as a center of rotation.
-   *
-   * @param segments the {@link Segment}s to rotate.
-   */
-  @Override
-  public void rotateSegments(Collection<Segment> segments) {
-    //TODO: math
+  public void rotateSegment(Segment segment, int degrees) {
+    segment.rotate(degrees);
+    disconnectFromAll(segment);
   }
 
   //runs a piece of code while not breaking connections due to movements

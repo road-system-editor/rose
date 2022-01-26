@@ -12,13 +12,14 @@ import java.util.Objects;
  * @author ROSE Team
  */
 public abstract class Controller {
+
   private final StorageLock storageLock;
   private final Navigator navigator;
 
   /**
    * Creates a new instance of the {@link Controller} class.
    *
-   * @param storageLock the {@link StorageLock} instance of the controller, may not be null.
+   * @param storageLock the {@link StorageLock} instance of the controller.
    * @param navigator the navigator for the controller.
    */
   protected Controller(StorageLock storageLock, Navigator navigator) {

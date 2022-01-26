@@ -1,15 +1,18 @@
 package edu.kit.rose.controller.hierarchy;
 
 import edu.kit.rose.infrastructure.SetObservable;
+import edu.kit.rose.infrastructure.UnitObservable;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Group;
 import edu.kit.rose.model.roadsystem.elements.Segment;
+import java.util.List;
+import java.util.function.BiConsumer;
 
 /**
  * Provides the functionality to manage the element
  * hierarchy of the roadsystem.
  */
-public interface HierarchyController extends SetObservable<Segment, HierarchyController> {
+public interface HierarchyController {
 
   /**
    * Creates a new group that contains all selected segments in the element hierarchy.
@@ -40,4 +43,18 @@ public interface HierarchyController extends SetObservable<Segment, HierarchyCon
    * @param name  the new name of the group
    */
   void setGroupName(Group group, String name);
+
+  /**
+   * Adds a biConsumer to the consumer list.
+   *
+   * @param consumer to be added
+   */
+  void addSubscription(BiConsumer<Segment, Boolean> consumer);
+
+  /**
+   * Removes the biConsumer to the consumer list.
+   *
+   * @param consumer to be removed
+   */
+  void removeSubscription(BiConsumer<Segment, Boolean> consumer);
 }

@@ -12,6 +12,7 @@ import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.elements.Connection;
 import edu.kit.rose.model.roadsystem.elements.Connector;
 import edu.kit.rose.model.roadsystem.elements.Element;
+import edu.kit.rose.model.roadsystem.elements.Group;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import java.util.ArrayList;
@@ -57,7 +58,8 @@ class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, RoadSys
   }
 
   @Override
-  public void createGroup(Collection<Element> includedElements) {
+  public Group createGroup(Collection<Element> includedElements) {
+    return null;
   }
 
   @Override

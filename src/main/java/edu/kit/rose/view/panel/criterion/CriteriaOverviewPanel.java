@@ -44,6 +44,10 @@ public class CriteriaOverviewPanel extends FxmlContainer
    */
   public CriteriaOverviewPanel() {
     super("CriteriaOverviewPanel.fxml");
+    for (PlausibilityCriterion  criterion :
+        applicationDataSystem.getCriteriaManager().getCriteria()) {
+
+    }
   }
 
   /**

@@ -43,4 +43,14 @@ class SegmentView extends ElementView<Segment> {
   protected Collection<FxmlContainer> getSubFxmlContainer() {
     return null;
   }
+
+  @Override
+  public void notifyAddition(Element unit) {
+
+  }
+
+  @Override
+  public void notifyRemoval(Element unit) {
+
+  }
 }

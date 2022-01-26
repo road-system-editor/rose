@@ -1,7 +1,7 @@
 package edu.kit.rose.model.roadsystem.elements;
 
+import edu.kit.rose.infrastructure.SetObservable;
 import edu.kit.rose.infrastructure.SortedBox;
-import edu.kit.rose.infrastructure.UnitObservable;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 
 /**
@@ -10,7 +10,7 @@ import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
  * Implements the Composite in the Composition Pattern with {@link Segment}s as leaf
  * and {@link Group} as container.
  */
-public interface Element extends UnitObservable<Element> {
+public interface Element extends SetObservable<Element, Element> {
 
   /**
    * Returns {@link AttributeAccessor}s that thus allow for access to attributes of this element.

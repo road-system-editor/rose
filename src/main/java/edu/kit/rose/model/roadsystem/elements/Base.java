@@ -3,8 +3,8 @@ package edu.kit.rose.model.roadsystem.elements;
 import edu.kit.rose.infrastructure.Box;
 import edu.kit.rose.infrastructure.Movement;
 import edu.kit.rose.infrastructure.Position;
+import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.infrastructure.SortedBox;
-import edu.kit.rose.infrastructure.UnitObserver;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.measurements.Measurement;
 
@@ -78,6 +78,16 @@ public class Base implements Segment {
   }
 
   @Override
+  public void addSubscriber(SetObserver<Element, Element> observer) {
+
+  }
+
+  @Override
+  public void removeSubscriber(SetObserver<Element, Element> observer) {
+
+  }
+
+  @Override
   public void notifySubscribers() {
 
   }
@@ -85,15 +95,5 @@ public class Base implements Segment {
   @Override
   public Element getThis() {
     return this;
-  }
-
-  @Override
-  public void addSubscriber(UnitObserver<Element> observer) {
-
-  }
-
-  @Override
-  public void removeSubscriber(UnitObserver<Element> observer) {
-
   }
 }

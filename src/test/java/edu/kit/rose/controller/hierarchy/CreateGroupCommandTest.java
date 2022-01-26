@@ -13,6 +13,7 @@ import edu.kit.rose.model.roadsystem.elements.Base;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Exit;
 import edu.kit.rose.model.roadsystem.elements.Group;
+import edu.kit.rose.model.roadsystem.elements.Segment;
 import java.util.ArrayList;
 import java.util.Collection;
 import org.junit.jupiter.api.Assertions;
@@ -56,13 +57,13 @@ class CreateGroupCommandTest {
    * the elements that should be added to group
    * when createGroup will be called.
    */
-  private ArrayList<Element> elements;
+  private ArrayList<Segment> elements;
   /**
    * The elements that the roadsystem contains.
    */
   private ArrayList<Element> roadElements;
-  private Element element1;
-  private Element element2;
+  private Segment element1;
+  private Segment element2;
 
   @BeforeEach
   public void setUp() {

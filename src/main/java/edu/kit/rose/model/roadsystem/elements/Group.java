@@ -3,6 +3,7 @@ package edu.kit.rose.model.roadsystem.elements;
 import edu.kit.rose.infrastructure.Box;
 import edu.kit.rose.infrastructure.RoseSetObservable;
 import edu.kit.rose.infrastructure.RoseSortedBox;
+import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
@@ -59,6 +60,11 @@ public class Group
 
     if (!elements.contains(element)) {
       elements.add(element);
+
+      Iterator<SetObserver<Element, Element>> subscriberIterator = getSubscriberIterator();
+      while (subscriberIterator.hasNext()) {
+        subscriberIterator.next().notifyAddition(element);
+      }
     }
   }
 
@@ -68,7 +74,12 @@ public class Group
    * @param element The {@link Element} that shall be removed from the Group.
    */
   public void removeElement(Element element) {
-    elements.remove(element);
+    if (elements.remove(element)) {
+      Iterator<SetObserver<Element, Element>> subscriberIterator = getSubscriberIterator();
+      while (subscriberIterator.hasNext()) {
+        subscriberIterator.next().notifyRemoval(element);
+      }
+    }
   }
 
   /**

@@ -1,7 +1,7 @@
 package edu.kit.rose.view.panel.segment;
 
 import com.google.inject.Injector;
-import edu.kit.rose.infrastructure.UnitObserver;
+import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Segment;
@@ -16,7 +16,7 @@ import javafx.scene.control.Tab;
  * The segment editor panel allows the user to configure the attributes and measurements
  * of a given segment, as specified in PF11.1.5.
  */
-public class SegmentEditorPanel extends FxmlContainer implements UnitObserver<Element> {
+public class SegmentEditorPanel extends FxmlContainer implements SetObserver<Element, Element> {
   private Segment segment;
 
   @FXML
@@ -82,5 +82,15 @@ public class SegmentEditorPanel extends FxmlContainer implements UnitObserver<El
     if (this.segment != null) {
       segment.removeSubscriber(this);
     }
+  }
+
+  @Override
+  public void notifyAddition(Element unit) {
+
+  }
+
+  @Override
+  public void notifyRemoval(Element unit) {
+
   }
 }

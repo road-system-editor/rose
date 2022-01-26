@@ -1,23 +1,24 @@
 package edu.kit.rose.model.roadsystem.elements;
 
 import edu.kit.rose.infrastructure.Box;
+import edu.kit.rose.infrastructure.RoseSetObservable;
 import edu.kit.rose.infrastructure.RoseSortedBox;
-import edu.kit.rose.infrastructure.RoseUnitObservable;
+import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
-import java.lang.runtime.ObjectMethods;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * A container tha holds multiple {@link Element}s.
  * Might hold other groups.
  * (see: Pflichtenheft: "Gruppe")
  */
-public class Group extends RoseUnitObservable<Element> implements Element, Iterable<Element> {
+public class Group
+    extends RoseSetObservable<Element, Element>
+    implements Element, Iterable<Element> {
 
   private final List<Element> elements = new ArrayList<>();
   private final SortedBox<AttributeAccessor<?>> accessors;
@@ -59,6 +60,8 @@ public class Group extends RoseUnitObservable<Element> implements Element, Itera
 
     if (!elements.contains(element)) {
       elements.add(element);
+
+      subscribers.forEach(subscriber -> subscriber.notifyAddition(element));
     }
   }
 
@@ -68,7 +71,9 @@ public class Group extends RoseUnitObservable<Element> implements Element, Itera
    * @param element The {@link Element} that shall be removed from the Group.
    */
   public void removeElement(Element element) {
-    elements.remove(element);
+    if (elements.remove(element)) {
+      subscribers.forEach(subscriber -> subscriber.notifyRemoval(element));
+    }
   }
 
   /**
@@ -109,4 +114,5 @@ public class Group extends RoseUnitObservable<Element> implements Element, Itera
   public Element getThis() {
     return this;
   }
+
 }

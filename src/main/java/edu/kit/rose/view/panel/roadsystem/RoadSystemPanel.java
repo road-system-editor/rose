@@ -11,8 +11,8 @@ import edu.kit.rose.infrastructure.DualSetObserver;
 import edu.kit.rose.infrastructure.Movement;
 import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.infrastructure.RoseSortedBox;
+import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.infrastructure.SortedBox;
-import edu.kit.rose.infrastructure.UnitObserver;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.roadsystem.RoadSystem;
@@ -144,13 +144,14 @@ public class RoadSystemPanel extends FxmlContainer
         return false;
       }
 
+
       @Override
-      public void addSubscriber(UnitObserver<Element> observer) {
+      public void addSubscriber(SetObserver<Element, Element> observer) {
 
       }
 
       @Override
-      public void removeSubscriber(UnitObserver<Element> observer) {
+      public void removeSubscriber(SetObserver<Element, Element> observer) {
 
       }
 

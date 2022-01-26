@@ -61,10 +61,7 @@ public class Group
     if (!elements.contains(element)) {
       elements.add(element);
 
-      Iterator<SetObserver<Element, Element>> subscriberIterator = getSubscriberIterator();
-      while (subscriberIterator.hasNext()) {
-        subscriberIterator.next().notifyAddition(element);
-      }
+      subscribers.forEach(subscriber -> subscriber.notifyAddition(element));
     }
   }
 
@@ -75,10 +72,7 @@ public class Group
    */
   public void removeElement(Element element) {
     if (elements.remove(element)) {
-      Iterator<SetObserver<Element, Element>> subscriberIterator = getSubscriberIterator();
-      while (subscriberIterator.hasNext()) {
-        subscriberIterator.next().notifyRemoval(element);
-      }
+      subscribers.forEach(subscriber -> subscriber.notifyRemoval(element));
     }
   }
 

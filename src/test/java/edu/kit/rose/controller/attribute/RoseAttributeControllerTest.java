@@ -1,8 +1,9 @@
 package edu.kit.rose.controller.attribute;
 
-import edu.kit.rose.controller.command.RoseChangeCommandBuffer;
-import edu.kit.rose.controller.commons.RoseStorageLock;
+import edu.kit.rose.controller.command.ChangeCommandBuffer;
+import edu.kit.rose.controller.commons.StorageLock;
 import edu.kit.rose.controller.navigation.Navigator;
+import edu.kit.rose.controller.selection.SelectionBuffer;
 import edu.kit.rose.model.ApplicationDataSystem;
 import edu.kit.rose.model.ModelFactory;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
@@ -14,7 +15,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 /**
- * Tests the {@link RoseAttributeController} class.
+ * Tests the {@link RoseAttributeController} class, except for bulk edit.
+ *
+ * @see RoseAttributeControllerBulkEditTest
  */
 public class RoseAttributeControllerTest {
   private static final Path CONFIG_PATH = Path.of("build/tmp/tests/config");
@@ -31,8 +34,12 @@ public class RoseAttributeControllerTest {
   void setUp() {
     var modelFactory = new ModelFactory(CONFIG_PATH);
     applicationDataSystem = modelFactory.createApplicationDataSystem();
-    attributeController = new RoseAttributeController(new RoseChangeCommandBuffer(),
-        new RoseStorageLock(), Mockito.mock(Navigator.class), modelFactory.createProject(),
+    attributeController = new RoseAttributeController(
+        Mockito.mock(ChangeCommandBuffer.class),
+        Mockito.mock(SelectionBuffer.class),
+        Mockito.mock(StorageLock.class),
+        Mockito.mock(Navigator.class),
+        modelFactory.createProject(),
         applicationDataSystem);
     accessor = new AttributeAccessor<>(
         AttributeType.LANE_COUNT,

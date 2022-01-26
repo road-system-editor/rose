@@ -75,8 +75,8 @@ public class ControllerFactory {
    * @return attribute controller instance
    */
   public AttributeController getAttributeController() {
-    return new RoseAttributeController(this.changeCommandBuffer, this.storageLock,
-        this.navigator, this.project, this.applicationDataSystem);
+    return new RoseAttributeController(this.changeCommandBuffer, this.selectionBuffer,
+        this.storageLock, this.navigator, this.project, this.applicationDataSystem);
   }
 
   /**

@@ -6,10 +6,7 @@ import edu.kit.rose.infrastructure.RoseBox;
 import edu.kit.rose.infrastructure.RoseDualSetObservable;
 import edu.kit.rose.infrastructure.RoseSortedBox;
 import edu.kit.rose.infrastructure.SortedBox;
-import edu.kit.rose.infrastructure.UnitObserver;
 import edu.kit.rose.model.plausibility.criteria.CriteriaManager;
-import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterion;
-import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterionType;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.elements.Connection;
@@ -21,29 +18,20 @@ import edu.kit.rose.model.roadsystem.elements.SegmentFactory;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
-import org.jgrapht.Graph;
-import org.jgrapht.graph.DefaultUndirectedGraph;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
-import java.util.HashSet;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultUndirectedGraph;
+
+
+
 
 
 /**
@@ -143,23 +131,6 @@ class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, RoadSys
       connectorConnectionMap.remove(c);
       c.removeSubscriber(this);
     });
-  }
-
-  private void removeGroup(Group group) {
-    group.getElements().forEach(this::removeElement);
-    elements.remove(group);
-    groups.remove(group);
-    subscribers.forEach(s -> s.notifyRemoval(group));
-  }
-
-  private void removeSegment(Segment segment) {
-    elements.remove(segment);
-    var connectionsToSegment = segmentConnectionGraph.edgesOf(segment);
-    segment.getConnectors().forEach(connectorSegmentMap::remove);
-    segmentConnectionGraph.removeVertex(segment);
-    subscribers.forEach(s -> connectionsToSegment.forEach(s::notifyRemovalSecond));
-    criteriaManager.getCriteria().forEach(segment::removeSubscriber);
-    subscribers.forEach(s -> s.notifyRemoval(segment));
   }
 
   private void removeGroup(Group group) {

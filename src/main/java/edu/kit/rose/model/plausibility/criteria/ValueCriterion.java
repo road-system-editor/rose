@@ -68,4 +68,14 @@ class ValueCriterion implements PlausibilityCriterion {
   public PlausibilityCriterion getThis() {
     return this;
   }
+
+  @Override
+  public void notifyAddition(Element unit) {
+
+  }
+
+  @Override
+  public void notifyRemoval(Element unit) {
+
+  }
 }

@@ -16,8 +16,10 @@ import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Group;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import org.junit.jupiter.api.Assertions;
@@ -112,10 +114,10 @@ class DeleteGroupCommandTest {
       mockGroup.removeElement(element1);
       mockGroup.removeElement(element2);
       group = mockGroup;
-      ArrayList<Element> list = e.getArgument(0);
-      list.forEach(group::addElement);
+      HashSet<Element> set = e.getArgument(0);
+      set.forEach(group::addElement);
       return group;
-    }).when(this.roadSystem).createGroup(ArgumentMatchers.<Collection<Element>>any());
+    }).when(this.roadSystem).createGroup(ArgumentMatchers.<Set<Element>>any());
 
     doAnswer(e -> this.group = null).when(this.roadSystem).removeElement(any());
   }

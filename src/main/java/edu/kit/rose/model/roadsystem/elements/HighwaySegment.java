@@ -193,4 +193,19 @@ public abstract class HighwaySegment
   private Long getCreationTime() {
     return this.creationTime;
   }
+
+  @Override
+  public void rotate(int degrees) {
+
+  }
+
+  @Override
+  public int getRotation() {
+    return 0;
+  }
+
+  @Override
+  public Position getRotatedConnectorPosition(Connector connector) {
+    return null;
+  }
 }

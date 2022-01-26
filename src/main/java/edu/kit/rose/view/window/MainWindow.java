@@ -2,26 +2,15 @@ package edu.kit.rose.view.window;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-import edu.kit.rose.controller.application.ApplicationController;
-import edu.kit.rose.controller.navigation.Navigator;
-import edu.kit.rose.controller.navigation.WindowType;
-import edu.kit.rose.controller.project.ProjectController;
-import edu.kit.rose.infrastructure.language.Language;
-import edu.kit.rose.model.ExportFormat;
 import edu.kit.rose.view.commons.FxmlUtility;
 import edu.kit.rose.view.panel.hierarchy.HierarchyPanel;
 import edu.kit.rose.view.panel.problem.ProblemOverviewPanel;
 import edu.kit.rose.view.panel.roadsystem.RoadSystemPanel;
 import edu.kit.rose.view.panel.segmentbox.SegmentBoxPanel;
-import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
 
 /**
@@ -54,12 +43,18 @@ public class MainWindow extends RoseWindow {
   }
 
   @Override
+  public void close() {
+    super.close();
+    Platform.exit();
+  }
+
+  @Override
   protected void configureStage(Stage stage, Injector injector) {
     Parent tree = FxmlUtility.loadFxml(null, this, getClass().getResource("MainWindow.fxml"));
     var scene = new Scene(tree);
 
     stage.setScene(scene);
-    stage.setWidth(1280);
+    stage.setWidth(1280); // TODO magic number
     stage.setHeight(720);
     stage.setTitle("ROSE");
 

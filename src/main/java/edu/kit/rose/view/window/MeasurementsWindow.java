@@ -6,10 +6,17 @@ import edu.kit.rose.controller.measurement.MeasurementController;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.roadsystem.measurements.MeasurementType;
+import edu.kit.rose.view.commons.EnumLocalizationUtility;
+import edu.kit.rose.view.commons.FxmlUtility;
 import edu.kit.rose.view.panel.measurement.MeasurementOverviewPanel;
 import edu.kit.rose.view.panel.measurement.TimeSliceSettingPanel;
 import java.util.List;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.stage.Stage;
 
@@ -20,13 +27,12 @@ import javafx.stage.Stage;
  */
 public class MeasurementsWindow extends RoseWindow {
   @Inject
-  private MeasurementController measurementController;
-  @Inject
   private Project project;
 
   /**
    * The interval settings panel is contained in the measurements window.
    */
+  @FXML
   private TimeSliceSettingPanel timeSliceSetting;
   /**
    * The measurement overview panels are contained in a tabbed layout in the measurements window.
@@ -54,12 +60,29 @@ public class MeasurementsWindow extends RoseWindow {
 
   @Override
   protected void configureStage(Stage stage, Injector injector) {
-    // fxml loading
-    timeSliceSetting.setController(controller);
-    timeSliceSetting.setTimeSliceSetting(project.getRoadSystem().getTimeSliceSetting());
+    Parent tree = FxmlUtility.loadFxml(null, this,
+        getClass().getResource("MeasurementsWindow.fxml"));
+    var scene = new Scene(tree);
 
-    MeasurementOverviewPanel demandPanel = new MeasurementOverviewPanel(getTranslator(), controller,
-        null /* TODO project.getRoadSystem()*/, MeasurementType.DEMAND);
-    measurementOverviews.add(demandPanel);
+    stage.setScene(scene);
+    stage.setWidth(640); // TODO magic numbers
+    stage.setHeight(360);
+
+    getTranslator().subscribeToOnLanguageChanged(lang -> updateTranslatableStrings(stage));
+    updateTranslatableStrings(stage);
+
+    timeSliceSetting.init(injector);
+
+    // TODO add tabs with measurement tables
+    for (var type : MeasurementType.values()) {
+      String title = EnumLocalizationUtility.localizeMeasurementTypeTitle(getTranslator(), type);
+      Node content = new Button(String.format("table for %s goes here!", title));
+      tabs.getTabs().add(new Tab(title, content));
+    }
+  }
+
+  private void updateTranslatableStrings(Stage stage) {
+    stage.setTitle(getTranslator().getLocalizedText("view.window.measurements.title"));
+    // TODO translate tab titles too
   }
 }

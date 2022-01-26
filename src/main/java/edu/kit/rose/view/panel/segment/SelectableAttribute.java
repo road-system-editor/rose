@@ -5,10 +5,12 @@ import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.view.commons.FxmlContainer;
 import java.util.Collection;
+import java.util.function.Function;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ListCell;
 
 
 /**
@@ -18,7 +20,10 @@ import javafx.scene.control.ComboBox;
  *
  * @param <T> the java type of the attribute value.
  */
-class SelectableAttribute<T> extends EditableAttribute<T> {
+abstract class SelectableAttribute<T> extends EditableAttribute<T> {
+  
+  private final ComboBox<T> inputField;
+  
   private final Collection<T> options;
 
   /**
@@ -29,20 +34,31 @@ class SelectableAttribute<T> extends EditableAttribute<T> {
                       Collection<T> options) {
     super(attribute, controller);
     this.options = options;
+    this.inputField = new ComboBox<>();
   }
 
   @Override
   protected Node createInputField() {
-    ComboBox<T> cb = new ComboBox<>();
     ObservableList<T> o = new SimpleListProperty<>();
     o.addAll(options);
-    cb.setItems(o);
+    inputField.setItems(o);
 
-    cb.getSelectionModel().selectedItemProperty().addListener((options, old, newVal) -> {
-      getController().setAttribute(getAttribute(), newVal);
+    inputField.setCellFactory(listView -> new ListCell<>() {
+      @Override
+      protected void updateItem(T item, boolean empty) {
+        super.updateItem(item, empty);
+        if (item == null) {
+          setText(INHOMOGENEOUS_VALUE_PLACEHOLDER);
+        } else {
+          setText(localizeOption(item));
+        }
+      }
     });
 
-    return cb;
+    inputField.getSelectionModel().selectedItemProperty().addListener(
+        (options, old, newVal) -> getController().setAttribute(getAttribute(), newVal));
+
+    return inputField;
   }
 
   @Override
@@ -59,4 +75,12 @@ class SelectableAttribute<T> extends EditableAttribute<T> {
   public void notifyChange(AttributeAccessor<T> unit) {
 
   }
+
+  /**
+   * Create a localized description of the given {@code option}.
+   *
+   * @param option the selectable option to create a localized description for, may not be null.
+   * @return the localized description of the option.
+   */
+  protected abstract String localizeOption(T option);
 }

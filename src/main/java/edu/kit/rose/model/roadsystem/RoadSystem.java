@@ -52,7 +52,7 @@ public interface RoadSystem
    *
    * @param includedElements The {@link Element}s that shall be in the new {@link Group}
    */
-  void createGroup(Collection<Element> includedElements);
+  Group createGroup(Collection<Element> includedElements);
 
   /**
    * Removes an {@link Element} from the RoadSystem. It cannot be accessed afterwards.

@@ -1,9 +1,9 @@
 package edu.kit.rose.view.panel.measurement;
 
+import com.google.inject.Inject;
 import edu.kit.rose.controller.measurement.MeasurementController;
 import edu.kit.rose.infrastructure.language.Language;
-import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
-import edu.kit.rose.model.roadsystem.TimeSliceSetting;
+import edu.kit.rose.model.Project;
 import edu.kit.rose.view.commons.FxmlContainer;
 import java.util.Collection;
 import javafx.fxml.FXML;
@@ -15,7 +15,9 @@ import javafx.scene.control.TextField;
  * settings, as specified in PF11.1.4.
  */
 public class TimeSliceSettingPanel extends FxmlContainer {
-  private TimeSliceSetting timeSliceSetting;
+  @Inject
+  private Project project;
+  @Inject
   private MeasurementController controller;
 
   @FXML
@@ -28,25 +30,10 @@ public class TimeSliceSettingPanel extends FxmlContainer {
   private TextField intervalLengthField;
 
   /**
-   * Needs {@link #setTranslator(LocalizedTextProvider)} +
-   * {@link #setController(MeasurementController)} + {@link #setTimeSliceSetting(TimeSliceSetting)}.
+   * Creates a new time slice settings panel.
    */
   public TimeSliceSettingPanel() {
-    super("interval_settings_panel.fxml");
-  }
-
-  /**
-   * Sets the controller that handles measurement value updates.
-   */
-  public void setController(MeasurementController controller) {
-    this.controller = controller;
-  }
-
-  /**
-   * Sets the time slice settings instance that is editable through this panel.
-   */
-  public void setTimeSliceSetting(TimeSliceSetting timeSliceSetting) {
-    this.timeSliceSetting = timeSliceSetting;
+    super("TimeSliceSettingsPanel.fxml");
   }
 
   @Override

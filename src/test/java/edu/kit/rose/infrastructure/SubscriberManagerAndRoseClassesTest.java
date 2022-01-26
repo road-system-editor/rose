@@ -4,13 +4,13 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 /**
- * Tests {@link SimpleUnitObservable}, {@link SimpleSetObservable} and
- * {@link SimpleDualSetObservable}. Thus testing the SubscriberManager class as well.
+ * Tests {@link RoseUnitObservable}, {@link RoseSetObservable} and
+ * {@link RoseDualSetObservable}. Thus testing the SubscriberManager class as well.
  */
-public class SubscriberManagerAndSimpleClassesTest {
+public class SubscriberManagerAndRoseClassesTest {
 
   @Test
-  public void singleSubscriberSubscribeTestSimpleUnitObservable() {
+  public void singleSubscriberSubscribeTestRoseUnitObservable() {
     var unitObservable = new TestUnitObservable();
     var unitObserver = new TestUnitObserver();
 
@@ -30,7 +30,7 @@ public class SubscriberManagerAndSimpleClassesTest {
   }
 
   @Test
-  public void multipleSubscribersSubscribeTestSimpleUnitObservable() {
+  public void multipleSubscribersSubscribeTestRoseUnitObservable() {
     var unitObservable = new TestUnitObservable();
     var unitObserver1 = new TestUnitObserver();
     var unitObserver2 = new TestUnitObserver();
@@ -46,7 +46,7 @@ public class SubscriberManagerAndSimpleClassesTest {
   }
 
   @Test
-  public void singleSubscriberSubscribeTestSimpleSetObservable() {
+  public void singleSubscriberSubscribeTestRoseSetObservable() {
     var setObservable = new TestSetObservable();
     var setObserver = new TestSetObserver();
 
@@ -66,7 +66,7 @@ public class SubscriberManagerAndSimpleClassesTest {
   }
 
   @Test
-  public void multipleSubscribersSubscribeTestSimpleSetObservable() {
+  public void multipleSubscribersSubscribeTestRoseSetObservable() {
     var setObservable = new TestSetObservable();
     var setObserver1 = new TestSetObserver();
     var setObserver2 = new TestSetObserver();
@@ -82,7 +82,7 @@ public class SubscriberManagerAndSimpleClassesTest {
   }
 
   @Test
-  public void singleSubscriberSubscribeTestSimpleDualSetObservable() {
+  public void singleSubscriberSubscribeTestRoseDualSetObservable() {
     var dualSetObservable = new TestDualSetObservable();
     var dualSetObserver = new TestDualSetObserver();
 
@@ -102,7 +102,7 @@ public class SubscriberManagerAndSimpleClassesTest {
   }
 
   @Test
-  public void multipleSubscribersSubscribeTestSimpleDualSetObservable() {
+  public void multipleSubscribersSubscribeTestRoseDualSetObservable() {
     var dualSetObservable = new TestDualSetObservable();
     var dualSetObserver1 = new TestDualSetObserver();
     var dualSetObserver2 = new TestDualSetObserver();
@@ -120,7 +120,7 @@ public class SubscriberManagerAndSimpleClassesTest {
 
 
 
-  private static class TestUnitObservable extends SimpleUnitObservable<TestUnitObservable> {
+  private static class TestUnitObservable extends RoseUnitObservable<TestUnitObservable> {
 
     @Override
     public TestUnitObservable getThis() {
@@ -128,7 +128,7 @@ public class SubscriberManagerAndSimpleClassesTest {
     }
   }
 
-  private static class TestSetObservable extends SimpleSetObservable<Object, TestSetObservable> {
+  private static class TestSetObservable extends RoseSetObservable<Object, TestSetObservable> {
 
     @Override
     public TestSetObservable getThis() {
@@ -137,7 +137,7 @@ public class SubscriberManagerAndSimpleClassesTest {
   }
 
   private static class TestDualSetObservable
-          extends SimpleDualSetObservable<Object, Object, TestDualSetObservable> {
+          extends RoseDualSetObservable<Object, Object, TestDualSetObservable> {
 
     @Override
     public TestDualSetObservable getThis() {

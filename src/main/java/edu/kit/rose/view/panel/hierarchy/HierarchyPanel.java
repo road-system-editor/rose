@@ -3,7 +3,6 @@ package edu.kit.rose.view.panel.hierarchy;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import edu.kit.rose.controller.hierarchy.HierarchyController;
-import edu.kit.rose.infrastructure.DualSetObserver;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.roadsystem.RoadSystem;

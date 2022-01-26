@@ -8,31 +8,34 @@ import java.util.List;
  *
  * @param <T> The Type of the Objects in the Box.
  */
-public class SimpleSortedBox<T> implements SortedBox<T> {
-
-  private final List<T> content;
+public class RoseSortedBox<T> extends RoseBox<T> implements SortedBox<T> {
 
   /**
    * Constructor.
    *
    * @param content the Elements that are supposed to be in the Box.
    */
-  public SimpleSortedBox(List<T> content) {
-    this.content = content;
+  public RoseSortedBox(List<T> content) {
+    super(content);
   }
 
-  @Override
-  public int getSize() {
-    return content.size();
+  /**
+   * Constructor.
+   *
+   * @param content the Elements that are supposed to be in the Box.
+   */
+  @SafeVarargs
+  public RoseSortedBox(T... content) {
+    super(content);
   }
 
   @Override
   public T get(int index) {
-    return content.get(index);
+    return getContent().get(index);
   }
 
   @Override
   public Iterator<T> iterator() {
-    return content.iterator();
+    return getContent().iterator();
   }
 }

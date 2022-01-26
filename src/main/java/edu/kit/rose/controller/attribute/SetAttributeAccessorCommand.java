@@ -13,6 +13,10 @@ import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
  */
 public class SetAttributeAccessorCommand<T> implements ChangeCommand {
 
+  private final AttributeAccessor<T> accessor;
+  private final T oldValue;
+  private final T newValue;
+
   /**
    * Creates a {@link SetAttributeAccessorCommand} that sets an accessor's value to a new value.
    *
@@ -23,15 +27,22 @@ public class SetAttributeAccessorCommand<T> implements ChangeCommand {
    */
   public SetAttributeAccessorCommand(Project project, AttributeAccessor<T> accessor, T oldValue,
                                      T newValue) {
+    if (accessor == null) {
+      throw new IllegalArgumentException("field 'accessor' can't be null.");
+    }
+    this.accessor = accessor;
+    this.oldValue = oldValue;
+    this.newValue = newValue;
   }
 
   @Override
   public void execute() {
-
+    accessor.setValue(newValue);
   }
 
   @Override
   public void unexecute() {
-
+    accessor.setValue(oldValue);
+    //TODO: bulk edit has to be supported. New Type of AttributeAccessor?
   }
 }

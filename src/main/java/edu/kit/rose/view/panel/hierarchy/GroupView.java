@@ -64,4 +64,14 @@ class GroupView extends ElementView<Group> {
   protected Collection<FxmlContainer> getSubFxmlContainer() {
     return null;
   }
+
+  @Override
+  public void notifyAddition(Element unit) {
+
+  }
+
+  @Override
+  public void notifyRemoval(Element unit) {
+
+  }
 }

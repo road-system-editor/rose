@@ -5,6 +5,7 @@ import com.google.inject.Injector;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.function.Consumer;
 import javafx.scene.layout.Pane;
 
@@ -24,9 +25,10 @@ public abstract class FxmlContainer extends Pane {
    * Creates a new FXMLPanel and immediately mounts the components specified in the given FXML
    * resource ({@code fxmlResourceName}).
    *
-   * @param fxmlResourceName the name of the fxml resource.
+   * @param fxmlResourceName the name of the fxml resource, may not be null.
    */
   public FxmlContainer(String fxmlResourceName) {
+    Objects.requireNonNull(fxmlResourceName, "fxmlResourceName may not be null");
     FxmlUtility.loadFxml(this, this, this.getClass().getResource(fxmlResourceName));
   }
 
@@ -50,9 +52,11 @@ public abstract class FxmlContainer extends Pane {
   /**
    * Initializes the {@link FxmlContainer} and its sub container.
    *
-   * @param injector the dependency injector.
+   * @param injector the dependency injector, may not be null.
    */
   public void init(Injector injector) {
+    Objects.requireNonNull(injector, "injector may not be null");
+
     injector.injectMembers(this);
 
     initSubContainer(injector);
@@ -64,9 +68,8 @@ public abstract class FxmlContainer extends Pane {
   private void initSubContainer(Injector injector) {
     Collection<FxmlContainer> fxmlSubContainers = getSubFxmlContainer();
 
-    if (fxmlSubContainers != null && injector != null) {
+    if (fxmlSubContainers != null) {
       for (FxmlContainer subContainer : fxmlSubContainers) {
-        injector.injectMembers(subContainer);
         subContainer.init(injector);
       }
     }

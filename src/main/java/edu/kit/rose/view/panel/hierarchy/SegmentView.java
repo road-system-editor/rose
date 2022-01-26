@@ -61,5 +61,15 @@ class SegmentView extends ElementView<Segment> {
   private void toggleSelection() {
     getController().toggleSegmentSelection(getElement());
   }
+
+  @Override
+  public void notifyAddition(Element unit) {
+
+  }
+
+  @Override
+  public void notifyRemoval(Element unit) {
+
+  }
 }
 

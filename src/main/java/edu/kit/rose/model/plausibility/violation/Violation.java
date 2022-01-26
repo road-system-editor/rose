@@ -14,8 +14,8 @@ public class Violation {
   /**
    * Constructor.
    *
-   * @param violatedCriterion the {@link PlausibilityCriterion} this SimpleViolation offends.
-   * @param offendingSegments the {@link Segment}s that cause this SimpleViolation.
+   * @param violatedCriterion the {@link PlausibilityCriterion} this RoseViolation offends.
+   * @param offendingSegments the {@link Segment}s that cause this RoseViolation.
    */
   public Violation(PlausibilityCriterion violatedCriterion, Collection<Segment> offendingSegments) {
 

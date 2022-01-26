@@ -1,7 +1,7 @@
 package edu.kit.rose.view.panel.hierarchy;
 
 import edu.kit.rose.controller.hierarchy.HierarchyController;
-import edu.kit.rose.infrastructure.UnitObserver;
+import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.view.commons.FxmlContainer;
@@ -13,7 +13,7 @@ import edu.kit.rose.view.commons.FxmlContainer;
  * @param <T> the type of Element this ElementView uses.
  */
 abstract class ElementView<T extends Element> extends FxmlContainer
-    implements UnitObserver<Element> {
+    implements SetObserver<Element, Element> {
 
   private HierarchyController controller;
   private T element;

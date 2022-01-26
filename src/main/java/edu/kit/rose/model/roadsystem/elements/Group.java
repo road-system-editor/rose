@@ -6,10 +6,12 @@ import edu.kit.rose.infrastructure.RoseUnitObservable;
 import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
+import java.lang.runtime.ObjectMethods;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -17,7 +19,9 @@ import java.util.Set;
  * Might hold other groups.
  * (see: Pflichtenheft: "Gruppe")
  */
-public class Group extends RoseUnitObservable<Element> implements Element, Iterable<Element> {
+public class Group
+    extends RoseSetObservable<Element, Element>
+    implements Element, Iterable<Element> {
 
   private final Set<Element> elements;
   private final SortedBox<AttributeAccessor<?>> accessors;
@@ -64,7 +68,12 @@ public class Group extends RoseUnitObservable<Element> implements Element, Itera
       throw new IllegalArgumentException(
           "The parameter element may not be null on Group.addElement");
     }
-    elements.add(element);
+
+    if (!elements.contains(element)) {
+      elements.add(element);
+
+      subscribers.forEach(subscriber -> subscriber.notifyAddition(element));
+    }
   }
 
   /**
@@ -73,7 +82,9 @@ public class Group extends RoseUnitObservable<Element> implements Element, Itera
    * @param element The {@link Element} that shall be removed from the Group.
    */
   public void removeElement(Element element) {
-    elements.remove(element);
+    if (elements.remove(element)) {
+      subscribers.forEach(subscriber -> subscriber.notifyRemoval(element));
+    }
   }
 
   /**
@@ -114,4 +125,5 @@ public class Group extends RoseUnitObservable<Element> implements Element, Itera
   public Element getThis() {
     return this;
   }
+
 }

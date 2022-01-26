@@ -1,6 +1,7 @@
 package edu.kit.rose.controller.selection;
 
 import edu.kit.rose.infrastructure.SetObserver;
+import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +51,11 @@ public class RoseSelectionBuffer implements SelectionBuffer {
   @Override
   public boolean isSegmentSelected(Segment segment) {
     return this.segmentList.contains(segment);
+  }
+
+  @Override
+  public List<Element> getSelectedSegments() {
+    return new ArrayList<>(this.segmentList);
   }
 
   @Override

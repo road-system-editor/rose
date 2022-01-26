@@ -53,18 +53,6 @@ abstract class RampSegment extends HighwaySegment {
   protected abstract void initRampConnector(List<AttributeAccessor<?>> rampAttributesList,
                                    Position rampPosition);
 
-  @Override
-  protected void initConnectors(List<AttributeAccessor<?>> entryAttributesList,
-                      List<AttributeAccessor<?>> exitAttributesList) {
-    this.entryConnector = new Connector(ConnectorType.ENTRY,
-        new Position(getCenter().getX() - INITIAL_CONNECTOR_DISTANCE_TO_CENTER,
-            getCenter().getY()),
-        entryAttributesList);
-    this.exitConnector = new Connector(ConnectorType.EXIT,
-        new Position(getCenter().getX() + INITIAL_CONNECTOR_DISTANCE_TO_CENTER,
-            getCenter().getY()),
-        exitAttributesList);
-  }
 
   /**
    * Returns the ramp {@link Connector} of the RampSegment.

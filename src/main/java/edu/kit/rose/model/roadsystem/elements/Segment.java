@@ -5,7 +5,6 @@ import edu.kit.rose.infrastructure.Movement;
 import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.model.roadsystem.measurements.Measurement;
-import java.util.Date;
 
 /**
  * A Piece of a road in a RoadSystem. (see: Pflichtenheft: "Straßensegment")
@@ -25,7 +24,7 @@ public interface Segment extends Element, Comparable<Segment> {
    *
    * @return a {@link Box} containing all {@link Measurement}s of the Segment.
    */
-  SortedBox<Measurement<?>> getMeasurements();
+  Box<Measurement<?>> getMeasurements();
 
   /**
    * Returns the {@link Connector}s of the Segment.

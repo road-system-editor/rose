@@ -55,7 +55,7 @@ public class BaseTest {
    * Tests if the AttributeAccessors are of the correct Type and in the right Order.
    */
   @Test
-  public void testAttributeAccessors() {
+  public void testGetAttributeAccessors() {
     SortedBox<AttributeAccessor<?>> attributeAccessors = testBase.getAttributeAccessors();
     Assertions.assertEquals(7, attributeAccessors.getSize());
     Assertions.assertEquals(AttributeType.NAME, attributeAccessors.get(0).getAttributeType());
@@ -93,6 +93,10 @@ public class BaseTest {
   public void testCompareTo() {
     Base secondTestBase = new Base("secondTestBase");
     Assertions.assertTrue(testBase.compareTo(secondTestBase) < 0);
+
+    Base firstTestBase = new Base("firstTestBase");
+    secondTestBase = new Base("secondTestBase");
+    Assertions.assertTrue(firstTestBase.compareTo(secondTestBase) < 0);
   }
 
   /**

@@ -5,6 +5,7 @@ import edu.kit.rose.infrastructure.Movement;
 import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.infrastructure.RoseBox;
 import edu.kit.rose.infrastructure.RoseSortedBox;
+import edu.kit.rose.infrastructure.RoseUnitObservable;
 import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
@@ -18,7 +19,7 @@ import java.util.Set;
 /**
  * A base Class for a {@link Segment} that implements the basic functionality all Segments share.
  */
-public abstract class HighwaySegment implements Segment {
+public abstract class HighwaySegment extends RoseUnitObservable<Element> implements Segment {
 
   protected static final int INITIAL_CONNECTOR_DISTANCE_TO_CENTER = 50;
 
@@ -54,8 +55,6 @@ public abstract class HighwaySegment implements Segment {
     this.segmentType = segmentType;
     this.name = name;
     init();
-    connectors.add(entryConnector);
-    connectors.add(exitConnector);
   }
 
   private void init() {
@@ -99,8 +98,19 @@ public abstract class HighwaySegment implements Segment {
     initConnectors(entryAttributesList, exitAttributesList);
   }
 
-  abstract void initConnectors(List<AttributeAccessor<?>> entryAttributesList,
-                              List<AttributeAccessor<?>> exitAttributesList);
+  protected void initConnectors(List<AttributeAccessor<?>> entryAttributesList,
+                                List<AttributeAccessor<?>> exitAttributesList) {
+    this.entryConnector = new Connector(ConnectorType.ENTRY,
+        new Position(getCenter().getX() - INITIAL_CONNECTOR_DISTANCE_TO_CENTER,
+            getCenter().getY()),
+        entryAttributesList);
+    this.exitConnector = new Connector(ConnectorType.EXIT,
+        new Position(getCenter().getX() + INITIAL_CONNECTOR_DISTANCE_TO_CENTER,
+            getCenter().getY()),
+        exitAttributesList);
+    connectors.add(entryConnector);
+    connectors.add(exitConnector);
+  }
 
   /**
    * Provides the entry Connector for this Segment.
@@ -122,7 +132,7 @@ public abstract class HighwaySegment implements Segment {
 
   @Override
   public SortedBox<AttributeAccessor<?>> getAttributeAccessors() {
-    return new RoseSortedBox<>(new ArrayList<>(this.attributeAccessors));
+    return new RoseSortedBox<>(this.attributeAccessors);
   }
 
   @Override
@@ -141,13 +151,13 @@ public abstract class HighwaySegment implements Segment {
   }
 
   @Override
-  public SortedBox<Measurement<?>> getMeasurements() {
-    return new RoseSortedBox<>(new ArrayList<>(this.measurements));
+  public Box<Measurement<?>> getMeasurements() {
+    return new RoseBox<>(this.measurements);
   }
 
   @Override
   public Box<Connector> getConnectors() {
-    return new RoseBox<>(new ArrayList<>(this.connectors));
+    return new RoseBox<>(this.connectors);
   }
 
   @Override
@@ -160,11 +170,11 @@ public abstract class HighwaySegment implements Segment {
     center.setX(center.getX() + movement.getX());
     center.setY(center.getY() + movement.getY());
     connectors.forEach(c -> c.move(movement));
+    notifySubscribers();
   }
 
   @Override
   public int compareTo(Segment segment) {
-    //TODO: make more easy to look at
     try {
       var highWaySegment = (HighwaySegment) segment;
       return creationTime.compareTo(highWaySegment.getCreationTime());
@@ -174,7 +184,7 @@ public abstract class HighwaySegment implements Segment {
   }
 
   @Override
-  public Element getThis() {
+  public HighwaySegment getThis() {
     return this;
   }
 

@@ -19,8 +19,6 @@ import java.util.Set;
  */
 public class Entrance extends RampSegment {
 
-  private final Set<UnitObserver<Element>> observers = new HashSet<>();
-
   /**
    * Standard Constructor.
    * Initializes all values to default ones.
@@ -37,21 +35,6 @@ public class Entrance extends RampSegment {
    */
   public Entrance(String name) {
     super(SegmentType.ENTRANCE, name);
-  }
-
-  @Override
-  public void addSubscriber(UnitObserver<Element> observer) {
-    observers.add(observer);
-  }
-
-  @Override
-  public void removeSubscriber(UnitObserver<Element> observer) {
-    observers.remove(observer);
-  }
-
-  @Override
-  public void notifySubscribers() {
-    observers.forEach(o -> o.notifyChange(this));
   }
 
   @Override

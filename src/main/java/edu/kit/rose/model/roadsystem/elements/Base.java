@@ -13,9 +13,7 @@ import java.util.Set;
  * Represents a one way road. (as in part of a freeway)
  * A Base {@link Segment} is a simple {@link Segment} that only has one entrance and one exit.
  */
-public class Base extends HighwaySegment implements Segment {
-
-  private final Set<UnitObserver<Element>> observers = new HashSet<>();
+public class Base extends HighwaySegment {
 
   /**
    * Standard Constructor.
@@ -33,35 +31,5 @@ public class Base extends HighwaySegment implements Segment {
    */
   public Base(String name) {
     super(SegmentType.BASE, name);
-  }
-
-  @Override
-  public void addSubscriber(UnitObserver<Element> observer) {
-    observers.add(observer);
-  }
-
-  @Override
-  public void removeSubscriber(UnitObserver<Element> observer) {
-    observers.remove(observer);
-  }
-
-  @Override
-  public void notifySubscribers() {
-    observers.forEach(o -> o.notifyChange(this));
-  }
-
-  @Override
-  void initConnectors(List<AttributeAccessor<?>> entryAttributesList,
-                      List<AttributeAccessor<?>> exitAttributesList) {
-    this.entryConnector = new MovableConnector(ConnectorType.ENTRY,
-        new Position(getCenter().getX() - INITIAL_CONNECTOR_DISTANCE_TO_CENTER,
-            getCenter().getY()),
-        entryAttributesList);
-    this.exitConnector = new MovableConnector(ConnectorType.EXIT,
-        new Position(getCenter().getX() + INITIAL_CONNECTOR_DISTANCE_TO_CENTER,
-            getCenter().getY()),
-        exitAttributesList);
-    connectors.add(entryConnector);
-    connectors.add(exitConnector);
   }
 }

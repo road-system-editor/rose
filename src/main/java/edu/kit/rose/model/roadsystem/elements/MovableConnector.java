@@ -4,11 +4,12 @@ import edu.kit.rose.infrastructure.Movement;
 import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * A Connector that can be moved by anyone that dares.
  */
-public class MoveableConnector extends Connector {
+public class MovableConnector extends Connector {
 
   /**
    * Constructor.
@@ -17,12 +18,15 @@ public class MoveableConnector extends Connector {
    * @param position  the {@link Position} that this RoseConnector is supposed to be at.
    * @param accessors The {@link AttributeAccessor}s that this RoseConnector is supposed to have.
    */
-  MoveableConnector(ConnectorType type, Position position,
-                    Collection<AttributeAccessor<?>> accessors) {
+  MovableConnector(ConnectorType type, Position position,
+                   List<AttributeAccessor<?>> accessors) {
     super(type, position, accessors);
   }
 
   @Override
   public void move(Movement movement) {
+    this.getPositionInstance().setX(this.getPosition().getX() + movement.getX());
+    this.getPositionInstance().setY(this.getPosition().getY() + movement.getY());
+    notifySubscribers();
   }
 }

@@ -45,7 +45,7 @@ public interface RoadSystem
    *
    * @param segmentType The {@link SegmentType} the {@link Segment} shall have.
    */
-  void createSegment(SegmentType segmentType);
+  Segment createSegment(SegmentType segmentType);
 
   /**
    * Creates a {@link Group} containing the given {@link Element}s.

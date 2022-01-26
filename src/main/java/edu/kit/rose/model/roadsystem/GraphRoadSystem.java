@@ -53,8 +53,8 @@ class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, RoadSys
   }
 
   @Override
-  public void createSegment(SegmentType segmentType) {
-
+  public Segment createSegment(SegmentType segmentType) {
+    return null;
   }
 
   @Override

@@ -86,9 +86,9 @@ public class CriteriaManager extends RoseSetObservable<PlausibilityCriterion, Cr
    */
   public void createCriterionOfType(PlausibilityCriterionType type) {
     PlausibilityCriterion newCriteria = switch (type) {
-      case VALUE -> this.criterionFactory.createValueCriterion();
-      case COMPLETENESS -> this.criterionFactory.createCompletenessCriterion();
-      case COMPATIBILITY -> this.criterionFactory.createCompatibilityCriterion();
+        case VALUE -> this.criterionFactory.createValueCriterion();
+        case COMPLETENESS -> this.criterionFactory.createCompletenessCriterion();
+        case COMPATIBILITY -> this.criterionFactory.createCompatibilityCriterion();
     };
 
     this.criterion.add(newCriteria);

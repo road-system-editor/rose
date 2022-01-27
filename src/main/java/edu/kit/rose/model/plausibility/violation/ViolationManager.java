@@ -42,7 +42,8 @@ public class ViolationManager
    * @param offendingSegments The {@link Segment}s that cause the {@link Violation}
    * @return the violation agoinst the given Criterion by the given Segments.
    */
-  public Violation getViolation(PlausibilityCriterion criterion, Collection<Segment> offendingSegments) {
+  public Violation getViolation(PlausibilityCriterion criterion,
+                                Collection<Segment> offendingSegments) {
     return null;
   }
 

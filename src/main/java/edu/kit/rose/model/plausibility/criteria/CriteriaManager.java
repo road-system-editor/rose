@@ -1,10 +1,14 @@
 package edu.kit.rose.model.plausibility.criteria;
 
+import edu.kit.rose.infrastructure.RoseSortedBox;
 import edu.kit.rose.infrastructure.SetObservable;
 import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.infrastructure.UnitObserver;
 import edu.kit.rose.model.plausibility.violation.ViolationManager;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * A CriteriaManager holds {@link PlausibilityCriterion}s .
@@ -44,10 +48,11 @@ public class CriteriaManager implements SetObservable<PlausibilityCriterion, Cri
    * that this CriteriaManager contains.
    *
    * @return a {@link SortedBox} containing all {@link PlausibilityCriterion}
-   *        that this CriteriaManager contains.
+   * that this CriteriaManager contains.
    */
   public SortedBox<PlausibilityCriterion> getCriteria() {
-    return null;
+    return new RoseSortedBox<PlausibilityCriterion>((new ValueCriterion()));
+    //TODO: Implement, this is only a stub.
   }
 
   /**

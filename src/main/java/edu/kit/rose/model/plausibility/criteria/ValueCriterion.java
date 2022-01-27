@@ -14,7 +14,8 @@ class ValueCriterion implements PlausibilityCriterion {
 
   @Override
   public String getName() {
-    return null;
+    return "exampleName";
+    //TODO: Implement, this is only a stub.
   }
 
   @Override

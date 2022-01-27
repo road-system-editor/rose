@@ -2,7 +2,11 @@ package edu.kit.rose.view.panel.criterion;
 
 import edu.kit.rose.controller.plausibility.PlausibilityController;
 import edu.kit.rose.infrastructure.UnitObserver;
+import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterion;
+import edu.kit.rose.view.commons.FxmlContainer;
+import java.util.Collection;
+import java.util.function.Consumer;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -13,7 +17,7 @@ import javafx.scene.layout.HBox;
  * Criterion handles are the entries in the {@link CriteriaOverviewPanel} that each represent
  * one plausibility criterion.
  */
-class CriterionHandle extends HBox
+class CriterionHandle extends FxmlContainer
     implements UnitObserver<PlausibilityCriterion> { // TODO maybe as a listcell implementation?
   private PlausibilityController controller;
   private PlausibilityCriterion criterion;
@@ -32,10 +36,13 @@ class CriterionHandle extends HBox
    * @param selectListener will be called when this handle is clicked
    */
   public CriterionHandle(PlausibilityController controller, PlausibilityCriterion criterion,
-                         Runnable selectListener) {
+                         Consumer<PlausibilityCriterion> selectListener) {
+    super("CriterionHandle.fxml");
     this.controller = controller;
     this.criterion = criterion;
-    this.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> selectListener.run());
+    this.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> selectListener.accept(criterion));
+    this.label.setText(criterion.getName());
+    this.deleteButton.setText("delete");
   }
 
   /**
@@ -59,5 +66,15 @@ class CriterionHandle extends HBox
   @Override
   public void notifyChange(PlausibilityCriterion unit) {
 
+  }
+
+  @Override
+  protected void updateTranslatableStrings(Language newLang) {
+
+  }
+
+  @Override
+  protected Collection<FxmlContainer> getSubFxmlContainer() {
+    return null;
   }
 }

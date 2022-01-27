@@ -43,7 +43,7 @@ class RoseApplicationDataSystem implements ApplicationDataSystem {
 
   @Override
   public CriteriaManager getCriteriaManager() {
-    return null;
+    return new CriteriaManager(); //TODO: Implement
   }
 
   /**

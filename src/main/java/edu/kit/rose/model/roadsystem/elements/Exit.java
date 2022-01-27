@@ -1,12 +1,8 @@
 package edu.kit.rose.model.roadsystem.elements;
 
-import edu.kit.rose.infrastructure.Box;
-import edu.kit.rose.infrastructure.Movement;
 import edu.kit.rose.infrastructure.Position;
-import edu.kit.rose.infrastructure.SortedBox;
-import edu.kit.rose.infrastructure.UnitObserver;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
-import edu.kit.rose.model.roadsystem.measurements.Measurement;
+import java.util.List;
 
 /**
  * Represents a freeway exit.
@@ -15,63 +11,28 @@ import edu.kit.rose.model.roadsystem.measurements.Measurement;
  */
 public class Exit extends RampSegment {
 
-  @Override
-  public SortedBox<AttributeAccessor<?>> getAttributeAccessors() {
-    return null;
+  /**
+   * Standard Constructor.
+   * initializes all values to default ones.
+   */
+  public Exit() {
+    super(SegmentType.EXIT);
+  }
+
+  /**
+   * Constructor.
+   * Uses the name and initializes all values to default ones.
+   *
+   * @param name the name for the Exit Segment
+   */
+  public Exit(String name) {
+    super(SegmentType.EXIT, name);
   }
 
   @Override
-  public String getName() {
-    return null;
-  }
-
-  @Override
-  public boolean isContainer() {
-    return false;
-  }
-
-  @Override
-  public SegmentType getSegmentType() {
-    return null;
-  }
-
-  @Override
-  public SortedBox<Measurement<?>> getMeasurements() {
-    return null;
-  }
-
-  @Override
-  public Box<Connector> getConnectors() {
-    return null;
-  }
-
-  @Override
-  public Position getCenter() {
-    return null;
-  }
-
-  @Override
-  public void move(Movement movement) {
-
-  }
-
-  @Override
-  public int compareTo(Segment o) {
-    return 0;
-  }
-
-  @Override
-  public void notifySubscribers() {
-
-  }
-
-  @Override
-  public void addSubscriber(UnitObserver<Element> observer) {
-
-  }
-
-  @Override
-  public void removeSubscriber(UnitObserver<Element> observer) {
-
+  protected void initRampConnector(List<AttributeAccessor<?>> rampAttributesList,
+                              Position rampPosition) {
+    this.rampConnector = new Connector(ConnectorType.RAMP_EXIT,
+        rampPosition, rampAttributesList);
   }
 }

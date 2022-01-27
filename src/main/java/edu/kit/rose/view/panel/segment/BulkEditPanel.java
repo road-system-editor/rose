@@ -26,7 +26,6 @@ public class BulkEditPanel extends FxmlContainer {
                        AttributeController controller, Collection<Element> elements) {
     super("bulk_edit_panel.fxml");
 
-    attributePanel.setController(controller);
     attributePanel.setAttributes(roadSystem.getSharedAttributeAccessors(elements));
   }
 

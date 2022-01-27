@@ -23,8 +23,7 @@ public class SegmentBoxPanel extends FxmlContainer {
 
   /**
    * Creates a new segment box panel.
-   * Requires {@link #setTranslator(LocalizedTextProvider)} +
-   * {@link #setController(RoadSystemController)}
+   * Requires {@link #setController(RoadSystemController)}
    */
   public SegmentBoxPanel() {
     super("SegmentBoxPanel.fxml");

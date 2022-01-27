@@ -19,17 +19,11 @@ public class SetAttributeAccessorCommandTest {
 
   @BeforeEach
   void setUp() {
-    accessor = new AttributeAccessor<>() {
-      @Override
-      public void setValue(Integer value) {
-        testInt = value;
-      }
-
-      @Override
-      public Integer getValue() {
-        return testInt;
-      }
-    };
+    accessor = new AttributeAccessor<>(
+        AttributeType.LANE_COUNT,
+        () -> testInt,
+        newValue -> testInt = newValue
+    );
     testInt = INITIAL_VALUE;
   }
 

@@ -169,7 +169,7 @@ public class RoseApplication extends Application implements Navigator {
 
     private void configureControllers() {
       ControllerFactory factory =
-          new ControllerFactory(navigator, provider, applicationData, project, null);
+          new ControllerFactory(navigator, provider, applicationData, project);
 
       bind(ApplicationController.class).toInstance(factory.getApplicationController());
       bind(AttributeController.class).toInstance(factory.getAttributeController());

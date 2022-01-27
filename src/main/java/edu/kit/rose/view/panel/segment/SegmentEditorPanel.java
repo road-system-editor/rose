@@ -1,66 +1,96 @@
 package edu.kit.rose.view.panel.segment;
 
-import edu.kit.rose.controller.attribute.AttributeController;
-import edu.kit.rose.controller.measurement.MeasurementController;
-import edu.kit.rose.infrastructure.UnitObserver;
+import com.google.inject.Injector;
+import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.infrastructure.language.Language;
-import edu.kit.rose.model.roadsystem.TimeSliceSetting;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.view.commons.FxmlContainer;
 import edu.kit.rose.view.commons.UnmountUtility;
 import java.util.Collection;
+import java.util.List;
 import javafx.fxml.FXML;
-import javafx.scene.control.TabPane;
-
-
+import javafx.scene.control.Tab;
 
 /**
  * The segment editor panel allows the user to configure the attributes and measurements
  * of a given segment, as specified in PF11.1.5.
  */
-public class SegmentEditorPanel extends FxmlContainer implements UnitObserver<Element> {
-  private final AttributeController attributeController;
-  private final MeasurementController measurementController;
+public class SegmentEditorPanel extends FxmlContainer implements SetObserver<Element, Element> {
+  private Segment segment;
 
-  private final Segment segment;
   @FXML
-  private TabPane tabPane;
+  private Tab attributeTab;
   @FXML
   private AttributePanel attributePanel;
+  @FXML
+  private Tab measurementTab;
   @FXML
   private MeasurementPanel measurementPanel;
 
   /**
-   * Creates a new segment editor panel for a given {@code segment}.
+   * Creates a new segment editor panel. Make sure to call {@link #init(Injector)} afterwards!
    */
-  public SegmentEditorPanel(Segment segment, TimeSliceSetting timeSliceSetting,
-                            AttributeController attributeController,
-                            MeasurementController measurementController) {
-    super("segment_editor_panel.fxml");
-    this.segment = segment;
-    this.attributeController = attributeController;
-    this.measurementController = measurementController;
-    UnmountUtility.subscribeUntilUnmount(this, this, segment);
-    attributePanel.setAttributes(segment.getAttributeAccessors());
-    attributePanel.setController(attributeController);
-    measurementPanel.setSegment(segment);
-    measurementPanel.setTimeSliceSetting(timeSliceSetting);
-    measurementPanel.setController(measurementController);
+  public SegmentEditorPanel() {
+    super("SegmentEditorPanel.fxml");
+  }
+
+  @Override
+  public void init(Injector injector) {
+    super.init(injector);
+
+    UnmountUtility.runOnUnmount(this, this::unregisterListeners);
   }
 
   @Override
   protected void updateTranslatableStrings(Language newLang) {
-
+    attributeTab.setText(
+        getTranslator().getLocalizedText("view.panel.segment.attributeEditor"));
+    measurementTab.setText(
+        getTranslator().getLocalizedText("view.panel.segment.measurementEditor"));
   }
 
   @Override
   protected Collection<FxmlContainer> getSubFxmlContainer() {
-    return null;
+    return List.of(attributePanel, measurementPanel);
   }
 
   @Override
   public void notifyChange(Element unit) {
+
+  }
+
+  /**
+   * Sets the segment that should be editable in this editor.
+   *
+   * @param segment the new segment to edit.
+   */
+  public void setSegment(Segment segment) {
+    if (this.segment != null) {
+      segment.removeSubscriber(this);
+    }
+
+    this.segment = segment;
+    attributePanel.setAttributes(segment.getAttributeAccessors());
+
+    if (this.segment != null) {
+      segment.addSubscriber(this);
+    }
+  }
+
+  private void unregisterListeners() {
+    if (this.segment != null) {
+      segment.removeSubscriber(this);
+    }
+  }
+
+  @Override
+  public void notifyAddition(Element unit) {
+
+  }
+
+  @Override
+  public void notifyRemoval(Element unit) {
 
   }
 }

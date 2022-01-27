@@ -3,6 +3,7 @@ package edu.kit.rose.controller.measurement;
 import edu.kit.rose.controller.command.ChangeCommandBuffer;
 import edu.kit.rose.controller.commons.Controller;
 import edu.kit.rose.controller.commons.StorageLock;
+import edu.kit.rose.controller.navigation.Navigator;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.roadsystem.measurements.Measurement;
 
@@ -16,10 +17,11 @@ public class RoseMeasurementController extends Controller implements Measurement
    * Creates a new {@link RoseMeasurementController}.
    *
    * @param storageLock         the coordinator for controller actions
+   * @param navigator           the navigator for the controller
    * @param project             the model facade for project data
    */
-  public RoseMeasurementController(StorageLock storageLock, Project project) {
-    super(storageLock);
+  public RoseMeasurementController(StorageLock storageLock, Navigator navigator, Project project) {
+    super(storageLock, navigator);
   }
 
   @Override

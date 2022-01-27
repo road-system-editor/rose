@@ -6,13 +6,21 @@ package edu.kit.rose.model.plausibility.criteria.validation;
  * @param <T> The Type that this ValidationStrategy is applied to.
  */
 class EqualsValidationStrategy<T> extends ValidationStrategy<T> {
-  @Override
-  boolean validate(Object first, Object second) {
-    return false;
+
+  /**
+   * Standard Constructor.
+   */
+  public EqualsValidationStrategy() {
+    super(ValidationType.EQUALS);
   }
 
   @Override
-  boolean validate(T first, T second, double legalDiscrepancy) {
-    return false;
+  public boolean validate(Object first, Object second) {
+    return first.equals(second);
+  }
+
+  @Override
+  public boolean validate(T first, T second, double legalDiscrepancy) {
+    return this.validate(first, second);
   }
 }

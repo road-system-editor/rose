@@ -3,7 +3,7 @@ package edu.kit.rose.controller.plausibility;
 
 import edu.kit.rose.model.plausibility.criteria.CompatibilityCriterion;
 import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterionType;
-import edu.kit.rose.model.plausibility.criteria.validation.OperatorType;
+import edu.kit.rose.model.plausibility.criteria.validation.ValidationType;
 import edu.kit.rose.model.plausibility.violation.Violation;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
@@ -60,13 +60,13 @@ public interface PlausibilityController {
                                               AttributeType attributeType);
 
   /**
-   * Sets the {@link OperatorType} of an {@link CompatibilityCriterion}.
+   * Sets the {@link ValidationType} of an {@link CompatibilityCriterion}.
    *
    * @param criterion    the criterion to set the operator type
-   * @param operatorType the new operator type
+   * @param validationType the new operator type
    */
   void setCompatibilityCriterionOperatorType(CompatibilityCriterion criterion,
-                                             OperatorType operatorType);
+                                             ValidationType validationType);
 
   /**
    * Sets the discrepancy of an {@link CompatibilityCriterion}.

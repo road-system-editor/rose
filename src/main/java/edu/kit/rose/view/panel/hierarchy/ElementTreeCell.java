@@ -67,16 +67,10 @@ public class ElementTreeCell extends TreeCell<Element>
   }
 
   private void updateGroup(Element element) {
-    if (this.element == null) {
-      this.element = element;
-      setGraphic(new GroupView(translator, (Group) element, hierarchyController));
-      this.element.addSubscriber(this);
-    } else if (this.element != element) {
-      this.element.removeSubscriber(this);
-      this.element = element;
-      this.element.addSubscriber(this);
-      setGraphic(new GroupView(translator, (Group) element, hierarchyController));
-    }
+    this.element.removeSubscriber(this);
+    this.element = element;
+    this.element.addSubscriber(this);
+    setGraphic(new GroupView(translator, (Group) element, hierarchyController));
   }
 
   private void updateSegment(Element element) {

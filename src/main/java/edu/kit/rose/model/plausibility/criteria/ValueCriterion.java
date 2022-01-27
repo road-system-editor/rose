@@ -35,6 +35,7 @@ class ValueCriterion extends RoseSetObservable<SegmentType, PlausibilityCriterio
   private static final int LOWER_MAX_SPEED_RAMP = 30;
   private static final double UPPER_SLOPE = 10;
   private static final double LOWER_SLOPE = -10;
+
   private String name;
   private final Set<AttributeType> affectedAttributeTypes;
   private final Set<SegmentType> segmentTypes;

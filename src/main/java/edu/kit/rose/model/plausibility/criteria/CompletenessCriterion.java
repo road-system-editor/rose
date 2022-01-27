@@ -3,10 +3,15 @@ package edu.kit.rose.model.plausibility.criteria;
 import edu.kit.rose.infrastructure.Box;
 import edu.kit.rose.infrastructure.RoseBox;
 import edu.kit.rose.infrastructure.RoseSetObservable;
+import edu.kit.rose.model.plausibility.violation.Violation;
 import edu.kit.rose.model.plausibility.violation.ViolationManager;
+import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
+import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.elements.Element;
+import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -20,11 +25,15 @@ class CompletenessCriterion extends RoseSetObservable<SegmentType, PlausibilityC
   private String name;
   private final Set<SegmentType> segmentTypes;
   private final ViolationManager violationManager;
+  private final Set<AttributeType> necessaryAttributeTypes;
 
   public CompletenessCriterion(ViolationManager violationManager) {
     this.name = "";
     this.segmentTypes = new HashSet<>();
     this.violationManager = violationManager;
+    this.necessaryAttributeTypes = new HashSet<>();
+    this.necessaryAttributeTypes.add(AttributeType.NAME);
+    this.necessaryAttributeTypes.add(AttributeType.LENGTH);
   }
 
   @Override
@@ -60,7 +69,14 @@ class CompletenessCriterion extends RoseSetObservable<SegmentType, PlausibilityC
 
   @Override
   public void notifyChange(Element unit) {
-
+    Box<AttributeAccessor<?>> accessors = unit.getAttributeAccessors();
+    for (AttributeAccessor<?> accessor : accessors) {
+      if (this.necessaryAttributeTypes.contains(accessor.getAttributeType())) {
+        if (accessor.getValue() == null) {
+          this.violationManager.addViolation(new Violation(this, List.of((Segment) unit)));
+        }
+      }
+    }
   }
 
   @Override

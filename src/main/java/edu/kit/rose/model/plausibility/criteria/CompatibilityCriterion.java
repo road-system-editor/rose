@@ -45,6 +45,7 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
    * Constructor.
    *
    * @param roadSystem The Roadsystem this Criterion applied to.
+   * @param violationManager manager to which violations will be added
    */
   CompatibilityCriterion(RoadSystem roadSystem, ViolationManager violationManager) {
     this.name = "";
@@ -181,7 +182,8 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
         }
         default -> throw new InvalidParameterException("invalid operator type");
       }
-      if (!invalidSegments.isEmpty()) {
+      if (!invalidSegments.isEmpty()
+              && this.segmentTypes.contains(((Segment) unit).getSegmentType())) {
         invalidSegments.add((Segment) unit);
         this.violationManager.addViolation(new Violation(this, invalidSegments));
       }
@@ -202,10 +204,12 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
 
 
     for (Segment adjacentSegment : adjacentSegments) {
-      AttributeAccessor<?> adjacentAccessor =
-              getAccessorOfType(adjacentSegment.getAttributeAccessors(), this.attributeType);
-      if (!checkValid(strategy, segmentAccessor, adjacentAccessor, useDiscrepancy)) {
-        invalidSegments.add(adjacentSegment);
+      if (this.segmentTypes.contains(adjacentSegment.getSegmentType())) {
+        AttributeAccessor<?> adjacentAccessor =
+                getAccessorOfType(adjacentSegment.getAttributeAccessors(), this.attributeType);
+        if (!checkValid(strategy, segmentAccessor, adjacentAccessor, useDiscrepancy)) {
+          invalidSegments.add(adjacentSegment);
+        }
       }
     }
     return invalidSegments;

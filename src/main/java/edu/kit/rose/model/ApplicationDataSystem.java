@@ -10,9 +10,12 @@ import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import java.nio.file.Path;
 
 /**
- * ApplicationData is all Data that has to be saved independently of the project.
+ * ApplicationData is all data that has to be saved independently of the project.
  * It includes the current language setting as well as the {@link CriteriaManager}
  * as these are to be configured on a project independent level.
+ * Is to be observed by the {@link edu.kit.rose.view} package.
+ * Observes the {@link CriteriaManager} in order to be informed of changes to the criteria held
+ * within, as the ApplicationDataSystem needs to write these changes to the config file.
  */
 public interface ApplicationDataSystem extends UnitObservable<ApplicationDataSystem>,
         SetObserver<PlausibilityCriterion, CriteriaManager> {

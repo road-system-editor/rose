@@ -46,13 +46,7 @@ class RoseApplicationDataSystem implements ApplicationDataSystem {
     return new CriteriaManager(); //TODO: Implement
   }
 
-  /**
-   * Imports all {@link edu.kit.rose.model.plausibility.criteria.CompatibilityCriterion}
-   * from the File at the given
-   * Path. This adds the included Criteria to the currently active Criteria.
-   *
-   * @param path the path to the File that contains the Criteria.
-   */
+  @Override
   public void importCriteriaFromFile(Path path) {
 
   }

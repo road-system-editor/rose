@@ -70,7 +70,7 @@ public enum AttributeType {
    *
    * @return the {@link DataType} of the AttributeType.
    */
-  DataType getDataType() {
+  public DataType getDataType() {
     return this.dataType;
   }
 
@@ -79,7 +79,7 @@ public enum AttributeType {
    *
    * @return a String holding the name of the AttributeType.
    */
-  String getName() {
+  public String getName() {
     return this.name;
   }
 

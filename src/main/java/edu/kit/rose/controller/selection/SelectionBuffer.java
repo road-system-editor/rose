@@ -1,7 +1,9 @@
 package edu.kit.rose.controller.selection;
 
 import edu.kit.rose.infrastructure.SetObservable;
+import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Segment;
+import java.util.List;
 
 /**
  * A selection buffer is a container that stores selected segments
@@ -39,4 +41,11 @@ public interface SelectionBuffer extends SetObservable<Segment, SelectionBuffer>
    * @return boolean value that indicates if the segment is selected
    */
   boolean isSegmentSelected(Segment segment);
+
+  /**
+   * Returns all selected segments.
+   *
+   * @return all selected segments
+   */
+  List<Segment> getSelectedSegments();
 }

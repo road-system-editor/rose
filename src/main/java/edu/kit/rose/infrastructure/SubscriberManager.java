@@ -13,7 +13,7 @@ import java.util.List;
  */
 abstract class SubscriberManager<T extends UnitObserver<S>, S> implements Observable<T, S> {
 
-  private final List<T> subscribers;
+  protected final List<T> subscribers;
 
   public SubscriberManager() {
     subscribers = new LinkedList<>();

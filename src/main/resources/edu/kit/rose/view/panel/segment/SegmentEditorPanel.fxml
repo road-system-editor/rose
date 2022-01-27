@@ -1,0 +1,17 @@
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.Tab?>
+<?import edu.kit.rose.view.panel.segment.AttributePanel?>
+<?import edu.kit.rose.view.panel.segment.MeasurementPanel?>
+<fx:root xmlns="http://javafx.com/javafx"
+         xmlns:fx="http://javafx.com/fxml" type="Pane"
+         style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0); -fx-background-color: white;">
+    <TabPane>
+        <Tab fx:id="attributeTab">
+            <AttributePanel fx:id="attributePanel"/>
+        </Tab>
+        <Tab fx:id="measurementTab">
+            <MeasurementPanel fx:id="measurementPanel"/>
+        </Tab>
+    </TabPane>
+</fx:root>

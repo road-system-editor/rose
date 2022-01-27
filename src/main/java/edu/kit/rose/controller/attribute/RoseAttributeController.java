@@ -3,6 +3,7 @@ package edu.kit.rose.controller.attribute;
 import edu.kit.rose.controller.command.ChangeCommandBuffer;
 import edu.kit.rose.controller.commons.Controller;
 import edu.kit.rose.controller.commons.StorageLock;
+import edu.kit.rose.controller.navigation.Navigator;
 import edu.kit.rose.model.ApplicationDataSystem;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
@@ -25,12 +26,13 @@ public class RoseAttributeController extends Controller implements AttributeCont
    *
    * @param changeCommandBuffer the buffer for change commands
    * @param storageLock         the coordinator for controller actions
+   * @param navigator           the navigator for the controller
    * @param applicationDataSystem             the model facade for project data
    */
   public RoseAttributeController(ChangeCommandBuffer changeCommandBuffer, StorageLock storageLock,
-                                 Project project,
+                                 Navigator navigator, Project project,
                                  ApplicationDataSystem applicationDataSystem) {
-    super(storageLock);
+    super(storageLock, navigator);
     this.changeCommandBuffer = changeCommandBuffer;
     this.project = project;
     this.applicationDataSystem = applicationDataSystem;

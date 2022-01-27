@@ -70,7 +70,7 @@ public enum AttributeType {
    *
    * @return the {@link DataType} of the AttributeType.
    */
-  DataType getDataType() {
+  public DataType getDataType() {
     return this.dataType;
   }
 
@@ -79,7 +79,7 @@ public enum AttributeType {
    *
    * @return a String holding the name of the AttributeType.
    */
-  String getName() {
+  public String getName() {
     return this.name;
   }
 
@@ -90,8 +90,7 @@ public enum AttributeType {
    * @return a boolean describing if the AttributeType can be accessed for multiple
    *        {@link Element}s at once.
    */
-  boolean isBulkable() {
+  public boolean isBulkable() {
     return this.isBulkable;
   }
-
 }

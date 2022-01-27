@@ -68,4 +68,14 @@ class ValueCriterion extends RoseSetObservable<SegmentType, PlausibilityCriterio
   public ValueCriterion getThis() {
     return this;
   }
+
+  @Override
+  public void notifyAddition(Element unit) {
+
+  }
+
+  @Override
+  public void notifyRemoval(Element unit) {
+
+  }
 }

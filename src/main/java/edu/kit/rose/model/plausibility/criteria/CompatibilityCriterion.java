@@ -280,4 +280,14 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
       default -> throw new IllegalArgumentException("no such data type found");
     }
   }
+
+  @Override
+  public void notifyAddition(Element unit) {
+
+  }
+
+  @Override
+  public void notifyRemoval(Element unit) {
+
+  }
 }

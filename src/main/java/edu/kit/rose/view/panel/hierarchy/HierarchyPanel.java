@@ -3,6 +3,7 @@ package edu.kit.rose.view.panel.hierarchy;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import edu.kit.rose.controller.hierarchy.HierarchyController;
+import edu.kit.rose.infrastructure.DualSetObserver;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.roadsystem.RoadSystem;
@@ -28,7 +29,7 @@ import javafx.scene.layout.BorderPane;
  * The hierarchy panel shows the hierarchical order of the elements contained in the road system.
  */
 public class HierarchyPanel extends FxmlContainer
-    implements DualSetObserver<Element, Connection, RoadSystem> {
+                            implements DualSetObserver<Element, Connection, RoadSystem> {
 
   @Inject
   private HierarchyController controller;
@@ -55,20 +56,6 @@ public class HierarchyPanel extends FxmlContainer
     rootItem = new TreeItem<>(null);
 
     setUp();
-
-    Group g = new Group();
-    Segment s = new Entrance();
-
-    TreeItem<Element> g1 = new TreeItem<>(g);
-    TreeItem<Element> g2 = new TreeItem<>(s);
-    g1.getChildren().add(g2);
-
-    Group gi = new Group();
-    TreeItem<Element> g3 = new TreeItem<>(gi);
-    rootItem.getChildren().add(g3);
-
-    rootItem.getChildren().add(g1);
-
   }
 
   private void setUp() {
@@ -105,32 +92,10 @@ public class HierarchyPanel extends FxmlContainer
     ElementTreeCell.dragItem = null;
 
     dragEvent.setDropCompleted(true);
+    dragEvent.consume();
   }
 
-  @Override
-  public void notifyAdditionSecond(Connection unit) {
 
-  }
-
-  @Override
-  public void notifyRemovalSecond(Connection unit) {
-
-  }
-
-  @Override
-  public void notifyAddition(Element unit) {
-
-  }
-
-  @Override
-  public void notifyRemoval(Element unit) {
-
-  }
-
-  @Override
-  public void notifyChange(RoadSystem unit) {
-
-  }
 
   @Override
   protected void updateTranslatableStrings(Language lang) {
@@ -147,5 +112,32 @@ public class HierarchyPanel extends FxmlContainer
   @Override
   public void init(Injector injector) {
     super.init(injector);
+    controller.createGroup();
+  }
+
+  @Override
+  public void notifyAdditionSecond(Connection unit) {
+
+  }
+
+  @Override
+  public void notifyRemovalSecond(Connection unit) {
+
+  }
+
+  @Override
+  public void notifyAddition(Element unit) {
+    TreeItem<Element> treeItem = new TreeItem<>(unit);
+    rootItem.getChildren().add(treeItem);
+  }
+
+  @Override
+  public void notifyRemoval(Element unit) {
+    rootItem.getChildren().removeIf(child -> child.getValue() == unit);
+  }
+
+  @Override
+  public void notifyChange(RoadSystem unit) {
+
   }
 }

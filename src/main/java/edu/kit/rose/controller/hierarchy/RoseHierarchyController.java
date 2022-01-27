@@ -79,6 +79,11 @@ public class RoseHierarchyController extends Controller
     addAndExecute(setGroupNamCommand);
   }
 
+  @Override
+  public void toggleSegmentSelection(Segment segment) {
+
+  }
+
 
   @Override
   public void addSubscription(BiConsumer<Segment, Boolean> consumer) {

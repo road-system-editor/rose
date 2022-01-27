@@ -1,6 +1,7 @@
 package edu.kit.rose.view.panel.hierarchy;
 
 import edu.kit.rose.controller.hierarchy.HierarchyController;
+import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Group;
@@ -18,7 +19,8 @@ import javafx.scene.input.TransferMode;
  * This class is a {@link javafx.scene.control.ListView} cell,
  * that displays a {@link Group}.
  */
-public class ElementTreeCell extends TreeCell<Element> {
+public class ElementTreeCell extends TreeCell<Element>
+                              implements SetObserver<Element, Element> {
 
   private final LocalizedTextProvider translator;
   private final HierarchyController hierarchyController;
@@ -58,8 +60,19 @@ public class ElementTreeCell extends TreeCell<Element> {
     }
   }
 
+  private Element element;
+
   private void updateGroup(Element element) {
-    setGraphic(new GroupView(translator, (Group) element, hierarchyController));
+    if (this.element == null) {
+      this.element = element;
+      setGraphic(new GroupView(translator, (Group) element, hierarchyController));
+      this.element.addSubscriber(this);
+    } else if (this.element != element) {
+      this.element.removeSubscriber(this);
+      this.element = element;
+      this.element.addSubscriber(this);
+      setGraphic(new GroupView(translator, (Group) element, hierarchyController));
+    }
   }
 
   private void updateSegment(Element element) {
@@ -91,7 +104,7 @@ public class ElementTreeCell extends TreeCell<Element> {
 
   private void onDragOver(DragEvent dragEvent) {
     if (!dragEvent.getDragboard()
-        .hasContent(DATA_FORMAT) || getItem() == null || !getItem().isContainer()) {
+        .hasContent(DATA_FORMAT) || getItem() == null) {
       return;
     }
 
@@ -110,23 +123,43 @@ public class ElementTreeCell extends TreeCell<Element> {
 
   private void onDragDropped(DragEvent dragEvent) {
     if (!dragEvent.getDragboard()
-        .hasContent(DATA_FORMAT) || getItem() == null || !getItem().isContainer()) {
+        .hasContent(DATA_FORMAT) || getItem() == null) {
       return;
     }
 
     TreeItem<Element> itemToPlaceOn = getTreeItem();
 
-    TreeItem<Element> draggedItemParent = dragItem.getParent();
-    draggedItemParent.getChildren().remove(dragItem);
-
-    itemToPlaceOn.getChildren().add(dragItem);
-    dragItem = null;
+    this.hierarchyController.addElementToGroup(
+        dragItem.getValue(),
+        (Group) itemToPlaceOn.getValue());
 
     dragEvent.setDropCompleted(true);
-
+    dragEvent.consume();
   }
 
   private void onDragDone(DragEvent dragEvent) {
+
+  }
+
+  @Override
+  public void notifyAddition(Element unit) {
+    TreeItem<Element> itemToPlaceOn = getTreeItem();
+    if (itemToPlaceOn != null) {
+      itemToPlaceOn.getChildren().add(dragItem);
+    }
+  }
+
+  @Override
+  public void notifyRemoval(Element unit) {
+    TreeItem<Element> treeItem = getTreeItem().getParent();
+    if (treeItem != null) {
+      treeItem.getChildren().removeIf(child -> child.getValue() == unit);
+      unit.removeSubscriber(this);
+    }
+  }
+
+  @Override
+  public void notifyChange(Element unit) {
 
   }
 }

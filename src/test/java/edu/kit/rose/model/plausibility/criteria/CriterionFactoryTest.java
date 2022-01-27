@@ -5,7 +5,7 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import edu.kit.rose.infrastructure.SimpleSortedBox;
+import edu.kit.rose.infrastructure.RoseSortedBox;
 import edu.kit.rose.model.plausibility.violation.ViolationManager;
 import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.elements.Element;
@@ -36,7 +36,7 @@ class CriterionFactoryTest {
     doAnswer(e -> this.subscribed = SUBSCRIBED)
             .when(this.element).addSubscriber(any());
     when(this.element.isContainer()).thenReturn(false);
-    when(this.roadSystem.getElements()).thenReturn(new SimpleSortedBox<>(List.of(this.element)));
+    when(this.roadSystem.getElements()).thenReturn(new RoseSortedBox<>(List.of(this.element)));
     this.factory = new CriterionFactory(this.roadSystem, mock(ViolationManager.class));
   }
 

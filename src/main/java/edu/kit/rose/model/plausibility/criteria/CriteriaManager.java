@@ -2,6 +2,7 @@ package edu.kit.rose.model.plausibility.criteria;
 
 
 import edu.kit.rose.infrastructure.SetObservable;
+import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.infrastructure.SimpleSetObservable;
 import edu.kit.rose.infrastructure.SimpleSortedBox;
 import edu.kit.rose.infrastructure.SortedBox;
@@ -9,6 +10,7 @@ import edu.kit.rose.infrastructure.UnitObserver;
 import edu.kit.rose.model.plausibility.violation.ViolationManager;
 import edu.kit.rose.model.roadsystem.RoadSystem;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * A CriteriaManager holds {@link PlausibilityCriterion}s .
@@ -22,7 +24,7 @@ public class CriteriaManager extends SimpleSetObservable<PlausibilityCriterion, 
 
   private ViolationManager violationManager;
   private final ArrayList<PlausibilityCriterion> criterion;
-  private final CritrionFactory criterionFactory;
+  private final CriterionFactory criterionFactory;
 
   /**
    * Constructor.
@@ -91,7 +93,7 @@ public class CriteriaManager extends SimpleSetObservable<PlausibilityCriterion, 
     };
 
     this.criterion.add(newCriteria);
-    subscribers.forEach(e -> e.notifyAddition(newCriteria));
+    notifyAdditionToSubscribers(getSubscriberIterator(), newCriteria);
   }
 
   /**
@@ -101,14 +103,14 @@ public class CriteriaManager extends SimpleSetObservable<PlausibilityCriterion, 
    */
   public void removeCriterion(PlausibilityCriterion criteria) {
     this.criterion.remove(criteria);
-    subscribers.forEach(e -> e.notifyRemoval(criteria));
+    notifyRemovalToSubscribers(getSubscriberIterator(), criteria);
   }
 
   /**
    * Removes all {@link PlausibilityCriterion} from this CriterionManager.
    */
   public void removeAllCriteria() {
-    subscribers.forEach(e -> this.criterion.forEach(e::notifyRemoval));
+    this.criterion.forEach(e -> notifyRemovalToSubscribers(getSubscriberIterator(), e));
     this.criterion.clear();
   }
 
@@ -121,7 +123,7 @@ public class CriteriaManager extends SimpleSetObservable<PlausibilityCriterion, 
   public void removeAllCriteriaOfType(PlausibilityCriterionType type) {
     for (PlausibilityCriterion criteria : this.criterion) {
       if (criteria.getType() == type) {
-        subscribers.forEach(e -> e.notifyRemoval(criteria));
+        notifyRemovalToSubscribers(getSubscriberIterator(), criteria);
         this.criterion.remove(criteria);
       }
     }
@@ -135,5 +137,19 @@ public class CriteriaManager extends SimpleSetObservable<PlausibilityCriterion, 
   @Override
   public void notifyChange(PlausibilityCriterion unit) {
     this.notifySubscribers();
+  }
+
+  private void notifyAdditionToSubscribers(Iterator<SetObserver<PlausibilityCriterion,
+          CriteriaManager>> iterator, PlausibilityCriterion criterion) {
+    while (iterator.hasNext()) {
+      iterator.next().notifyAddition(criterion);
+    }
+  }
+
+  private void notifyRemovalToSubscribers(Iterator<SetObserver<PlausibilityCriterion,
+          CriteriaManager>> iterator, PlausibilityCriterion criterion) {
+    while (iterator.hasNext()) {
+      iterator.next().notifyRemoval(criterion);
+    }
   }
 }

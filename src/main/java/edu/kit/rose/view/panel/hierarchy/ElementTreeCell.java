@@ -22,10 +22,16 @@ import javafx.scene.input.TransferMode;
 public class ElementTreeCell extends TreeCell<Element>
     implements SetObserver<Element, Element> {
 
+  public static TreeItem<Element> dragItem;
+  public static final DataFormat DATA_FORMAT
+      = new DataFormat("application/rose-hierarchy-element-drag");
+  public static final String DRAG_AND_DROP_MOVE_CONTENT
+      = "ElementListCell-Element";
+
   private final LocalizedTextProvider translator;
   private final HierarchyController hierarchyController;
 
-  private ElementView<? extends Element> elementView;
+  private Element element;
 
   /**
    * Creates a new {@link ElementTreeCell}.
@@ -60,8 +66,6 @@ public class ElementTreeCell extends TreeCell<Element>
     }
   }
 
-  private Element element;
-
   private void updateGroup(Element element) {
     if (this.element == null) {
       this.element = element;
@@ -79,11 +83,6 @@ public class ElementTreeCell extends TreeCell<Element>
     setGraphic(new SegmentView(translator, (Segment) element, hierarchyController));
   }
 
-  public static TreeItem<Element> dragItem;
-  public static final DataFormat DATA_FORMAT
-      = new DataFormat("application/rose-hierarchy-element-drag");
-
-
   private void onDragDetected(MouseEvent mouseEvent) {
     dragItem = getTreeItem();
 
@@ -94,7 +93,7 @@ public class ElementTreeCell extends TreeCell<Element>
     Dragboard dragboard = startDragAndDrop(TransferMode.MOVE);
 
     ClipboardContent content = new ClipboardContent();
-    content.put(DATA_FORMAT, "ElementListCell-Element");
+    content.put(DATA_FORMAT, DRAG_AND_DROP_MOVE_CONTENT);
 
     dragboard.setContent(content);
     dragboard.setDragView(snapshot(null, null));

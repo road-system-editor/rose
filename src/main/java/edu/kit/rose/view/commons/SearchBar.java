@@ -3,10 +3,9 @@ package edu.kit.rose.view.commons;
 import edu.kit.rose.infrastructure.UnitObservable;
 import edu.kit.rose.infrastructure.UnitObserver;
 import edu.kit.rose.infrastructure.language.Language;
-import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
@@ -17,7 +16,7 @@ import javafx.scene.control.TextField;
  */
 public class SearchBar extends FxmlContainer implements UnitObservable<SearchBar> {
 
-  private final List<UnitObserver<SearchBar>> searchBarObserver = new ArrayList<>();
+  private final Set<UnitObserver<SearchBar>> searchBarObserver = new HashSet<>();
 
   @FXML
   private TextField searchTextField;
@@ -36,9 +35,7 @@ public class SearchBar extends FxmlContainer implements UnitObservable<SearchBar
 
   @Override
   public void addSubscriber(UnitObserver<SearchBar> observer) {
-    if (!searchBarObserver.contains(observer)) {
-      searchBarObserver.add(observer);
-    }
+    searchBarObserver.add(observer);
   }
 
   @Override

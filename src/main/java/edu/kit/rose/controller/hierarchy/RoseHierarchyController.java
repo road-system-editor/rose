@@ -81,7 +81,7 @@ public class RoseHierarchyController extends Controller
 
   @Override
   public void toggleSegmentSelection(Segment segment) {
-
+    this.selectionBuffer.toggleSegmentSelection(segment);
   }
 
 

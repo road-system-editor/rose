@@ -20,7 +20,7 @@ import javafx.scene.input.TransferMode;
  * that displays a {@link Group}.
  */
 public class ElementTreeCell extends TreeCell<Element>
-                              implements SetObserver<Element, Element> {
+    implements SetObserver<Element, Element> {
 
   private final LocalizedTextProvider translator;
   private final HierarchyController hierarchyController;
@@ -133,6 +133,8 @@ public class ElementTreeCell extends TreeCell<Element>
         dragItem.getValue(),
         (Group) itemToPlaceOn.getValue());
 
+    dragItem = null;
+
     dragEvent.setDropCompleted(true);
     dragEvent.consume();
   }
@@ -145,9 +147,10 @@ public class ElementTreeCell extends TreeCell<Element>
   public void notifyAddition(Element unit) {
     TreeItem<Element> itemToPlaceOn = getTreeItem();
     if (itemToPlaceOn != null) {
-      itemToPlaceOn.getChildren().add(dragItem);
+      itemToPlaceOn.getChildren().add(new TreeItem<>(unit));
     }
   }
+
 
   @Override
   public void notifyRemoval(Element unit) {

@@ -23,13 +23,7 @@ class LessThanValidationStrategy<T extends Number> extends ValidationStrategy<T>
   @Override
   public boolean validate(T first, T second, double legalDiscrepancy) {
 
-    double discrepancy;
-    if (Double.compare(first.doubleValue(), second.doubleValue()) > 0) {
-      discrepancy = first.doubleValue() - second.doubleValue();
-    } else {
-      discrepancy = second.doubleValue() - first.doubleValue();
-    }
-    discrepancy = Math.abs(discrepancy);
+    double discrepancy = Math.abs(first.doubleValue() - second.doubleValue());
     return discrepancy < legalDiscrepancy;
   }
 }

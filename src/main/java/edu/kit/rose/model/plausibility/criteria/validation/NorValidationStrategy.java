@@ -3,7 +3,6 @@ package edu.kit.rose.model.plausibility.criteria.validation;
 /**
  * An Operator describing the logical NOR function for two booleans.
  */
-@SuppressWarnings({"checkstyle:ClassTypeParameterName", "checkstyle:CommentsIndentation"})
 class NorValidationStrategy extends ValidationStrategy<Boolean> {
 
   /**

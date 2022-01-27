@@ -1,6 +1,19 @@
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.control.TextField?>
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
 <fx:root xmlns="http://javafx.com/javafx"
-         xmlns:fx="http://javafx.com/fxml" type="Pane">
-    <TextField fx:id="searchTextField" promptText="Search..."/>
+         xmlns:fx="http://javafx.com/fxml"
+         type="Pane"
+         fx:id="parentContainer">
+    <AnchorPane prefWidth="${parentContainer.width}" prefHeight="${parentContainer.height}">
+        <TextField
+                fx:id="searchTextField"
+                AnchorPane.bottomAnchor="0.0"
+                AnchorPane.topAnchor="0.0"
+                AnchorPane.rightAnchor="0.0"
+                AnchorPane.leftAnchor="0.0"
+                promptText="Search Element..."/>
+    </AnchorPane>
 </fx:root>

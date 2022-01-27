@@ -1,10 +1,9 @@
 package edu.kit.rose.model.plausibility.criteria;
 
-
+import edu.kit.rose.infrastructure.RoseSetObservable;
+import edu.kit.rose.infrastructure.RoseSortedBox;
 import edu.kit.rose.infrastructure.SetObservable;
 import edu.kit.rose.infrastructure.SetObserver;
-import edu.kit.rose.infrastructure.SimpleSetObservable;
-import edu.kit.rose.infrastructure.SimpleSortedBox;
 import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.infrastructure.UnitObserver;
 import edu.kit.rose.model.plausibility.violation.ViolationManager;
@@ -18,7 +17,7 @@ import java.util.Iterator;
  * Provided with a {@link edu.kit.rose.model.roadsystem.RoadSystem} it will set up created
  * Criteria to observe the appropriate {@link edu.kit.rose.model.roadsystem.elements.Segment}s.
  */
-public class CriteriaManager extends SimpleSetObservable<PlausibilityCriterion, CriteriaManager>
+public class CriteriaManager extends RoseSetObservable<PlausibilityCriterion, CriteriaManager>
         implements SetObservable<PlausibilityCriterion, CriteriaManager>,
         UnitObserver<PlausibilityCriterion> {
 
@@ -59,7 +58,7 @@ public class CriteriaManager extends SimpleSetObservable<PlausibilityCriterion, 
    *        that this CriteriaManager contains.
    */
   public SortedBox<PlausibilityCriterion> getCriteria() {
-    return new SimpleSortedBox<>(this.criterion);
+    return new RoseSortedBox<>(this.criterion);
   }
 
   /**
@@ -77,7 +76,7 @@ public class CriteriaManager extends SimpleSetObservable<PlausibilityCriterion, 
         typeCriteria.add(criteria);
       }
     }
-    return new SimpleSortedBox<>(typeCriteria);
+    return new RoseSortedBox<>(typeCriteria);
   }
 
   /**
@@ -87,9 +86,9 @@ public class CriteriaManager extends SimpleSetObservable<PlausibilityCriterion, 
    */
   public void createCriterionOfType(PlausibilityCriterionType type) {
     PlausibilityCriterion newCriteria = switch (type) {
-      case VALUE -> CriterionFactory.createValueCriterion();
-      case COMPLETENESS -> CriterionFactory.createCompletenessCriterion();
-      case COMPATIBILITY -> CriterionFactory.createCompatibilityCriterion();
+      case VALUE -> this.criterionFactory.createValueCriterion();
+      case COMPLETENESS -> this.criterionFactory.createCompletenessCriterion();
+      case COMPATIBILITY -> this.criterionFactory.createCompatibilityCriterion();
     };
 
     this.criterion.add(newCriteria);

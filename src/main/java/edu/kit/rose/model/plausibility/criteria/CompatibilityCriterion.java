@@ -1,8 +1,8 @@
 package edu.kit.rose.model.plausibility.criteria;
 
 import edu.kit.rose.infrastructure.Box;
-import edu.kit.rose.infrastructure.SimpleSetObservable;
-import edu.kit.rose.infrastructure.SimpleSortedBox;
+import edu.kit.rose.infrastructure.RoseSetObservable;
+import edu.kit.rose.infrastructure.RoseSortedBox;
 import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.model.plausibility.criteria.validation.EqualsValidationStrategy;
 import edu.kit.rose.model.plausibility.criteria.validation.LessThanValidationStrategy;
@@ -17,6 +17,7 @@ import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.elements.Element;
+import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
@@ -28,7 +29,7 @@ import java.util.stream.Collectors;
 /**
  * Modells a Compatiblity Criterion. See Pflichtenheft: "Kompatibilitätskriterium"
  */
-public class CompatibilityCriterion extends SimpleSetObservable<SegmentType,
+public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
         PlausibilityCriterion> implements PlausibilityCriterion {
   private static final boolean USE_DISCREPANCY = true;
   private static final boolean NOT_USE_DISCREPANCY = false;
@@ -97,7 +98,7 @@ public class CompatibilityCriterion extends SimpleSetObservable<SegmentType,
    * @return containing all {@link OperatorType}s that are compatible with this criterion.
    */
   public SortedBox<OperatorType> getCompatibleOperatorTypes() {
-    return new SimpleSortedBox<>(Arrays.stream(OperatorType.values()).filter(e -> e.getCompatible()
+    return new RoseSortedBox<>(Arrays.stream(OperatorType.values()).filter(e -> e.getCompatible()
             .contains(this.attributeType.getDataType())).collect(Collectors.toList()));
   }
 
@@ -152,37 +153,36 @@ public class CompatibilityCriterion extends SimpleSetObservable<SegmentType,
   }
 
   @Override
-  public void notifyChange(Segment unit) {
+  public void notifyChange(Element unit) {
     ArrayList<Segment> invalidSegments;
     if (!this.operatorType.equals(OperatorType.DEFAULT)) {
       ValidationStrategy strategy;
-      boolean valid = false;
 
       switch (this.operatorType) {
         case EQUALS -> {
           strategy = new EqualsValidationStrategy<>();
-          invalidSegments = getInvalidSegments(strategy, unit, NOT_USE_DISCREPANCY);
+          invalidSegments = getInvalidSegments(strategy, (Segment) unit, NOT_USE_DISCREPANCY);
         }
         case LESS_THAN -> {
           strategy = new LessThanValidationStrategy<>();
-          invalidSegments = getInvalidSegments(strategy, unit, USE_DISCREPANCY);
+          invalidSegments = getInvalidSegments(strategy, (Segment) unit, USE_DISCREPANCY);
         }
         case NOR -> {
           strategy = new NorValidationStrategy<>();
-          invalidSegments = getInvalidSegments(strategy, unit, NOT_USE_DISCREPANCY);
+          invalidSegments = getInvalidSegments(strategy, (Segment) unit, NOT_USE_DISCREPANCY);
         }
         case NOT_EQUALS -> {
           strategy = new NotEqualsValidationStrategy<>();
-          invalidSegments = getInvalidSegments(strategy, unit, NOT_USE_DISCREPANCY);
+          invalidSegments = getInvalidSegments(strategy, (Segment) unit, NOT_USE_DISCREPANCY);
         }
         case OR -> {
           strategy = new OrValidationStrategy<>();
-          invalidSegments = getInvalidSegments(strategy, unit, NOT_USE_DISCREPANCY);
+          invalidSegments = getInvalidSegments(strategy, (Segment) unit, NOT_USE_DISCREPANCY);
         }
         default -> throw new InvalidParameterException("invalid operator type");
       }
       if (!invalidSegments.isEmpty()) {
-        invalidSegments.add(unit);
+        invalidSegments.add((Segment) unit);
         this.violationManager.addViolation(new Violation(this, invalidSegments));
       }
     }

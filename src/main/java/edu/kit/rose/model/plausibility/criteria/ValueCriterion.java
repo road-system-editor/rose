@@ -2,9 +2,10 @@ package edu.kit.rose.model.plausibility.criteria;
 
 
 import edu.kit.rose.infrastructure.Box;
-import edu.kit.rose.infrastructure.SimpleBox;
-import edu.kit.rose.infrastructure.SimpleSetObservable;
+import edu.kit.rose.infrastructure.RoseBox;
+import edu.kit.rose.infrastructure.RoseSetObservable;
 import edu.kit.rose.model.plausibility.violation.ViolationManager;
+import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import java.util.HashSet;
@@ -15,7 +16,7 @@ import java.util.Set;
  * This checks if the value of an {@link edu.kit.rose.model.roadsystem.attributes.AttributeType}
  * of a {@link Segment} is legal.
  */
-class ValueCriterion extends SimpleSetObservable<SegmentType, PlausibilityCriterion>
+class ValueCriterion extends RoseSetObservable<SegmentType, PlausibilityCriterion>
         implements PlausibilityCriterion {
   private String name;
   private Set<SegmentType> segmentTypes;
@@ -39,7 +40,7 @@ class ValueCriterion extends SimpleSetObservable<SegmentType, PlausibilityCriter
 
   @Override
   public Box<SegmentType> getSegmentTypes() {
-    return new SimpleBox<SegmentType>(this.segmentTypes);
+    return new RoseBox<SegmentType>(this.segmentTypes);
   }
 
 

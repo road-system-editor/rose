@@ -1,10 +1,10 @@
 package edu.kit.rose.model.plausibility.criteria;
 
 import edu.kit.rose.infrastructure.Box;
-import edu.kit.rose.infrastructure.SimpleBox;
-import edu.kit.rose.infrastructure.SimpleSetObservable;
+import edu.kit.rose.infrastructure.RoseBox;
+import edu.kit.rose.infrastructure.RoseSetObservable;
 import edu.kit.rose.model.plausibility.violation.ViolationManager;
-import edu.kit.rose.model.roadsystem.elements.Segment;
+import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import java.util.HashSet;
 import java.util.Set;
@@ -14,7 +14,7 @@ import java.util.Set;
  * This type of Criterion can be used to ensure certain
  * Attributes are set to a value if necessary for export or similar.
  */
-class CompletenessCriterion extends SimpleSetObservable<SegmentType, PlausibilityCriterion>
+class CompletenessCriterion extends RoseSetObservable<SegmentType, PlausibilityCriterion>
         implements PlausibilityCriterion {
 
   private String name;
@@ -39,7 +39,7 @@ class CompletenessCriterion extends SimpleSetObservable<SegmentType, Plausibilit
 
   @Override
   public Box<SegmentType> getSegmentTypes() {
-    return new SimpleBox<>(this.segmentTypes);
+    return new RoseBox<>(this.segmentTypes);
   }
 
 

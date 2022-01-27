@@ -112,7 +112,6 @@ public class HierarchyPanel extends FxmlContainer
   @Override
   public void init(Injector injector) {
     super.init(injector);
-    controller.createGroup();
   }
 
   @Override

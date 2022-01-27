@@ -1,6 +1,7 @@
 package edu.kit.rose.model.plausibility.criteria;
 
 import edu.kit.rose.infrastructure.Box;
+import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.model.plausibility.violation.ViolationManager;
 import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.elements.Element;
@@ -62,7 +63,7 @@ class CriterionFactory {
     if (elements != null) {
       for (Element element : elements) {
         if (!element.isContainer()) {
-          element.addSubscriber(criterion);
+          element.addSubscriber((SetObserver<Element, Element>) criterion);
         }
       }
     }

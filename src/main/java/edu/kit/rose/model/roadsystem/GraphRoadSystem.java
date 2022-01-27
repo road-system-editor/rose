@@ -209,7 +209,9 @@ class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, RoadSys
   }
 
   @Override
-  public void connectConnectors(Connector segment1Connector, Connector segment2Connector) {
+  public Connection connectConnectors(Connector segment1Connector, Connector segment2Connector) {
+    disconnectConnection(connectorConnectionMap.get(segment1Connector));
+    disconnectConnection(connectorConnectionMap.get(segment2Connector));
     var connection = new Connection(segment1Connector, segment2Connector);
     segmentConnectionGraph.addEdge(
         connectorSegmentMap.get(segment1Connector),
@@ -218,12 +220,18 @@ class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, RoadSys
     );
     connectorConnectionMap.put(segment1Connector, connection);
     connectorConnectionMap.put(segment2Connector, connection);
+    subscribers.forEach(s -> s.notifyAdditionSecond(connection));
+    return connection;
   }
 
   @Override
   public void disconnectConnection(Connection connection) {
+    if (connection == null) {
+      return;
+    }
     segmentConnectionGraph.removeEdge(connection);
     connection.getConnectors().forEach(c -> connectorConnectionMap.put(c, null));
+    subscribers.forEach(s -> s.notifyRemovalSecond(connection));
   }
 
   @Override
@@ -254,7 +262,7 @@ class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, RoadSys
     return new RoseBox<>(
         elements.stream()
             .filter(e -> groups.stream()
-                .anyMatch(g -> g.contains(e)))
+                .noneMatch(g -> g.contains(e)))
             .collect(Collectors.toList())
     );
   }

@@ -45,6 +45,8 @@ public abstract class HighwaySegment
   private boolean conurbation = false;
   private int speedLimit = 100;
 
+  private int rotation = 0;
+
 
 
 
@@ -196,12 +198,13 @@ public abstract class HighwaySegment
 
   @Override
   public void rotate(int degrees) {
-
+    this.rotation += degrees;
+    this.rotation %= 360;
   }
 
   @Override
   public int getRotation() {
-    return 0;
+    return this.rotation;
   }
 
   @Override

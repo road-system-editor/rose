@@ -80,7 +80,7 @@ public interface RoadSystem
    * @param segment1Connector The first {@link Connector}
    * @param segment2Connector The second {@link Connector}
    */
-  void connectConnectors(Connector segment1Connector, Connector segment2Connector);
+  Connection connectConnectors(Connector segment1Connector, Connector segment2Connector);
 
   /**
    * Disconnects a given {@link Connection} this means the {@link Connector}s are no

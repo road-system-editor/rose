@@ -114,7 +114,6 @@ public class CriteriaOverviewPanel extends FxmlContainer
 
   @Override
   public void notifyRemoval(PlausibilityCriterion unit) {
-    // gets called when criterionHandle deleteButton is clicked.
     criteriaList.getItems().removeIf(item -> item == unit);
   }
 

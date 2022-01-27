@@ -48,7 +48,7 @@ public class CriteriaManager implements SetObservable<PlausibilityCriterion, Cri
    * that this CriteriaManager contains.
    *
    * @return a {@link SortedBox} containing all {@link PlausibilityCriterion}
-   * that this CriteriaManager contains.
+   *        that this CriteriaManager contains.
    */
   public SortedBox<PlausibilityCriterion> getCriteria() {
     return null;

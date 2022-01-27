@@ -1,33 +1,23 @@
 package edu.kit.rose.controller.commons;
 
+import java.util.concurrent.locks.ReentrantLock;
+
 /**
  * Provides the functionality for controllers to synchronize
  * and coordinate their actions.
  */
 public class RoseStorageLock implements StorageLock {
 
-  private final Object synchronizationObject = new Object();
-  private boolean isAcquired = false;
+  ReentrantLock lock;
 
   @Override
-  public void acquireStorageLock() {
-    synchronized (synchronizationObject) {
-      isAcquired = true;
-    }
+  public boolean acquireStorageLock() {
+    return lock.tryLock();
   }
 
-  @Override
-  public boolean isStorageLockAcquired() {
-    synchronized (synchronizationObject) {
-      return isAcquired;
-    }
-
-  }
 
   @Override
   public void releaseStorageLock() {
-    synchronized (synchronizationObject) {
-      isAcquired = false;
-    }
+    lock.unlock();
   }
 }

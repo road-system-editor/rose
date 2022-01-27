@@ -3,6 +3,7 @@ package edu.kit.rose.controller.project;
 import edu.kit.rose.controller.command.ChangeCommandBuffer;
 import edu.kit.rose.controller.commons.Controller;
 import edu.kit.rose.controller.commons.StorageLock;
+import edu.kit.rose.controller.navigation.Navigator;
 import edu.kit.rose.model.ExportFormat;
 import edu.kit.rose.model.Project;
 
@@ -16,10 +17,11 @@ public class RoseProjectController extends Controller implements ProjectControll
    * Creates a new {@link RoseProjectController}.
    *
    * @param storageLock         the coordinator for controller actions
+   * @param navigator           the navigator for the controller
    * @param project             the model facade for project data
    */
-  public RoseProjectController(StorageLock storageLock, Project project) {
-    super(storageLock);
+  public RoseProjectController(StorageLock storageLock, Navigator navigator, Project project) {
+    super(storageLock, navigator);
   }
 
   @Override

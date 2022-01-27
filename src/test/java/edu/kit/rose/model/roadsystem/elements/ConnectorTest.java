@@ -3,6 +3,7 @@ package edu.kit.rose.model.roadsystem.elements;
 import edu.kit.rose.infrastructure.Movement;
 import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
+import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import java.util.ArrayList;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,7 +16,13 @@ import org.junit.jupiter.api.Test;
 class ConnectorTest {
   private static final int X = 1;
   private static final int Y = 1;
-  private static final AttributeAccessor<?> attribute = new AttributeAccessor<>();
+  /**
+   * This is a dummy accessor whose getters and setters don't do anything.
+   */
+  private static final AttributeAccessor<?> attribute = new AttributeAccessor<>(
+      AttributeType.COMMENT,
+      () -> null,
+      newValue -> {});
   private ArrayList<AttributeAccessor<?>> accessors;
   private Connector connector;
 

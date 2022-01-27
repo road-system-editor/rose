@@ -2,13 +2,14 @@ package edu.kit.rose.model.roadsystem.elements;
 
 import edu.kit.rose.infrastructure.Movement;
 import edu.kit.rose.infrastructure.Position;
-import edu.kit.rose.infrastructure.SimpleSortedBox;
-import edu.kit.rose.infrastructure.SimpleUnitObservable;
+import edu.kit.rose.infrastructure.RoseSortedBox;
+import edu.kit.rose.infrastructure.RoseUnitObservable;
 import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.infrastructure.UnitObservable;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
 * A Connector is part of a {@link edu.kit.rose.model.roadsystem.elements.Segment}
@@ -16,20 +17,20 @@ import java.util.Collection;
 * of the same (see Pflichtenheft: Straßensegment). A Connector can also be part of a
 * {@link Connection}.
 */
-public class Connector extends SimpleUnitObservable<Connector>
+public class Connector extends RoseUnitObservable<Connector>
           implements UnitObservable<Connector> {
   private final ConnectorType type;
   private final Position position;
-  private final Collection<AttributeAccessor<?>> accessors;
+  private final List<AttributeAccessor<?>> accessors;
 
   /**
    * Constructor.
    *
-   * @param type      the {@link ConnectorType} for this SimpleConnector.
-   * @param position  the {@link Position} that this SimpleConnector is supposed to be at.
-   * @param accessors The {@link AttributeAccessor}s that this SimpleConnector is supposed to have.
+   * @param type      the {@link ConnectorType} for this Connector.
+   * @param position  the {@link Position} that this Connector is supposed to be at.
+   * @param accessors The {@link AttributeAccessor}s that this Connector is supposed to have.
    */
-  Connector(ConnectorType type, Position position, Collection<AttributeAccessor<?>> accessors) {
+  Connector(ConnectorType type, Position position, List<AttributeAccessor<?>> accessors) {
     this.type = type;
     this.position = position;
     this.accessors = accessors;
@@ -44,6 +45,11 @@ public class Connector extends SimpleUnitObservable<Connector>
     return new Position(this.position.getX(), this.position.getY());
   }
 
+
+  protected Position getPositionInstance() {
+    return this.position;
+  }
+
   /**
    * Gives the {@link AttributeAccessor}s to the Attributes that are specific for this Connector.
    * The referenced Attributes are part of the Segment this Connector is part of, though only the
@@ -52,10 +58,10 @@ public class Connector extends SimpleUnitObservable<Connector>
    * of the end point of the segment represented by this connector.
    *
    * @return a {@link SortedBox} containing the specific {@link AttributeAccessor}s of this
-   *        Connector.
+   *      Connector.
    */
   public SortedBox<AttributeAccessor<?>> getAttributeAccessors() {
-    return new SimpleSortedBox<>(new ArrayList<>(this.accessors));
+    return new RoseSortedBox<>(this.accessors);
   }
 
   /**
@@ -78,9 +84,9 @@ public class Connector extends SimpleUnitObservable<Connector>
    * @param movement the movement that is to be applied.
    */
   void move(Movement movement) {
-
     this.position.setX(this.position.getX() + movement.getX());
     this.position.setY(this.position.getY() + movement.getY());
     notifySubscribers();
   }
+
 }

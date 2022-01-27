@@ -7,7 +7,7 @@ import edu.kit.rose.model.roadsystem.RoadSystem;
 /**
  * A Standard Implementation of the {@link PlausibilitySystem} Interface.
  */
-public class SimplePlausibilitySystem implements PlausibilitySystem {
+public class RosePlausibilitySystem implements PlausibilitySystem {
 
   /**
    * Constructor.
@@ -15,7 +15,7 @@ public class SimplePlausibilitySystem implements PlausibilitySystem {
    * @param roadSystem The {@link RoadSystem} that this PlausibilitySystem is supposed to check.
    * @param criteriaManager The CriteriaManager holding the Criteria that are to be checked against.
    */
-  public SimplePlausibilitySystem(CriteriaManager criteriaManager, RoadSystem roadSystem) {
+  public RosePlausibilitySystem(CriteriaManager criteriaManager, RoadSystem roadSystem) {
 
   }
 

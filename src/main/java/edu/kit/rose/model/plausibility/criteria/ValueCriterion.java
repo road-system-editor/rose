@@ -59,7 +59,7 @@ class ValueCriterion extends SimpleSetObservable<SegmentType, PlausibilityCriter
   }
 
   @Override
-  public void notifyChange(Segment unit) {
+  public void notifyChange(Element unit) {
 
   }
 

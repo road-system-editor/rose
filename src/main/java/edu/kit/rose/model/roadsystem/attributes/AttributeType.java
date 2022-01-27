@@ -90,8 +90,7 @@ public enum AttributeType {
    * @return a boolean describing if the AttributeType can be accessed for multiple
    *        {@link Element}s at once.
    */
-  boolean isBulkable() {
+  public boolean isBulkable() {
     return this.isBulkable;
   }
-
 }

@@ -59,7 +59,7 @@ class CompletenessCriterion extends SimpleSetObservable<SegmentType, Plausibilit
   }
 
   @Override
-  public void notifyChange(Segment unit) {
+  public void notifyChange(Element unit) {
 
   }
 

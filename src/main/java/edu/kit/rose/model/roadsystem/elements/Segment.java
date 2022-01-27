@@ -24,7 +24,7 @@ public interface Segment extends Element, Comparable<Segment> {
    *
    * @return a {@link Box} containing all {@link Measurement}s of the Segment.
    */
-  SortedBox<Measurement<?>> getMeasurements();
+  Box<Measurement<?>> getMeasurements();
 
   /**
    * Returns the {@link Connector}s of the Segment.

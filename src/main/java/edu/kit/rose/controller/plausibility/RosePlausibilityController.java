@@ -3,6 +3,7 @@ package edu.kit.rose.controller.plausibility;
 import edu.kit.rose.controller.command.ChangeCommandBuffer;
 import edu.kit.rose.controller.commons.Controller;
 import edu.kit.rose.controller.commons.StorageLock;
+import edu.kit.rose.controller.navigation.Navigator;
 import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.model.ApplicationDataSystem;
 import edu.kit.rose.model.Project;
@@ -28,12 +29,13 @@ public class RosePlausibilityController extends Controller implements Plausibili
    * Creates a new {@link RosePlausibilityController}.
    *
    * @param storageLock           the coordinator for controller actions
+   * @param navigator             the navigator for the controller
    * @param project               the model facade for project data
    * @param applicationDataSystem the model facade for application data
    */
-  public RosePlausibilityController(StorageLock storageLock, Project project,
+  public RosePlausibilityController(StorageLock storageLock, Navigator navigator, Project project,
                                     ApplicationDataSystem applicationDataSystem) {
-    super(storageLock);
+    super(storageLock, navigator);
   }
 
   @Override

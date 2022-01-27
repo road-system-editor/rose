@@ -3,9 +3,9 @@ package edu.kit.rose.controller.roadsystem;
 import edu.kit.rose.controller.command.ChangeCommandBuffer;
 import edu.kit.rose.controller.commons.Controller;
 import edu.kit.rose.controller.commons.StorageLock;
+import edu.kit.rose.controller.navigation.Navigator;
 import edu.kit.rose.controller.selection.SelectionBuffer;
 import edu.kit.rose.infrastructure.Position;
-import edu.kit.rose.infrastructure.SetObservable;
 import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.roadsystem.elements.Connector;
@@ -32,12 +32,14 @@ public class RoseRoadSystemController extends Controller
    *
    * @param changeCommandBuffer the buffer for change commands
    * @param storageLock         the coordinator for controller actions
+   * @param navigator           the navigator for the controller
    * @param selectionBuffer     the container that stores selected segments
    * @param project             the model facade for project data
    */
   public RoseRoadSystemController(ChangeCommandBuffer changeCommandBuffer, StorageLock storageLock,
-                                  SelectionBuffer selectionBuffer, Project project) {
-    super(storageLock);
+                                  Navigator navigator, SelectionBuffer selectionBuffer,
+                                  Project project) {
+    super(storageLock, navigator);
     this.selectionBuffer = selectionBuffer;
   }
 

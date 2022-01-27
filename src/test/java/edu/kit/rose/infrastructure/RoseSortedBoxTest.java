@@ -24,7 +24,7 @@ public class RoseSortedBoxTest {
       testArrayList.add(i);
     }
 
-    sortedBox = new SimpleSortedBox<>(testArrayList);
+    sortedBox = new RoseSortedBox<>(testArrayList);
   }
 
   @Test

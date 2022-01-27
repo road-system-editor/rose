@@ -7,6 +7,7 @@ import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterion;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Map;
 
 /**
  * A ViolationManager provides currently active Violations, violations can be added and removed
@@ -15,13 +16,17 @@ import java.util.Iterator;
 public class ViolationManager
     implements SetObservable<Violation, ViolationManager>, Iterable<Violation> {
 
+  private Collection<Violation> violations;
+  private Map<PlausibilityCriterion, Violation> criterionViolationMap;
+
   /**
    * Adds a given {@link Violation} to the ViolationManager.
    *
    * @param violation The {@link Violation} to add.
    */
   void addViolation(Violation violation) {
-
+    violations.add(violation);
+    criterionViolationMap.put(violation.getViolatedCriterion(), violation);
   }
 
   /**
@@ -30,7 +35,8 @@ public class ViolationManager
    * @param violation The {@link Violation} to remove.
    */
   void removeViolation(Violation violation) {
-
+    violations.remove(violation);
+    criterionViolationMap.remove(violation.getViolatedCriterion());
   }
 
   /**
@@ -43,6 +49,7 @@ public class ViolationManager
    * @return the violation agoinst the given Criterion by the given Segments.
    */
   Violation getViolation(PlausibilityCriterion criterion, Collection<Segment> offendingSegments) {
+    //Collection<Violation> criterionViolations = criterionViolationMap.(criterion);
     return null;
   }
 

@@ -1,0 +1,16 @@
+<?import javafx.scene.layout.Pane?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Label?>
+<fx:root xmlns="http://javafx.com/javafx"
+         xmlns:fx="http://javafx.com/fxml" type="Pane">
+    <VBox fx:id="violationBox">
+        <HBox>
+            <Label fx:id="violationLabel"/>
+            <Label fx:id="segmentLabel"/>
+        </HBox>
+    </VBox>
+    <Button text="Problem overview" />
+</fx:root>

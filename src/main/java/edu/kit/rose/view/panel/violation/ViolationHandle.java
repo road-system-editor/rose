@@ -1,4 +1,4 @@
-package edu.kit.rose.view.panel.problem;
+package edu.kit.rose.view.panel.violation;
 
 import edu.kit.rose.controller.plausibility.PlausibilityController;
 import edu.kit.rose.infrastructure.UnitObserver;
@@ -13,40 +13,46 @@ import javafx.scene.control.Tooltip;
 
 
 /**
- * A {@link Problem} informs the user about a violation against a
+ * A {@link ViolationHandle} informs the user about a violation against a
  * {@link edu.kit.rose.model.plausibility.criteria.PlausibilityCriterion}.
  */
-class Problem extends FxmlContainer implements UnitObserver<Violation> {
+class ViolationHandle extends FxmlContainer implements UnitObserver<Violation> {
   /**
    * The controller to use for handling navigation to the affected segments in the road system view.
    */
-  private PlausibilityController controller;
+  private final PlausibilityController controller;
   /**
    * The violation to describe.
    */
-  private Violation violation;
+  private final Violation violation;
+
   /**
    * Always-visible text with a brief description of the violation.
    */
   @FXML
-  private Label label;
+  private Label criterion;
+  @FXML
+  private Label segments;
+
   /**
    * A more detailed description of the violation
    * that is only visible when this component is hovered.
    */
   @FXML
-  private Tooltip tooltip;
+  private Tooltip extendedMessage;
 
   /**
-   * Creates a new {@link Problem} for a given {@code violation}.
+   * Creates a new {@link ViolationHandle} for a given {@code violation}.
    *
    * @param controller the {@link PlausibilityController} instance
-   * @param violation the {@link Violation} the {@link Problem} belongs to
+   * @param violation the {@link Violation} the {@link ViolationHandle} belongs to
    */
-  public Problem(PlausibilityController controller, Violation violation) {
+  public ViolationHandle(PlausibilityController controller, Violation violation) {
     super("problem.fxml");
     this.controller = controller;
     this.violation = violation;
+    extendedMessage.setText("");
+    Tooltip.install(criterion, extendedMessage);
   }
 
   @Override

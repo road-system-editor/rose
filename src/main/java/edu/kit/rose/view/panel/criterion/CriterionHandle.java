@@ -3,10 +3,12 @@ package edu.kit.rose.view.panel.criterion;
 import edu.kit.rose.controller.plausibility.PlausibilityController;
 import edu.kit.rose.infrastructure.UnitObserver;
 import edu.kit.rose.infrastructure.language.Language;
+import edu.kit.rose.model.plausibility.criteria.CompatibilityCriterion;
 import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterion;
 import edu.kit.rose.view.commons.FxmlContainer;
 import java.util.Collection;
 import java.util.function.Consumer;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -18,9 +20,9 @@ import javafx.scene.layout.HBox;
  * one plausibility criterion.
  */
 class CriterionHandle extends FxmlContainer
-    implements UnitObserver<PlausibilityCriterion> { // TODO maybe as a listcell implementation?
-  private PlausibilityController controller;
-  private PlausibilityCriterion criterion;
+    implements UnitObserver<PlausibilityCriterion> {
+  private final PlausibilityController controller;
+  private final PlausibilityCriterion criterion;
   private boolean selected = false;
 
   @FXML
@@ -35,14 +37,19 @@ class CriterionHandle extends FxmlContainer
    * @param criterion      the criteria to be handled
    * @param selectListener will be called when this handle is clicked
    */
-  public CriterionHandle(PlausibilityController controller, PlausibilityCriterion criterion,
+  public CriterionHandle(PlausibilityController controller, CompatibilityCriterion criterion,
                          Consumer<PlausibilityCriterion> selectListener) {
     super("CriterionHandle.fxml");
     this.controller = controller;
     this.criterion = criterion;
-    this.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> selectListener.accept(criterion));
+
     this.label.setText(criterion.getName());
-    this.deleteButton.setText("delete");
+    this.deleteButton.setText(getTranslator()
+        .getLocalizedText("view.panel.criterion.criteriaHandle.delete"));
+
+    this.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> selectListener.accept(criterion));
+    this.deleteButton.addEventHandler(MouseEvent.MOUSE_CLICKED,
+        event -> controller.deleteCompatibilityCriterion(criterion));
   }
 
   /**
@@ -65,7 +72,9 @@ class CriterionHandle extends FxmlContainer
 
   @Override
   public void notifyChange(PlausibilityCriterion unit) {
-
+    if (!unit.getName().equals(this.label.getText())) {
+      this.label.setText(unit.getName());
+    }
   }
 
   @Override

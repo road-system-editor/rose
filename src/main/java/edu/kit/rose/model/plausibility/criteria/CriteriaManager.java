@@ -51,8 +51,7 @@ public class CriteriaManager implements SetObservable<PlausibilityCriterion, Cri
    * that this CriteriaManager contains.
    */
   public SortedBox<PlausibilityCriterion> getCriteria() {
-    return new RoseSortedBox<PlausibilityCriterion>((new ValueCriterion()));
-    //TODO: Implement, this is only a stub.
+    return null;
   }
 
   /**

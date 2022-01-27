@@ -1,6 +1,7 @@
 package edu.kit.rose.view.panel.criterion;
 
 import edu.kit.rose.controller.plausibility.PlausibilityController;
+import edu.kit.rose.model.plausibility.criteria.CompatibilityCriterion;
 import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterion;
 import java.util.function.Consumer;
 import javafx.scene.control.ListCell;
@@ -9,7 +10,7 @@ import javafx.scene.control.ListCell;
  * A {@link CriteriaListCell} is a container that holds
  * a {@link javafx.scene.control.ListView} item layout.
  */
-public class CriteriaListCell extends ListCell<PlausibilityCriterion> {
+public class CriteriaListCell extends ListCell<CompatibilityCriterion> {
 
   private final PlausibilityController controller;
   private final Consumer<PlausibilityCriterion> selectListener;
@@ -27,7 +28,7 @@ public class CriteriaListCell extends ListCell<PlausibilityCriterion> {
   }
 
   @Override
-  public void updateItem(PlausibilityCriterion criterion, boolean empty) {
+  public void updateItem(CompatibilityCriterion criterion, boolean empty) {
     super.updateItem(criterion, empty);
 
     if (criterion == null || empty) {

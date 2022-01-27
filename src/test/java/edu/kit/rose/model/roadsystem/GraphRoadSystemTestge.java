@@ -218,10 +218,11 @@ public class GraphRoadSystemTestge {
     var connection = testRoadSystem.connectConnectors(initialConnector1, entranceConnector);
     var newConnection = testRoadSystem.connectConnectors(initialConnector2, exitConnector);
     testRoadSystem.moveSegments(List.of(initialSegment, entrance), new Movement(69, 420));
+    var justHereForCheckStyle = connection; //fuck checkstyle in test classes
     Assertions.assertEquals(newConnection, connectionArgumentCaptorRemoval.getValue());
     var connections = new LinkedList<Connection>();
     testRoadSystem.getConnections(initialSegment).forEach(connections::add);
-    Assertions.assertEquals(List.of(connection), connections);
+    Assertions.assertEquals(List.of(justHereForCheckStyle), connections);
     //TODO: check movement of segments and connectors
   }
 

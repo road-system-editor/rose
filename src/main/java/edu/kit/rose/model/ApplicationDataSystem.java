@@ -1,8 +1,8 @@
 package edu.kit.rose.model;
 
 import edu.kit.rose.infrastructure.Box;
+import edu.kit.rose.infrastructure.SetObservable;
 import edu.kit.rose.infrastructure.SetObserver;
-import edu.kit.rose.infrastructure.UnitObservable;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.model.plausibility.criteria.CriteriaManager;
 import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterion;
@@ -17,7 +17,7 @@ import java.nio.file.Path;
  * Observes the {@link CriteriaManager} in order to be informed of changes to the criteria held
  * within, as the ApplicationDataSystem needs to write these changes to the config file.
  */
-public interface ApplicationDataSystem extends UnitObservable<ApplicationDataSystem>,
+public interface ApplicationDataSystem extends SetObservable<AttributeType, ApplicationDataSystem>,
         SetObserver<PlausibilityCriterion, CriteriaManager> {
 
   /**

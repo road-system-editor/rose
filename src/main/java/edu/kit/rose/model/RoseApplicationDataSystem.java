@@ -2,6 +2,8 @@ package edu.kit.rose.model;
 
 import edu.kit.rose.infrastructure.Box;
 import edu.kit.rose.infrastructure.RoseBox;
+import edu.kit.rose.infrastructure.RoseSetObservable;
+import edu.kit.rose.infrastructure.RoseUnitObservable;
 import edu.kit.rose.infrastructure.UnitObserver;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.model.plausibility.criteria.CriteriaManager;
@@ -16,9 +18,10 @@ import java.util.Set;
  * Provided with a global config file it will write changes in the applicationData to the
  * config file in real time.
  */
-class RoseApplicationDataSystem implements ApplicationDataSystem {
-
+class RoseApplicationDataSystem extends RoseSetObservable<AttributeType, ApplicationDataSystem>
+    implements ApplicationDataSystem {
   private final Set<AttributeType> shownAttributeTypes;
+  private Language language = Language.DEFAULT;
 
   /**
    * Constructor.
@@ -33,12 +36,13 @@ class RoseApplicationDataSystem implements ApplicationDataSystem {
 
   @Override
   public Language getLanguage() {
-    return null;
+    return this.language;
   }
 
   @Override
   public void setLanguage(Language language) {
-
+    this.language = language;
+    notifySubscribers();
   }
 
   @Override
@@ -58,12 +62,20 @@ class RoseApplicationDataSystem implements ApplicationDataSystem {
 
   @Override
   public void addShownAttributeType(AttributeType attributeType) {
-    this.shownAttributeTypes.add(attributeType);
+    boolean added = this.shownAttributeTypes.add(attributeType);
+
+    if (added) {
+      getSubscriberIterator().forEachRemaining(sub -> sub.notifyAddition(attributeType));
+    }
   }
 
   @Override
   public void removeShownAttributeType(AttributeType attributeType) {
-    this.shownAttributeTypes.remove(attributeType);
+    boolean removed = this.shownAttributeTypes.remove(attributeType);
+
+    if (removed) {
+      getSubscriberIterator().forEachRemaining(sub -> sub.notifyRemoval(attributeType));
+    }
   }
 
   @Override
@@ -72,23 +84,8 @@ class RoseApplicationDataSystem implements ApplicationDataSystem {
   }
 
   @Override
-  public void notifySubscribers() {
-
-  }
-
-  @Override
   public ApplicationDataSystem getThis() {
     return this;
-  }
-
-  @Override
-  public void addSubscriber(UnitObserver<ApplicationDataSystem> observer) {
-
-  }
-
-  @Override
-  public void removeSubscriber(UnitObserver<ApplicationDataSystem> observer) {
-
   }
 
   @Override

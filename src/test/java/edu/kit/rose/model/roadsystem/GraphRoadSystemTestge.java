@@ -2,6 +2,7 @@ package edu.kit.rose.model.roadsystem;
 
 import edu.kit.rose.infrastructure.DualSetObserver;
 import edu.kit.rose.infrastructure.Movement;
+import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.infrastructure.RoseSortedBox;
 import edu.kit.rose.model.plausibility.criteria.CriteriaManager;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
@@ -204,7 +205,6 @@ public class GraphRoadSystemTestge {
     Assertions.assertEquals(connection, testRoadSystem.getConnection(entranceConnector));
   }
 
-  @SuppressWarnings("checkstyle:VariableDeclarationUsageDistance")
   @Test
   void moveSegmentsTest() {
     var entrance = testRoadSystem.createSegment(SegmentType.ENTRANCE);
@@ -223,7 +223,33 @@ public class GraphRoadSystemTestge {
     var connections = new LinkedList<Connection>();
     testRoadSystem.getConnections(initialSegment).forEach(connections::add);
     Assertions.assertEquals(List.of(justHereForCheckStyle), connections);
-    //TODO: check movement of segments and connectors
+  }
+
+  @Test
+  void moveSegmentsTest2() {
+    var entrance = testRoadSystem.createSegment(SegmentType.ENTRANCE);
+    var exit = testRoadSystem.createSegment(SegmentType.EXIT);
+    var initialConnectors = new LinkedList<Connector>();
+    initialSegment.getConnectors().forEach(initialConnectors::add);
+    var initialConnector1 = initialConnectors.get(0);
+    var initialConnector2 = initialConnectors.get(1);
+    var entranceConnector = entrance.getConnectors().iterator().next();
+    var exitConnector = exit.getConnectors().iterator().next();
+    Segment[] segments = new Segment[]{initialSegment, entrance, exit};
+    Position[] originalCenters = new Position[3];
+    for (int i = 0; i < 3; i++) {
+      originalCenters[i] = new Position(segments[i].getCenter().getX(),
+          segments[i].getCenter().getY());
+    }
+    testRoadSystem.connectConnectors(initialConnector1, entranceConnector);
+    testRoadSystem.connectConnectors(initialConnector2, exitConnector);
+    testRoadSystem.moveSegments(List.of(initialSegment, entrance), new Movement(69, 420));
+    for (int i = 0; i < 2; i++) {
+      Assertions.assertEquals(originalCenters[i].getX() + 69, segments[i].getCenter().getX());
+      Assertions.assertEquals(originalCenters[i].getY() + 420, segments[i].getCenter().getY());
+    }
+    Assertions.assertEquals(originalCenters[2].getX(), segments[2].getCenter().getX());
+    Assertions.assertEquals(originalCenters[2].getY(), segments[2].getCenter().getY());
   }
 
   @Test

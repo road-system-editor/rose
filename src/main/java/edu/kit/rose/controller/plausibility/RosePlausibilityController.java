@@ -92,10 +92,12 @@ public class RosePlausibilityController extends Controller implements Plausibili
 
   @Override
   public void importCompatibilityCriteria() {
+    applicationDataSystem.importCriteriaFromFile(getNavigator().showFileDialog());
   }
 
   @Override
   public void exportCompatibilityCriteria() {
+    applicationDataSystem.exportCriteriaToFile(getNavigator().showFileDialog());
   }
 
   @Override

@@ -23,6 +23,9 @@ import edu.kit.rose.model.roadsystem.elements.SegmentType;
  */
 public class RosePlausibilityController extends Controller implements PlausibilityController {
 
+  private Project project;
+  private ApplicationDataSystem applicationDataSystem;
+
   /**
    * Creates a new {@link RosePlausibilityController}.
    *
@@ -34,63 +37,65 @@ public class RosePlausibilityController extends Controller implements Plausibili
   public RosePlausibilityController(StorageLock storageLock, Navigator navigator, Project project,
                                     ApplicationDataSystem applicationDataSystem) {
     super(storageLock, navigator);
+    this.project = project;
+    this.applicationDataSystem = applicationDataSystem;
+
   }
 
   @Override
   public void addCompatibilityCriterion(PlausibilityCriterionType type) {
-
+    applicationDataSystem.getCriteriaManager().createCriterionOfType(type);
   }
 
   @Override
   public void setCompatibilityCriterionName(CompatibilityCriterion criterion,
                                             String criterionName) {
-
+    criterion.setName(criterionName);
+    criterion.notifySubscribers();
   }
 
   @Override
   public void addSegmentTypeToCompatibilityCriterion(CompatibilityCriterion criterion,
                                                      SegmentType segmentType) {
-
+    criterion.addSegmentType(segmentType);
   }
 
   @Override
   public void removeSegmentTypeToCompatibilityCriterion(CompatibilityCriterion criterion,
                                                         SegmentType segmentType) {
-
+    criterion.removeSegmentType(segmentType);
   }
 
   @Override
   public void setCompatibilityCriterionAttributeType(CompatibilityCriterion criterion,
                                                      AttributeType attributeType) {
-
+    criterion.setAttributeType(attributeType);
   }
 
   @Override
   public void setCompatibilityCriterionOperatorType(CompatibilityCriterion criterion,
                                                     OperatorType operatorType) {
-
+    criterion.setOperatorType(operatorType);
   }
 
   @Override
   public void setCompatibilityCriterionLegalDiscrepancy(CompatibilityCriterion criterion,
                                                         double discrepancy) {
-
+    criterion.setLegalDiscrepancy(discrepancy);
   }
 
 
   @Override
   public void deleteCompatibilityCriterion(CompatibilityCriterion criterion) {
-
+    applicationDataSystem.getCriteriaManager().removeCriterion(criterion);
   }
 
   @Override
   public void importCompatibilityCriteria() {
-
   }
 
   @Override
   public void exportCompatibilityCriteria() {
-
   }
 
   @Override

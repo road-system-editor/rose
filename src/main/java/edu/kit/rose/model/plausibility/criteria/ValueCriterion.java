@@ -14,6 +14,7 @@ import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -43,6 +44,8 @@ class ValueCriterion extends RoseSetObservable<SegmentType, PlausibilityCriterio
   private final Set<AttributeType> affectedAttributeTypes;
   private final Set<SegmentType> segmentTypes;
   private final ViolationManager violationManager;
+  private final HashMap<Element, Violation> elementViolationMap;
+
 
   /**
    * Constructor.
@@ -54,6 +57,7 @@ class ValueCriterion extends RoseSetObservable<SegmentType, PlausibilityCriterio
     this.segmentTypes = new HashSet<>();
     this.affectedAttributeTypes = new HashSet<>();
     this.violationManager = violationManager;
+    this.elementViolationMap = new HashMap<>();
   }
 
   /**
@@ -108,7 +112,26 @@ class ValueCriterion extends RoseSetObservable<SegmentType, PlausibilityCriterio
 
   @Override
   public void notifyChange(Element unit) {
-
+    boolean valid = true;
+    Segment segment = (Segment) unit;
+    if (!unit.isContainer()) {
+      if (this.segmentTypes.contains(segment.getSegmentType())) {
+        SortedBox<AttributeAccessor<?>> accessors = unit.getAttributeAccessors();
+        for (AttributeAccessor<?> accessor : accessors) {
+          if (!checkValue(accessor)) {
+            valid = false;
+            affectedAttributeTypes.add(accessor.getAttributeType());
+          } else {
+            this.affectedAttributeTypes.remove(accessor.getAttributeType());
+          }
+        }
+      }
+      if (!valid) {
+        Violation violation = new Violation(this, List.of((Segment) unit));
+        this.violationManager.addViolation(violation);
+        this.elementViolationMap.put(unit, violation);
+      }
+    }
   }
 
   @Override
@@ -118,27 +141,13 @@ class ValueCriterion extends RoseSetObservable<SegmentType, PlausibilityCriterio
 
   @Override
   public void notifyAddition(Element unit) {
-    boolean valid = true;
-    Segment segment = (Segment) unit;
-    if (this.segmentTypes.contains(segment.getSegmentType())) {
-      SortedBox<AttributeAccessor<?>> accessors = unit.getAttributeAccessors();
-      for (AttributeAccessor<?> accessor : accessors) {
-        if (!checkValue(accessor)) {
-          valid = false;
-          affectedAttributeTypes.add(accessor.getAttributeType());
-        } else {
-          this.affectedAttributeTypes.remove(accessor.getAttributeType());
-        }
-      }
-    }
-    if (!valid) {
-      this.violationManager.addViolation(new Violation(this, List.of(segment)));
-    }
+    notifyChange(unit);
   }
 
   @Override
   public void notifyRemoval(Element unit) {
-
+    this.violationManager.removeViolation(this.elementViolationMap.get(unit));
+    this.elementViolationMap.remove(unit);
   }
 
   private boolean checkValue(AttributeAccessor accessor) {

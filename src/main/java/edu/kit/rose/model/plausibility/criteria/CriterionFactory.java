@@ -60,9 +60,7 @@ class CriterionFactory {
   private void subscribeCriterionToSegments(PlausibilityCriterion criterion,
                                             Box<Element> elements) {
     for (Element element : elements) {
-      if (!element.isContainer()) {
-        element.addSubscriber(criterion);
-      }
+      element.addSubscriber(criterion);
     }
   }
 }

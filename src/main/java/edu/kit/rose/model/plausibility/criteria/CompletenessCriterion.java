@@ -11,6 +11,7 @@ import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -28,6 +29,7 @@ class CompletenessCriterion extends RoseSetObservable<SegmentType, PlausibilityC
   private final Set<SegmentType> segmentTypes;
   private final ViolationManager violationManager;
   private final Set<AttributeType> necessaryAttributeTypes;
+  private final HashMap<Element, Violation> elementViolationMap;
 
   public CompletenessCriterion(ViolationManager violationManager) {
     this.name = "";
@@ -36,6 +38,7 @@ class CompletenessCriterion extends RoseSetObservable<SegmentType, PlausibilityC
     this.necessaryAttributeTypes = new HashSet<>();
     this.necessaryAttributeTypes.add(AttributeType.NAME);
     this.necessaryAttributeTypes.add(AttributeType.LENGTH);
+    this.elementViolationMap = new HashMap<>();
   }
 
   @Override
@@ -80,11 +83,15 @@ class CompletenessCriterion extends RoseSetObservable<SegmentType, PlausibilityC
 
   @Override
   public void notifyChange(Element unit) {
-    Box<AttributeAccessor<?>> accessors = unit.getAttributeAccessors();
-    for (AttributeAccessor<?> accessor : accessors) {
-      if (this.necessaryAttributeTypes.contains(accessor.getAttributeType())) {
-        if (accessor.getValue() == null) {
-          this.violationManager.addViolation(new Violation(this, List.of((Segment) unit)));
+    if (!unit.isContainer()) {
+      Box<AttributeAccessor<?>> accessors = unit.getAttributeAccessors();
+      for (AttributeAccessor<?> accessor : accessors) {
+        if (this.necessaryAttributeTypes.contains(accessor.getAttributeType())) {
+          if (accessor.getValue() == null) {
+            Violation violation = new Violation(this, List.of((Segment) unit));
+            this.violationManager.addViolation(violation);
+            this.elementViolationMap.put(unit, violation);
+          }
         }
       }
     }
@@ -97,11 +104,12 @@ class CompletenessCriterion extends RoseSetObservable<SegmentType, PlausibilityC
 
   @Override
   public void notifyAddition(Element unit) {
-
+    notifyChange(unit);
   }
 
   @Override
   public void notifyRemoval(Element unit) {
-
+    this.violationManager.removeViolation(this.elementViolationMap.get(unit));
+    this.elementViolationMap.remove(unit);
   }
 }

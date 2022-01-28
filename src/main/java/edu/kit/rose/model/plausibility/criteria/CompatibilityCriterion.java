@@ -24,6 +24,7 @@ import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -43,6 +44,7 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
   private final Set<SegmentType> segmentTypes;
   private final RoadSystem roadSystem;
   private final ViolationManager violationManager;
+  private final HashMap<Element, Violation> elementViolationMap;
 
   /**
    * Constructor.
@@ -56,6 +58,7 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
     this.segmentTypes = new HashSet<>();
     this.violationManager = violationManager;
     this.roadSystem = roadSystem;
+    this.elementViolationMap = new HashMap<>();
   }
 
   /**
@@ -168,7 +171,7 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
   @Override
   public void notifyChange(Element unit) {
     ArrayList<Segment> invalidSegments;
-    if (!this.operatorType.equals(OperatorType.DEFAULT)) {
+    if (!this.operatorType.equals(OperatorType.DEFAULT) && !unit.isContainer()) {
       ValidationStrategy strategy;
 
       switch (this.operatorType) {
@@ -197,7 +200,9 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
       if (!invalidSegments.isEmpty()
               && this.segmentTypes.contains(((Segment) unit).getSegmentType())) {
         invalidSegments.add((Segment) unit);
-        this.violationManager.addViolation(new Violation(this, invalidSegments));
+        Violation violation = new Violation(this, invalidSegments);
+        this.violationManager.addViolation(violation);
+        this.elementViolationMap.put(unit, violation);
       }
     }
   }
@@ -304,6 +309,7 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
 
   @Override
   public void notifyRemoval(Element unit) {
-
+    this.violationManager.removeViolation(this.elementViolationMap.get(unit));
+    this.elementViolationMap.remove(unit);
   }
 }

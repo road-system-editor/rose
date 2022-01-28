@@ -198,17 +198,15 @@ public abstract class HighwaySegment
 
   @Override
   public void rotate(int degrees) {
-    this.rotation += degrees;
-    this.rotation %= 360;
+    this.rotation = Math.floorMod(this.rotation + degrees, 360);
+    this.subscribers.forEach(s -> s.notifyChange(this));
   }
 
-  //TODO: write tests
   @Override
   public int getRotation() {
     return this.rotation;
   }
 
-  //TODO: write tests
   @Override
   public Position getRotatedConnectorPosition(Connector connector) {
     if (!this.connectors.contains(connector)) {

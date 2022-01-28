@@ -169,4 +169,20 @@ public class BaseTest {
 
   //TODO: Tests for subscribers.
 
+  @Test
+  void rotationTest() {
+    var oldRotation = testBase.getRotation();
+    testBase.rotate(69);
+    Assertions.assertEquals(oldRotation + 69, testBase.getRotation());
+
+    oldRotation = testBase.getRotation();
+    testBase.rotate(-360);
+    Assertions.assertEquals(oldRotation, testBase.getRotation());
+
+    oldRotation = testBase.getRotation();
+    testBase.rotate(360);
+    Assertions.assertEquals(oldRotation, testBase.getRotation());
+  }
+
+
 }

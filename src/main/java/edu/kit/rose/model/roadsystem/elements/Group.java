@@ -90,7 +90,7 @@ public class Group
    * @return a {@link Box} of all {@link Element}s in the Group.
    */
   public SortedBox<Element> getElements() {
-    return new RoseSortedBox<>(new ArrayList<>(elements));
+    return new RoseSortedBox<>(elements);
   }
 
   /**

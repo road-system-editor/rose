@@ -6,6 +6,7 @@ import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.infrastructure.UnitObserver;
 import edu.kit.rose.model.plausibility.violation.ViolationManager;
 
+
 /**
  * A CriteriaManager holds {@link PlausibilityCriterion}s .
  * It provides functions to create and remove Criteria as well as getters for them.

@@ -17,6 +17,7 @@ import edu.kit.rose.controller.roadsystem.RoadSystemController;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.infrastructure.language.RoseLocalizedTextProvider;
 import edu.kit.rose.model.ApplicationDataSystem;
+import edu.kit.rose.model.ExportFormat;
 import edu.kit.rose.model.ModelFactory;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.view.window.CriteriaWindow;
@@ -120,7 +121,7 @@ public class RoseApplication extends Application implements Navigator {
   }
 
   @Override
-  public Path showFileDialog(FileDialogOption option) {
+  public Path showFileDialog(FileDialogOption option, ExportFormat format) {
     var fileChooser = new FileChooser();
     // TODO differentiate between saving and opening files
     var file = fileChooser.showOpenDialog(null);

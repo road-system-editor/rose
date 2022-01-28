@@ -3,13 +3,13 @@ package edu.kit.rose.view.panel.roadsystem;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.view.commons.SegmentView;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.List;
+import java.util.Set;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
 
 /**
@@ -26,6 +26,11 @@ public class Grid extends Pane {
   private static final float LINE_WIDTH = 0.5f;
 
   /**
+   * Contains all displayed segment views on grid.
+   */
+  private final Set<SegmentView<? extends Segment>> segments;
+
+  /**
    * creates new Grid.
    */
   public Grid() {
@@ -33,12 +38,10 @@ public class Grid extends Pane {
     setHeight(HEIGHT);
     setBackground(new Background(new BackgroundFill(BACKGROUND_COLOR, null, null)));
     getChildren().addAll(getLines());
+    segments = new HashSet<>();
   }
 
-  /**
-   * Contains all displayed segment views on grid.
-   */
-  private List<SegmentView<? extends Segment>> segments;
+
 
   /**
    * Adds a segment view and displays it on the grid.
@@ -46,6 +49,7 @@ public class Grid extends Pane {
    * @param segmentView the segment view to add
    */
   public void addSegmentView(SegmentView<? extends Segment> segmentView) {
+    segments.add(segmentView);
   }
 
   /**
@@ -54,6 +58,7 @@ public class Grid extends Pane {
    * @param segmentView the segment view to remove
    */
   public void removeSegmentView(SegmentView<? extends Segment> segmentView) {
+    segments.remove(segmentView);
   }
 
   private Collection<Line> getLines() {

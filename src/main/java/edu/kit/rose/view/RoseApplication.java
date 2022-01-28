@@ -14,6 +14,7 @@ import edu.kit.rose.controller.navigation.WindowType;
 import edu.kit.rose.controller.plausibility.PlausibilityController;
 import edu.kit.rose.controller.project.ProjectController;
 import edu.kit.rose.controller.roadsystem.RoadSystemController;
+import edu.kit.rose.infrastructure.Box;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.infrastructure.language.RoseLocalizedTextProvider;
 import edu.kit.rose.model.ApplicationDataSystem;
@@ -25,7 +26,10 @@ import edu.kit.rose.view.window.MainWindow;
 import edu.kit.rose.view.window.MeasurementsWindow;
 import edu.kit.rose.view.window.RoseWindow;
 import edu.kit.rose.view.window.WindowState;
+import java.io.File;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import javafx.application.Application;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -122,10 +126,33 @@ public class RoseApplication extends Application implements Navigator {
 
   @Override
   public Path showFileDialog(FileDialogType option, FileFormat format) {
-    var fileChooser = new FileChooser();
-    // TODO differentiate between saving and opening files
-    var file = fileChooser.showOpenDialog(null);
+    FileChooser fileChooser = new FileChooser();
+    fileChooser.getExtensionFilters().add(getExtensionFilter(format));
+
+    File file = null;
+    switch (option) {
+      case LOAD_FILE -> file = fileChooser.showOpenDialog(null);
+      case SAVE_FILE -> file = fileChooser.showSaveDialog(null);
+      default -> throw new IllegalStateException("Unexpected value: " + format);
+    }
     return file == null ? null : file.toPath();
+  }
+
+  private FileChooser.ExtensionFilter getExtensionFilter(FileFormat format) {
+    return switch (format) {
+      case ROSE -> new FileChooser.ExtensionFilter("ROSE", convertBoxToList(
+          format.getFileExtensions()));
+      case SUMO -> new FileChooser.ExtensionFilter("SUMO", convertBoxToList(
+          format.getFileExtensions()));
+      case YAML -> new FileChooser.ExtensionFilter("YAML", convertBoxToList(
+          format.getFileExtensions()));
+    };
+  }
+
+  private <T> List<T> convertBoxToList(Box<T> box) {
+    List<T> list = new ArrayList<>();
+    box.forEach(list::add);
+    return list;
   }
 
   /**

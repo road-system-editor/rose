@@ -20,6 +20,7 @@ public interface Navigator {
    * and return that path.
    *
    * @param option specifies whether to load or save a file
+   * @param fileFormat specifies the target file format
    *
    * @return the path that the user chose
    */

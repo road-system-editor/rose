@@ -2,6 +2,7 @@ package edu.kit.rose.controller.project;
 
 
 import edu.kit.rose.model.FileFormat;
+import java.nio.file.Path;
 
 /**
  * Provides functionality to save, load and
@@ -34,8 +35,10 @@ public interface ProjectController {
 
   /**
    * Loads the newest backup version of the currently opened project.
+   *
+   * @param backUpPath the path where the backup file is stored
    */
-  void loadBackup();
+  void loadBackup(Path backUpPath);
 
   /**
    * Registers a runnable that gets called before the controller executes a loading, saving or

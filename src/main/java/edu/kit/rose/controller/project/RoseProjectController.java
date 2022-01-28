@@ -5,6 +5,7 @@ import edu.kit.rose.controller.commons.StorageLock;
 import edu.kit.rose.controller.navigation.Navigator;
 import edu.kit.rose.model.FileFormat;
 import edu.kit.rose.model.Project;
+import java.nio.file.Path;
 
 /**
  * Provides functionality to save, load and
@@ -44,7 +45,7 @@ public class RoseProjectController extends Controller implements ProjectControll
   }
 
   @Override
-  public void loadBackup() {
+  public void loadBackup(Path backUpPath) {
 
   }
 

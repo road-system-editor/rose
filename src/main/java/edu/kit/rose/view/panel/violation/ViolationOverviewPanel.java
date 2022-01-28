@@ -9,7 +9,9 @@ import edu.kit.rose.model.Project;
 import edu.kit.rose.model.plausibility.violation.Violation;
 import edu.kit.rose.model.plausibility.violation.ViolationManager;
 import edu.kit.rose.view.commons.FxmlContainer;
+import edu.kit.rose.view.panel.problem.MessageFactory;
 import java.util.Collection;
+import java.util.List;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
@@ -37,6 +39,8 @@ public class ViolationOverviewPanel extends FxmlContainer
   @FXML
   private Label segmentLabel;
 
+  private MessageFactory messageFactory;
+
   private Collection<ViolationHandle> violationHandles;
 
   /**
@@ -49,7 +53,7 @@ public class ViolationOverviewPanel extends FxmlContainer
   @Override
   public void init(Injector injector) {
     super.init(injector);
-
+    this.messageFactory = new MessageFactory(getTranslator());
     initViolationBox();
   }
 
@@ -58,13 +62,13 @@ public class ViolationOverviewPanel extends FxmlContainer
 
     for (Violation violation : project.getPlausibilitySystem().getViolationManager()
         .getViolations()) {
-      violationBox.getChildren().add(new ViolationHandle(controller, violation));
+      violationBox.getChildren().add(new ViolationHandle(controller, messageFactory, violation));
     }
   }
 
   @Override
   public void notifyAddition(Violation unit) {
-    violationBox.getChildren().add(new ViolationHandle(controller, unit));
+    violationBox.getChildren().add(new ViolationHandle(controller, messageFactory, unit));
   }
 
   @Override
@@ -87,6 +91,6 @@ public class ViolationOverviewPanel extends FxmlContainer
 
   @Override
   protected Collection<FxmlContainer> getSubFxmlContainer() {
-    return null;
+    return List.of((ViolationHandle) violationBox.getChildren());
   }
 }

@@ -40,7 +40,7 @@ public class ViolationManager extends RoseSetObservable<Violation, ViolationMana
    */
   void addViolation(Violation violation) {
     violations.add(violation);
-    criterionViolationMap.put(violation.getViolatedCriterion(), violation);
+    criterionViolationMap.put(violation.violatedCriterion(), violation);
     notifySubscribers();
   }
 
@@ -51,7 +51,7 @@ public class ViolationManager extends RoseSetObservable<Violation, ViolationMana
    */
   void removeViolation(Violation violation) {
     violations.remove(violation);
-    criterionViolationMap.removeMapping(violation.getViolatedCriterion(), violation);
+    criterionViolationMap.removeMapping(violation.violatedCriterion(), violation);
     notifySubscribers();
   }
 
@@ -68,7 +68,7 @@ public class ViolationManager extends RoseSetObservable<Violation, ViolationMana
     Collection<Violation> violationsAgainstCriterion = criterionViolationMap.get(criterion);
     List<Violation> matches =
         violationsAgainstCriterion.stream().filter((violation ->
-            violation.getOffendingSegments().equals(offendingSegments))).toList();
+            violation.offendingSegments().equals(offendingSegments))).toList();
     assert (matches.size() <= 1);
     return matches.get(0);
   }

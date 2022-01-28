@@ -6,6 +6,7 @@ import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.model.plausibility.violation.Violation;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.view.commons.FxmlContainer;
+import edu.kit.rose.view.panel.problem.MessageFactory;
 import java.util.Collection;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -41,6 +42,7 @@ public class ViolationHandle extends FxmlContainer implements UnitObserver<Viola
    */
   @FXML
   private Tooltip extendedMessage;
+  private final MessageFactory messageFactory;
 
   /**
    * Creates a new {@link ViolationHandle} for a given {@code violation}.
@@ -48,30 +50,30 @@ public class ViolationHandle extends FxmlContainer implements UnitObserver<Viola
    * @param controller the {@link PlausibilityController} instance
    * @param violation the {@link Violation} the {@link ViolationHandle} belongs to
    */
-  public ViolationHandle(PlausibilityController controller, Violation violation) {
-    super("problem.fxml");
+  public ViolationHandle(PlausibilityController controller,
+                         MessageFactory messageFactory, Violation violation) {
+    super("ViolationHandle.fxml");
     this.controller = controller;
+    this.messageFactory = messageFactory;
     this.violation = violation;
 
-    String offendingSegments = "";
-    for (Segment segment : violation.getOffendingSegments()) {
-      offendingSegments = offendingSegments.concat(segment.getName() + ", ");
-    }
-    segments.setText(offendingSegments);
-    criterion.setText(violation.getViolatedCriterion().getName());
-    extendedMessage.setText("TODO");
+    segments.setText(messageFactory.generateShortDescription(violation));
+    criterion.setText(violation.violatedCriterion().getName());
+    extendedMessage.setText(messageFactory.generateDetailedDescription(violation));
 
     Tooltip.install(criterion, extendedMessage);
   }
 
   @Override
   public void notifyChange(Violation unit) {
-
+    updateTranslatableStrings(null);
   }
 
   @Override
   protected void updateTranslatableStrings(Language newLang) {
-
+    segments.setText(messageFactory.generateShortDescription(violation));
+    criterion.setText(violation.violatedCriterion().getName());
+    extendedMessage.setText(messageFactory.generateDetailedDescription(violation));
   }
 
   @Override

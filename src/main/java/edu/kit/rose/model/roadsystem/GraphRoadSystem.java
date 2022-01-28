@@ -103,7 +103,7 @@ class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, RoadSys
 
   @Override
   public Group createGroup(Set<Element> includedElements) {
-    var group = new Group(includedElements);
+    var group = new Group(new LinkedList<>(includedElements));
     elements.add(group);
     groups.add(group);
     subscribers.forEach(s -> s.notifyAddition(group));

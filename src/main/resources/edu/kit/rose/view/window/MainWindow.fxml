@@ -3,10 +3,6 @@
 <?import edu.kit.rose.view.panel.segmentbox.SegmentBoxPanel?>
 <?import edu.kit.rose.view.panel.violation.ViolationOverviewPanel?>
 <?import edu.kit.rose.view.panel.hierarchy.HierarchyPanel?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.SeparatorMenuItem?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
 <?import edu.kit.rose.view.window.RoseMenuBar?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml">
@@ -19,7 +15,7 @@
                 <SegmentBoxPanel fx:id="segmentBoxPanel"/>
             </top>
             <bottom>
-                <ViolationOverviewPanel fx:id="problemOverviewPanel"/>
+                <ViolationOverviewPanel fx:id="violationOverviewPanel"/>
             </bottom>
         </BorderPane>
     </left>

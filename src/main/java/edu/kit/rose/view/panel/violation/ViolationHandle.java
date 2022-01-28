@@ -4,6 +4,7 @@ import edu.kit.rose.controller.plausibility.PlausibilityController;
 import edu.kit.rose.infrastructure.UnitObserver;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.model.plausibility.violation.Violation;
+import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.view.commons.FxmlContainer;
 import java.util.Collection;
 import javafx.fxml.FXML;
@@ -16,7 +17,7 @@ import javafx.scene.control.Tooltip;
  * A {@link ViolationHandle} informs the user about a violation against a
  * {@link edu.kit.rose.model.plausibility.criteria.PlausibilityCriterion}.
  */
-class ViolationHandle extends FxmlContainer implements UnitObserver<Violation> {
+public class ViolationHandle extends FxmlContainer implements UnitObserver<Violation> {
   /**
    * The controller to use for handling navigation to the affected segments in the road system view.
    */
@@ -51,7 +52,15 @@ class ViolationHandle extends FxmlContainer implements UnitObserver<Violation> {
     super("problem.fxml");
     this.controller = controller;
     this.violation = violation;
-    extendedMessage.setText("");
+
+    String offendingSegments = "";
+    for (Segment segment : violation.getOffendingSegments()) {
+      offendingSegments = offendingSegments.concat(segment.getName() + ", ");
+    }
+    segments.setText(offendingSegments);
+    criterion.setText(violation.getViolatedCriterion().getName());
+    extendedMessage.setText("TODO");
+
     Tooltip.install(criterion, extendedMessage);
   }
 
@@ -68,5 +77,10 @@ class ViolationHandle extends FxmlContainer implements UnitObserver<Violation> {
   @Override
   protected Collection<FxmlContainer> getSubFxmlContainer() {
     return null;
+  }
+
+
+  Violation getViolation() {
+    return this.violation;
   }
 }

@@ -1,0 +1,12 @@
+<?import javafx.scene.layout.Pane?>
+
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Label?>
+<fx:root xmlns="http://javafx.com/javafx"
+         xmlns:fx="http://javafx.com/fxml" type="Pane">
+    <HBox>
+        <Label fx:id="criterion"/>
+        <Label fx:id="segments"/>
+    </HBox>
+
+</fx:root>

@@ -41,8 +41,6 @@ public class ViolationOverviewPanel extends FxmlContainer
 
   /**
    * Creates a new problem overview panel.
-   * Requires {@link #setController(PlausibilityController)}
-   *        + {@link #setManager(ViolationManager)}
    */
   public ViolationOverviewPanel() {
     super("ViolationOverviewPanel.fxml");
@@ -52,51 +50,39 @@ public class ViolationOverviewPanel extends FxmlContainer
   public void init(Injector injector) {
     super.init(injector);
 
-    violationLabel.setText(getTranslator()
-        .getLocalizedText("view.panel.violation.violationOverviewPanel.violationLabel"));
-    segmentLabel.setText(getTranslator()
-        .getLocalizedText("view.panel.violation.violationOverviewPanel.segmentLabel"));
-
-    project.getPlausibilitySystem().getViolationManager().getViolations();
-
+    initViolationBox();
   }
 
-  /**
-   * Sets the controller that handles plausibility input.
-   *
-   * @param controller controller that handles plausibility input.
-   */
-  public void setController(PlausibilityController controller) {
-    this.controller = controller;
+  private void initViolationBox() {
+    violationBox.getChildren().clear();
+
+    for (Violation violation : project.getPlausibilitySystem().getViolationManager()
+        .getViolations()) {
+      violationBox.getChildren().add(new ViolationHandle(controller, violation));
+    }
   }
-
-  /**
-   * Sets the {@link ViolationManager}.
-   *
-   * @param manager the {@link ViolationManager} instance
-   */
-  public void setManager(ViolationManager manager) {
-
-  } //TODO: can this be removed?
 
   @Override
   public void notifyAddition(Violation unit) {
-
+    violationBox.getChildren().add(new ViolationHandle(controller, unit));
   }
 
   @Override
   public void notifyRemoval(Violation unit) {
-
+    violationBox.getChildren().removeIf(item -> ((ViolationHandle) item).getViolation() == unit);
   }
 
   @Override
   public void notifyChange(ViolationManager unit) {
-
+    initViolationBox();
   }
 
   @Override
   protected void updateTranslatableStrings(Language lang) {
-
+    violationLabel.setText(getTranslator()
+        .getLocalizedText("view.panel.violation.violationOverviewPanel.violationLabel"));
+    segmentLabel.setText(getTranslator()
+        .getLocalizedText("view.panel.violation.violationOverviewPanel.segmentLabel"));
   }
 
   @Override

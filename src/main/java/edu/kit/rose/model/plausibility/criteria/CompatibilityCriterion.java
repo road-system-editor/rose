@@ -127,6 +127,7 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
    */
   public void setLegalDiscrepancy(double discrepancy) {
     this.discrepancy = discrepancy;
+    notifySubscribers();
   }
 
   @Override

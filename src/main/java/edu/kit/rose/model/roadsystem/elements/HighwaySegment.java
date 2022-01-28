@@ -202,13 +202,34 @@ public abstract class HighwaySegment
     this.rotation %= 360;
   }
 
+  //TODO: write tests
   @Override
   public int getRotation() {
     return this.rotation;
   }
 
+  //TODO: write tests
   @Override
   public Position getRotatedConnectorPosition(Connector connector) {
-    return null;
+    if (!this.connectors.contains(connector)) {
+      throw new IllegalArgumentException("connector is not part of this segment");
+    }
+
+    var s = Math.sin(rotation);
+    var c = Math.cos(rotation);
+
+    var x = connector.getPosition().getX();
+    var y = connector.getPosition().getY();
+
+    // translate point back to origin:
+    x -= center.getX();
+    y -= center.getY();
+
+    // rotate point
+    double xNew = x * c - y * s;
+    double yNew = x * s + y * c;
+
+    // translate point back:
+    return new Position((int) Math.round(xNew + x), (int) Math.round(yNew + y));
   }
 }

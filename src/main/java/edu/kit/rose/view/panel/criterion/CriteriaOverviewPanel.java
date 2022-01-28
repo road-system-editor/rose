@@ -5,27 +5,17 @@ import com.google.inject.Injector;
 import edu.kit.rose.controller.plausibility.PlausibilityController;
 import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.infrastructure.language.Language;
-import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.model.ApplicationDataSystem;
-import edu.kit.rose.model.plausibility.criteria.CompatibilityCriterion;
 import edu.kit.rose.model.plausibility.criteria.CriteriaManager;
 import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterion;
 import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterionType;
 import edu.kit.rose.view.commons.FxmlContainer;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.function.Consumer;
 import javafx.fxml.FXML;
-import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 
 /**
  * The criteria overview panel allows the user to view the criteria.
@@ -48,7 +38,7 @@ public class CriteriaOverviewPanel extends FxmlContainer
   @FXML
   private Button newButton;
   @FXML
-  private ListView<CompatibilityCriterion> criteriaList;
+  private ListView<PlausibilityCriterion> criteriaList;
 
   /**
    * Creates a new CriteriaOverviewPanel.
@@ -81,7 +71,7 @@ public class CriteriaOverviewPanel extends FxmlContainer
     for (PlausibilityCriterion criterion :
         applicationDataSystem.getCriteriaManager()
             .getCriteriaOfType(PlausibilityCriterionType.COMPATIBILITY)) {
-      criteriaList.getItems().add((CompatibilityCriterion) criterion);
+      criteriaList.getItems().add(criterion);
     }
   }
 
@@ -97,7 +87,7 @@ public class CriteriaOverviewPanel extends FxmlContainer
   @Override
   public void notifyAddition(PlausibilityCriterion unit) {
     if (unit.getType() == PlausibilityCriterionType.COMPATIBILITY) {
-      criteriaList.getItems().add((CompatibilityCriterion) unit);
+      criteriaList.getItems().add(unit);
     }
   }
 

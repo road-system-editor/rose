@@ -5,6 +5,7 @@ import edu.kit.rose.infrastructure.UnitObserver;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.model.plausibility.criteria.CompatibilityCriterion;
 import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterion;
+import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterionType;
 import edu.kit.rose.view.commons.FxmlContainer;
 import java.util.Collection;
 import java.util.function.Consumer;
@@ -37,7 +38,7 @@ class CriterionHandle extends FxmlContainer
    * @param criterion      the criteria to be handled
    * @param selectListener will be called when this handle is clicked
    */
-  public CriterionHandle(PlausibilityController controller, CompatibilityCriterion criterion,
+  public CriterionHandle(PlausibilityController controller, PlausibilityCriterion criterion,
                          Consumer<PlausibilityCriterion> selectListener) {
     super("CriterionHandle.fxml");
     this.controller = controller;
@@ -45,8 +46,12 @@ class CriterionHandle extends FxmlContainer
 
     this.label.setText(criterion.getName());
     this.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> selectListener.accept(criterion));
-    this.deleteButton.addEventHandler(MouseEvent.MOUSE_CLICKED,
-        event -> controller.deleteCompatibilityCriterion(criterion));
+
+    //CompatibilityCriteria are the only ones that can be deleted.
+    if (criterion.getType() == PlausibilityCriterionType.COMPATIBILITY) {
+      this.deleteButton.addEventHandler(MouseEvent.MOUSE_CLICKED,
+          event -> controller.deleteCompatibilityCriterion((CompatibilityCriterion) criterion));
+    }
   }
 
   /**

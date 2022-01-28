@@ -10,7 +10,7 @@ import javafx.scene.control.ListCell;
  * A {@link CriteriaListCell} is a container that holds
  * a {@link javafx.scene.control.ListView} item layout.
  */
-public class CriteriaListCell extends ListCell<CompatibilityCriterion> {
+public class CriteriaListCell extends ListCell<PlausibilityCriterion> {
 
   private final PlausibilityController controller;
   private final Consumer<PlausibilityCriterion> selectListener;
@@ -28,7 +28,7 @@ public class CriteriaListCell extends ListCell<CompatibilityCriterion> {
   }
 
   @Override
-  public void updateItem(CompatibilityCriterion criterion, boolean empty) {
+  public void updateItem(PlausibilityCriterion criterion, boolean empty) {
     super.updateItem(criterion, empty);
 
     if (criterion == null || empty) {

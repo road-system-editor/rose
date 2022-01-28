@@ -1,8 +1,11 @@
 package edu.kit.rose.model.plausibility.criteria;
 
+
 import edu.kit.rose.infrastructure.Box;
+import edu.kit.rose.infrastructure.RoseBox;
 import edu.kit.rose.infrastructure.RoseSetObservable;
 import edu.kit.rose.infrastructure.RoseSortedBox;
+import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.model.plausibility.criteria.validation.EqualsValidationStrategy;
 import edu.kit.rose.model.plausibility.criteria.validation.LessThanValidationStrategy;
@@ -19,10 +22,10 @@ import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
-import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -131,11 +134,12 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
   @Override
   public void setName(String name) {
     this.name = name;
+    notifySubscribers();
   }
 
   @Override
   public Box<SegmentType> getSegmentTypes() {
-    return null;
+    return new RoseBox<>(this.segmentTypes);
   }
 
   @Override
@@ -146,11 +150,19 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
   @Override
   public void addSegmentType(SegmentType type) {
     this.segmentTypes.add(type);
+    Iterator<SetObserver<SegmentType, PlausibilityCriterion>> iterator = getSubscriberIterator();
+    while (iterator.hasNext()) {
+      iterator.next().notifyAddition(type);
+    }
   }
 
   @Override
   public void removeSegmentType(SegmentType type) {
     this.segmentTypes.remove(type);
+    Iterator<SetObserver<SegmentType, PlausibilityCriterion>> iterator = getSubscriberIterator();
+    while (iterator.hasNext()) {
+      iterator.next().notifyRemoval(type);
+    }
   }
 
   @Override
@@ -180,7 +192,7 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
           strategy = new OrValidationStrategy<>();
           invalidSegments = getInvalidSegments(strategy, (Segment) unit, NOT_USE_DISCREPANCY);
         }
-        default -> throw new InvalidParameterException("invalid operator type");
+        default -> throw new IllegalArgumentException("invalid operator type");
       }
       if (!invalidSegments.isEmpty()
               && this.segmentTypes.contains(((Segment) unit).getSegmentType())) {
@@ -287,7 +299,7 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
 
   @Override
   public void notifyAddition(Element unit) {
-
+    notifyChange(unit);
   }
 
   @Override

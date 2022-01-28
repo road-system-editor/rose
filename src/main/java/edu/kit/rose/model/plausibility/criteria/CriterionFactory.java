@@ -59,11 +59,9 @@ class CriterionFactory {
 
   private void subscribeCriterionToSegments(PlausibilityCriterion criterion,
                                             Box<Element> elements) {
-    if (elements != null) {
-      for (Element element : elements) {
-        if (!element.isContainer()) {
-          element.addSubscriber(criterion);
-        }
+    for (Element element : elements) {
+      if (!element.isContainer()) {
+        element.addSubscriber(criterion);
       }
     }
   }

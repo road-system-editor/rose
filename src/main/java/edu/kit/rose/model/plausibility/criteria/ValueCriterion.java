@@ -1,9 +1,11 @@
 package edu.kit.rose.model.plausibility.criteria;
 
 
+
 import edu.kit.rose.infrastructure.Box;
 import edu.kit.rose.infrastructure.RoseBox;
 import edu.kit.rose.infrastructure.RoseSetObservable;
+import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.model.plausibility.violation.Violation;
 import edu.kit.rose.model.plausibility.violation.ViolationManager;
@@ -13,6 +15,7 @@ import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -71,6 +74,7 @@ class ValueCriterion extends RoseSetObservable<SegmentType, PlausibilityCriterio
   @Override
   public void setName(String name) {
     this.name = name;
+    notifySubscribers();
   }
 
   @Override
@@ -87,11 +91,19 @@ class ValueCriterion extends RoseSetObservable<SegmentType, PlausibilityCriterio
   @Override
   public void addSegmentType(SegmentType type) {
     this.segmentTypes.add(type);
+    Iterator<SetObserver<SegmentType, PlausibilityCriterion>> iterator = getSubscriberIterator();
+    while (iterator.hasNext()) {
+      iterator.next().notifyAddition(type);
+    }
   }
 
   @Override
   public void removeSegmentType(SegmentType type) {
     this.segmentTypes.remove(type);
+    Iterator<SetObserver<SegmentType, PlausibilityCriterion>> iterator = getSubscriberIterator();
+    while (iterator.hasNext()) {
+      iterator.next().notifyRemoval(type);
+    }
   }
 
   @Override

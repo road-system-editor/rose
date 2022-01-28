@@ -45,6 +45,7 @@ class CriterionFactoryTest {
     PlausibilityCriterion criteria = this.factory.createCompletenessCriterion();
 
     Assertions.assertNotNull(criteria);
+    Assertions.assertEquals(criteria.getType(), (PlausibilityCriterionType.COMPLETENESS));
     Assertions.assertTrue(this.subscribed);
   }
 
@@ -53,14 +54,16 @@ class CriterionFactoryTest {
     PlausibilityCriterion criteria = this.factory.createValueCriterion();
 
     Assertions.assertNotNull(criteria);
+    Assertions.assertEquals(criteria.getType(), (PlausibilityCriterionType.VALUE));
     Assertions.assertTrue(this.subscribed);
   }
 
   @Test
   void createCompatibilityCriterionTest() {
-    PlausibilityCriterion criteria = this.factory.createCompletenessCriterion();
+    PlausibilityCriterion criteria = this.factory.createCompatibilityCriterion();
 
     Assertions.assertNotNull(criteria);
+    Assertions.assertEquals(criteria.getType(), (PlausibilityCriterionType.COMPATIBILITY));
     Assertions.assertTrue(this.subscribed);
   }
 }

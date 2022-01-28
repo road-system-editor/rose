@@ -98,7 +98,7 @@ public class CriteriaManager extends RoseSetObservable<PlausibilityCriterion, Cr
     }
 
     this.criterion.add(newCriteria);
-    notifyAdditionToSubscribers(getSubscriberIterator(), newCriteria);
+    notifyAdditionToSubscribers(newCriteria);
   }
 
   /**
@@ -108,14 +108,14 @@ public class CriteriaManager extends RoseSetObservable<PlausibilityCriterion, Cr
    */
   public void removeCriterion(PlausibilityCriterion criteria) {
     this.criterion.remove(criteria);
-    notifyRemovalToSubscribers(getSubscriberIterator(), criteria);
+    notifyRemovalToSubscribers(criteria);
   }
 
   /**
    * Removes all {@link PlausibilityCriterion} from this CriterionManager.
    */
   public void removeAllCriteria() {
-    this.criterion.forEach(e -> notifyRemovalToSubscribers(getSubscriberIterator(), e));
+    this.criterion.forEach(this::notifyRemovalToSubscribers);
     this.criterion.clear();
   }
 
@@ -128,7 +128,7 @@ public class CriteriaManager extends RoseSetObservable<PlausibilityCriterion, Cr
   public void removeAllCriteriaOfType(PlausibilityCriterionType type) {
     for (PlausibilityCriterion criteria : this.criterion) {
       if (criteria.getType() == type) {
-        notifyRemovalToSubscribers(getSubscriberIterator(), criteria);
+        notifyRemovalToSubscribers(criteria);
         this.criterion.remove(criteria);
       }
     }
@@ -144,15 +144,17 @@ public class CriteriaManager extends RoseSetObservable<PlausibilityCriterion, Cr
     this.notifySubscribers();
   }
 
-  private void notifyAdditionToSubscribers(Iterator<SetObserver<PlausibilityCriterion,
-          CriteriaManager>> iterator, PlausibilityCriterion criterion) {
+  private void notifyAdditionToSubscribers(PlausibilityCriterion criterion) {
+    Iterator<SetObserver<PlausibilityCriterion,
+            CriteriaManager>> iterator = getSubscriberIterator();
     while (iterator.hasNext()) {
       iterator.next().notifyAddition(criterion);
     }
   }
 
-  private void notifyRemovalToSubscribers(Iterator<SetObserver<PlausibilityCriterion,
-          CriteriaManager>> iterator, PlausibilityCriterion criterion) {
+  private void notifyRemovalToSubscribers(PlausibilityCriterion criterion) {
+    Iterator<SetObserver<PlausibilityCriterion,
+            CriteriaManager>> iterator = getSubscriberIterator();
     while (iterator.hasNext()) {
       iterator.next().notifyRemoval(criterion);
     }

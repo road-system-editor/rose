@@ -2,7 +2,6 @@ package edu.kit.rose.model.roadsystem.elements;
 
 import edu.kit.rose.infrastructure.SetObservable;
 import edu.kit.rose.infrastructure.SortedBox;
-import edu.kit.rose.infrastructure.UnitObservable;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 
 /**

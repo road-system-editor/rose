@@ -31,15 +31,12 @@ import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultUndirectedGraph;
 
 
-
-
-
 /**
  * A Standard implementation of a {@link RoadSystem}
  * using a Graph for holding the connections between the {@link Segment}s.
  */
 class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, RoadSystem>
-        implements RoadSystem {
+    implements RoadSystem {
 
   private final CriteriaManager criteriaManager;
   private final TimeSliceSetting timeSliceSetting;
@@ -103,6 +100,10 @@ class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, RoadSys
 
   @Override
   public Group createGroup(Set<Element> includedElements) {
+    if (includedElements.stream().anyMatch(e -> !elements.contains(e))) {
+      throw new IllegalArgumentException(
+          "can not create group from elements outside this roadSystem");
+    }
     var group = new Group(new LinkedList<>(includedElements));
     elements.add(group);
     groups.add(group);
@@ -112,6 +113,9 @@ class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, RoadSys
 
   @Override
   public void removeElement(Element element) {
+    if (!elements.contains(element)) {
+      throw new IllegalArgumentException("unknown element");
+    }
     if (element.isContainer()) {
       removeGroup((Group) element);
     } else {
@@ -210,6 +214,10 @@ class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, RoadSys
 
   @Override
   public Connection connectConnectors(Connector segment1Connector, Connector segment2Connector) {
+    if (!connectorConnectionMap.containsKey(segment1Connector)
+        || !connectorConnectionMap.containsKey(segment2Connector)) {
+      throw new IllegalArgumentException("can not connect connectors outside this roadSystem");
+    }
     disconnectConnection(connectorConnectionMap.get(segment1Connector));
     disconnectConnection(connectorConnectionMap.get(segment2Connector));
     var connection = new Connection(segment1Connector, segment2Connector);
@@ -226,21 +234,29 @@ class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, RoadSys
 
   @Override
   public void disconnectConnection(Connection connection) {
-    if (connection == null) {
-      return;
+    if (!connectorConnectionMap.containsValue(connection)) {
+      throw new IllegalArgumentException("unknown connection");
     }
-    segmentConnectionGraph.removeEdge(connection);
-    connection.getConnectors().forEach(c -> connectorConnectionMap.put(c, null));
-    subscribers.forEach(s -> s.notifyRemovalSecond(connection));
+    if (connection != null && connectorConnectionMap.containsValue(connection)) {
+      segmentConnectionGraph.removeEdge(connection);
+      connection.getConnectors().forEach(c -> connectorConnectionMap.put(c, null));
+      subscribers.forEach(s -> s.notifyRemovalSecond(connection));
+    }
   }
 
   @Override
   public void disconnectFromAll(Segment segment) {
+    if (!elements.contains(segment)) {
+      throw new IllegalArgumentException("unknown segment");
+    }
     getConnections(segment).forEach(this::disconnectConnection);
   }
 
   @Override
   public Box<Segment> getAdjacentSegments(Segment segment) {
+    if (!elements.contains(segment)) {
+      throw new IllegalArgumentException("unknown segment");
+    }
     return new RoseBox<>(getAdjacentSegmentsList(segment));
   }
 
@@ -269,27 +285,42 @@ class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, RoadSys
 
   @Override
   public Box<Connection> getConnections(Segment segment) {
+    if (!elements.contains(segment)) {
+      throw new IllegalArgumentException("unknown segment");
+    }
     return new RoseBox<>(getConnectionsSet(segment));
   }
 
 
   @Override
   public Box<Connection> getConnections(Segment segment1, Segment segment2) {
+    if (!elements.contains(segment1) || !elements.contains(segment2)) {
+      throw new IllegalArgumentException("unknown segment");
+    }
     return new RoseBox<>(segmentConnectionGraph.getAllEdges(segment1, segment2));
   }
 
   private Set<Connection> getConnectionsSet(Segment segment) {
+    if (!elements.contains(segment)) {
+      throw new IllegalArgumentException("unknown segment");
+    }
     return segmentConnectionGraph.edgesOf(segment);
   }
 
   @Override
   public Connection getConnection(Connector connector) {
+    if (!connectorConnectionMap.containsKey(connector)) {
+      throw new IllegalArgumentException("unknown connector");
+    }
     return connectorConnectionMap.get(connector);
   }
 
 
   @Override
   public void moveSegments(Collection<Segment> segments, Movement movement) {
+    if (segments.stream().anyMatch(e -> !elements.contains(e))) {
+      throw new IllegalArgumentException("can not move unknown segments");
+    }
     var outSideConnections = getOutSideConnections(segments);
     inNoBreakMode(() -> segments.forEach(s -> s.move(movement)));
     outSideConnections.forEach(this::disconnectConnection);
@@ -306,6 +337,9 @@ class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, RoadSys
    */
   @Override
   public void rotateSegment(Segment segment, int degrees) {
+    if (!elements.contains(segment)) {
+      throw new IllegalArgumentException("unknown segment");
+    }
     segment.rotate(degrees);
     disconnectFromAll(segment);
   }
@@ -346,6 +380,9 @@ class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, RoadSys
 
   @Override
   public void notifyChange(Connector unit) {
+    if (!connectorConnectionMap.containsKey(unit)) {
+      throw new IllegalArgumentException("unknown connector");
+    }
     var connection = connectorConnectionMap.get(unit);
     if (breakOnMove && connection != null) {
       disconnectConnection(connection);

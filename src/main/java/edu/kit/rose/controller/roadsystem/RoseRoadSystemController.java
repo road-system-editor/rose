@@ -10,10 +10,11 @@ import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.roadsystem.elements.Connector;
+import edu.kit.rose.model.roadsystem.elements.MovableConnector;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Provides the functionality for managing roadsystems
@@ -42,7 +43,7 @@ public class RoseRoadSystemController extends Controller
   private Connector dragConnector;
   private Position initialConnectorDragPosition;
 
-  private final List<SetObserver<Segment, RoadSystemController>> observers;
+  private final Set<SetObserver<Segment, RoadSystemController>> observers;
 
   /**
    * Creates a new {@link RoseRoadSystemController}.
@@ -61,7 +62,7 @@ public class RoseRoadSystemController extends Controller
     this.selectionBuffer = selectionBuffer;
     this.project = project;
 
-    observers = new ArrayList<>();
+    observers = new HashSet<>();
   }
 
   @Override
@@ -107,7 +108,6 @@ public class RoseRoadSystemController extends Controller
         = new DragStreetSegmentCommand(
         this.project,
         this.selectionBuffer.getSelectedSegments(),
-        initialSegmentDragPosition,
         draggingTransition);
 
     changeCommandBuffer.addCommand(dragStreetSegmentCommand);
@@ -124,7 +124,41 @@ public class RoseRoadSystemController extends Controller
   @Override
   public void selectSegmentsInRectangle(Position firstSelectionCorner,
                                         Position secondSelectionCorner) {
-    this.project.getRoadSystem().getElements();
+
+    this.project.getRoadSystem().getElements().forEach(element -> {
+      if (!element.isContainer()) {
+        return;
+      }
+      Segment segment = (Segment) element;
+      if (isInRectangle(segment.getCenter(), firstSelectionCorner, secondSelectionCorner)) {
+        selectionBuffer.addSegmentSelection(segment);
+      } else {
+        for (Connector connector : segment.getConnectors()) {
+          if (isInRectangle(connector.getPosition(), firstSelectionCorner, secondSelectionCorner)) {
+            selectionBuffer.addSegmentSelection(segment);
+            break;
+          }
+        }
+      }
+    });
+  }
+
+  private static boolean isInRectangle(Position target,
+                                       Position firstSelectionCorner,
+                                       Position secondSelectionCorner) {
+
+    int maximumX = Math.max(firstSelectionCorner.getX(), secondSelectionCorner.getX());
+    int minimumX = Math.min(firstSelectionCorner.getX(), secondSelectionCorner.getX());
+
+    int maximumY = Math.max(firstSelectionCorner.getY(), secondSelectionCorner.getY());
+    int minimumY = Math.min(firstSelectionCorner.getY(), secondSelectionCorner.getY());
+
+    return isInInterval(target.getX(), minimumX, maximumX)
+        && isInInterval(target.getY(), minimumY, maximumY);
+  }
+
+  private static boolean isInInterval(int value, int lowerIntervalBorder, int upperIntervalBorder) {
+    return lowerIntervalBorder <= value && value <= upperIntervalBorder;
   }
 
   @Override
@@ -135,16 +169,16 @@ public class RoseRoadSystemController extends Controller
 
   @Override
   public void endDragSegmentEnd(Position connectorEndPosition) {
+    if (this.dragConnector == null) {
+      return;
+    }
+
     Movement draggingTransition = new Movement(
         connectorEndPosition.getX() - initialSegmentDragPosition.getX(),
         connectorEndPosition.getY() - initialSegmentDragPosition.getY());
 
     DragSegmentEndCommand dragSegmentEndCommand
-        = new DragSegmentEndCommand(
-        this.project,
-        dragConnector,
-        initialConnectorDragPosition,
-        draggingTransition);
+        = new DragSegmentEndCommand((MovableConnector) dragConnector, draggingTransition);
 
     changeCommandBuffer.addCommand(dragSegmentEndCommand);
     dragSegmentEndCommand.execute();
@@ -156,9 +190,7 @@ public class RoseRoadSystemController extends Controller
 
   @Override
   public void addSubscriber(SetObserver<Segment, RoadSystemController> observer) {
-    if (!observers.contains(observer)) {
-      observers.add(observer);
-    }
+    observers.add(observer);
   }
 
   @Override

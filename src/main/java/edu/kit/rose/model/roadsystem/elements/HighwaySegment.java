@@ -226,10 +226,10 @@ public abstract class HighwaySegment
     y -= center.getY();
 
     // rotate point
-    double xNew = x * c - y * s;
-    double yNew = x * s + y * c;
+    double newX = x * c - y * s;
+    double newY = x * s + y * c;
 
     // translate point back:
-    return new Position((int) Math.round(xNew + x), (int) Math.round(yNew + y));
+    return new Position((int) Math.round(newX + x), (int) Math.round(newY + y));
   }
 }

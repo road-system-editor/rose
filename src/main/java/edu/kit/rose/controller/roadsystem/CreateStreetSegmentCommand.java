@@ -2,6 +2,8 @@ package edu.kit.rose.controller.roadsystem;
 
 import edu.kit.rose.controller.command.ChangeCommand;
 import edu.kit.rose.model.Project;
+import edu.kit.rose.model.roadsystem.elements.Segment;
+import edu.kit.rose.model.roadsystem.elements.SegmentFactory;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
 
 /**
@@ -10,6 +12,10 @@ import edu.kit.rose.model.roadsystem.elements.SegmentType;
  */
 public class CreateStreetSegmentCommand implements ChangeCommand {
 
+  private final Project project;
+  private final SegmentType segmentType;
+  private Segment segment;
+
   /**
    * Creates a {@link CreateStreetSegmentCommand} that creates a streetsegment of a specified type.
    *
@@ -17,16 +23,24 @@ public class CreateStreetSegmentCommand implements ChangeCommand {
    * @param segmentType the type of the segment to create
    */
   public CreateStreetSegmentCommand(Project project, SegmentType segmentType) {
-
+    this.project = project;
+    this.segmentType = segmentType;
   }
 
   @Override
   public void execute() {
 
+    if (segment == null) {
+      Segment newSegment = project.getRoadSystem().createSegment(this.segmentType);
+    } else {
+      SegmentFactory segmentFactory = new SegmentFactory();
+      this.segment = segmentFactory.createSegmentFrom(this.segment);
+    }
   }
+
 
   @Override
   public void unexecute() {
-
+    this.project.getRoadSystem().removeElement(this.segment);
   }
 }

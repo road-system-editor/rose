@@ -23,5 +23,5 @@ public interface Navigator {
    *
    * @return the path that the user chose
    */
-  Path showFileDialog(FileDialogOption option, FileFormat fileFormat);
+  Path showFileDialog(FileDialogType option, FileFormat fileFormat);
 }

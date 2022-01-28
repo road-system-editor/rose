@@ -24,7 +24,6 @@ import java.util.Set;
  * the plausibility criteria.
  */
 public class RosePlausibilityController extends Controller implements PlausibilityController {
-  private final StorageLock storageLock;
   private final Navigator navigator;
   private final Project project;
   private final ApplicationDataSystem applicationDataSystem;
@@ -42,7 +41,6 @@ public class RosePlausibilityController extends Controller implements Plausibili
   public RosePlausibilityController(StorageLock storageLock, Navigator navigator, Project project,
                                     ApplicationDataSystem applicationDataSystem) {
     super(storageLock, navigator);
-    this.storageLock = storageLock;
     this.navigator = navigator;
     this.project = project;
     this.applicationDataSystem = applicationDataSystem;
@@ -100,23 +98,26 @@ public class RosePlausibilityController extends Controller implements Plausibili
 
   @Override
   public void importCompatibilityCriteria() {
-    if (this.storageLock.acquireStorageLock()) {
-      this.onBeginSubscribers.forEach((Runnable::run));
-      this.applicationDataSystem.importCriteriaFromFile(this.navigator.showFileDialog());
-      this.onDoneSubscribers.forEach(Runnable::run);
-      this.storageLock.releaseStorageLock();
+    if (getStorageLock().isStorageLockAcquired()) {
+      return;
     }
+    getStorageLock().acquireStorageLock();
+    this.onBeginSubscribers.forEach((Runnable::run));
+    this.applicationDataSystem.importCriteriaFromFile(this.navigator.showFileDialog());
+    this.onDoneSubscribers.forEach(Runnable::run);
+    getStorageLock().releaseStorageLock();
   }
 
   @Override
   public void exportCompatibilityCriteria() {
-    if (this.storageLock.acquireStorageLock()) {
-      this.storageLock.acquireStorageLock();
-      this.onBeginSubscribers.forEach((Runnable::run));
-      this.applicationDataSystem.exportCriteriaToFile(this.navigator.showFileDialog());
-      this.onDoneSubscribers.forEach(Runnable::run);
-      this.storageLock.releaseStorageLock();
+    if (getStorageLock().isStorageLockAcquired()) {
+      return;
     }
+    getStorageLock().acquireStorageLock();
+    this.onBeginSubscribers.forEach((Runnable::run));
+    this.applicationDataSystem.exportCriteriaToFile(this.navigator.showFileDialog());
+    this.onDoneSubscribers.forEach(Runnable::run);
+    getStorageLock().releaseStorageLock();
   }
 
   @Override

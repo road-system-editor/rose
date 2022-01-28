@@ -10,10 +10,15 @@ public interface StorageLock {
 
   /**
    * Acquires the storage lock for the caller.
-   *
-   * @return true if the lock is acquired and false otherwise
    */
-  boolean acquireStorageLock();
+  void acquireStorageLock();
+
+  /**
+   * Checks if the storage lock is acquired.
+   *
+   * @return true if the storage lock is acquired, false else
+   */
+  boolean isStorageLockAcquired();
 
   /**
    * Releases the storage lock if the caller has already acquired it.

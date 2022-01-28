@@ -136,7 +136,8 @@ class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, RoadSys
   }
 
   @Override
-  public void connectConnectors(Connector segment1Connector, Connector segment2Connector) {
+  public Connection connectConnectors(Connector segment1Connector, Connector segment2Connector) {
+    return null;
   }
 
   @Override

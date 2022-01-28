@@ -70,7 +70,10 @@ public class ViolationManager extends RoseSetObservable<Violation, ViolationMana
         violationsAgainstCriterion.stream().filter((violation ->
             violation.offendingSegments().equals(offendingSegments))).toList();
     assert (matches.size() <= 1);
-    return matches.get(0);
+    if (matches.size() == 1) {
+      return matches.get(0);
+    }
+    return null;
   }
 
 

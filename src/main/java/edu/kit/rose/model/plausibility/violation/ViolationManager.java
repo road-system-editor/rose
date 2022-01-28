@@ -62,18 +62,22 @@ public class ViolationManager extends RoseSetObservable<Violation, ViolationMana
    * @param criterion The {@link PlausibilityCriterion} that the searched
    *        {@link Violation} offends against.
    * @param offendingSegments The {@link Segment}s that cause the {@link Violation}
-   * @return the violation agoinst the given Criterion by the given Segments.
+   * @return the violation against the given Criterion by the given Segments. Or null if the
+   *        Violation is not in the ViolationManager.
    */
   Violation getViolation(PlausibilityCriterion criterion, Collection<Segment> offendingSegments) {
     Collection<Violation> violationsAgainstCriterion = criterionViolationMap.get(criterion);
     List<Violation> matches =
         violationsAgainstCriterion.stream().filter((violation ->
-            violation.offendingSegments().equals(offendingSegments))).toList();
+            violation.offendingSegments().containsAll(offendingSegments)
+        && offendingSegments.containsAll(violation.offendingSegments()))).toList();
     assert (matches.size() <= 1);
+
     if (matches.size() == 1) {
       return matches.get(0);
+    } else {
+      return null;
     }
-    return null;
   }
 
 

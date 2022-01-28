@@ -1,4 +1,4 @@
-package edu.kit.rose.model.model.plausibility.violation;
+package edu.kit.rose.model.plausibility.violation;
 
 import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterion;
 import edu.kit.rose.model.plausibility.violation.Violation;

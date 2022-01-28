@@ -18,7 +18,9 @@ public interface Navigator {
    * the possibility to choose the path of a file
    * and return that path.
    *
+   * @param option specifies whether to load or save a file
+   *
    * @return the path that the user chose
    */
-  Path showFileDialog();
+  Path showFileDialog(FileDialogOption option);
 }

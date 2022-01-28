@@ -11,12 +11,11 @@
 
     <VBox prefWidth="${parentContainer.width}" prefHeight="${parentContainer.height}">
         <HBox>
-            <Label fx:id="violationLabel"/>
-            <Label fx:id="segmentLabel" HBox.hgrow="ALWAYS"/>
+            <Label fx:id="violationLabel" prefWidth="100" prefHeight="30"/>
+            <Label fx:id="segmentLabel" prefWidth="250" prefHeight = "30" HBox.hgrow="ALWAYS"/>
         </HBox>
         <VBox fx:id="violationBox"/>
 
     </VBox>
-    <!--<Button text="Problem overview" />-->
 </fx:root>
 

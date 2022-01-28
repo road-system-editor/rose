@@ -16,7 +16,6 @@ import java.util.function.Consumer;
  * @implNote This class uses resource bundles for translations.
  */
 public class RoseLocalizedTextProvider implements LocalizedTextProvider, LanguageSelector {
-  private static final Language DEFAULT_LANGUAGE = Language.ENGLISH;
   private final List<Consumer<Language>> subscribers = new LinkedList<>();
   private Language language;
   private ResourceBundle resourceBundle;
@@ -26,7 +25,7 @@ public class RoseLocalizedTextProvider implements LocalizedTextProvider, Languag
    * with {@link Language}.ENGLISH as selected language.
    */
   public RoseLocalizedTextProvider() {
-    loadLanguage(DEFAULT_LANGUAGE);
+    loadLanguage(Language.DEFAULT);
   }
 
   /**
@@ -39,7 +38,7 @@ public class RoseLocalizedTextProvider implements LocalizedTextProvider, Languag
     if (language != null) {
       loadLanguage(language);
     } else {
-      loadLanguage(DEFAULT_LANGUAGE);
+      loadLanguage(Language.DEFAULT);
     }
   }
 

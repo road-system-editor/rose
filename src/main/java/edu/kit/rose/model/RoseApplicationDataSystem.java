@@ -2,6 +2,8 @@ package edu.kit.rose.model;
 
 import edu.kit.rose.infrastructure.Box;
 import edu.kit.rose.infrastructure.RoseBox;
+import edu.kit.rose.infrastructure.RoseSetObservable;
+import edu.kit.rose.infrastructure.RoseUnitObservable;
 import edu.kit.rose.infrastructure.UnitObserver;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.model.plausibility.criteria.CriteriaManager;
@@ -16,9 +18,11 @@ import java.util.Set;
  * Provided with a global config file it will write changes in the applicationData to the
  * config file in real time.
  */
-class RoseApplicationDataSystem implements ApplicationDataSystem {
-
+class RoseApplicationDataSystem extends RoseSetObservable<AttributeType, ApplicationDataSystem>
+    implements ApplicationDataSystem {
+  private final CriteriaManager criteriaManager;
   private final Set<AttributeType> shownAttributeTypes;
+  private Language language = Language.DEFAULT;
 
   /**
    * Constructor.
@@ -27,32 +31,31 @@ class RoseApplicationDataSystem implements ApplicationDataSystem {
    * @param configFilePath the Path to a config File containing global Settings.
    */
   public RoseApplicationDataSystem(Path configFilePath) {
+    this.criteriaManager = new CriteriaManager();
     this.shownAttributeTypes = new HashSet<>(); //fill with standard AttributeTypes
     // or get from config file
+    if (configFilePath.toFile().exists()) {
+      load();
+    }
   }
 
   @Override
   public Language getLanguage() {
-    return null;
+    return this.language;
   }
 
   @Override
   public void setLanguage(Language language) {
-
+    this.language = language;
+    notifySubscribers();
   }
 
   @Override
   public CriteriaManager getCriteriaManager() {
-    return new CriteriaManager(); //TODO: Implement
+    return this.criteriaManager;
   }
 
-  /**
-   * Imports all {@link edu.kit.rose.model.plausibility.criteria.CompatibilityCriterion}
-   * from the File at the given
-   * Path. This adds the included Criteria to the currently active Criteria.
-   *
-   * @param path the path to the File that contains the Criteria.
-   */
+  @Override
   public void importCriteriaFromFile(Path path) {
 
   }
@@ -64,21 +67,24 @@ class RoseApplicationDataSystem implements ApplicationDataSystem {
 
   @Override
   public void addShownAttributeType(AttributeType attributeType) {
-    this.shownAttributeTypes.add(attributeType);
+    boolean added = this.shownAttributeTypes.add(attributeType);
+
+    if (added) {
+      getSubscriberIterator().forEachRemaining(sub -> sub.notifyAddition(attributeType));
+    }
   }
 
   @Override
   public void removeShownAttributeType(AttributeType attributeType) {
-    this.shownAttributeTypes.remove(attributeType);
+    boolean removed = this.shownAttributeTypes.remove(attributeType);
+
+    if (removed) {
+      getSubscriberIterator().forEachRemaining(sub -> sub.notifyRemoval(attributeType));
+    }
   }
 
   @Override
   public void exportCriteriaToFile(Path path) {
-
-  }
-
-  @Override
-  public void notifySubscribers() {
 
   }
 
@@ -88,27 +94,25 @@ class RoseApplicationDataSystem implements ApplicationDataSystem {
   }
 
   @Override
-  public void addSubscriber(UnitObserver<ApplicationDataSystem> observer) {
-
-  }
-
-  @Override
-  public void removeSubscriber(UnitObserver<ApplicationDataSystem> observer) {
-
-  }
-
-  @Override
   public void notifyChange(CriteriaManager unit) {
-
+    save();
   }
 
   @Override
   public void notifyAddition(PlausibilityCriterion unit) {
-
+    save();
   }
 
   @Override
   public void notifyRemoval(PlausibilityCriterion unit) {
+    save();
+  }
 
+  private void save() {
+    // TODO
+  }
+
+  private void load() {
+    // TODO
   }
 }

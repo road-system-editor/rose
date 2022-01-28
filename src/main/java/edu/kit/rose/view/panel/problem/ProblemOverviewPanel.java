@@ -31,8 +31,7 @@ public class ProblemOverviewPanel extends FxmlContainer
 
   /**
    * Creates a new problem overview panel.
-   * Requires {@link #setTranslator(LocalizedTextProvider)}
-   *        + {@link #setController(PlausibilityController)}
+   * Requires {@link #setController(PlausibilityController)}
    *        + {@link #setManager(ViolationManager)}
    */
   public ProblemOverviewPanel() {

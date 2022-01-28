@@ -26,11 +26,6 @@ public class Grid extends Pane {
   private static final float LINE_WIDTH = 0.5f;
 
   /**
-   * Contains all displayed segment views on grid.
-   */
-  private final Set<SegmentView<? extends Segment>> segments;
-
-  /**
    * creates new Grid.
    */
   public Grid() {
@@ -38,7 +33,6 @@ public class Grid extends Pane {
     setHeight(HEIGHT);
     setBackground(new Background(new BackgroundFill(BACKGROUND_COLOR, null, null)));
     getChildren().addAll(getLines());
-    segments = new HashSet<>();
   }
 
 
@@ -49,7 +43,9 @@ public class Grid extends Pane {
    * @param segmentView the segment view to add
    */
   public void addSegmentView(SegmentView<? extends Segment> segmentView) {
-    segments.add(segmentView);
+    if (!getChildren().contains(segmentView)) {
+      getChildren().add(segmentView);
+    }
   }
 
   /**
@@ -58,7 +54,7 @@ public class Grid extends Pane {
    * @param segmentView the segment view to remove
    */
   public void removeSegmentView(SegmentView<? extends Segment> segmentView) {
-    segments.remove(segmentView);
+    getChildren().remove(segmentView);
   }
 
   private Collection<Line> getLines() {

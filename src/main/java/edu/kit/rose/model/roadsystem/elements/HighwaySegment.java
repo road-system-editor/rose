@@ -213,8 +213,8 @@ public abstract class HighwaySegment
       throw new IllegalArgumentException("connector is not part of this segment");
     }
 
-    var s = Math.sin(rotation);
-    var c = Math.cos(rotation);
+    var s = Math.sin(Math.toRadians(rotation));
+    var c = Math.cos(Math.toRadians(rotation));
 
     var x = connector.getPosition().getX();
     var y = connector.getPosition().getY();
@@ -224,10 +224,11 @@ public abstract class HighwaySegment
     y -= center.getY();
 
     // rotate point
-    double newX = x * c - y * s;
-    double newY = x * s + y * c;
+    double newX = y * s - x * c;
+    double newY = -x * s - y * c;
 
     // translate point back:
-    return new Position((int) Math.round(newX + x), (int) Math.round(newY + y));
+    return new Position((int) Math.round(newX + center.getX()),
+        (int) Math.round(newY + center.getY()));
   }
 }

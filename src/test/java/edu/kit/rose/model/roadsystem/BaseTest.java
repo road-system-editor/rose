@@ -2,12 +2,14 @@ package edu.kit.rose.model.roadsystem;
 
 import edu.kit.rose.infrastructure.Box;
 import edu.kit.rose.infrastructure.Movement;
+import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.elements.Base;
 import edu.kit.rose.model.roadsystem.elements.Connector;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
+import java.util.LinkedList;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -184,5 +186,54 @@ public class BaseTest {
     Assertions.assertEquals(oldRotation, testBase.getRotation());
   }
 
+  @Test
+  void rotationTest2() {
+    var connectors = new LinkedList<Connector>();
+    testBase.getConnectors().forEach(connectors::add);
+    var oldPositionEntry = new Position(connectors.get(0).getPosition().getX(),
+        connectors.get(0).getPosition().getY());
+    testBase.rotate(90);
+    Assertions.assertEquals(oldPositionEntry.getX(),
+        -testBase.getRotatedConnectorPosition(connectors.get(0)).getY());
+    Assertions.assertEquals(oldPositionEntry.getY(),
+        testBase.getRotatedConnectorPosition(connectors.get(0)).getX());
+  }
 
+  @Test
+  void rotationTest3() {
+    var connectors = new LinkedList<Connector>();
+    testBase.getConnectors().forEach(connectors::add);
+    var oldPositionExit = new Position(connectors.get(1).getPosition().getX(),
+        connectors.get(1).getPosition().getY());
+    testBase.rotate(90);
+    Assertions.assertEquals(oldPositionExit.getX(),
+        -testBase.getRotatedConnectorPosition(connectors.get(1)).getY());
+    Assertions.assertEquals(oldPositionExit.getY(),
+        testBase.getRotatedConnectorPosition(connectors.get(1)).getX());
+  }
+
+  @Test
+  void rotationTest4() {
+    var connectors = new LinkedList<Connector>();
+    testBase.getConnectors().forEach(connectors::add);
+    var moveX = 69;
+    var moveY = 420;
+    testBase.move(new Movement(moveX, moveY));
+    var oldPositionExitOrigin = new Position(
+        connectors.get(1).getPosition().getX() - moveX,
+        connectors.get(1).getPosition().getY() - moveY);
+    testBase.rotate(90);
+    Assertions.assertEquals(moveY - oldPositionExitOrigin.getX(),
+        testBase.getRotatedConnectorPosition(connectors.get(1)).getY());
+    Assertions.assertEquals(moveX + oldPositionExitOrigin.getY(),
+        testBase.getRotatedConnectorPosition(connectors.get(1)).getX());
+  }
+
+  @Test
+  void rotationTest5() {
+    var oldCenter = new Position(testBase.getCenter().getX(), testBase.getCenter().getX());
+    testBase.rotate(90);
+    Assertions.assertEquals(oldCenter.getX(), testBase.getCenter().getX());
+    Assertions.assertEquals(oldCenter.getY(), testBase.getCenter().getY());
+  }
 }

@@ -126,7 +126,7 @@ public class RoseRoadSystemController extends Controller
                                         Position secondSelectionCorner) {
 
     this.project.getRoadSystem().getElements().forEach(element -> {
-      if (!element.isContainer()) {
+      if (element.isContainer()) {
         return;
       }
       Segment segment = (Segment) element;

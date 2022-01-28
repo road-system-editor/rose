@@ -1,23 +1,37 @@
 package edu.kit.rose.model.plausibility.violation;
 
-import edu.kit.rose.infrastructure.SetObservable;
-import edu.kit.rose.infrastructure.SetObserver;
+import edu.kit.rose.infrastructure.RoseSetObservable;
+import edu.kit.rose.infrastructure.RoseSortedBox;
 import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterion;
 import edu.kit.rose.model.roadsystem.elements.Segment;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
-import java.util.Map;
+import java.util.List;
+import org.apache.commons.collections4.MultiValuedMap;
+import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
+
 
 /**
  * A ViolationManager provides currently active Violations, violations can be added and removed
  * (from inside this package). Violations held by this ViolationManager are mutually distinct.
  */
-public class ViolationManager
-    implements SetObservable<Violation, ViolationManager>, Iterable<Violation> {
+public class ViolationManager extends RoseSetObservable<Violation, ViolationManager>
+    implements Iterable<Violation> {
 
-  private Collection<Violation> violations;
-  private Map<PlausibilityCriterion, Violation> criterionViolationMap;
+  private final List<Violation> violations;
+  private final MultiValuedMap<PlausibilityCriterion, Violation> criterionViolationMap;
+
+  /**
+   * Constructor.
+   */
+  public ViolationManager() {
+    violations = new ArrayList<>();
+    criterionViolationMap = new HashSetValuedHashMap<>();
+  }
+
 
   /**
    * Adds a given {@link Violation} to the ViolationManager.
@@ -27,6 +41,7 @@ public class ViolationManager
   void addViolation(Violation violation) {
     violations.add(violation);
     criterionViolationMap.put(violation.getViolatedCriterion(), violation);
+    notifySubscribers();
   }
 
   /**
@@ -36,7 +51,8 @@ public class ViolationManager
    */
   void removeViolation(Violation violation) {
     violations.remove(violation);
-    criterionViolationMap.remove(violation.getViolatedCriterion());
+    criterionViolationMap.removeMapping(violation.getViolatedCriterion(), violation);
+    notifySubscribers();
   }
 
   /**
@@ -49,37 +65,27 @@ public class ViolationManager
    * @return the violation agoinst the given Criterion by the given Segments.
    */
   Violation getViolation(PlausibilityCriterion criterion, Collection<Segment> offendingSegments) {
-    //Collection<Violation> criterionViolations = criterionViolationMap.(criterion);
-    return null;
+    Collection<Violation> violationsAgainstCriterion = criterionViolationMap.get(criterion);
+    List<Violation> matches =
+        violationsAgainstCriterion.stream().filter((violation ->
+            violation.getOffendingSegments().equals(offendingSegments))).toList();
+    assert (matches.size() <= 1);
+    return matches.get(0);
   }
 
-  @Override
-  public void addSubscriber(SetObserver<Violation, ViolationManager> observer) {
-
-  }
-
-  @Override
-  public void removeSubscriber(SetObserver<Violation, ViolationManager> observer) {
-
-  }
 
   /**
-   * Returns all {@link Violation}s currentl held by the ViolationManager.
+   * Returns all {@link Violation}s currently held by the ViolationManager.
    *
    * @return A {@link SortedBox} containing all {@link Violation}s.
    */
   public SortedBox<Violation> getViolations() {
-    return null;
+    return new RoseSortedBox<>(violations);
   }
 
   @Override
   public Iterator<Violation> iterator() {
-    return null;
-  }
-
-  @Override
-  public void notifySubscribers() {
-
+    return Collections.unmodifiableCollection(violations).iterator();
   }
 
   @Override

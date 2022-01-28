@@ -3,8 +3,9 @@ module edu.kit.rose.entwurf {
     requires javafx.fxml;
     requires javafx.graphics;
     requires com.google.guice;
+  requires commons.collections4;
 
-    opens edu.kit.rose.view to javafx.fxml, com.google.guice;
+  opens edu.kit.rose.view to javafx.fxml, com.google.guice;
     opens edu.kit.rose.view.commons to javafx.fxml, com.google.guice;
     opens edu.kit.rose.view.panel.criterion to javafx.fxml, com.google.guice;
     opens edu.kit.rose.view.panel.hierarchy to javafx.fxml, com.google.guice;

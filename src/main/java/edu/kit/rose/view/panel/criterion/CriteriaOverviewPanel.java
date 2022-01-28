@@ -61,15 +61,6 @@ public class CriteriaOverviewPanel extends FxmlContainer
   public void init(Injector injector) {
     super.init(injector);
 
-    newButton.setText(getTranslator()
-        .getLocalizedText("view.panel.criterion.criteriaOverviewPanel.newCriteria"));
-    importButton.setText(
-        getTranslator().getLocalizedText("view.panel.criterion.criteriaOverviewPanel.import"));
-    exportButton.setText(
-        getTranslator().getLocalizedText("view.panel.criterion.criteriaOverviewPanel.export"));
-    deleteAllButton.setText(getTranslator()
-        .getLocalizedText("view.panel.criterion.criteriaOverviewPanel.deleteAll"));
-
     newButton.addEventHandler(MouseEvent.MOUSE_CLICKED,
         event -> controller.addCompatibilityCriterion(PlausibilityCriterionType.COMPATIBILITY));
     importButton.addEventHandler(MouseEvent.MOUSE_CLICKED,
@@ -77,11 +68,7 @@ public class CriteriaOverviewPanel extends FxmlContainer
     exportButton.addEventHandler(MouseEvent.MOUSE_CLICKED,
         event -> controller.exportCompatibilityCriteria());
     deleteAllButton.addEventHandler(MouseEvent.MOUSE_CLICKED,
-        event -> {
-          for (CompatibilityCriterion criterion : criteriaList.getItems()) {
-            controller.deleteCompatibilityCriterion(criterion);
-          }
-        });
+        event -> controller.deleteAllCompatibilityCriteria());
 
     initCriteriaList();
 
@@ -109,7 +96,9 @@ public class CriteriaOverviewPanel extends FxmlContainer
 
   @Override
   public void notifyAddition(PlausibilityCriterion unit) {
-    criteriaList.getItems().add((CompatibilityCriterion) unit);
+    if (unit.getType() == PlausibilityCriterionType.COMPATIBILITY) {
+      criteriaList.getItems().add((CompatibilityCriterion) unit);
+    }
   }
 
   @Override
@@ -124,7 +113,14 @@ public class CriteriaOverviewPanel extends FxmlContainer
 
   @Override
   protected void updateTranslatableStrings(Language lang) {
-
+    newButton.setText(getTranslator()
+        .getLocalizedText("view.panel.criterion.criteriaOverviewPanel.newCriteria"));
+    importButton.setText(
+        getTranslator().getLocalizedText("view.panel.criterion.criteriaOverviewPanel.import"));
+    exportButton.setText(
+        getTranslator().getLocalizedText("view.panel.criterion.criteriaOverviewPanel.export"));
+    deleteAllButton.setText(getTranslator()
+        .getLocalizedText("view.panel.criterion.criteriaOverviewPanel.deleteAll"));
   }
 
   @Override

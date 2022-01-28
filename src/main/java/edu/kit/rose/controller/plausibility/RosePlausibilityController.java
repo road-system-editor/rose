@@ -23,8 +23,8 @@ import edu.kit.rose.model.roadsystem.elements.SegmentType;
  */
 public class RosePlausibilityController extends Controller implements PlausibilityController {
 
-  private Project project;
-  private ApplicationDataSystem applicationDataSystem;
+  private final Project project;
+  private final ApplicationDataSystem applicationDataSystem;
 
   /**
    * Creates a new {@link RosePlausibilityController}.
@@ -51,7 +51,6 @@ public class RosePlausibilityController extends Controller implements Plausibili
   public void setCompatibilityCriterionName(CompatibilityCriterion criterion,
                                             String criterionName) {
     criterion.setName(criterionName);
-    criterion.notifySubscribers();
   }
 
   @Override
@@ -88,6 +87,14 @@ public class RosePlausibilityController extends Controller implements Plausibili
   @Override
   public void deleteCompatibilityCriterion(CompatibilityCriterion criterion) {
     applicationDataSystem.getCriteriaManager().removeCriterion(criterion);
+  }
+
+  @Override
+  public void deleteAllCompatibilityCriteria() {
+    for (PlausibilityCriterion criterion :
+        applicationDataSystem.getCriteriaManager().getCriteria()) {
+      applicationDataSystem.getCriteriaManager().removeCriterion(criterion);
+    }
   }
 
   @Override

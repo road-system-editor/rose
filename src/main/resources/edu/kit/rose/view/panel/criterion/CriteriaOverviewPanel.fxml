@@ -19,14 +19,12 @@
         <columnConstraints>
             <ColumnConstraints percentWidth="100"/>
         </columnConstraints>
-        <ListView GridPane.columnIndex="0" GridPane.rowIndex="0" fx:id="criteriaList">
-
-        </ListView>
+        <ListView GridPane.columnIndex="0" GridPane.rowIndex="0" fx:id="criteriaList"/>
         <HBox GridPane.columnIndex="0" GridPane.rowIndex="1">
-            <Button fx:id="newButton" text="new TODO"/>
-            <Button fx:id="exportButton" text="export TODO"/>
-            <Button fx:id="importButton" text="import TODO"/>
-            <Button fx:id="deleteAllButton" text="delete TODO"/>
+            <Button fx:id="newButton"/>
+            <Button fx:id="exportButton"/>
+            <Button fx:id="importButton"/>
+            <Button fx:id="deleteAllButton"/>
         </HBox>
 
     </GridPane>

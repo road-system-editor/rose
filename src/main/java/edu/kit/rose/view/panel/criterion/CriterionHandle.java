@@ -44,9 +44,6 @@ class CriterionHandle extends FxmlContainer
     this.criterion = criterion;
 
     this.label.setText(criterion.getName());
-    this.deleteButton.setText(getTranslator()
-        .getLocalizedText("view.panel.criterion.criteriaHandle.delete"));
-
     this.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> selectListener.accept(criterion));
     this.deleteButton.addEventHandler(MouseEvent.MOUSE_CLICKED,
         event -> controller.deleteCompatibilityCriterion(criterion));
@@ -79,6 +76,8 @@ class CriterionHandle extends FxmlContainer
 
   @Override
   protected void updateTranslatableStrings(Language newLang) {
+    this.deleteButton.setText(getTranslator()
+        .getLocalizedText("view.panel.criterion.criteriaHandle.delete"));
 
   }
 

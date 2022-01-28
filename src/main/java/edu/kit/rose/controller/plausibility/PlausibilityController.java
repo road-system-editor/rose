@@ -86,6 +86,11 @@ public interface PlausibilityController {
   void deleteCompatibilityCriterion(CompatibilityCriterion criterion);
 
   /**
+   * Deletes all compatibility criteria from the plausibility system.
+   */
+  void deleteAllCompatibilityCriteria();
+
+  /**
    * Opens a file chooser and imports the compatibility criteria
    * from a file chosen by the user.
    */

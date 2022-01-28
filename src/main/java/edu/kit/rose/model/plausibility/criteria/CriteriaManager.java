@@ -1,14 +1,11 @@
 package edu.kit.rose.model.plausibility.criteria;
 
-import edu.kit.rose.infrastructure.RoseSortedBox;
 import edu.kit.rose.infrastructure.SetObservable;
 import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.infrastructure.UnitObserver;
 import edu.kit.rose.model.plausibility.violation.ViolationManager;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Collection;
+
 
 /**
  * A CriteriaManager holds {@link PlausibilityCriterion}s .

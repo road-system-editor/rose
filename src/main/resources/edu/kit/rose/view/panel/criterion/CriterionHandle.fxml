@@ -11,7 +11,7 @@
          fx:id="parentContainer">
     <HBox prefWidth="${parentContainer.width}" prefHeight="${parentContainer.height}"
           alignment="CENTER_RIGHT">
-        <Label fx:id="label" text="Label1" HBox.hgrow="ALWAYS"/>
+        <Label fx:id="label" HBox.hgrow="ALWAYS"/>
         <Region HBox.hgrow="ALWAYS"/>
         <Button fx:id="deleteButton"/>
     </HBox>

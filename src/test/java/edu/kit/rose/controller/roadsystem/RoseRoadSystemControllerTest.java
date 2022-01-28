@@ -17,11 +17,13 @@ import edu.kit.rose.model.roadsystem.elements.ConnectorType;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
@@ -30,24 +32,26 @@ import org.mockito.Mockito;
  */
 public class RoseRoadSystemControllerTest {
 
-  private ChangeCommandBuffer changeCommandBuffer;
-  private StorageLock storageLock;
-  private Navigator navigator;
   private SelectionBuffer selectionBuffer;
   private Project project;
+  private RoadSystem roadSystem;
 
   private RoadSystemController roadSystemController;
 
-
+  /**
+   * Sets up mock objects.
+   */
   @BeforeEach
   private void setUp() {
-    changeCommandBuffer = Mockito.mock(ChangeCommandBuffer.class);
-    storageLock = Mockito.mock(StorageLock.class);
-    navigator = Mockito.mock(Navigator.class);
     selectionBuffer = Mockito.mock(SelectionBuffer.class);
     project = Mockito.mock(Project.class);
+    roadSystem = Mockito.mock(RoadSystem.class);
 
+    Mockito.when(project.getRoadSystem()).thenReturn(roadSystem);
 
+    ChangeCommandBuffer changeCommandBuffer = Mockito.mock(ChangeCommandBuffer.class);
+    StorageLock storageLock = Mockito.mock(StorageLock.class);
+    Navigator navigator = Mockito.mock(Navigator.class);
     roadSystemController = new RoseRoadSystemController(
         changeCommandBuffer,
         storageLock,
@@ -124,6 +128,8 @@ public class RoseRoadSystemControllerTest {
       return null;
     }).when(roadSystem).removeElement(Mockito.any(Element.class));
 
+    Mockito.when(roadSystem.getElements()).thenReturn(new RoseBox<>(List.of()));
+
     roadSystemController.deleteStreetSegment(segment);
     Assertions.assertTrue(called.get());
   }
@@ -136,6 +142,7 @@ public class RoseRoadSystemControllerTest {
 
     AtomicReference<Integer> centerPositionX = new AtomicReference<>(0);
     AtomicReference<Integer> centerPositionY = new AtomicReference<>(0);
+    AtomicReference<Boolean> called = new AtomicReference<>(false);
 
     Segment segment = Mockito.mock(Segment.class);
     Mockito.doAnswer(invocation -> {
@@ -149,12 +156,19 @@ public class RoseRoadSystemControllerTest {
         centerPositionX.get(),
         centerPositionY.get()));
 
+    Mockito.doAnswer(invocation -> {
+      Collection<Segment> segments = invocation.getArgument(0);
+      called.set(true);
+      return null;
+    })
+        .when(roadSystem)
+        .moveSegments(ArgumentMatchers.anyCollection(), ArgumentMatchers.any(Movement.class));
+
     roadSystemController.beginDragStreetSegment(initialPosition);
 
     roadSystemController.endDragStreetSegment(endPosition);
 
-    Assertions.assertEquals(10, segment.getCenter().getX());
-    Assertions.assertEquals(10, segment.getCenter().getY());
+    Assertions.assertTrue(called.get());
   }
 
   @Test
@@ -193,28 +207,38 @@ public class RoseRoadSystemControllerTest {
   public void testSelectSegmentsInRectangle() {
     AtomicReference<Boolean> called = new AtomicReference<>(false);
 
+    //Configure segments that are in range
     Connector segmentInRangeConnector = Mockito.mock(Connector.class);
     Mockito.when(segmentInRangeConnector.getPosition())
             .thenReturn(new Position(10, 10));
     Segment segmentInRange = Mockito.mock(Segment.class);
 
     Mockito.when(segmentInRange.getConnectors())
-        .thenReturn(new RoseBox<Connector>(List.of(segmentInRangeConnector)));
+        .thenReturn(new RoseBox<>(List.of(segmentInRangeConnector)));
 
+    Mockito.when(segmentInRange.getCenter()).thenReturn(new Position(10, 0));
 
+    //Configure segments that are out range
     Connector segmentOutRangeConnector = Mockito.mock(Connector.class);
-    Mockito.when(segmentInRangeConnector.getPosition())
+    Mockito.when(segmentOutRangeConnector.getPosition())
         .thenReturn(new Position(20, 20));
     Segment segmentOutRange = Mockito.mock(Segment.class);
 
     Mockito.when(segmentOutRange.getConnectors())
-        .thenReturn(new RoseBox<Connector>(List.of(segmentOutRangeConnector)));
+        .thenReturn(new RoseBox<>(List.of(segmentOutRangeConnector)));
 
+    Mockito.when(segmentOutRange.getCenter()).thenReturn(new Position(20, 30));
+
+    //Configure selection buffer
     Mockito.doAnswer(invocation ->  {
       Assertions.assertEquals(segmentInRange, invocation.getArgument(0));
       called.set(true);
       return null;
     }).when(selectionBuffer).addSegmentSelection(Mockito.any(Segment.class));
+
+    //Configure getElements of Roadsystem
+    Mockito.when(roadSystem.getElements())
+        .thenReturn(new RoseBox<>(List.of(segmentInRange, segmentOutRange)));
 
     roadSystemController.selectSegmentsInRectangle(
         new Position(0, 0),

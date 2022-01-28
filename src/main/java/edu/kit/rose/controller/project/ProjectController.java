@@ -1,7 +1,7 @@
 package edu.kit.rose.controller.project;
 
 
-import edu.kit.rose.model.ExportFormat;
+import edu.kit.rose.model.FileFormat;
 
 /**
  * Provides functionality to save, load and
@@ -14,7 +14,7 @@ public interface ProjectController {
    *
    * @param targetFormat format in which the roadsystem will be exported
    */
-  void export(ExportFormat targetFormat);
+  void export(FileFormat targetFormat);
 
 
   /**

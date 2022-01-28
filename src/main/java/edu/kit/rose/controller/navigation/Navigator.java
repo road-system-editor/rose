@@ -1,6 +1,6 @@
 package edu.kit.rose.controller.navigation;
 
-import edu.kit.rose.model.ExportFormat;
+import edu.kit.rose.model.FileFormat;
 import java.nio.file.Path;
 
 /**
@@ -23,5 +23,5 @@ public interface Navigator {
    *
    * @return the path that the user chose
    */
-  Path showFileDialog(FileDialogOption option, ExportFormat exportFormat);
+  Path showFileDialog(FileDialogOption option, FileFormat fileFormat);
 }

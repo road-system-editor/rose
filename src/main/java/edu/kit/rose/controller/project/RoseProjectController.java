@@ -1,10 +1,9 @@
 package edu.kit.rose.controller.project;
 
-import edu.kit.rose.controller.command.ChangeCommandBuffer;
 import edu.kit.rose.controller.commons.Controller;
 import edu.kit.rose.controller.commons.StorageLock;
 import edu.kit.rose.controller.navigation.Navigator;
-import edu.kit.rose.model.ExportFormat;
+import edu.kit.rose.model.FileFormat;
 import edu.kit.rose.model.Project;
 
 /**
@@ -25,7 +24,7 @@ public class RoseProjectController extends Controller implements ProjectControll
   }
 
   @Override
-  public void export(ExportFormat targetFormat) {
+  public void export(FileFormat targetFormat) {
 
   }
 

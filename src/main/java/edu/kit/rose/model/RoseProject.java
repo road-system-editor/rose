@@ -31,7 +31,7 @@ class RoseProject implements Project {
   }
 
   @Override
-  public void exportToFile(ExportFormat exportFormat, Path filePath) {
+  public void exportToFile(FileFormat fileFormat, Path filePath) {
 
   }
 

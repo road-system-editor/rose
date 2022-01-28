@@ -258,47 +258,16 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
                              AttributeAccessor accessor1, AttributeAccessor accessor2,
                              boolean useDiscrepancy) {
     switch (this.attributeType.getDataType()) {
-      case BOOLEAN -> {
-        AttributeAccessor<Boolean> auxAccessor1 = (AttributeAccessor<Boolean>) accessor1;
-        AttributeAccessor<Boolean> auxAccessor2 = (AttributeAccessor<Boolean>) accessor2;
-        ValidationStrategy<Boolean> auxStrategy = (ValidationStrategy<Boolean>) strategy;
-        if (useDiscrepancy) {
-          return auxStrategy.validate(auxAccessor1.getValue(),
-                  auxAccessor2.getValue(), this.discrepancy);
-        }
-        return auxStrategy.validate(auxAccessor1.getValue(), auxAccessor2.getValue());
-      }
-      case STRING -> {
-        AttributeAccessor<String> auxAccessor1 = (AttributeAccessor<String>) accessor1;
-        AttributeAccessor<String> auxAccessor2 = (AttributeAccessor<String>) accessor2;
-        ValidationStrategy<String> auxStrategy = (ValidationStrategy<String>) strategy;
-        if (useDiscrepancy) {
-          return auxStrategy.validate(auxAccessor1.getValue(),
-                  auxAccessor2.getValue(), this.discrepancy);
-        }
-        return auxStrategy.validate(auxAccessor1.getValue(), auxAccessor2.getValue());
-      }
-      case INTEGER -> {
-        AttributeAccessor<Integer> auxAccessor1 = (AttributeAccessor<Integer>) accessor1;
-        AttributeAccessor<Integer> auxAccessor2 = (AttributeAccessor<Integer>) accessor2;
-        ValidationStrategy<Integer> auxStrategy = (ValidationStrategy<Integer>) strategy;
-        if (useDiscrepancy) {
-          return auxStrategy.validate(auxAccessor1.getValue(),
-                  auxAccessor2.getValue(), this.discrepancy);
-        }
-        return auxStrategy.validate(auxAccessor1.getValue(), auxAccessor2.getValue());
-      }
-      case FRACTIONAL -> {
-        AttributeAccessor<Double> auxAccessor1 = (AttributeAccessor<Double>) accessor1;
-        AttributeAccessor<Double> auxAccessor2 = (AttributeAccessor<Double>) accessor2;
-        ValidationStrategy<Double> auxStrategy = (ValidationStrategy<Double>) strategy;
-        if (useDiscrepancy) {
-          return auxStrategy.validate(auxAccessor1.getValue(),
-                  auxAccessor2.getValue(), this.discrepancy);
-        }
-        return auxStrategy.validate(auxAccessor1.getValue(), auxAccessor2.getValue());
-      }
-      default -> throw new IllegalArgumentException("no such data type found");
+      case BOOLEAN:
+        return (this.<Boolean>validateWithType(strategy, accessor1, accessor2, useDiscrepancy));
+      case STRING:
+        return (this.<String>validateWithType(strategy, accessor1, accessor2, useDiscrepancy));
+      case INTEGER:
+        return (this.<Integer>validateWithType(strategy, accessor1, accessor2, useDiscrepancy));
+      case FRACTIONAL:
+        return (this.<Double>validateWithType(strategy, accessor1, accessor2, useDiscrepancy));
+      default:
+        throw new IllegalArgumentException("no such data type found");
     }
   }
 
@@ -311,5 +280,18 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
   public void notifyRemoval(Element unit) {
     this.violationManager.removeViolation(this.elementViolationMap.get(unit));
     this.elementViolationMap.remove(unit);
+  }
+
+  private <T> boolean validateWithType(ValidationStrategy strategy,
+                               AttributeAccessor accessor1, AttributeAccessor accessor2,
+                               boolean useDiscrepancy) {
+    AttributeAccessor<T> auxAccessor1 = (AttributeAccessor<T>) accessor1;
+    AttributeAccessor<T> auxAccessor2 = (AttributeAccessor<T>) accessor2;
+    ValidationStrategy<T> auxStrategy = (ValidationStrategy<T>) strategy;
+    if (useDiscrepancy) {
+      return auxStrategy.validate(auxAccessor1.getValue(),
+              auxAccessor2.getValue(), this.discrepancy);
+    }
+    return auxStrategy.validate(auxAccessor1.getValue(), auxAccessor2.getValue());
   }
 }

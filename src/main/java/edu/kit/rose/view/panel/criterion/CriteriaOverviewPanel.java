@@ -66,7 +66,7 @@ public class CriteriaOverviewPanel extends FxmlContainer
 
   private void initCriteriaList() {
     criteriaList
-        .setCellFactory(criterion -> new CriteriaListCell(this.controller, selectionListener));
+        .setCellFactory(criterion -> new CriterionListCell(this.controller, selectionListener));
 
     for (PlausibilityCriterion criterion :
         applicationDataSystem.getCriteriaManager()

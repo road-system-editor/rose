@@ -7,7 +7,7 @@ import java.util.Collection;
  * An enum that describes different kinds of {@link ValidationStrategy}s and the {@link DataType}s
  * they are compatible with.
  */
-public enum OperatorType {
+public enum ValidationType {
 
   DEFAULT(false, DataType.INTEGER, DataType.FRACTIONAL, DataType.STRING, DataType.BOOLEAN),
   LESS_THAN(true, DataType.INTEGER, DataType.FRACTIONAL),
@@ -19,22 +19,22 @@ public enum OperatorType {
   boolean hasDiscrepancy;
   DataType[] compatibleDataTypes;
 
-  OperatorType(boolean hasDiscrepancy, DataType... types) {
+  ValidationType(boolean hasDiscrepancy, DataType... types) {
   }
 
   /**
-   * Provides all {@link DataType}s that are compatible with this OperatorType.
+   * Provides all {@link DataType}s that are compatible with this ValidationType.
    *
-   * @return All {@link DataType}s that are compatible with this OperatorType.
+   * @return All {@link DataType}s that are compatible with this ValidationType.
    */
   Collection<DataType> getCompatible() {
     return null;
   }
 
   /**
-   * Provides a boolean describing if the OperatorType can be used with a discrepancy.
+   * Provides a boolean describing if the ValidationType can be used with a discrepancy.
    *
-   * @return true if the OperatorType can be used with a discrepancy.
+   * @return true if the ValidationType can be used with a discrepancy.
    */
   public boolean hasDiscrepancy() {
     return hasDiscrepancy;

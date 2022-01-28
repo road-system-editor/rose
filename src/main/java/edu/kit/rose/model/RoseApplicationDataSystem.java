@@ -20,6 +20,7 @@ import java.util.Set;
  */
 class RoseApplicationDataSystem extends RoseSetObservable<AttributeType, ApplicationDataSystem>
     implements ApplicationDataSystem {
+  private final CriteriaManager criteriaManager;
   private final Set<AttributeType> shownAttributeTypes;
   private Language language = Language.DEFAULT;
 
@@ -30,8 +31,12 @@ class RoseApplicationDataSystem extends RoseSetObservable<AttributeType, Applica
    * @param configFilePath the Path to a config File containing global Settings.
    */
   public RoseApplicationDataSystem(Path configFilePath) {
+    this.criteriaManager = new CriteriaManager();
     this.shownAttributeTypes = new HashSet<>(); //fill with standard AttributeTypes
     // or get from config file
+    if (configFilePath.toFile().exists()) {
+      load();
+    }
   }
 
   @Override
@@ -47,7 +52,7 @@ class RoseApplicationDataSystem extends RoseSetObservable<AttributeType, Applica
 
   @Override
   public CriteriaManager getCriteriaManager() {
-    return new CriteriaManager(); //TODO: Implement
+    return this.criteriaManager;
   }
 
   @Override
@@ -90,16 +95,24 @@ class RoseApplicationDataSystem extends RoseSetObservable<AttributeType, Applica
 
   @Override
   public void notifyChange(CriteriaManager unit) {
-
+    save();
   }
 
   @Override
   public void notifyAddition(PlausibilityCriterion unit) {
-
+    save();
   }
 
   @Override
   public void notifyRemoval(PlausibilityCriterion unit) {
+    save();
+  }
 
+  private void save() {
+    // TODO
+  }
+
+  private void load() {
+    // TODO
   }
 }

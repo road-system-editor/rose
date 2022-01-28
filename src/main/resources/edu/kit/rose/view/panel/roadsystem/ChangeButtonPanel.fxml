@@ -1,5 +1,4 @@
 <?import javafx.scene.layout.Pane?>
-
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.control.Button?>
 <fx:root xmlns="http://javafx.com/javafx"

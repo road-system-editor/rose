@@ -3,13 +3,11 @@ package edu.kit.rose.view.panel.roadsystem;
 import com.google.inject.Inject;
 import edu.kit.rose.controller.application.ApplicationController;
 import edu.kit.rose.infrastructure.language.Language;
-import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.view.commons.FxmlContainer;
+import java.util.Collection;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.input.MouseEvent;
 
-import java.util.Collection;
 
 /**
  * The change button panel contains the buttons for undoing and redoing a changeable action.
@@ -32,7 +30,7 @@ public class ChangeButtonPanel extends FxmlContainer {
   public ChangeButtonPanel() {
     super("ChangeButtonPanel.fxml");
     undoButton.setOnMouseClicked(mouseEvent -> controller.undo());
-    undoButton.setOnMouseClicked(mouseEvent -> controller.redo());
+    redoButton.setOnMouseClicked(mouseEvent -> controller.redo());
   }
 
 

@@ -49,10 +49,12 @@ public class RoseApplicationController extends Controller implements Application
   @Override
   public void undo() {
     this.changeCommandBuffer.undo();
+    System.out.println("undo");
   }
 
   @Override
   public void redo() {
     this.changeCommandBuffer.redo();
+    System.out.println("redo");
   }
 }

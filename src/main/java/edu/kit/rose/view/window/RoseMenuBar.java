@@ -179,9 +179,7 @@ public class RoseMenuBar extends FxmlContainer {
     // TODO allow format configuration
     exportProject.setOnAction(evt -> projectController.export(FileFormat.YAML));
     saveProject.setOnAction(evt -> projectController.save());
-    // TODO allow path choice
-    saveProjectAs.setOnAction(evt -> projectController.save());
-
+    saveProjectAs.setOnAction(evt -> projectController.saveAs());
     // Validation
     // TODO remove sub-menu and detect clicks on top-level menu
     criteria.setOnAction(evt -> navigator.showWindow(WindowType.CRITERION));

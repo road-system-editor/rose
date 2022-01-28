@@ -1,0 +1,11 @@
+<?import javafx.scene.layout.Pane?>
+
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Button?>
+<fx:root xmlns="http://javafx.com/javafx"
+         xmlns:fx="http://javafx.com/fxml" type="Pane">
+    <HBox>
+        <Button fx:id="undoButton" text="U"/>
+        <Button fx:id="redoButton" text="R"/>
+    </HBox>
+</fx:root>

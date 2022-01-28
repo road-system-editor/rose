@@ -1,39 +1,43 @@
 package edu.kit.rose.view.panel.roadsystem;
 
+import com.google.inject.Inject;
 import edu.kit.rose.controller.application.ApplicationController;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.view.commons.FxmlContainer;
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.input.MouseEvent;
+
 import java.util.Collection;
 
 /**
  * The change button panel contains the buttons for undoing and redoing a changeable action.
  */
 public class ChangeButtonPanel extends FxmlContainer {
+
+  @FXML
+  private Button undoButton;
+
+  @FXML
+  private Button redoButton;
+
+  @Inject
   private ApplicationController controller;
 
   /**
    * Creates a new FXMLPanel and immediately mounts the components
    * specified in the given FXML file ({@code fxmlResourceName}.
-   * Requires {@link #setTranslator(LocalizedTextProvider)} +
-   * {@link #setController(ApplicationController)}
    */
   public ChangeButtonPanel() {
-    super("change_button_panel.fxml");
+    super("ChangeButtonPanel.fxml");
+    undoButton.setOnMouseClicked(mouseEvent -> controller.undo());
+    undoButton.setOnMouseClicked(mouseEvent -> controller.redo());
   }
 
-  /**
-   * Sets the application controller.
-   *
-   * @param controller the application controller
-   */
-  public void setController(ApplicationController controller) {
-    this.controller = controller;
-  }
 
   @Override
   protected void updateTranslatableStrings(Language lang) {
-
   }
 
   @Override

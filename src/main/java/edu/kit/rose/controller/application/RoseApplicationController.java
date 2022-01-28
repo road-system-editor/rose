@@ -14,7 +14,9 @@ import edu.kit.rose.model.ApplicationDataSystem;
  *
  */
 public class RoseApplicationController extends Controller implements ApplicationController {
+
   private final LanguageSelector languageSelector;
+  private final ChangeCommandBuffer changeCommandBuffer;
 
   /**
    * Creates a new {@link RoseApplicationController}.
@@ -30,6 +32,7 @@ public class RoseApplicationController extends Controller implements Application
                                    ApplicationDataSystem applicationDataSystem) {
     super(storageLock, navigator);
     this.languageSelector = languageSelector;
+    this.changeCommandBuffer = changeCommandBuffer;
   }
 
   @Override
@@ -45,11 +48,11 @@ public class RoseApplicationController extends Controller implements Application
 
   @Override
   public void undo() {
-
+    this.changeCommandBuffer.undo();
   }
 
   @Override
   public void redo() {
-
+    this.changeCommandBuffer.redo();
   }
 }

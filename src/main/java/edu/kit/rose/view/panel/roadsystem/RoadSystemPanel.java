@@ -183,7 +183,7 @@ public class RoadSystemPanel extends FxmlContainer
 
   @Override
   protected Collection<FxmlContainer> getSubFxmlContainer() {
-    return null;
+    return List.of(changeButtonPanel);
   }
 
   @Override

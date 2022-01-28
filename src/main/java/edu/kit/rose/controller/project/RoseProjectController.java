@@ -35,6 +35,21 @@ public class RoseProjectController extends Controller implements ProjectControll
   }
 
   @Override
+  public void saveAs() {
+
+  }
+
+  @Override
+  public void close() {
+
+  }
+
+  @Override
+  public void loadBackup() {
+
+  }
+
+  @Override
   public void subscribeToProjectIoAction(Runnable onBegin, Runnable onDone) {
 
   }

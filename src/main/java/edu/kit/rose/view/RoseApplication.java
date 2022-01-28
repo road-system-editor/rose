@@ -8,6 +8,7 @@ import edu.kit.rose.controller.application.ApplicationController;
 import edu.kit.rose.controller.attribute.AttributeController;
 import edu.kit.rose.controller.hierarchy.HierarchyController;
 import edu.kit.rose.controller.measurement.MeasurementController;
+import edu.kit.rose.controller.navigation.FileDialogOption;
 import edu.kit.rose.controller.navigation.Navigator;
 import edu.kit.rose.controller.navigation.WindowType;
 import edu.kit.rose.controller.plausibility.PlausibilityController;
@@ -119,7 +120,7 @@ public class RoseApplication extends Application implements Navigator {
   }
 
   @Override
-  public Path showFileDialog() {
+  public Path showFileDialog(FileDialogOption option) {
     var fileChooser = new FileChooser();
     // TODO differentiate between saving and opening files
     var file = fileChooser.showOpenDialog(null);

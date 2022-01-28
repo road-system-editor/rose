@@ -23,6 +23,21 @@ public interface ProjectController {
   void save();
 
   /**
+   * Lets the user pick a file and saves the project to that file.
+   */
+  void saveAs();
+
+  /**
+   * Closes the currently opened project.
+   */
+  void close();
+
+  /**
+   * Loads the newest backup version of the currently opened project.
+   */
+  void loadBackup();
+
+  /**
    * Registers a runnable that gets called before the controller executes a loading, saving or
    * an export and a runnable that runs when it is done.
    *

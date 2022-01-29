@@ -5,9 +5,6 @@ import edu.kit.rose.controller.roadsystem.RoadSystemController;
 import edu.kit.rose.infrastructure.Position;
 import javafx.geometry.Insets;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.input.KeyCode;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 
 /**
  * The zoomable ScrollPane is a ScrollPane that adds pan and zoom gesture support to its content.

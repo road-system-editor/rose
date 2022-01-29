@@ -9,6 +9,6 @@
          fx:id="parentContainer">
     <AnchorPane prefWidth="${parentContainer.width}" prefHeight="${parentContainer.height}">
         <ChangeButtonPanel AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" fx:id="changeButtonPanel"/>
-        <NavigatorView AnchorPane.rightAnchor="5.0" AnchorPane.bottomAnchor="10.0" fx:id="navigator"/>
+        <NavigatorView AnchorPane.rightAnchor="7.0" AnchorPane.bottomAnchor="15.0" fx:id="navigator"/>
     </AnchorPane>
 </fx:root>

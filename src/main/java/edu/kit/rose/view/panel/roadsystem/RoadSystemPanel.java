@@ -79,11 +79,22 @@ public class RoadSystemPanel extends FxmlContainer
    */
   public RoadSystemPanel() {
     super("RoadSystemPanel.fxml");
+    setupNavigatorView();
+  }
+
+  private void setupNavigatorView() {
+    this.navigator.setOnUp(zoomContainer::moveUp);
+    this.navigator.setOnDown(zoomContainer::moveDown);
+    this.navigator.setOnLeft(zoomContainer::moveLeft);
+    this.navigator.setOnRight(zoomContainer::moveRight);
+    this.navigator.setOnIn(zoomContainer::zoomIn);
+    this.navigator.setOnOut(zoomContainer::zoomOut);
   }
 
   @Override
   public void init(Injector injector) {
     super.init(injector);
+    injector.injectMembers(this.zoomContainer);
   }
 
   @Override

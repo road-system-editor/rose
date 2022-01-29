@@ -18,9 +18,11 @@
             fill="lightgray"/>
     <Rectangle
             x="22"
-            y="70"
+            y="40"
             width="31"
-            height="60"
+            height="90"
+            arcHeight="30"
+            arcWidth="30"
             fill="lightgray"/>
     <Button
             fx:id="navigateToRightButton"

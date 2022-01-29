@@ -44,6 +44,10 @@ import javafx.stage.Stage;
 public class RoseApplication extends Application implements Navigator {
   private static final Path CONFIG_PATH = Path.of(""); //TODO
 
+  private static final String ROSE_EXTENSION_FILTER_NAME = "ROSE";
+  private static final String SUMO_EXTENSION_FILTER_NAME = "SUMO";
+  private static final String YAML_EXTENSION_FILTER_NAME = "YAML";
+
   /**
    * Contains the main window instance of the application.
    */
@@ -133,19 +137,19 @@ public class RoseApplication extends Application implements Navigator {
     switch (option) {
       case LOAD_FILE -> file = fileChooser.showOpenDialog(null);
       case SAVE_FILE -> file = fileChooser.showSaveDialog(null);
-      default -> throw new IllegalStateException("Unexpected value: " + format);
+      default -> throw new IllegalStateException(format.toString());
     }
     return file == null ? null : file.toPath();
   }
 
   private FileChooser.ExtensionFilter getExtensionFilter(FileFormat format) {
     return switch (format) {
-      case ROSE -> new FileChooser.ExtensionFilter("ROSE", convertBoxToList(
-          format.getFileExtensions()));
-      case SUMO -> new FileChooser.ExtensionFilter("SUMO", convertBoxToList(
-          format.getFileExtensions()));
-      case YAML -> new FileChooser.ExtensionFilter("YAML", convertBoxToList(
-          format.getFileExtensions()));
+      case ROSE -> new FileChooser.ExtensionFilter(ROSE_EXTENSION_FILTER_NAME,
+          convertBoxToList(format.getFileExtensions()));
+      case SUMO -> new FileChooser.ExtensionFilter(SUMO_EXTENSION_FILTER_NAME,
+          convertBoxToList(format.getFileExtensions()));
+      case YAML -> new FileChooser.ExtensionFilter(YAML_EXTENSION_FILTER_NAME,
+          convertBoxToList(format.getFileExtensions()));
     };
   }
 

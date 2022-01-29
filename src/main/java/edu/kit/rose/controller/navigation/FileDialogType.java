@@ -1,6 +1,6 @@
 package edu.kit.rose.controller.navigation;
 
-import edu.kit.rose.model.FileFormat;
+import edu.kit.rose.model.ProjectFormat;
 
 /**
  * Contains options that configure a call of

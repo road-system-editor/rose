@@ -1,7 +1,8 @@
 package edu.kit.rose.controller.project;
 
 
-import edu.kit.rose.model.FileFormat;
+import edu.kit.rose.controller.navigation.FileFormat;
+import edu.kit.rose.model.ProjectFormat;
 import java.nio.file.Path;
 
 /**
@@ -15,7 +16,7 @@ public interface ProjectController {
    *
    * @param targetFormat format in which the roadsystem will be exported
    */
-  void export(FileFormat targetFormat);
+  void export(ProjectFormat targetFormat);
 
 
   /**

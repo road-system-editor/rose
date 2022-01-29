@@ -9,6 +9,7 @@ import edu.kit.rose.controller.attribute.AttributeController;
 import edu.kit.rose.controller.hierarchy.HierarchyController;
 import edu.kit.rose.controller.measurement.MeasurementController;
 import edu.kit.rose.controller.navigation.FileDialogType;
+import edu.kit.rose.controller.navigation.FileFormat;
 import edu.kit.rose.controller.navigation.Navigator;
 import edu.kit.rose.controller.navigation.WindowType;
 import edu.kit.rose.controller.plausibility.PlausibilityController;
@@ -18,7 +19,6 @@ import edu.kit.rose.infrastructure.Box;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.infrastructure.language.RoseLocalizedTextProvider;
 import edu.kit.rose.model.ApplicationDataSystem;
-import edu.kit.rose.model.FileFormat;
 import edu.kit.rose.model.ModelFactory;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.view.window.CriteriaWindow;
@@ -47,6 +47,7 @@ public class RoseApplication extends Application implements Navigator {
   private static final String ROSE_EXTENSION_FILTER_NAME = "ROSE";
   private static final String SUMO_EXTENSION_FILTER_NAME = "SUMO";
   private static final String YAML_EXTENSION_FILTER_NAME = "YAML";
+  private static final String CRITERIA_EXTENSION_FILTER_NAME = "CRITERIA";
 
   /**
    * Contains the main window instance of the application.
@@ -149,6 +150,8 @@ public class RoseApplication extends Application implements Navigator {
       case SUMO -> new FileChooser.ExtensionFilter(SUMO_EXTENSION_FILTER_NAME,
           convertBoxToList(format.getFileExtensions()));
       case YAML -> new FileChooser.ExtensionFilter(YAML_EXTENSION_FILTER_NAME,
+          convertBoxToList(format.getFileExtensions()));
+      case CRITERIA -> new FileChooser.ExtensionFilter(CRITERIA_EXTENSION_FILTER_NAME,
           convertBoxToList(format.getFileExtensions()));
     };
   }

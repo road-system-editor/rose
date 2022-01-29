@@ -30,13 +30,13 @@ public interface Project {
 
 
   /**
-   * Formats the Project to fit a specified {@link FileFormat} and exports it to a file at the
+   * Formats the Project to fit a specified {@link ProjectFormat} and exports it to a file at the
    * given {@link Path}.
    *
-   * @param fileFormat The {@link FileFormat} to save in.
+   * @param projectFormat The {@link ProjectFormat} to save in.
    * @param filePath     The {@link Path} of where to store the export.
    */
-  void exportToFile(FileFormat fileFormat, Path filePath);
+  void exportToFile(ProjectFormat projectFormat, Path filePath);
 
   /**
    * Saves the Project as a ROSE file. This saves everything the Project needs to be reopened in

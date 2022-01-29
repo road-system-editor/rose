@@ -1,15 +1,18 @@
-package edu.kit.rose.model;
+package edu.kit.rose.controller.navigation;
 
 import edu.kit.rose.infrastructure.Box;
 import edu.kit.rose.infrastructure.RoseBox;
+import edu.kit.rose.model.ProjectFormat;
 
 /**
- * An enum holding the different Formats to which a Project can be exported.
+ * Contains file formats that can be used to
+ * configure {@link Navigator#showFileDialog(FileDialogType, FileFormat)}.
  */
 public enum FileFormat {
-  YAML("yaml", "yml"),
+  ROSE("yaml", "yml"),
   SUMO("sumo"),
-  ROSE("rose");
+  YAML("rose"),
+  CRITERIA("criteria");
 
   /**
    * Creates a new value in {@link FileFormat} enum.

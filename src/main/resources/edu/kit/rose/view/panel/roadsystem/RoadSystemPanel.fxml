@@ -3,11 +3,18 @@
 <?import edu.kit.rose.view.panel.roadsystem.NavigatorView?>
 <?import edu.kit.rose.view.panel.roadsystem.ChangeButtonPanel?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import edu.kit.rose.view.panel.roadsystem.Grid?>
 <fx:root xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml"
          type="Pane"
          fx:id="parentContainer">
     <AnchorPane prefWidth="${parentContainer.width}" prefHeight="${parentContainer.height}">
+        <Grid
+                fx:id="roadSystemGrid"
+                AnchorPane.topAnchor="0.0"
+                AnchorPane.bottomAnchor="0.0"
+                AnchorPane.rightAnchor="0.0"
+                AnchorPane.leftAnchor="0.0"/>
         <ChangeButtonPanel AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" fx:id="changeButtonPanel"/>
         <NavigatorView AnchorPane.rightAnchor="7.0" AnchorPane.bottomAnchor="15.0" fx:id="navigator"/>
     </AnchorPane>

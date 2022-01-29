@@ -84,7 +84,7 @@ public class ViolationManagerTest {
     Assertions.assertNotEquals(compatibilityViolation, violation);
     violation = violationManager.getViolation(compatibilityCriterion,
         twoOffendingSegments);
-    Assertions.assertEquals(compatibilityViolation, violation);
+    Assertions.assertSame(compatibilityViolation, violation);
     Assertions.assertNotEquals(violationsNoSegments, violation);
   }
 
@@ -113,7 +113,7 @@ public class ViolationManagerTest {
 
   @Test
   public void testGetThis() {
-    Assertions.assertEquals(violationManager, violationManager.getThis());
+    Assertions.assertSame(violationManager, violationManager.getThis());
   }
 
 

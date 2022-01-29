@@ -5,7 +5,6 @@ import edu.kit.rose.infrastructure.RoseSortedBox;
 import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterion;
 import edu.kit.rose.model.roadsystem.elements.Segment;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -21,14 +20,12 @@ import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 public class ViolationManager extends RoseSetObservable<Violation, ViolationManager>
     implements Iterable<Violation> {
 
-  private final List<Violation> violations;
   private final MultiValuedMap<PlausibilityCriterion, Violation> criterionViolationMap;
 
   /**
    * Constructor.
    */
   public ViolationManager() {
-    violations = new ArrayList<>();
     criterionViolationMap = new HashSetValuedHashMap<>();
   }
 
@@ -39,9 +36,8 @@ public class ViolationManager extends RoseSetObservable<Violation, ViolationMana
    * @param violation The {@link Violation} to add.
    */
   void addViolation(Violation violation) {
-    violations.add(violation);
     criterionViolationMap.put(violation.violatedCriterion(), violation);
-    notifySubscribers();
+    getSubscriberIterator().forEachRemaining(sub -> sub.notifyAddition(violation));
   }
 
   /**
@@ -50,9 +46,8 @@ public class ViolationManager extends RoseSetObservable<Violation, ViolationMana
    * @param violation The {@link Violation} to remove.
    */
   void removeViolation(Violation violation) {
-    violations.remove(violation);
     criterionViolationMap.removeMapping(violation.violatedCriterion(), violation);
-    notifySubscribers();
+    getSubscriberIterator().forEachRemaining(sub -> sub.notifyRemoval(violation));
   }
 
   /**
@@ -71,15 +66,15 @@ public class ViolationManager extends RoseSetObservable<Violation, ViolationMana
         violationsAgainstCriterion.stream().filter((violation ->
             violation.offendingSegments().containsAll(offendingSegments)
         && offendingSegments.containsAll(violation.offendingSegments()))).toList();
-    assert (matches.size() <= 1);
 
-    if (matches.size() == 1) {
+    if (matches.size() > 1) {
+      throw new IllegalStateException("Multiple entries for the same criterion and segments");
+    } else if (matches.size() == 1) {
       return matches.get(0);
     } else {
       return null;
     }
   }
-
 
   /**
    * Returns all {@link Violation}s currently held by the ViolationManager.
@@ -87,12 +82,12 @@ public class ViolationManager extends RoseSetObservable<Violation, ViolationMana
    * @return A {@link SortedBox} containing all {@link Violation}s.
    */
   public SortedBox<Violation> getViolations() {
-    return new RoseSortedBox<>(violations);
+    return new RoseSortedBox<>(criterionViolationMap.values().toArray(new Violation[0]));
   }
 
   @Override
   public Iterator<Violation> iterator() {
-    return Collections.unmodifiableCollection(violations).iterator();
+    return Collections.unmodifiableCollection(criterionViolationMap.values()).iterator();
   }
 
   @Override

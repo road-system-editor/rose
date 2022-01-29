@@ -65,7 +65,7 @@ public class ViolationHandle extends FxmlContainer implements UnitObserver<Viola
 
   @Override
   public void notifyChange(Violation unit) {
-    updateTranslatableStrings(null);
+    updateTranslatableStrings(getTranslator().getSelectedLanguage());
   }
 
   @Override

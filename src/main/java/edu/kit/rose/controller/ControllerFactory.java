@@ -105,7 +105,7 @@ public class ControllerFactory {
    */
   public PlausibilityController getPlausibilityController() {
     return new RosePlausibilityController(this.storageLock, this.navigator, this.project,
-            this.applicationDataSystem);
+            this.selectionBuffer, this.applicationDataSystem);
   }
 
   /**

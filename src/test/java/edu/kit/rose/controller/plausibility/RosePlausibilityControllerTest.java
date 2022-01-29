@@ -8,6 +8,8 @@ import static org.mockito.Mockito.when;
 import edu.kit.rose.controller.commons.RoseStorageLock;
 import edu.kit.rose.controller.commons.StorageLock;
 import edu.kit.rose.controller.navigation.Navigator;
+import edu.kit.rose.controller.selection.SelectionBuffer;
+import edu.kit.rose.infrastructure.Movement;
 import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.model.ApplicationDataSystem;
 import edu.kit.rose.model.Project;
@@ -16,37 +18,36 @@ import edu.kit.rose.model.plausibility.criteria.CriteriaManager;
 import edu.kit.rose.model.plausibility.violation.Violation;
 import edu.kit.rose.model.roadsystem.elements.Base;
 import edu.kit.rose.model.roadsystem.elements.Segment;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
+import org.mockito.Mockito;
 
 
 class RosePlausibilityControllerTest {
-  @Mock
-  CriteriaManager criteriaManager;
-  @Mock
+  private CriteriaManager criteriaManager;
   private Project project;
-  @Mock
   private ApplicationDataSystem applicationDataSystem;
-  private StorageLock storageLock;
-  @Mock
-  private Navigator navigator;
+  private SelectionBuffer selectionBuffer;
   private PlausibilityController controller;
 
   @BeforeEach
   public void setUp() {
     this.applicationDataSystem = mock(ApplicationDataSystem.class);
-    this.storageLock = new RoseStorageLock();
-    this.navigator = mock(Navigator.class);
+    StorageLock storageLock = new RoseStorageLock();
+    Navigator navigator = mock(Navigator.class);
     this.criteriaManager = mock(CriteriaManager.class);
     this.project = mock(Project.class);
+    this.selectionBuffer = mock(SelectionBuffer.class);
     when(applicationDataSystem.getCriteriaManager()).thenAnswer(e -> this.criteriaManager);
-    this.controller = new RosePlausibilityController(this.storageLock,
-            this.navigator, this.project, this.applicationDataSystem);
+    this.controller = new RosePlausibilityController(storageLock,
+            navigator, this.project, this.selectionBuffer, this.applicationDataSystem);
   }
 
 
@@ -76,8 +77,8 @@ class RosePlausibilityControllerTest {
     this.controller.importCompatibilityCriteria();
 
     Assertions.assertTrue(imported.get());
-    Assertions.assertTrue(onBeginRun.get());
-    Assertions.assertTrue(onEndRun.get());
+    Mockito.verify(onBegin, Mockito.times(1)).run();
+    Mockito.verify(onEnd, Mockito.times(1)).run();
   }
 
   @Test
@@ -112,22 +113,39 @@ class RosePlausibilityControllerTest {
 
   @Test
   void jumpToCriterionViolationTest() {
+    Segment segment1 = new Base();
+    Segment segment2 = new Base();
+    Segment segment3 = new Base();
+    segment2.move(new Movement(1, 1));
+    segment3.move(new Movement(3, 3));
+
     Violation violation = mock(Violation.class);
     ZoomSetting zoomSetting = mock(ZoomSetting.class);
+
+    AtomicReference<List<Segment>> selectedSegments = new AtomicReference<>();
     AtomicReference<Position> position = new AtomicReference<>();
     AtomicReference<Collection<Segment>> segment = new AtomicReference<>();
-    segment.set(List.of(new Base()));
+    segment.set(Arrays.asList(segment1, segment2, segment3));
+    selectedSegments.set(new ArrayList<>());
+
     when(violation.offendingSegments()).thenAnswer(e -> segment.get());
     doAnswer(e -> {
-      position.set(new Position(0, 0));
+      position.set(new Position(2, 2));
       return null; })
             .when(zoomSetting).setCenterOfView(any());
+    doAnswer((e -> {
+      selectedSegments.get().add(e.getArgument(0));
+      return null;
+    })).when(this.selectionBuffer).addSegmentSelection(any());
     when(this.project.getZoomSetting()).thenReturn(zoomSetting);
 
     this.controller.jumpToCriterionViolation(violation);
 
-    Assertions.assertEquals(0, position.get().getX());
-    Assertions.assertEquals(0, position.get().getY());
+    Assertions.assertEquals(2, position.get().getX());
+    Assertions.assertEquals(2, position.get().getY());
+    Assertions.assertTrue(selectedSegments.get().contains(segment1));
+    Assertions.assertTrue(selectedSegments.get().contains(segment2));
+    Assertions.assertTrue(selectedSegments.get().contains(segment3));
   }
 
 }

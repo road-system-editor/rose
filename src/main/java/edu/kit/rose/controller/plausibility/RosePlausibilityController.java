@@ -3,6 +3,7 @@ package edu.kit.rose.controller.plausibility;
 import edu.kit.rose.controller.commons.Controller;
 import edu.kit.rose.controller.commons.StorageLock;
 import edu.kit.rose.controller.navigation.Navigator;
+import edu.kit.rose.controller.selection.SelectionBuffer;
 import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.model.ApplicationDataSystem;
 import edu.kit.rose.model.Project;
@@ -26,6 +27,7 @@ import java.util.Set;
 public class RosePlausibilityController extends Controller implements PlausibilityController {
   private final Navigator navigator;
   private final Project project;
+  private final SelectionBuffer selectionBuffer;
   private final ApplicationDataSystem applicationDataSystem;
   private final Set<Runnable> onBeginSubscribers;
   private final Set<Runnable> onDoneSubscribers;
@@ -39,6 +41,7 @@ public class RosePlausibilityController extends Controller implements Plausibili
    * @param applicationDataSystem the model facade for application data
    */
   public RosePlausibilityController(StorageLock storageLock, Navigator navigator, Project project,
+                                    SelectionBuffer selectionBuffer,
                                     ApplicationDataSystem applicationDataSystem) {
     super(storageLock, navigator);
     this.navigator = navigator;
@@ -46,11 +49,13 @@ public class RosePlausibilityController extends Controller implements Plausibili
     this.applicationDataSystem = applicationDataSystem;
     this.onBeginSubscribers = new HashSet<>();
     this.onDoneSubscribers = new HashSet<>();
+    this.selectionBuffer = selectionBuffer;
   }
 
   @Override
-  public void addCompatibilityCriterion(PlausibilityCriterionType type) {
-    this.applicationDataSystem.getCriteriaManager().createCriterionOfType(type);
+  public void addCompatibilityCriterion() {
+    this.applicationDataSystem.getCriteriaManager()
+            .createCriterionOfType(PlausibilityCriterionType.COMPATIBILITY);
   }
 
   @Override
@@ -98,26 +103,24 @@ public class RosePlausibilityController extends Controller implements Plausibili
 
   @Override
   public void importCompatibilityCriteria() {
-    if (getStorageLock().isStorageLockAcquired()) {
-      return;
+    if (!getStorageLock().isStorageLockAcquired()) {
+      getStorageLock().acquireStorageLock();
+      this.onBeginSubscribers.forEach((Runnable::run));
+      this.applicationDataSystem.importCriteriaFromFile(this.navigator.showFileDialog());
+      this.onDoneSubscribers.forEach(Runnable::run);
+      getStorageLock().releaseStorageLock();
     }
-    getStorageLock().acquireStorageLock();
-    this.onBeginSubscribers.forEach((Runnable::run));
-    this.applicationDataSystem.importCriteriaFromFile(this.navigator.showFileDialog());
-    this.onDoneSubscribers.forEach(Runnable::run);
-    getStorageLock().releaseStorageLock();
   }
 
   @Override
   public void exportCompatibilityCriteria() {
-    if (getStorageLock().isStorageLockAcquired()) {
-      return;
+    if (!getStorageLock().isStorageLockAcquired()) {
+      getStorageLock().acquireStorageLock();
+      this.onBeginSubscribers.forEach((Runnable::run));
+      this.applicationDataSystem.exportCriteriaToFile(this.navigator.showFileDialog());
+      this.onDoneSubscribers.forEach(Runnable::run);
+      getStorageLock().releaseStorageLock();
     }
-    getStorageLock().acquireStorageLock();
-    this.onBeginSubscribers.forEach((Runnable::run));
-    this.applicationDataSystem.exportCriteriaToFile(this.navigator.showFileDialog());
-    this.onDoneSubscribers.forEach(Runnable::run);
-    getStorageLock().releaseStorageLock();
   }
 
   @Override
@@ -126,6 +129,7 @@ public class RosePlausibilityController extends Controller implements Plausibili
     double sumX = 0;
     double sumY = 0;
     for (Segment segment : offendingSegments) {
+      this.selectionBuffer.addSegmentSelection(segment);
       sumX += segment.getCenter().getX();
       sumY += segment.getCenter().getY();
     }

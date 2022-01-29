@@ -194,7 +194,7 @@ public class RoseMenuBar extends FxmlContainer {
     englishLanguage.setOnAction(evt -> applicationController.setLanguage(Language.ENGLISH));
 
     // Help
-    shortcuts.setOnAction(evt -> {/* TODO implement shortcut overview */});
+    shortcuts.setOnAction(evt -> navigator.showWindow(WindowType.HELP));
   }
 
   @Override

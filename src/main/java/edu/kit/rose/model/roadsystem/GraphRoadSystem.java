@@ -237,7 +237,7 @@ class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, RoadSys
     if (!connectorConnectionMap.containsValue(connection)) {
       throw new IllegalArgumentException("unknown connection");
     }
-    if (connection != null && connectorConnectionMap.containsValue(connection)) {
+    if (connection != null) {
       segmentConnectionGraph.removeEdge(connection);
       connection.getConnectors().forEach(c -> connectorConnectionMap.put(c, null));
       subscribers.forEach(s -> s.notifyRemovalSecond(connection));

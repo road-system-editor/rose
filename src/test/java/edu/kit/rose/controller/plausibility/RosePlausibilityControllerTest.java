@@ -59,13 +59,16 @@ class RosePlausibilityControllerTest {
     AtomicReference<Boolean> onEndRun = new AtomicReference<>();
     doAnswer(e -> {
       onBeginRun.set(true);
-      return null; }).when(onBegin).run();
+      return null; })
+            .when(onBegin).run();
     doAnswer(e -> {
       onEndRun.set(true);
-      return null; }).when(onEnd).run();
+      return null; })
+            .when(onEnd).run();
     doAnswer(e -> {
       imported.set(true);
-      return null; }).when(applicationDataSystem).importCriteriaFromFile(any());
+      return null; })
+            .when(applicationDataSystem).importCriteriaFromFile(any());
     onBeginRun.set(false);
     onEndRun.set(false);
     imported.set(false);
@@ -86,13 +89,16 @@ class RosePlausibilityControllerTest {
     AtomicReference<Boolean> onEndRun = new AtomicReference<>();
     doAnswer(e -> {
       onBeginRun.set(true);
-      return null; }).when(onBegin).run();
+      return null; })
+            .when(onBegin).run();
     doAnswer(e -> {
       onEndRun.set(true);
-      return null; }).when(onEnd).run();
+      return null; })
+            .when(onEnd).run();
     doAnswer(e -> {
       exported.set(true);
-      return null; }).when(applicationDataSystem).exportCriteriaToFile(any());
+      return null; })
+            .when(applicationDataSystem).exportCriteriaToFile(any());
     onBeginRun.set(false);
     onEndRun.set(false);
     exported.set(false);

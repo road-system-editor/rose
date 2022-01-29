@@ -47,9 +47,22 @@ public class NavigatorView extends FxmlContainer {
 
 
   private void registerButtonListeners() {
-    navigateToTopButton.setOnMouseClicked(mouseEvent -> updateEditorPosition(0, 10));
-    navigateToBottomButton.setOnMouseClicked(mouseEvent -> updateEditorPosition(0, -10));
+    navigateToTopButton
+        .setOnMouseClicked(mouseEvent -> updateEditorPosition(0, 10));
+    navigateToBottomButton
+        .setOnMouseClicked(mouseEvent -> updateEditorPosition(0, -10));
+    navigateToLeftButton
+        .setOnMouseClicked(mouseEvent -> updateEditorPosition(-10, 0));
+    navigateToRightButton
+        .setOnMouseClicked(mouseEvent -> updateEditorPosition(-10, 0));
 
+    zoomInButton.setOnMouseClicked(mouseEvent -> {
+      roadSystemController.setZoomLevel(project.getZoomSetting().getZoomLevel() + 1);
+    });
+
+    zoomOutButton.setOnMouseClicked(mouseEvent -> {
+      roadSystemController.setZoomLevel(project.getZoomSetting().getZoomLevel() - 1);
+    });
   }
 
   private void updateEditorPosition(int offsetX, int offsetY) {

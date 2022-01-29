@@ -2,6 +2,7 @@ package edu.kit.rose.controller.project;
 
 import edu.kit.rose.controller.commons.Controller;
 import edu.kit.rose.controller.commons.StorageLock;
+import edu.kit.rose.controller.navigation.FileDialogType;
 import edu.kit.rose.controller.navigation.Navigator;
 import edu.kit.rose.model.FileFormat;
 import edu.kit.rose.model.Project;
@@ -13,6 +14,8 @@ import java.nio.file.Path;
  */
 public class RoseProjectController extends Controller implements ProjectController {
 
+  private final Project project;
+
   /**
    * Creates a new {@link RoseProjectController}.
    *
@@ -22,6 +25,8 @@ public class RoseProjectController extends Controller implements ProjectControll
    */
   public RoseProjectController(StorageLock storageLock, Navigator navigator, Project project) {
     super(storageLock, navigator);
+
+    this.project = project;
   }
 
   @Override
@@ -36,7 +41,10 @@ public class RoseProjectController extends Controller implements ProjectControll
 
   @Override
   public void saveAs() {
-
+    Path targetPath = getNavigator().showFileDialog(FileDialogType.SAVE_FILE, FileFormat.ROSE);
+    if (targetPath != null) {
+      project.save(targetPath);
+    }
   }
 
   @Override

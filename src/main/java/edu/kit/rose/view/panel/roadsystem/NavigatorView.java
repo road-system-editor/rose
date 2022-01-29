@@ -16,6 +16,9 @@ import javafx.scene.control.Button;
  */
 public class NavigatorView extends FxmlContainer {
 
+  private static final int UPDATE_EDITOR_POSITION_OFFSET = 10;
+  private static final int UPDATE_EDITOR_POSITION_IGNORE_DIMENSION = 0;
+
   @Inject
   private RoadSystemController roadSystemController;
 
@@ -45,23 +48,30 @@ public class NavigatorView extends FxmlContainer {
     registerButtonListeners();
   }
 
-
   private void registerButtonListeners() {
     navigateToTopButton
-        .setOnMouseClicked(mouseEvent -> updateEditorPosition(0, 10));
+        .setOnMouseClicked(mouseEvent -> updateEditorPosition(
+            UPDATE_EDITOR_POSITION_IGNORE_DIMENSION,
+            UPDATE_EDITOR_POSITION_OFFSET));
     navigateToBottomButton
-        .setOnMouseClicked(mouseEvent -> updateEditorPosition(0, -10));
+        .setOnMouseClicked(mouseEvent -> updateEditorPosition(
+            UPDATE_EDITOR_POSITION_IGNORE_DIMENSION,
+            -UPDATE_EDITOR_POSITION_OFFSET));
     navigateToLeftButton
-        .setOnMouseClicked(mouseEvent -> updateEditorPosition(-10, 0));
+        .setOnMouseClicked(mouseEvent -> updateEditorPosition(
+            -UPDATE_EDITOR_POSITION_OFFSET,
+            UPDATE_EDITOR_POSITION_IGNORE_DIMENSION));
     navigateToRightButton
-        .setOnMouseClicked(mouseEvent -> updateEditorPosition(-10, 0));
+        .setOnMouseClicked(mouseEvent -> updateEditorPosition(
+            -UPDATE_EDITOR_POSITION_OFFSET,
+            UPDATE_EDITOR_POSITION_IGNORE_DIMENSION));
 
     zoomInButton.setOnMouseClicked(mouseEvent -> {
       roadSystemController.setZoomLevel(project.getZoomSetting().getZoomLevel() + 1);
     });
 
     zoomOutButton.setOnMouseClicked(mouseEvent -> {
-      roadSystemController.setZoomLevel(project.getZoomSetting().getZoomLevel() - 1);
+      roadSystemController.setZoomLevel(project.getZoomSetting().getZoomLevel() + 1);
     });
   }
 

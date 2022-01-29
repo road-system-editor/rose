@@ -37,6 +37,7 @@ public class CriteriaManager extends RoseSetObservable<PlausibilityCriterion, Cr
   public CriteriaManager(RoadSystem roadSystem, ViolationManager violationManager) {
     this.criterion = new ArrayList<>();
     this.criterionFactory = new CriterionFactory(roadSystem, violationManager);
+    this.criterion.addAll(this.criterionFactory.createValueCriterion());
   }
 
   /**
@@ -80,22 +81,11 @@ public class CriteriaManager extends RoseSetObservable<PlausibilityCriterion, Cr
   }
 
   /**
-   * Creates a new {@link PlausibilityCriterion} with the given {@link PlausibilityCriterionType}.
+   * Creates a new {@link CompatibilityCriterion}.
    *
-   * @param type The Type of the new {@link PlausibilityCriterion}.
    */
-  public void createCriterionOfType(PlausibilityCriterionType type) {
-    PlausibilityCriterion newCriteria;
-    switch (type) {
-      case VALUE:         newCriteria = this.criterionFactory.createValueCriterion();
-                          break;
-      case COMPLETENESS:  newCriteria = this.criterionFactory.createCompletenessCriterion();
-                          break;
-      case COMPATIBILITY: newCriteria = this.criterionFactory.createCompatibilityCriterion();
-                          break;
-      default:            throw new IllegalArgumentException("no such plausibility "
-             + "criterion type found");
-    }
+  public void createCompatibilityCriterion() {
+    PlausibilityCriterion newCriteria = this.criterionFactory.createCompatibilityCriterion();
 
     this.criterion.add(newCriteria);
     notifyAdditionToSubscribers(newCriteria);

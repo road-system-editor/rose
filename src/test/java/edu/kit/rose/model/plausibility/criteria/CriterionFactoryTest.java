@@ -51,11 +51,13 @@ class CriterionFactoryTest {
 
   @Test
   void createValueCriterionTest() {
-    PlausibilityCriterion criteria = this.factory.createValueCriterion();
+    List<ValueCriterion> criterion = this.factory.createValueCriterion();
 
-    Assertions.assertNotNull(criteria);
-    Assertions.assertEquals(criteria.getType(), (PlausibilityCriterionType.VALUE));
-    Assertions.assertTrue(this.subscribed);
+    for (ValueCriterion criteria : criterion) {
+      Assertions.assertNotNull(criteria);
+      Assertions.assertEquals(criteria.getType(), (PlausibilityCriterionType.VALUE));
+      Assertions.assertTrue(this.subscribed);
+    }
   }
 
   @Test

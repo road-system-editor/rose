@@ -1,9 +1,11 @@
 package edu.kit.rose.model.plausibility.criteria;
 
-import edu.kit.rose.infrastructure.Box;
 import edu.kit.rose.model.plausibility.violation.ViolationManager;
 import edu.kit.rose.model.roadsystem.RoadSystem;
+import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.elements.Element;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -30,7 +32,7 @@ class CriterionFactory {
    */
   public CompletenessCriterion createCompletenessCriterion() {
     CompletenessCriterion criterion = new CompletenessCriterion(this.violationManager);
-    subscribeCriterionToSegments(criterion, this.roadSystem.getElements());
+    subscribeCriterionToSegments(criterion);
     return criterion;
   }
 
@@ -39,10 +41,40 @@ class CriterionFactory {
    *
    * @return the new ValueCriterion
    */
-  public ValueCriterion createValueCriterion() {
-    ValueCriterion criterion = new ValueCriterion(this.violationManager);
-    subscribeCriterionToSegments(criterion, this.roadSystem.getElements());
-    return criterion;
+  public List<ValueCriterion> createValueCriterion() {
+    ArrayList<ValueCriterion> valueCriterion = new ArrayList<>();
+
+    ValueCriterion criterion = new ValueCriterion(this.violationManager, AttributeType.LANE_COUNT,
+            ValueCriterion.LANE_COUNT_RANGE);
+    valueCriterion.add(criterion);
+    subscribeCriterionToSegments(criterion);
+
+    criterion = new ValueCriterion(this.violationManager, AttributeType.LANE_COUNT_RAMP,
+            ValueCriterion.LANE_COUNT_RAMP_RANGE);
+    valueCriterion.add(criterion);
+    subscribeCriterionToSegments(criterion);
+
+    criterion = new ValueCriterion(this.violationManager, AttributeType.LENGTH,
+            ValueCriterion.LENGTH_RANGE);
+    valueCriterion.add(criterion);
+    subscribeCriterionToSegments(criterion);
+
+    criterion = new ValueCriterion(this.violationManager, AttributeType.MAX_SPEED,
+            ValueCriterion.MAX_SPEED_RANGE);
+    valueCriterion.add(criterion);
+    subscribeCriterionToSegments(criterion);
+
+    criterion = new ValueCriterion(this.violationManager, AttributeType.MAX_SPEED_RAMP,
+            ValueCriterion.MAX_SPEED_RAMP_RANGE);
+    valueCriterion.add(criterion);
+    subscribeCriterionToSegments(criterion);
+
+    criterion = new ValueCriterion(this.violationManager, AttributeType.SLOPE,
+            ValueCriterion.SLOPE_RANGE);
+    valueCriterion.add(criterion);
+    subscribeCriterionToSegments(criterion);
+
+    return valueCriterion;
   }
 
   /**
@@ -53,13 +85,12 @@ class CriterionFactory {
   public CompatibilityCriterion createCompatibilityCriterion() {
     CompatibilityCriterion criterion =
             new CompatibilityCriterion(this.roadSystem, this.violationManager);
-    subscribeCriterionToSegments(criterion, this.roadSystem.getElements());
+    subscribeCriterionToSegments(criterion);
     return criterion;
   }
 
-  private void subscribeCriterionToSegments(PlausibilityCriterion criterion,
-                                            Box<Element> elements) {
-    for (Element element : elements) {
+  private void subscribeCriterionToSegments(PlausibilityCriterion criterion) {
+    for (Element element : this.roadSystem.getElements()) {
       element.addSubscriber(criterion);
     }
   }

@@ -4,6 +4,7 @@ import edu.kit.rose.infrastructure.Box;
 import edu.kit.rose.infrastructure.SetObservable;
 import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.infrastructure.UnitObserver;
+import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;

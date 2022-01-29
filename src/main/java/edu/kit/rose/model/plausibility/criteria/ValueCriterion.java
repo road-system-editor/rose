@@ -1,7 +1,7 @@
 package edu.kit.rose.model.plausibility.criteria;
 
 
-
+import com.google.common.collect.Range;
 import edu.kit.rose.infrastructure.Box;
 import edu.kit.rose.infrastructure.RoseBox;
 import edu.kit.rose.infrastructure.RoseSetObservable;
@@ -27,21 +27,16 @@ import java.util.Set;
  */
 class ValueCriterion extends RoseSetObservable<SegmentType, PlausibilityCriterion>
         implements PlausibilityCriterion {
-  private static final int UPPER_LENGTH = 5000;
-  private static final int LOWER_LENGTH = 1;
-  private static final int UPPER_LANE_COUNT = 10;
-  private static final int LOWER_LANE_COUNT = 1;
-  private static final int UPPER_LANE_COUNT_RAMP = 10;
-  private static final int LOWER_LANE_COUNT_RAMP = 1;
-  private static final int UPPER_MAX_SPEED = 400;
-  private static final int LOWER_MAX_SPEED = 30;
-  private static final int UPPER_MAX_SPEED_RAMP = 200;
-  private static final int LOWER_MAX_SPEED_RAMP = 30;
-  private static final double UPPER_SLOPE = 10;
-  private static final double LOWER_SLOPE = -10;
+  protected static final Range<Double> LENGTH_RANGE = Range.closed(1.0, 5000.0);
+  protected static final Range<Double> LANE_COUNT_RANGE = Range.closed(1.0, 10.0);
+  protected static final Range<Double> LANE_COUNT_RAMP_RANGE = Range.closed(1.0, 10.0);
+  protected static final Range<Double> MAX_SPEED_RANGE = Range.closed(30.0, 400.0);
+  protected static final Range<Double> MAX_SPEED_RAMP_RANGE = Range.closed(30.0, 200.0);
+  protected static final Range<Double> SLOPE_RANGE = Range.closed(-10.0, 10.0);
 
   private String name;
-  private final Set<AttributeType> affectedAttributeTypes;
+  private final AttributeType attributeType;
+  private final Range<Double> range;
   private final Set<SegmentType> segmentTypes;
   private final ViolationManager violationManager;
   private final HashMap<Element, Violation> elementViolationMap;
@@ -52,22 +47,18 @@ class ValueCriterion extends RoseSetObservable<SegmentType, PlausibilityCriterio
    *
    * @param violationManager manager to which violations will be added
    */
-  public ValueCriterion(ViolationManager violationManager) {
+  public ValueCriterion(ViolationManager violationManager,
+                        AttributeType type, Range<Double> range) {
     this.name = "";
     this.segmentTypes = new HashSet<>();
-    this.affectedAttributeTypes = new HashSet<>();
     this.violationManager = violationManager;
     this.elementViolationMap = new HashMap<>();
+    this.attributeType = type;
+    this.range = range;
   }
 
-  /**
-   * Gets the types of attributes that do not
-   * fill the requirements for value criteria.
-   *
-   * @return a box of affected types.
-   */
-  public Box<AttributeType> getAffectedAttributeType() {
-    return new RoseBox<>(this.affectedAttributeTypes);
+  public AttributeType getAttributeType() {
+    return this.attributeType;
   }
 
   @Override
@@ -86,8 +77,6 @@ class ValueCriterion extends RoseSetObservable<SegmentType, PlausibilityCriterio
     return new RoseBox<>(this.segmentTypes);
   }
 
-
-  @Override
   public PlausibilityCriterionType getType() {
     return PlausibilityCriterionType.VALUE;
   }
@@ -112,24 +101,17 @@ class ValueCriterion extends RoseSetObservable<SegmentType, PlausibilityCriterio
 
   @Override
   public void notifyChange(Element unit) {
-    boolean valid = true;
     Segment segment = (Segment) unit;
     if (!unit.isContainer()) {
       if (this.segmentTypes.contains(segment.getSegmentType())) {
         SortedBox<AttributeAccessor<?>> accessors = unit.getAttributeAccessors();
         for (AttributeAccessor<?> accessor : accessors) {
           if (!checkValue(accessor)) {
-            valid = false;
-            affectedAttributeTypes.add(accessor.getAttributeType());
-          } else {
-            this.affectedAttributeTypes.remove(accessor.getAttributeType());
+            Violation violation = new Violation(this, List.of((Segment) unit));
+            this.violationManager.addViolation(violation);
+            this.elementViolationMap.put(unit, violation);
           }
         }
-      }
-      if (!valid) {
-        Violation violation = new Violation(this, List.of((Segment) unit));
-        this.violationManager.addViolation(violation);
-        this.elementViolationMap.put(unit, violation);
       }
     }
   }
@@ -151,29 +133,15 @@ class ValueCriterion extends RoseSetObservable<SegmentType, PlausibilityCriterio
   }
 
   private boolean checkValue(AttributeAccessor accessor) {
-    switch (accessor.getAttributeType()) {
-      case LENGTH:
-        return ((Integer) accessor.getValue() >= LOWER_LENGTH
-                && (Integer) accessor.getValue() <= UPPER_LENGTH);
-      case SLOPE:
-        return ((Double) accessor.getValue() >= LOWER_SLOPE
-                && (Double) accessor.getValue() <= UPPER_SLOPE);
-      case MAX_SPEED:
-        return ((Integer) accessor.getValue() >= LOWER_MAX_SPEED
-                && (Integer) accessor.getValue() <= UPPER_MAX_SPEED);
-      case LANE_COUNT:
-        return ((Integer) accessor.getValue() >= LOWER_LANE_COUNT
-                && (Integer) accessor.getValue() <= UPPER_LANE_COUNT);
-      case LANE_COUNT_RAMP:
-        return ((Integer) accessor.getValue()
-                >= LOWER_LANE_COUNT_RAMP
-                && (Integer) accessor.getValue() <= UPPER_LANE_COUNT_RAMP);
-      case MAX_SPEED_RAMP:
-        return ((Integer) accessor.getValue()
-                >= LOWER_MAX_SPEED_RAMP
-                && (Integer) accessor.getValue() <= UPPER_MAX_SPEED_RAMP);
-      default:
-        throw new IllegalArgumentException("no such accessor type found");
+    if (accessor.getAttributeType().equals(this.attributeType)) {
+      switch (accessor.getAttributeType().getDataType()) {
+        case INTEGER:
+          return this.range.contains(Double.valueOf((Integer) accessor.getValue()));
+        case FRACTIONAL:
+          return this.range.contains((Double) accessor.getValue());
+        default: return true;
+      }
     }
+    return true;
   }
 }

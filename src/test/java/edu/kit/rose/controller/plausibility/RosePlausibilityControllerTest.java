@@ -58,11 +58,14 @@ class RosePlausibilityControllerTest {
     AtomicReference<Boolean> onBeginRun = new AtomicReference<>();
     AtomicReference<Boolean> onEndRun = new AtomicReference<>();
     doAnswer(e -> {
-      onBeginRun.set(true); return null; }).when(onBegin).run();
+      onBeginRun.set(true);
+      return null; }).when(onBegin).run();
     doAnswer(e -> {
-      onEndRun.set(true); return null; }).when(onEnd).run();
+      onEndRun.set(true);
+      return null; }).when(onEnd).run();
     doAnswer(e -> {
-      imported.set(true); return null; }).when(applicationDataSystem).importCriteriaFromFile(any());
+      imported.set(true);
+      return null; }).when(applicationDataSystem).importCriteriaFromFile(any());
     onBeginRun.set(false);
     onEndRun.set(false);
     imported.set(false);
@@ -82,11 +85,14 @@ class RosePlausibilityControllerTest {
     AtomicReference<Boolean> onBeginRun = new AtomicReference<>();
     AtomicReference<Boolean> onEndRun = new AtomicReference<>();
     doAnswer(e -> {
-      onBeginRun.set(true); return null; }).when(onBegin).run();
+      onBeginRun.set(true);
+      return null; }).when(onBegin).run();
     doAnswer(e -> {
-      onEndRun.set(true); return null; }).when(onEnd).run();
+      onEndRun.set(true);
+      return null; }).when(onEnd).run();
     doAnswer(e -> {
-      exported.set(true); return null; }).when(applicationDataSystem).exportCriteriaToFile(any());
+      exported.set(true);
+      return null; }).when(applicationDataSystem).exportCriteriaToFile(any());
     onBeginRun.set(false);
     onEndRun.set(false);
     exported.set(false);
@@ -107,7 +113,8 @@ class RosePlausibilityControllerTest {
     segment.set(List.of(new Base()));
     when(violation.offendingSegments()).thenAnswer(e -> segment.get());
     doAnswer(e -> {
-      position.set(new Position(0, 0)); return null; })
+      position.set(new Position(0, 0));
+      return null; })
             .when(zoomSetting).setCenterOfView(any());
     when(this.project.getZoomSetting()).thenReturn(zoomSetting);
 

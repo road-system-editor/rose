@@ -18,7 +18,6 @@ import edu.kit.rose.model.plausibility.criteria.CriteriaManager;
 import edu.kit.rose.model.plausibility.violation.Violation;
 import edu.kit.rose.model.roadsystem.elements.Base;
 import edu.kit.rose.model.roadsystem.elements.Segment;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -40,11 +39,13 @@ class RosePlausibilityControllerTest {
   @BeforeEach
   public void setUp() {
     this.applicationDataSystem = mock(ApplicationDataSystem.class);
-    StorageLock storageLock = new RoseStorageLock();
-    Navigator navigator = mock(Navigator.class);
     this.criteriaManager = mock(CriteriaManager.class);
     this.project = mock(Project.class);
     this.selectionBuffer = mock(SelectionBuffer.class);
+
+    StorageLock storageLock = new RoseStorageLock();
+    Navigator navigator = mock(Navigator.class);
+
     when(applicationDataSystem.getCriteriaManager()).thenAnswer(e -> this.criteriaManager);
     this.controller = new RosePlausibilityController(storageLock,
             navigator, this.project, this.selectionBuffer, this.applicationDataSystem);
@@ -119,15 +120,14 @@ class RosePlausibilityControllerTest {
     segment2.move(new Movement(1, 1));
     segment3.move(new Movement(3, 3));
 
-    Violation violation = mock(Violation.class);
-    ZoomSetting zoomSetting = mock(ZoomSetting.class);
-
     AtomicReference<List<Segment>> selectedSegments = new AtomicReference<>();
-    AtomicReference<Position> position = new AtomicReference<>();
     AtomicReference<Collection<Segment>> segment = new AtomicReference<>();
     segment.set(Arrays.asList(segment1, segment2, segment3));
     selectedSegments.set(new ArrayList<>());
 
+    ZoomSetting zoomSetting = mock(ZoomSetting.class);
+    Violation violation = mock(Violation.class);
+    AtomicReference<Position> position = new AtomicReference<>();
     when(violation.offendingSegments()).thenAnswer(e -> segment.get());
     doAnswer(e -> {
       position.set(new Position(2, 2));

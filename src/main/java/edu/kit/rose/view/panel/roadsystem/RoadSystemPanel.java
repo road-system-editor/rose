@@ -53,9 +53,6 @@ public class RoadSystemPanel extends FxmlContainer
    */
   private Project project;
 
-  @FXML
-  private StackPane stackPane;
-
   /**
    * The navigator view that displays functionality for navigation on the road system panel.
    */

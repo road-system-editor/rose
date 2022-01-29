@@ -2,6 +2,7 @@ package edu.kit.rose.controller.plausibility;
 
 import edu.kit.rose.controller.commons.Controller;
 import edu.kit.rose.controller.commons.StorageLock;
+import edu.kit.rose.controller.navigation.FileDialogType;
 import edu.kit.rose.controller.navigation.Navigator;
 import edu.kit.rose.model.ApplicationDataSystem;
 import edu.kit.rose.model.Project;
@@ -12,6 +13,7 @@ import edu.kit.rose.model.plausibility.criteria.validation.ValidationType;
 import edu.kit.rose.model.plausibility.violation.Violation;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
+import java.nio.file.Path;
 
 
 /**
@@ -96,13 +98,15 @@ public class RosePlausibilityController extends Controller implements Plausibili
   }
 
   @Override
-  public void importCompatibilityCriteria() {
-    applicationDataSystem.importCriteriaFromFile(getNavigator().showFileDialog());
+  public void importCompatibilityCriteria() { // TODO criteria file format!
+    Path filePath = getNavigator().showFileDialog(FileDialogType.LOAD_FILE, null);
+    applicationDataSystem.importCriteriaFromFile(filePath);
   }
 
   @Override
   public void exportCompatibilityCriteria() {
-    applicationDataSystem.exportCriteriaToFile(getNavigator().showFileDialog());
+    Path filePath = getNavigator().showFileDialog(FileDialogType.SAVE_FILE, null);
+    applicationDataSystem.exportCriteriaToFile(filePath);
   }
 
   @Override

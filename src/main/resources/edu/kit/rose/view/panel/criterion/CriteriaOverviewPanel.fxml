@@ -1,7 +1,33 @@
 <?import javafx.scene.layout.Pane?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.control.ListView?>
 <fx:root xmlns="http://javafx.com/javafx"
-         xmlns:fx="http://javafx.com/fxml" type="Pane">
-    <Button fx:id="createGroupButton" text="criteria stuff" />
+         xmlns:fx="http://javafx.com/fxml" type="Pane"
+         fx:id="parentContainer">
+    <GridPane
+            prefWidth="${parentContainer.width}"
+            prefHeight="${parentContainer.height}">
+        <rowConstraints>
+            <RowConstraints vgrow="ALWAYS"/>
+            <RowConstraints vgrow="SOMETIMES" fillHeight="false"/>
+        </rowConstraints>
+        <columnConstraints>
+            <ColumnConstraints percentWidth="100"/>
+        </columnConstraints>
+        <ListView GridPane.columnIndex="0" GridPane.rowIndex="0" fx:id="criteriaList"/>
+        <HBox GridPane.columnIndex="0" GridPane.rowIndex="1">
+            <Button fx:id="newButton"/>
+            <Button fx:id="exportButton"/>
+            <Button fx:id="importButton"/>
+            <Button fx:id="deleteAllButton"/>
+        </HBox>
+
+    </GridPane>
+
+
 </fx:root>

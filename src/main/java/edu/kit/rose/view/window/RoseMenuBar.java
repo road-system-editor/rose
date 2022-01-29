@@ -3,11 +3,12 @@ package edu.kit.rose.view.window;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import edu.kit.rose.controller.application.ApplicationController;
+import edu.kit.rose.controller.navigation.FileFormat;
 import edu.kit.rose.controller.navigation.Navigator;
 import edu.kit.rose.controller.navigation.WindowType;
 import edu.kit.rose.controller.project.ProjectController;
 import edu.kit.rose.infrastructure.language.Language;
-import edu.kit.rose.model.ExportFormat;
+import edu.kit.rose.model.ProjectFormat;
 import edu.kit.rose.view.commons.FxmlContainer;
 import java.nio.file.Path;
 import java.util.Collection;
@@ -177,11 +178,9 @@ public class RoseMenuBar extends FxmlContainer {
     });
     loadProject.setOnAction(evt -> {/* TODO how do we load projects? */});
     // TODO allow format configuration
-    exportProject.setOnAction(evt -> projectController.export(ExportFormat.YAML));
+    exportProject.setOnAction(evt -> projectController.export(ProjectFormat.ROSE));
     saveProject.setOnAction(evt -> projectController.save());
-    // TODO allow path choice
-    saveProjectAs.setOnAction(evt -> projectController.save());
-
+    saveProjectAs.setOnAction(evt -> projectController.saveAs());
     // Validation
     // TODO remove sub-menu and detect clicks on top-level menu
     criteria.setOnAction(evt -> navigator.showWindow(WindowType.CRITERION));

@@ -15,7 +15,7 @@ public enum FileFormat {
   CRITERIA("criteria");
 
   /**
-   * Creates a new value in {@link ProjectFormat} enum.
+   * Creates a new value in {@link FileFormat} enum.
    *
    * @param fileExtensions all valid file extensions for an export format
    */

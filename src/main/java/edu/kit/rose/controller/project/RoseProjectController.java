@@ -6,6 +6,7 @@ import edu.kit.rose.controller.navigation.FileDialogType;
 import edu.kit.rose.controller.navigation.FileFormat;
 import edu.kit.rose.controller.navigation.Navigator;
 import edu.kit.rose.model.Project;
+import edu.kit.rose.model.ProjectFormat;
 import java.nio.file.Path;
 
 /**
@@ -30,7 +31,7 @@ public class RoseProjectController extends Controller implements ProjectControll
   }
 
   @Override
-  public void export(FileFormat targetFormat) {
+  public void export(ProjectFormat targetFormat) {
 
   }
 

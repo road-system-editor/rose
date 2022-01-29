@@ -4,7 +4,7 @@ import edu.kit.rose.model.ProjectFormat;
 
 /**
  * Contains options that configure a call of
- * {@link Navigator#showFileDialog(FileDialogType, ProjectFormat)}.
+ * {@link Navigator#showFileDialog(FileDialogType, FileFormat)}.
  */
 public enum FileDialogType {
   LOAD_FILE,

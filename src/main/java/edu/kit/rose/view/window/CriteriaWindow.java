@@ -62,6 +62,7 @@ public class CriteriaWindow extends RoseWindow {
     getTranslator().subscribeToOnLanguageChanged(lang -> updateTranslatableStrings(stage));
     updateTranslatableStrings(stage);
 
+    overview.init(injector);
     overview.setSelectionListener(this::onSelect);
   }
 

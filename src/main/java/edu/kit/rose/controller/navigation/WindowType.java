@@ -24,6 +24,11 @@ public enum WindowType {
    */
   MEASUREMENT_EDITOR,
   /**
+   * References the part of the GUI where shortcuts and information about the application are
+   * displayed.
+   */
+  HELP,
+  /**
    * References the part of the GUI where attribute values can be edited.
    */
   Attribute

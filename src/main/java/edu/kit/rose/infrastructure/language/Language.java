@@ -6,6 +6,7 @@ import java.util.Locale;
  * Contains support languages and their {@link Locale}s.
  */
 public enum Language {
+
   /**
    * References the english language.
    */
@@ -15,7 +16,12 @@ public enum Language {
    */
   GERMAN(new Locale("de"));
 
-  private Locale locale;
+  /**
+   * This is the default language.
+   */
+  public static final Language DEFAULT = Language.ENGLISH;
+
+  private final Locale locale;
 
   /**
    * Constructor.
@@ -28,7 +34,7 @@ public enum Language {
   }
 
   /**
-   * Returns the {@linkjava.util.Locale} associated with the language.
+   * Returns the {@link Locale} associated with the language.
    *
    * @return the locale assigned to a language value
    */

@@ -7,7 +7,7 @@ import edu.kit.rose.controller.navigation.Navigator;
 import edu.kit.rose.controller.navigation.WindowType;
 import edu.kit.rose.controller.project.ProjectController;
 import edu.kit.rose.infrastructure.language.Language;
-import edu.kit.rose.model.FileFormat;
+import edu.kit.rose.controller.navigation.FileFormat;
 import edu.kit.rose.view.commons.FxmlContainer;
 import java.nio.file.Path;
 import java.util.Collection;
@@ -177,7 +177,7 @@ public class RoseMenuBar extends FxmlContainer {
     });
     loadProject.setOnAction(evt -> {/* TODO how do we load projects? */});
     // TODO allow format configuration
-    exportProject.setOnAction(evt -> projectController.export(FileFormat.YAML));
+    exportProject.setOnAction(evt -> projectController.export(FileFormat.ROSE));
     saveProject.setOnAction(evt -> projectController.save());
     saveProjectAs.setOnAction(evt -> projectController.saveAs());
     // Validation

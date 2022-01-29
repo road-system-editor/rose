@@ -1,10 +1,10 @@
 package edu.kit.rose.controller.navigation;
 
-import edu.kit.rose.model.FileFormat;
+import edu.kit.rose.model.ProjectFormat;
 
 /**
  * Contains options that configure a call of
- * {@link Navigator#showFileDialog(FileDialogType, FileFormat)}.
+ * {@link Navigator#showFileDialog(FileDialogType, ProjectFormat)}.
  */
 public enum FileDialogType {
   LOAD_FILE,

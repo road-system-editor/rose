@@ -1,7 +1,7 @@
 package edu.kit.rose.controller.project;
 
 
-import edu.kit.rose.model.FileFormat;
+import edu.kit.rose.controller.navigation.FileFormat;
 import java.nio.file.Path;
 
 /**

@@ -3,8 +3,8 @@ package edu.kit.rose.controller.project;
 import edu.kit.rose.controller.commons.Controller;
 import edu.kit.rose.controller.commons.StorageLock;
 import edu.kit.rose.controller.navigation.FileDialogType;
+import edu.kit.rose.controller.navigation.FileFormat;
 import edu.kit.rose.controller.navigation.Navigator;
-import edu.kit.rose.model.FileFormat;
 import edu.kit.rose.model.Project;
 import java.nio.file.Path;
 

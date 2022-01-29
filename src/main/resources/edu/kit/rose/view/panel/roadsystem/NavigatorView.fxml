@@ -66,9 +66,7 @@
             maxWidth="20"
             minHeight="20"
             maxHeight="20"
-            textFill="white"
-            text="+"
-            style="-fx-background-color: #009682;">
+            style="-fx-background-color: #009682; -fx-graphic: url('edu/kit/rose/view/panel/roadsystem/ZoomInIcon.png');">
         <shape>
             <Circle radius="20"/>
         </shape>
@@ -81,9 +79,7 @@
             maxWidth="20"
             minHeight="20"
             maxHeight="20"
-            textFill="white"
-            text="-"
-            style="-fx-background-color: #009682;">
+            style="-fx-background-color: #009682; -fx-graphic: url('edu/kit/rose/view/panel/roadsystem/ZoomOutIcon.png');">
     <shape>
         <Circle radius="20"/>
     </shape>

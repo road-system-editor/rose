@@ -1,7 +1,8 @@
 package edu.kit.rose.controller.project;
 
 
-import edu.kit.rose.model.ExportFormat;
+import edu.kit.rose.model.FileFormat;
+import java.nio.file.Path;
 
 /**
  * Provides functionality to save, load and
@@ -14,13 +15,25 @@ public interface ProjectController {
    *
    * @param targetFormat format in which the roadsystem will be exported
    */
-  void export(ExportFormat targetFormat);
+  void export(FileFormat targetFormat);
 
 
   /**
    * Saves the project to a file.
    */
   void save();
+
+  /**
+   * Lets the user pick a file and saves the project to that file.
+   */
+  void saveAs();
+
+  /**
+   * Loads the newest backup version of the currently opened project.
+   *
+   * @param backUpPath the path where the backup file is stored
+   */
+  void loadBackup(Path backUpPath);
 
   /**
    * Registers a runnable that gets called before the controller executes a loading, saving or

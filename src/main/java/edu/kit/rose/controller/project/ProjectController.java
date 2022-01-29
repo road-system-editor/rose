@@ -29,11 +29,6 @@ public interface ProjectController {
   void saveAs();
 
   /**
-   * Closes the currently opened project.
-   */
-  void close();
-
-  /**
    * Loads the newest backup version of the currently opened project.
    *
    * @param backUpPath the path where the backup file is stored

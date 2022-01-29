@@ -40,11 +40,6 @@ public class RoseProjectController extends Controller implements ProjectControll
   }
 
   @Override
-  public void close() {
-
-  }
-
-  @Override
   public void loadBackup(Path backUpPath) {
 
   }

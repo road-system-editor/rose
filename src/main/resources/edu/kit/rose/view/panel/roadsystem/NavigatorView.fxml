@@ -42,7 +42,7 @@
             style="-fx-background-color: transparent; -fx-graphic: url('edu/kit/rose/view/panel/roadsystem/LeftNavigationIcon.png');"/>
     <Button
             fx:id="navigateToTopButton"
-            layoutX="27"
+            layoutX="27.5"
             layoutY="3"
             minWidth="20"
             maxWidth="20"
@@ -51,7 +51,7 @@
             style="-fx-background-color: transparent; -fx-graphic: url('edu/kit/rose/view/panel/roadsystem/TopNavigationIcon.png');"/>
     <Button
             fx:id="navigateToBottomButton"
-            layoutX="27"
+            layoutX="27.5"
             layoutY="52"
             minWidth="20"
             maxWidth="20"

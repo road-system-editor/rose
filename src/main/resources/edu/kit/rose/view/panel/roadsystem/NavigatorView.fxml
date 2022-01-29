@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Rectangle?>
+<fx:root
+        xmlns="http://javafx.com/javafx"
+        xmlns:fx="http://javafx.com/fxml"
+        type="Pane"
+        prefWidth="75"
+        prefHeight="130">
+    <Circle
+            centerX="37"
+            centerY="37"
+            radius="37"
+            fill="lightgray"/>
+    <Rectangle
+            x="22"
+            y="70"
+            width="31"
+            height="60"
+            fill="lightgray"/>
+    <Button
+            fx:id="navigateToRightButton"
+            layoutX="52"
+            layoutY="27"
+            minWidth="20"
+            maxWidth="20"
+            minHeight="20"
+            maxHeight="20"
+            style="-fx-background-color: transparent; -fx-graphic: url('edu/kit/rose/view/panel/roadsystem/RightNavigationIcon.png');"/>
+    <Button
+            fx:id="navigateToLeftButton"
+            layoutX="3"
+            layoutY="27"
+            minWidth="20"
+            maxWidth="20"
+            minHeight="20"
+            maxHeight="20"
+            style="-fx-background-color: transparent; -fx-graphic: url('edu/kit/rose/view/panel/roadsystem/LeftNavigationIcon.png');"/>
+    <Button
+            fx:id="navigateToTopButton"
+            layoutX="27.5"
+            layoutY="3"
+            minWidth="20"
+            maxWidth="20"
+            minHeight="20"
+            maxHeight="20"
+            style="-fx-background-color: transparent; -fx-graphic: url('edu/kit/rose/view/panel/roadsystem/TopNavigationIcon.png');"/>
+    <Button
+            fx:id="navigateToBottomButton"
+            layoutX="27.5"
+            layoutY="52"
+            minWidth="20"
+            maxWidth="20"
+            minHeight="20"
+            maxHeight="20"
+            style="-fx-background-color: transparent; -fx-graphic: url('edu/kit/rose/view/panel/roadsystem/BottomNavigationIcon.png');"/>
+    <Button
+            fx:id="zoomInButton"
+            layoutX="27.5"
+            layoutY="80"
+            minWidth="20"
+            maxWidth="20"
+            minHeight="20"
+            maxHeight="20"
+            style="-fx-background-color: #009682; -fx-graphic: url('edu/kit/rose/view/panel/roadsystem/ZoomInIcon.png');">
+        <shape>
+            <Circle radius="20"/>
+        </shape>
+    </Button>
+    <Button
+            fx:id="zoomOutButton"
+            layoutX="27.5"
+            layoutY="105"
+            minWidth="20"
+            maxWidth="20"
+            minHeight="20"
+            maxHeight="20"
+            style="-fx-background-color: #009682; -fx-graphic: url('edu/kit/rose/view/panel/roadsystem/ZoomOutIcon.png');">
+    <shape>
+        <Circle radius="20"/>
+    </shape>
+    </Button>
+</fx:root>

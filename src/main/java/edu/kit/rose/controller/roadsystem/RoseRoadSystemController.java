@@ -44,7 +44,7 @@ public class RoseRoadSystemController extends Controller
   }
 
   @Override
-  public void setZoomLevel(int zoomLevel) {
+  public void setZoomLevel(double zoomLevel) {
 
   }
 

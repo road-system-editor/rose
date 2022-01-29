@@ -1,9 +1,14 @@
 <?import javafx.scene.layout.Pane?>
 
-<?import javafx.scene.layout.StackPane?>
+<?import edu.kit.rose.view.panel.roadsystem.NavigatorView?>
 <?import edu.kit.rose.view.panel.roadsystem.ChangeButtonPanel?>
+<?import javafx.scene.layout.AnchorPane?>
 <fx:root xmlns="http://javafx.com/javafx"
-         xmlns:fx="http://javafx.com/fxml" type="Pane">
-    <StackPane fx:id="stackPane"/>
-    <ChangeButtonPanel fx:id="changeButtonPanel"/>
+         xmlns:fx="http://javafx.com/fxml"
+         type="Pane"
+         fx:id="parentContainer">
+    <AnchorPane prefWidth="${parentContainer.width}" prefHeight="${parentContainer.height}">
+        <ChangeButtonPanel AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" fx:id="changeButtonPanel"/>
+        <NavigatorView AnchorPane.rightAnchor="7.0" AnchorPane.bottomAnchor="15.0" fx:id="navigator"/>
+    </AnchorPane>
 </fx:root>

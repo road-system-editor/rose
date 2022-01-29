@@ -71,7 +71,7 @@ public class NavigatorView extends FxmlContainer {
     });
 
     zoomOutButton.setOnMouseClicked(mouseEvent -> {
-      roadSystemController.setZoomLevel(project.getZoomSetting().getZoomLevel() + 0.1);
+      roadSystemController.setZoomLevel(project.getZoomSetting().getZoomLevel() - 0.1);
     });
   }
 

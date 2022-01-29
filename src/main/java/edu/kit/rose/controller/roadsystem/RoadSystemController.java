@@ -21,7 +21,7 @@ public interface RoadSystemController extends SetObservable<Segment, RoadSystemC
    *
    * @param zoomLevel zoomlevel of the road system editor
    */
-  void setZoomLevel(int zoomLevel);
+  void setZoomLevel(double zoomLevel);
 
   /**
    * Sets the position of the roadsystem editor on the

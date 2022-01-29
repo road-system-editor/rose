@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class ZoomSetting implements UnitObservable<ZoomSetting> {
   private Position centerOfView;
-  private int zoomLevel;
+  private double zoomLevel;
   private final List<UnitObserver<ZoomSetting>> observers = new ArrayList<>();
 
   /**
@@ -40,7 +40,7 @@ public class ZoomSetting implements UnitObservable<ZoomSetting> {
    *
    * @return the level of Zoom the View has.
    */
-  public int getZoomLevel() {
+  public double getZoomLevel() {
     return this.zoomLevel;
   }
 
@@ -49,7 +49,7 @@ public class ZoomSetting implements UnitObservable<ZoomSetting> {
    *
    * @param zoomLevel the new level of zoom of the view.
    */
-  public void setZoomLevel(int zoomLevel) {
+  public void setZoomLevel(double zoomLevel) {
     this.zoomLevel = zoomLevel;
     notifySubscribers();
   }

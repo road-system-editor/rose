@@ -16,13 +16,13 @@ import edu.kit.rose.model.plausibility.criteria.CriteriaManager;
 import edu.kit.rose.model.plausibility.violation.Violation;
 import edu.kit.rose.model.roadsystem.elements.Base;
 import edu.kit.rose.model.roadsystem.elements.Segment;
+import java.util.Collection;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import java.util.Collection;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 
 class RosePlausibilityControllerTest {
@@ -57,9 +57,12 @@ class RosePlausibilityControllerTest {
     AtomicReference<Boolean> imported = new AtomicReference<>();
     AtomicReference<Boolean> onBeginRun = new AtomicReference<>();
     AtomicReference<Boolean> onEndRun = new AtomicReference<>();
-    doAnswer(e -> {onBeginRun.set(true); return null;}).when(onBegin).run();
-    doAnswer(e -> {onEndRun.set(true); return null;}).when(onEnd).run();
-    doAnswer(e -> {imported.set(true); return null;}).when(applicationDataSystem).importCriteriaFromFile(any());
+    doAnswer(e -> {
+      onBeginRun.set(true); return null; }).when(onBegin).run();
+    doAnswer(e -> {
+      onEndRun.set(true); return null; }).when(onEnd).run();
+    doAnswer(e -> {
+      imported.set(true); return null; }).when(applicationDataSystem).importCriteriaFromFile(any());
     onBeginRun.set(false);
     onEndRun.set(false);
     imported.set(false);
@@ -78,9 +81,12 @@ class RosePlausibilityControllerTest {
     AtomicReference<Boolean> exported = new AtomicReference<>();
     AtomicReference<Boolean> onBeginRun = new AtomicReference<>();
     AtomicReference<Boolean> onEndRun = new AtomicReference<>();
-    doAnswer(e -> {onBeginRun.set(true); return null;}).when(onBegin).run();
-    doAnswer(e -> {onEndRun.set(true); return null;}).when(onEnd).run();
-    doAnswer(e -> {exported.set(true); return null;}).when(applicationDataSystem).exportCriteriaToFile(any());
+    doAnswer(e -> {
+      onBeginRun.set(true); return null; }).when(onBegin).run();
+    doAnswer(e -> {
+      onEndRun.set(true); return null; }).when(onEnd).run();
+    doAnswer(e -> {
+      exported.set(true); return null; }).when(applicationDataSystem).exportCriteriaToFile(any());
     onBeginRun.set(false);
     onEndRun.set(false);
     exported.set(false);
@@ -100,7 +106,8 @@ class RosePlausibilityControllerTest {
     AtomicReference<Collection<Segment>> segment = new AtomicReference<>();
     segment.set(List.of(new Base()));
     when(violation.offendingSegments()).thenAnswer(e -> segment.get());
-    doAnswer(e -> {position.set(new Position(0, 0)); return null;})
+    doAnswer(e -> {
+      position.set(new Position(0, 0)); return null; })
             .when(zoomSetting).setCenterOfView(any());
     when(this.project.getZoomSetting()).thenReturn(zoomSetting);
 

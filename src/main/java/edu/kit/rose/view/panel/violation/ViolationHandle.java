@@ -4,7 +4,6 @@ import edu.kit.rose.controller.plausibility.PlausibilityController;
 import edu.kit.rose.infrastructure.UnitObserver;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.model.plausibility.violation.Violation;
-import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.view.commons.FxmlContainer;
 import edu.kit.rose.view.panel.problem.MessageFactory;
 import java.util.Collection;

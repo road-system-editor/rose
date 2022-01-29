@@ -24,40 +24,40 @@
             fill="lightgray"/>
     <Button
             fx:id="navigateToRightButton"
-            layoutX="47"
+            layoutX="52"
             layoutY="27"
             minWidth="20"
             maxWidth="20"
             minHeight="20"
             maxHeight="20"
-            style="-fx-background-color: black;"/>
+            style="-fx-background-color: transparent; -fx-graphic: url('edu/kit/rose/view/panel/roadsystem/RightNavigationIcon.png');"/>
     <Button
             fx:id="navigateToLeftButton"
-            layoutX="7"
+            layoutX="3"
             layoutY="27"
             minWidth="20"
             maxWidth="20"
             minHeight="20"
             maxHeight="20"
-            style="-fx-background-color: black;"/>
+            style="-fx-background-color: transparent; -fx-graphic: url('edu/kit/rose/view/panel/roadsystem/LeftNavigationIcon.png');"/>
     <Button
             fx:id="navigateToTopButton"
             layoutX="27"
-            layoutY="7"
+            layoutY="3"
             minWidth="20"
             maxWidth="20"
             minHeight="20"
             maxHeight="20"
-            style="-fx-background-color: black;"/>
+            style="-fx-background-color: transparent; -fx-graphic: url('edu/kit/rose/view/panel/roadsystem/TopNavigationIcon.png');"/>
     <Button
             fx:id="navigateToBottomButton"
             layoutX="27"
-            layoutY="47"
+            layoutY="52"
             minWidth="20"
             maxWidth="20"
             minHeight="20"
             maxHeight="20"
-            style="-fx-background-color: black;"/>
+            style="-fx-background-color: transparent; -fx-graphic: url('edu/kit/rose/view/panel/roadsystem/BottomNavigationIcon.png');"/>
     <Button
             fx:id="zoomInButton"
             layoutX="27"
@@ -66,7 +66,9 @@
             maxWidth="20"
             minHeight="20"
             maxHeight="20"
-            style="-fx-background-color: black;">
+            textFill="white"
+            text="+"
+            style="-fx-background-color: #009682;">
         <shape>
             <Circle radius="20"/>
         </shape>
@@ -79,7 +81,9 @@
             maxWidth="20"
             minHeight="20"
             maxHeight="20"
-            style="-fx-background-color: black;">
+            textFill="white"
+            text="-"
+            style="-fx-background-color: #009682;">
     <shape>
         <Circle radius="20"/>
     </shape>

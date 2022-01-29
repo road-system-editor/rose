@@ -28,6 +28,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import org.jgrapht.Graph;
+import org.jgrapht.Graphs;
 import org.jgrapht.graph.DefaultUndirectedGraph;
 
 
@@ -257,20 +258,7 @@ class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, RoadSys
     if (!elements.contains(segment)) {
       throw new IllegalArgumentException("unknown segment");
     }
-    return new RoseBox<>(getAdjacentSegmentsList(segment));
-  }
-
-  //returns all segments adjacent to a given segment as a list
-  private List<Segment> getAdjacentSegmentsList(Segment segment) {
-    var connectors = segment.getConnectors();
-    return getConnectionsSet(segment).stream()
-        .map(connection -> {
-          var connector1 = connection.getConnectors().get(0);
-          var connector2 = connection.getOther(connector1);
-          return connectorSegmentMap.get(connectors.contains(connector1)
-              ? connector2 : connector1);
-        })
-        .collect(Collectors.toList());
+    return new RoseBox<>(Graphs.neighborListOf(segmentConnectionGraph, segment));
   }
 
   @Override
@@ -360,7 +348,7 @@ class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, RoadSys
     connectorBoxes.forEach(cb -> cb.forEach(connectors::add));
 
     return segments.stream()
-        .flatMap(s -> getAdjacentSegmentsList(s).stream())
+        .flatMap(s -> Graphs.neighborListOf(segmentConnectionGraph, s).stream())
         .filter(s -> !segments.contains(s))
         .flatMap(s -> getConnectionsSet(s).stream()
             .filter(c -> StreamSupport.stream(c.getConnectors().spliterator(), false)

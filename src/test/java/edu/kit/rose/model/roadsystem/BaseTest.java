@@ -11,6 +11,7 @@ import edu.kit.rose.model.roadsystem.elements.Connector;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import java.util.LinkedList;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -173,17 +174,25 @@ public class BaseTest {
 
   @Test
   void rotationTest() {
-    var oldRotation = testBase.getRotation();
-    testBase.rotate(69);
-    Assertions.assertEquals(oldRotation + 69, testBase.getRotation());
+    var funnyNumber = 69;
+    Assumptions.assumeTrue(testBase.getRotation() == 0);
 
-    oldRotation = testBase.getRotation();
+    testBase.rotate(funnyNumber);
+    Assertions.assertEquals(funnyNumber, testBase.getRotation());
+
     testBase.rotate(-360);
-    Assertions.assertEquals(oldRotation, testBase.getRotation());
+    Assertions.assertEquals(funnyNumber, testBase.getRotation());
 
-    oldRotation = testBase.getRotation();
     testBase.rotate(360);
-    Assertions.assertEquals(oldRotation, testBase.getRotation());
+    Assertions.assertEquals(funnyNumber, testBase.getRotation());
+
+    var evenFunnierNumber = 420;
+
+    testBase.rotate(evenFunnierNumber);
+    Assertions.assertEquals(129, testBase.getRotation());
+
+    testBase.rotate(-evenFunnierNumber);
+    Assertions.assertEquals(funnyNumber, testBase.getRotation());
   }
 
   @Test

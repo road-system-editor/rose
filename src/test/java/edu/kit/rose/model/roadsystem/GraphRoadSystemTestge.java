@@ -16,6 +16,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -29,11 +30,10 @@ public class GraphRoadSystemTestge {
   private RoadSystem testRoadSystem;
   private TimeSliceSetting timeSliceSetting;
   private Segment initialSegment;
-  DualSetObserver<Element, Connection, RoadSystem> observer;
-  ArgumentCaptor<Element> elementArgumentCaptorAddition;
-  ArgumentCaptor<Connection> connectionArgumentCaptorAddition;
-  ArgumentCaptor<Element> elementArgumentCaptorRemoval;
-  ArgumentCaptor<Connection> connectionArgumentCaptorRemoval;
+  private ArgumentCaptor<Element> elementArgumentCaptorAddition;
+  private ArgumentCaptor<Connection> connectionArgumentCaptorAddition;
+  private ArgumentCaptor<Element> elementArgumentCaptorRemoval;
+  private ArgumentCaptor<Connection> connectionArgumentCaptorRemoval;
 
   @BeforeEach
   void setup() {
@@ -44,7 +44,7 @@ public class GraphRoadSystemTestge {
     connectionArgumentCaptorRemoval = ArgumentCaptor.forClass(Connection.class);
     var criteriaManager = Mockito.mock(CriteriaManager.class);
     timeSliceSetting = Mockito.mock(TimeSliceSetting.class);
-    observer = Mockito.mock(DualSetObserver.class);
+    DualSetObserver<Element, Connection, RoadSystem> observer = Mockito.mock(DualSetObserver.class);
     //Mockito method setup
     Mockito.when(criteriaManager.getCriteria()).thenReturn(new RoseSortedBox<>());
     Mockito.doAnswer(invocation -> null)
@@ -65,15 +65,16 @@ public class GraphRoadSystemTestge {
 
   @Test
   void testGetElements() {
-    Assertions.assertTrue(testRoadSystem.getElements().contains(initialSegment)
-        && testRoadSystem.getElements().getSize() == 1);
+    Assertions.assertTrue(testRoadSystem.getElements().contains(initialSegment));
+    Assertions.assertEquals(1, testRoadSystem.getElements().getSize());
+
   }
 
   @Test
   void testGetElementsByName() {
     var segment = createSegmentWithName(SegmentType.EXIT, "ROSEge");
-    Assertions.assertTrue(testRoadSystem.getElementsByName("R").contains(segment)
-        && testRoadSystem.getElementsByName("R").getSize() == 1);
+    Assertions.assertTrue(testRoadSystem.getElementsByName("R").contains(segment));
+    Assertions.assertEquals(1, testRoadSystem.getElementsByName("R").getSize());
   }
 
   @Test
@@ -81,14 +82,20 @@ public class GraphRoadSystemTestge {
     var entrance = testRoadSystem.createSegment(SegmentType.ENTRANCE);
     Assertions.assertEquals(entrance.getSegmentType(), SegmentType.ENTRANCE);
     Assertions.assertEquals(entrance, elementArgumentCaptorAddition.getValue());
+    Assertions.assertTrue(testRoadSystem.getElements().contains(entrance));
+    Assertions.assertEquals(0, testRoadSystem.getConnections(entrance).getSize());
 
     var base = testRoadSystem.createSegment(SegmentType.BASE);
     Assertions.assertEquals(base.getSegmentType(), SegmentType.BASE);
     Assertions.assertEquals(base, elementArgumentCaptorAddition.getValue());
+    Assertions.assertTrue(testRoadSystem.getElements().contains(base));
+    Assertions.assertEquals(0, testRoadSystem.getConnections(base).getSize());
 
     var exit = testRoadSystem.createSegment(SegmentType.EXIT);
     Assertions.assertEquals(exit.getSegmentType(), SegmentType.EXIT);
     Assertions.assertEquals(exit, elementArgumentCaptorAddition.getValue());
+    Assertions.assertTrue(testRoadSystem.getElements().contains(exit));
+    Assertions.assertEquals(0, testRoadSystem.getConnections(exit).getSize());
   }
 
   @Test
@@ -98,6 +105,11 @@ public class GraphRoadSystemTestge {
     var exit = testRoadSystem.createSegment(SegmentType.EXIT);
     var group = testRoadSystem.createGroup(Set.of(entrance, base, exit));
     Assertions.assertEquals(group, elementArgumentCaptorAddition.getValue());
+    Assertions.assertTrue(testRoadSystem.getElements().contains(group));
+    Assertions.assertEquals(3, group.getElements().getSize());
+    var elements = new LinkedList<Element>();
+    group.getElements().forEach(elements::add);
+    Assertions.assertTrue(elements.containsAll(List.of(entrance, base, exit)));
   }
 
   @Test
@@ -105,6 +117,7 @@ public class GraphRoadSystemTestge {
     testRoadSystem.removeElement(initialSegment);
     Assertions.assertEquals(initialSegment, elementArgumentCaptorRemoval.getValue());
     Assertions.assertEquals(0, testRoadSystem.getElements().getSize());
+    Assertions.assertFalse(testRoadSystem.getElements().contains(initialSegment));
   }
 
   @Test
@@ -114,10 +127,13 @@ public class GraphRoadSystemTestge {
     var entranceConnector = entrance.getConnectors().iterator().next();
     var connection = testRoadSystem.connectConnectors(initialConnector, entranceConnector);
     Assertions.assertEquals(connection, connectionArgumentCaptorAddition.getValue());
+    Assertions.assertEquals(connection, testRoadSystem.getConnection(initialConnector));
     var exit = testRoadSystem.createSegment(SegmentType.EXIT);
     var exitConnector = exit.getConnectors().iterator().next();
     var newConnection = testRoadSystem.connectConnectors(initialConnector, exitConnector);
     Assertions.assertEquals(newConnection, connectionArgumentCaptorAddition.getValue());
+    Assertions.assertEquals(newConnection, testRoadSystem.getConnection(initialConnector));
+    Assertions.assertEquals(connection, connectionArgumentCaptorRemoval.getValue());
   }
 
   @Test
@@ -128,6 +144,7 @@ public class GraphRoadSystemTestge {
     var connection = testRoadSystem.connectConnectors(initialConnector, entranceConnector);
     testRoadSystem.disconnectConnection(connection);
     Assertions.assertEquals(connection, connectionArgumentCaptorRemoval.getValue());
+    Assertions.assertNull(testRoadSystem.getConnection(initialConnector));
   }
 
   @Test
@@ -145,6 +162,8 @@ public class GraphRoadSystemTestge {
     testRoadSystem.disconnectFromAll(initialSegment);
     Assertions.assertEquals(List.of(connection, newConnection),
         connectionArgumentCaptorRemoval.getAllValues());
+    Assertions.assertNull(testRoadSystem.getConnection(initialConnector1));
+    Assertions.assertNull(testRoadSystem.getConnection(initialConnector2));
   }
 
   @Test
@@ -218,7 +237,7 @@ public class GraphRoadSystemTestge {
     var connection = testRoadSystem.connectConnectors(initialConnector1, entranceConnector);
     var newConnection = testRoadSystem.connectConnectors(initialConnector2, exitConnector);
     testRoadSystem.moveSegments(List.of(initialSegment, entrance), new Movement(69, 420));
-    var justHereForCheckStyle = connection; //fuck checkstyle in test classes
+    var justHereForCheckStyle = connection; //checkstyle in test classes was a great idea
     Assertions.assertEquals(newConnection, connectionArgumentCaptorRemoval.getValue());
     var connections = new LinkedList<Connection>();
     testRoadSystem.getConnections(initialSegment).forEach(connections::add);
@@ -255,19 +274,19 @@ public class GraphRoadSystemTestge {
   @Test
   void rotateSegmentTest() {
     int funnyNumber = 69;
-    Assertions.assertEquals(0, initialSegment.getRotation());
+    Assumptions.assumeTrue(initialSegment.getRotation() == 0);
     testRoadSystem.rotateSegment(initialSegment, funnyNumber);
     Assertions.assertEquals(funnyNumber, initialSegment.getRotation());
   }
 
   @Test
   void getTimeSliceSettingTest() {
-    Assertions.assertEquals(timeSliceSetting, testRoadSystem.getTimeSliceSetting());
+    Assertions.assertSame(timeSliceSetting, testRoadSystem.getTimeSliceSetting());
   }
 
   @Test
   void getThisTest() {
-    Assertions.assertEquals(testRoadSystem, testRoadSystem.getThis());
+    Assertions.assertSame(testRoadSystem, testRoadSystem.getThis());
   }
 
   @Test
@@ -283,7 +302,7 @@ public class GraphRoadSystemTestge {
   private Segment createSegmentWithName(SegmentType segmentType, String name) {
     var segment = testRoadSystem.createSegment(segmentType);
     var nameAccessor = segment.getAttributeAccessors().get(0);
-    assert nameAccessor.getAttributeType() == AttributeType.NAME;
+    Assumptions.assumeTrue(nameAccessor.getAttributeType() == AttributeType.NAME);
     ((AttributeAccessor<String>) nameAccessor).setValue(name);
     return segment;
   }

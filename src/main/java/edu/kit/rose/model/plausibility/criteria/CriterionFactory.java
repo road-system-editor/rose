@@ -37,11 +37,11 @@ class CriterionFactory {
   }
 
   /**
-   * Creates a new ValueCriterion.
+   * Creates new ValueCriteria.
    *
-   * @return the new ValueCriterion
+   * @return the list of new ValueCriteria
    */
-  public List<ValueCriterion> createValueCriterion() {
+  public List<ValueCriterion> createValueCriteria() {
     ArrayList<ValueCriterion> valueCriterion = new ArrayList<>();
 
     ValueCriterion criterion = new ValueCriterion(this.violationManager, AttributeType.LANE_COUNT,

@@ -51,7 +51,7 @@ class CriterionFactoryTest {
 
   @Test
   void createValueCriterionTest() {
-    List<ValueCriterion> criterion = this.factory.createValueCriterion();
+    List<ValueCriterion> criterion = this.factory.createValueCriteria();
 
     for (ValueCriterion criteria : criterion) {
       Assertions.assertNotNull(criteria);

@@ -77,6 +77,7 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
    */
   public void setAttributeType(AttributeType attributeType) {
     this.attributeType = attributeType;
+    notifySubscribers();
   }
 
   /**
@@ -95,6 +96,7 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
    */
   public void setOperatorType(OperatorType operatorType) {
     this.operatorType = operatorType;
+    notifySubscribers();
   }
 
   /**

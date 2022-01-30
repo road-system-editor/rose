@@ -1,8 +1,10 @@
 package edu.kit.rose.controller.roadsystem;
 
+import edu.kit.rose.infrastructure.RoseBox;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.elements.Base;
+import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Entrance;
 import edu.kit.rose.model.roadsystem.elements.Exit;
 import edu.kit.rose.model.roadsystem.elements.Segment;
@@ -12,6 +14,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 
 /**
@@ -32,6 +35,10 @@ public class CreateStreetSegmentCommandTest {
     this.project = Mockito.mock(Project.class);
 
     Mockito.when(project.getRoadSystem()).thenReturn(roadSystem);
+    Mockito.when(roadSystem.getElements()).thenReturn(new RoseBox<Element>());
+
+    Mockito.when(roadSystem.createSegment(ArgumentMatchers.any(SegmentType.class)))
+        .thenAnswer(invocation -> createSegment(invocation.getArgument(0)));
   }
 
   private Segment createSegment(SegmentType segmentType) {
@@ -49,7 +56,7 @@ public class CreateStreetSegmentCommandTest {
     Mockito.when(roadSystem.createSegment(Mockito.any(SegmentType.class)))
         .thenAnswer(invocation -> {
           called.set(true);
-          return createSegment(invocation.getArgument(0));
+          return null;
         });
 
     CreateStreetSegmentCommand command
@@ -60,7 +67,19 @@ public class CreateStreetSegmentCommandTest {
   }
 
   @Test
-  public void testUnexecute() {
+  public void testUnExecute() {
+    AtomicReference<Boolean> called = new AtomicReference<>(false);
 
+    Mockito.doAnswer(invocation -> {
+      called.set(true);
+      return null;
+    }).when(roadSystem).removeElement(ArgumentMatchers.any(Segment.class));
+
+    CreateStreetSegmentCommand command
+        = new CreateStreetSegmentCommand(this.project, SegmentType.BASE);
+
+    command.execute();
+    command.unexecute();
+    Assertions.assertTrue(called.get());
   }
 }

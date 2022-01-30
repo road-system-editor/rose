@@ -1,0 +1,21 @@
+<?import javafx.scene.layout.Pane?>
+
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Label?>
+<fx:root xmlns="http://javafx.com/javafx"
+         xmlns:fx="http://javafx.com/fxml" type="Pane"
+         prefHeight="30"
+         prefWidth="80"
+         fx:id="parentContainer">
+
+    <VBox prefWidth="${parentContainer.width}" prefHeight="${parentContainer.height}">
+        <HBox>
+            <Label fx:id="violationLabel" prefWidth="100" prefHeight="30"/>
+            <Label fx:id="segmentLabel" prefWidth="250" prefHeight = "30" HBox.hgrow="ALWAYS"/>
+        </HBox>
+        <VBox fx:id="violationBox"/>
+
+    </VBox>
+</fx:root>
+

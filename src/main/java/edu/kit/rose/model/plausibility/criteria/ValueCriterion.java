@@ -15,7 +15,8 @@ class ValueCriterion implements PlausibilityCriterion {
 
   @Override
   public String getName() {
-    return null;
+    return "exampleName";
+    //TODO: Implement, this is only a stub.
   }
 
   @Override
@@ -67,5 +68,15 @@ class ValueCriterion implements PlausibilityCriterion {
   @Override
   public PlausibilityCriterion getThis() {
     return this;
+  }
+
+  @Override
+  public void notifyAddition(Element unit) {
+
+  }
+
+  @Override
+  public void notifyRemoval(Element unit) {
+
   }
 }

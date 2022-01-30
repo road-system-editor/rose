@@ -65,7 +65,7 @@ public interface PlausibilityController {
    * @param criterion    the criterion to set the operator type
    * @param validationType the new operator type
    */
-  void setCompatibilityCriterionOperatorType(CompatibilityCriterion criterion,
+  void setCompatibilityCriterionValidationType(CompatibilityCriterion criterion,
                                              ValidationType validationType);
 
   /**
@@ -84,6 +84,11 @@ public interface PlausibilityController {
    * @param criterion the criterion to delete
    */
   void deleteCompatibilityCriterion(CompatibilityCriterion criterion);
+
+  /**
+   * Deletes all compatibility criteria from the plausibility system.
+   */
+  void deleteAllCompatibilityCriteria();
 
   /**
    * Opens a file chooser and imports the compatibility criteria

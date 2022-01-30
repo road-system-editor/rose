@@ -16,6 +16,7 @@ import edu.kit.rose.model.roadsystem.elements.Group;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Set;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -125,7 +126,7 @@ class CreateGroupCommandTest {
       }
       this.roadElements.add(this.group);
       return this.group;
-    }).when(this.roadSystem).createGroup(ArgumentMatchers.<Collection<Element>>any());
+    }).when(this.roadSystem).createGroup(ArgumentMatchers.<Set<Element>>any());
 
     doAnswer(e -> this.roadElements.remove((Element) e.getArgument(0)))
             .when(roadSystem).removeElement(any(Element.class));

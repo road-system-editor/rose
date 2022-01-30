@@ -3,13 +3,15 @@ module edu.kit.rose.entwurf {
     requires javafx.fxml;
     requires javafx.graphics;
     requires com.google.guice;
+    requires commons.collections4;
+    requires org.jgrapht.core;
 
-    opens edu.kit.rose.view to javafx.fxml, com.google.guice;
+  opens edu.kit.rose.view to javafx.fxml, com.google.guice;
     opens edu.kit.rose.view.commons to javafx.fxml, com.google.guice;
     opens edu.kit.rose.view.panel.criterion to javafx.fxml, com.google.guice;
     opens edu.kit.rose.view.panel.hierarchy to javafx.fxml, com.google.guice;
     opens edu.kit.rose.view.panel.measurement to javafx.fxml, com.google.guice;
-    opens edu.kit.rose.view.panel.problem to javafx.fxml, com.google.guice;
+    opens edu.kit.rose.view.panel.violation to javafx.fxml, com.google.guice;
     opens edu.kit.rose.view.panel.roadsystem to javafx.fxml, com.google.guice;
     opens edu.kit.rose.view.panel.segment to javafx.fxml, com.google.guice;
     opens edu.kit.rose.view.panel.segmentbox to javafx.fxml, com.google.guice;

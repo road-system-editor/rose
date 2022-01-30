@@ -7,6 +7,7 @@ import edu.kit.rose.model.ApplicationDataSystem;
 import edu.kit.rose.model.ModelFactory;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
+import java.nio.file.Path;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,6 +17,7 @@ import org.mockito.Mockito;
  * Tests the {@link RoseAttributeController} class.
  */
 public class RoseAttributeControllerTest {
+  private static final Path CONFIG_PATH = Path.of("build/tmp/tests/config");
 
   private RoseAttributeController attributeController;
   private ApplicationDataSystem applicationDataSystem;
@@ -27,7 +29,7 @@ public class RoseAttributeControllerTest {
 
   @BeforeEach
   void setUp() {
-    var modelFactory = new ModelFactory(null);
+    var modelFactory = new ModelFactory(CONFIG_PATH);
     applicationDataSystem = modelFactory.createApplicationDataSystem();
     attributeController = new RoseAttributeController(new RoseChangeCommandBuffer(),
         new RoseStorageLock(), Mockito.mock(Navigator.class), modelFactory.createProject(),

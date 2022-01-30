@@ -10,6 +10,7 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 
 /**
@@ -59,10 +60,10 @@ public class Grid extends Pane {
 
   private Collection<Line> getLines() {
     var lines = new LinkedList<Line>();
-    for (int y = 0; y < HEIGHT; y += HORIZONTAL_LINE_SPACING) {
+    for (int y = 0; y <= HEIGHT; y += HORIZONTAL_LINE_SPACING) {
       lines.add(getLine(y, Orientation.HORIZONTAL));
     }
-    for (int x = 0; x < WIDTH; x += VERTICAL_LINE_SPACING) {
+    for (int x = 0; x <= WIDTH; x += VERTICAL_LINE_SPACING) {
       lines.add(getLine(x, Orientation.VERTICAL));
     }
     return lines;

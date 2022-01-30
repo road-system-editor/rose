@@ -19,6 +19,13 @@ public class NavigatorView extends FxmlContainer {
   private static final int UPDATE_EDITOR_POSITION_OFFSET = 10;
   private static final int UPDATE_EDITOR_POSITION_IGNORE_DIMENSION = 0;
 
+  private Runnable onUp = () -> {};
+  private Runnable onDown = () -> {};
+  private Runnable onLeft = () -> {};
+  private Runnable onRight = () -> {};
+  private Runnable onIn = () -> {};
+  private Runnable onOut = () -> {};
+
   @Inject
   private RoadSystemController roadSystemController;
 
@@ -48,31 +55,37 @@ public class NavigatorView extends FxmlContainer {
     registerButtonListeners();
   }
 
+  public void setOnUp(Runnable onUp) {
+    this.onUp = onUp;
+  }
+
+  public void setOnDown(Runnable onDown) {
+    this.onDown = onDown;
+  }
+
+  public void setOnLeft(Runnable onLeft) {
+    this.onLeft = onLeft;
+  }
+
+  public void setOnRight(Runnable onRight) {
+    this.onRight = onRight;
+  }
+
+  public void setOnIn(Runnable onIn) {
+    this.onIn = onIn;
+  }
+
+  public void setOnOut(Runnable onOut) {
+    this.onOut = onOut;
+  }
+
   private void registerButtonListeners() {
-    navigateToTopButton
-        .setOnMouseClicked(mouseEvent -> updateEditorPosition(
-            UPDATE_EDITOR_POSITION_IGNORE_DIMENSION,
-            UPDATE_EDITOR_POSITION_OFFSET));
-    navigateToBottomButton
-        .setOnMouseClicked(mouseEvent -> updateEditorPosition(
-            UPDATE_EDITOR_POSITION_IGNORE_DIMENSION,
-            -UPDATE_EDITOR_POSITION_OFFSET));
-    navigateToLeftButton
-        .setOnMouseClicked(mouseEvent -> updateEditorPosition(
-            -UPDATE_EDITOR_POSITION_OFFSET,
-            UPDATE_EDITOR_POSITION_IGNORE_DIMENSION));
-    navigateToRightButton
-        .setOnMouseClicked(mouseEvent -> updateEditorPosition(
-            -UPDATE_EDITOR_POSITION_OFFSET,
-            UPDATE_EDITOR_POSITION_IGNORE_DIMENSION));
-
-    zoomInButton.setOnMouseClicked(mouseEvent -> {
-      roadSystemController.setZoomLevel(project.getZoomSetting().getZoomLevel() + 0.1);
-    });
-
-    zoomOutButton.setOnMouseClicked(mouseEvent -> {
-      roadSystemController.setZoomLevel(project.getZoomSetting().getZoomLevel() - 0.1);
-    });
+    navigateToTopButton.setOnMouseClicked(mouseEvent -> onUp.run());
+    navigateToBottomButton.setOnMouseClicked(mouseEvent -> onDown.run());
+    navigateToLeftButton.setOnMouseClicked(mouseEvent -> onLeft.run());
+    navigateToRightButton.setOnMouseClicked(mouseEvent -> onRight.run());
+    zoomInButton.setOnMouseClicked(mouseEvent -> onIn.run());
+    zoomOutButton.setOnMouseClicked(mouseEvent -> onOut.run());
   }
 
   private void updateEditorPosition(int offsetX, int offsetY) {

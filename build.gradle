@@ -42,7 +42,7 @@ javafx {
 dependencies {
 
     implementation("com.google.inject:guice:5.0.1")
-    implementation 'org.apache.commons:commons-collections4:4.1'
+    implementation 'org.apache.commons:commons-collections4:4.4'
 
     implementation('org.jgrapht:jgrapht-core:1.5.1')
 

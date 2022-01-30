@@ -58,12 +58,14 @@ public class ViolationOverviewPanel extends FxmlContainer
   }
 
   private void initViolationBox() {
+    /* TODO
     violationBox.getChildren().clear();
 
     for (Violation violation : project.getPlausibilitySystem().getViolationManager()
         .getViolations()) {
       violationBox.getChildren().add(new ViolationHandle(controller, messageFactory, violation));
     }
+    */
   }
 
   @Override
@@ -91,6 +93,7 @@ public class ViolationOverviewPanel extends FxmlContainer
 
   @Override
   protected Collection<FxmlContainer> getSubFxmlContainer() {
-    return List.of((ViolationHandle) violationBox.getChildren());
+    return List.of();
+    //TODO return List.of((ViolationHandle) violationBox.getChildren());
   }
 }

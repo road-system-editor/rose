@@ -1,7 +1,10 @@
 package edu.kit.rose.view.panel.roadsystem;
 
+import edu.kit.rose.controller.roadsystem.RoseRoadSystemController;
 import edu.kit.rose.infrastructure.Position;
+import edu.kit.rose.model.roadsystem.elements.Exit;
 import edu.kit.rose.model.roadsystem.elements.Segment;
+import edu.kit.rose.view.commons.ExitSegmentView;
 import edu.kit.rose.view.commons.SegmentView;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -50,6 +53,7 @@ public class Grid extends Pane {
         CornerRadii.EMPTY,
         Insets.EMPTY)));
     getChildren().addAll(getLines());
+
   }
 
   private void setEventListeners() {

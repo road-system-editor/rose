@@ -21,9 +21,11 @@ import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.elements.Connection;
 import edu.kit.rose.model.roadsystem.elements.Connector;
 import edu.kit.rose.model.roadsystem.elements.Element;
+import edu.kit.rose.model.roadsystem.elements.Exit;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import edu.kit.rose.model.roadsystem.measurements.Measurement;
+import edu.kit.rose.view.commons.ExitSegmentView;
 import edu.kit.rose.view.commons.FxmlContainer;
 import edu.kit.rose.view.commons.SegmentView;
 import edu.kit.rose.view.panel.segment.SegmentEditorPanel;
@@ -98,6 +100,12 @@ public class RoadSystemPanel extends FxmlContainer
 
     this.roadSystemGrid.setOnAreaSelected((position1, position2) ->
         this.roadSystemController.selectSegmentsInRectangle(position1, position2));
+
+    var exit = new Exit();
+    exit.rotate(45);
+    exit.move(new Movement(1500, 1500));
+    roadSystemGrid.getChildren().add(
+        new ExitSegmentView(exit, roadSystemController, getTranslator()));
   }
 
   @Override

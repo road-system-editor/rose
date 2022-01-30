@@ -54,7 +54,7 @@ public class RoseSelectionBuffer implements SelectionBuffer {
   }
 
   @Override
-  public List<Element> getSelectedSegments() {
+  public List<Segment> getSelectedSegments() {
     return new ArrayList<>(this.segmentList);
   }
 

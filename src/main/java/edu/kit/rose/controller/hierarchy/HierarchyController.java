@@ -45,6 +45,13 @@ public interface HierarchyController {
   void setGroupName(Group group, String name);
 
   /**
+   * Toggles the selection state of a given segment.
+   *
+   * @param segment the segment to toggle the selection state
+   */
+  void toggleSegmentSelection(Segment segment);
+
+  /**
    * Adds a biConsumer to the consumer list.
    *
    * @param consumer to be added

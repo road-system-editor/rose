@@ -1,19 +1,19 @@
 package edu.kit.rose.controller.plausibility;
 
-import edu.kit.rose.controller.command.ChangeCommandBuffer;
 import edu.kit.rose.controller.commons.Controller;
 import edu.kit.rose.controller.commons.StorageLock;
+import edu.kit.rose.controller.navigation.FileDialogType;
 import edu.kit.rose.controller.navigation.Navigator;
-import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.model.ApplicationDataSystem;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.plausibility.criteria.CompatibilityCriterion;
 import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterion;
 import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterionType;
-import edu.kit.rose.model.plausibility.criteria.validation.OperatorType;
+import edu.kit.rose.model.plausibility.criteria.validation.ValidationType;
 import edu.kit.rose.model.plausibility.violation.Violation;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
+import java.nio.file.Path;
 
 
 /**
@@ -22,6 +22,9 @@ import edu.kit.rose.model.roadsystem.elements.SegmentType;
  * the plausibility criteria.
  */
 public class RosePlausibilityController extends Controller implements PlausibilityController {
+
+  private final Project project;
+  private final ApplicationDataSystem applicationDataSystem;
 
   /**
    * Creates a new {@link RosePlausibilityController}.
@@ -34,63 +37,76 @@ public class RosePlausibilityController extends Controller implements Plausibili
   public RosePlausibilityController(StorageLock storageLock, Navigator navigator, Project project,
                                     ApplicationDataSystem applicationDataSystem) {
     super(storageLock, navigator);
+    this.project = project;
+    this.applicationDataSystem = applicationDataSystem;
+
   }
 
   @Override
   public void addCompatibilityCriterion(PlausibilityCriterionType type) {
-
+    applicationDataSystem.getCriteriaManager().createCriterionOfType(type);
   }
 
   @Override
   public void setCompatibilityCriterionName(CompatibilityCriterion criterion,
                                             String criterionName) {
-
+    criterion.setName(criterionName);
   }
 
   @Override
   public void addSegmentTypeToCompatibilityCriterion(CompatibilityCriterion criterion,
                                                      SegmentType segmentType) {
-
+    criterion.addSegmentType(segmentType);
   }
 
   @Override
   public void removeSegmentTypeToCompatibilityCriterion(CompatibilityCriterion criterion,
                                                         SegmentType segmentType) {
-
+    criterion.removeSegmentType(segmentType);
   }
 
   @Override
   public void setCompatibilityCriterionAttributeType(CompatibilityCriterion criterion,
                                                      AttributeType attributeType) {
-
+    criterion.setAttributeType(attributeType);
   }
 
   @Override
-  public void setCompatibilityCriterionOperatorType(CompatibilityCriterion criterion,
-                                                    OperatorType operatorType) {
-
+  public void setCompatibilityCriterionValidationType(CompatibilityCriterion criterion,
+                                                    ValidationType validationType) {
+    criterion.setOperatorType(validationType);
   }
 
   @Override
   public void setCompatibilityCriterionLegalDiscrepancy(CompatibilityCriterion criterion,
                                                         double discrepancy) {
-
+    criterion.setLegalDiscrepancy(discrepancy);
   }
 
 
   @Override
   public void deleteCompatibilityCriterion(CompatibilityCriterion criterion) {
-
+    applicationDataSystem.getCriteriaManager().removeCriterion(criterion);
   }
 
   @Override
-  public void importCompatibilityCriteria() {
+  public void deleteAllCompatibilityCriteria() {
+    for (PlausibilityCriterion criterion :
+        applicationDataSystem.getCriteriaManager().getCriteria()) {
+      applicationDataSystem.getCriteriaManager().removeCriterion(criterion);
+    }
+  }
 
+  @Override
+  public void importCompatibilityCriteria() { // TODO criteria file format!
+    Path filePath = getNavigator().showFileDialog(FileDialogType.LOAD_FILE, null);
+    applicationDataSystem.importCriteriaFromFile(filePath);
   }
 
   @Override
   public void exportCompatibilityCriteria() {
-
+    Path filePath = getNavigator().showFileDialog(FileDialogType.SAVE_FILE, null);
+    applicationDataSystem.exportCriteriaToFile(filePath);
   }
 
   @Override

@@ -5,7 +5,7 @@ import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.model.plausibility.criteria.CompatibilityCriterion;
 import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterion;
-import edu.kit.rose.model.plausibility.criteria.validation.OperatorType;
+import edu.kit.rose.model.plausibility.criteria.validation.ValidationType;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import edu.kit.rose.view.commons.FxmlContainer;
@@ -36,7 +36,7 @@ class CompatibilityCriterionPanel
   @FXML
   private ComboBox<AttributeType> attributeSelector;
   @FXML
-  private ComboBox<OperatorType> operatorSelector;
+  private ComboBox<ValidationType> operatorSelector;
   @FXML
   private TextField valueField;
 

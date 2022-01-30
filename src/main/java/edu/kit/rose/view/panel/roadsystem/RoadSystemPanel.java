@@ -94,6 +94,8 @@ public class RoadSystemPanel extends FxmlContainer
     this.navigator.setOnIn(zoomContainer::zoomIn);
     this.navigator.setOnOut(zoomContainer::zoomOut);
 
+    this.roadSystemGrid = this.zoomContainer.getGrid();
+
     this.roadSystemGrid.setOnAreaSelected((position1, position2) ->
         this.roadSystemController.selectSegmentsInRectangle(position1, position2));
   }
@@ -102,8 +104,6 @@ public class RoadSystemPanel extends FxmlContainer
   public void init(Injector injector) {
     super.init(injector);
     injector.injectMembers(this.zoomContainer);
-
-    this.roadSystemGrid = this.zoomContainer.getGrid();
   }
 
   @Override

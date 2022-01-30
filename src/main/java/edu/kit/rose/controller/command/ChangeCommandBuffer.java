@@ -22,7 +22,7 @@ public interface ChangeCommandBuffer {
    *
    * @param changeCommand the command to be added
    */
-  void addCommand(ChangeCommand changeCommand);
+  void addAndExecuteCommand(ChangeCommand changeCommand);
 
   /**
    * Deletes all {@link ChangeCommand}s in the {@link ChangeCommandBuffer}.

@@ -59,8 +59,7 @@ public class RoseAttributeController extends Controller implements AttributeCont
 
     var command  = new SetAttributeAccessorCommand<>(project, accessor,
         accessor.getValue(), value);
-    command.execute();
-    changeCommandBuffer.addCommand(command);
+    changeCommandBuffer.addAndExecuteCommand(command);
   }
 
   @Override

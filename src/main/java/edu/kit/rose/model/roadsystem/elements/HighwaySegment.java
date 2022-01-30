@@ -23,7 +23,7 @@ public abstract class HighwaySegment
     extends RoseSetObservable<Element, Element>
     implements Segment {
 
-  protected static final int INITIAL_CONNECTOR_DISTANCE_TO_CENTER = 50;
+  protected static final int INITIAL_CONNECTOR_DISTANCE_TO_CENTER = 30;
 
   protected final ArrayList<AttributeAccessor<?>> attributeAccessors =
       new ArrayList<>();
@@ -105,12 +105,12 @@ public abstract class HighwaySegment
   protected void initConnectors(List<AttributeAccessor<?>> entryAttributesList,
                                 List<AttributeAccessor<?>> exitAttributesList) {
     this.entryConnector = new Connector(ConnectorType.ENTRY,
-        new Position(getCenter().getX() - INITIAL_CONNECTOR_DISTANCE_TO_CENTER,
-            getCenter().getY()),
+        new Position(getCenter().getX(),
+            getCenter().getY() + INITIAL_CONNECTOR_DISTANCE_TO_CENTER),
         entryAttributesList);
     this.exitConnector = new Connector(ConnectorType.EXIT,
-        new Position(getCenter().getX() + INITIAL_CONNECTOR_DISTANCE_TO_CENTER,
-            getCenter().getY()),
+        new Position(getCenter().getX(),
+            getCenter().getY() - INITIAL_CONNECTOR_DISTANCE_TO_CENTER),
         exitAttributesList);
     connectors.add(entryConnector);
     connectors.add(exitConnector);

@@ -24,6 +24,8 @@ public class RoseRoadSystemController extends Controller
     implements RoadSystemController,
     SetObserver<Segment, SelectionBuffer> {
 
+  private static final int SEGMENTS_ROTATION_ALLOWED_AMOUNT = 1;
+
   /**
    * The container for selected segments.
    */
@@ -97,6 +99,15 @@ public class RoseRoadSystemController extends Controller
   public void beginDragStreetSegment(Position segmentPosition) {
     this.initialSegmentDragPosition = segmentPosition;
   }
+
+  @Override
+  public void dragStreetSegment(Position interimPosition) {
+    Movement movement = new Movement(
+        interimPosition.getX() - initialSegmentDragPosition.getX(),
+        interimPosition.getY() - initialSegmentDragPosition.getY());
+    this.selectionBuffer.getSelectedSegments().forEach(segment -> segment.move(movement));
+  }
+
 
   @Override
   public void endDragStreetSegment(Position segmentPosition) {
@@ -185,6 +196,13 @@ public class RoseRoadSystemController extends Controller
 
     dragConnector = null;
     initialConnectorDragPosition = null;
+  }
+
+  @Override
+  public void rotateSegment() {
+    if (selectionBuffer.getSelectedSegments().size() == SEGMENTS_ROTATION_ALLOWED_AMOUNT) {
+      this.project.getRoadSystem().rotateSegment(selectionBuffer.getSelectedSegments().get(0));
+    }
   }
 
 

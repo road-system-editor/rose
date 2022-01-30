@@ -52,6 +52,13 @@ public interface RoadSystemController extends SetObservable<Segment, RoadSystemC
   void beginDragStreetSegment(Position segmentPosition);
 
   /**
+   * Updates the position of a street segment.
+   *
+   * @param interimPosition the interim position
+   */
+  void dragStreetSegment(Position interimPosition);
+
+  /**
    * Stores the end {@link Position} of the {@link Segment} which was dragged.
    *
    * @param segmentPosition the final position of the segment
@@ -92,5 +99,10 @@ public interface RoadSystemController extends SetObservable<Segment, RoadSystemC
    * @param connectorEndPosition position where the dragging ends
    */
   void endDragSegmentEnd(Position connectorEndPosition);
+
+  /**
+   * Rotates a single selected segment, if only that segment is selected.
+   */
+  void rotateSegment();
 
 }

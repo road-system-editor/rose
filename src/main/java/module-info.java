@@ -3,7 +3,7 @@ module edu.kit.rose.entwurf {
     requires javafx.fxml;
     requires javafx.graphics;
     requires com.google.guice;
-  requires commons.collections4;
+    requires commons.collections4;
     requires org.jgrapht.core;
 
   opens edu.kit.rose.view to javafx.fxml, com.google.guice;

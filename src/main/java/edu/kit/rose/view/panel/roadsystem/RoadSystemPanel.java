@@ -39,7 +39,7 @@ import javafx.scene.layout.StackPane;
  * moved and edited.
  *
  * @implNote Uses SetObserver as anonymous class
- *      to subscribe to selection events from RoadsystemController
+ *           to subscribe to selection events from RoadSystemController
  */
 public class RoadSystemPanel extends FxmlContainer
     implements DualSetObserver<Element, Connection, RoadSystem> {
@@ -70,7 +70,7 @@ public class RoadSystemPanel extends FxmlContainer
   @FXML
   private ZoomableScrollPane zoomContainer;
 
-  private Grid editorGridSurface;
+  private Grid roadSystemGrid;
 
   private List<SegmentView<? extends Segment>> segmentViews;
 
@@ -93,14 +93,17 @@ public class RoadSystemPanel extends FxmlContainer
     this.navigator.setOnRight(zoomContainer::moveRight);
     this.navigator.setOnIn(zoomContainer::zoomIn);
     this.navigator.setOnOut(zoomContainer::zoomOut);
+
+    this.roadSystemGrid = this.zoomContainer.getGrid();
+
+    this.roadSystemGrid.setOnAreaSelected((position1, position2) ->
+        this.roadSystemController.selectSegmentsInRectangle(position1, position2));
   }
 
   @Override
   public void init(Injector injector) {
     super.init(injector);
     injector.injectMembers(this.zoomContainer);
-
-    this.editorGridSurface = this.zoomContainer.getGrid();
   }
 
   @Override

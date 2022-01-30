@@ -123,9 +123,17 @@ public class ZoomableScrollPane extends ScrollPane {
   }
 
   private void setupDrag() {
-    setOnDragDetected(event -> startFullDrag());
+    setOnDragDetected(event -> {
+      if (!event.isConsumed() && !event.isControlDown()) {
+        startFullDrag();
+      }
+    });
 
-    setOnMouseDragReleased(event -> updatePosition());
+    setOnMouseDragReleased(event -> {
+      if (!event.isConsumed() && !event.isControlDown()) {
+        updatePosition();
+      }
+    });
   }
 
   private void setupScroll() {

@@ -6,6 +6,7 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
 /**
@@ -14,6 +15,7 @@ import javafx.scene.paint.Paint;
  */
 public class SelectionBox extends Pane {
 
+  private static final Paint BACKGROUND_COLOR = Paint.valueOf("#009682");
   private static final double INITIAL_WIDTH = 0;
   private static final double INITIAL_HEIGHT = 0;
   private static final double OPACITY = 0.5;
@@ -43,7 +45,7 @@ public class SelectionBox extends Pane {
     this.setBackground(
         new Background(
             new BackgroundFill(
-                Paint.valueOf("#009682"),
+                BACKGROUND_COLOR,
                 CornerRadii.EMPTY,
                 Insets.EMPTY)));
   }

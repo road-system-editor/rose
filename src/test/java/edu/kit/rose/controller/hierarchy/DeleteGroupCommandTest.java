@@ -16,8 +16,11 @@ import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Group;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import org.junit.jupiter.api.Assertions;
@@ -112,10 +115,10 @@ class DeleteGroupCommandTest {
       mockGroup.removeElement(element1);
       mockGroup.removeElement(element2);
       group = mockGroup;
-      ArrayList<Element> list = e.getArgument(0);
-      list.forEach(group::addElement);
+      HashSet<Element> set = e.getArgument(0);
+      set.forEach(group::addElement);
       return group;
-    }).when(this.roadSystem).createGroup(ArgumentMatchers.<Collection<Element>>any());
+    }).when(this.roadSystem).createGroup(ArgumentMatchers.any());
 
     doAnswer(e -> this.group = null).when(this.roadSystem).removeElement(any());
   }
@@ -138,15 +141,11 @@ class DeleteGroupCommandTest {
     Assertions.assertEquals(SET, this.name);
 
     SortedBox<Element> groupElements = this.group.getElements();
-    SortedBox<Element> expectedElements = new RoseSortedBox<>(this.elements);
+    var groupElementsList = new LinkedList<Element>();
+    groupElements.forEach(groupElementsList::add);
 
     Assertions.assertEquals(EXPECTED_NUMBER_OF_ELEMENTS, groupElements.getSize());
-
-    Iterator<Element> groupIterator = groupElements.iterator();
-
-    // checks if the elements from deleted group where added to this group
-    for (Element expectedElement : expectedElements) {
-      Assertions.assertEquals(expectedElement, groupIterator.next());
-    }
+    Assertions.assertTrue(this.elements.containsAll(groupElementsList));
+    Assertions.assertTrue(groupElementsList.containsAll(elements));
   }
 }

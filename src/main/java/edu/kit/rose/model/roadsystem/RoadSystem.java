@@ -13,6 +13,7 @@ import edu.kit.rose.model.roadsystem.elements.Group;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import java.util.Collection;
+import java.util.Set;
 
 /**
  * A RoadSystem models a set of {@link Element}s that can be
@@ -45,14 +46,14 @@ public interface RoadSystem
    *
    * @param segmentType The {@link SegmentType} the {@link Segment} shall have.
    */
-  void createSegment(SegmentType segmentType);
+  Segment createSegment(SegmentType segmentType);
 
   /**
    * Creates a {@link Group} containing the given {@link Element}s.
    *
    * @param includedElements The {@link Element}s that shall be in the new {@link Group}
    */
-  Group createGroup(Collection<Element> includedElements);
+  Group createGroup(Set<Element> includedElements);
 
   /**
    * Removes an {@link Element} from the RoadSystem. It cannot be accessed afterwards.
@@ -79,7 +80,7 @@ public interface RoadSystem
    * @param segment1Connector The first {@link Connector}
    * @param segment2Connector The second {@link Connector}
    */
-  void connectConnectors(Connector segment1Connector, Connector segment2Connector);
+  Connection connectConnectors(Connector segment1Connector, Connector segment2Connector);
 
   /**
    * Disconnects a given {@link Connection} this means the {@link Connector}s are no
@@ -152,18 +153,12 @@ public interface RoadSystem
   void moveSegments(Collection<Segment> segments, Movement movement);
 
   /**
-   * Rotates the given {@link Segment} on its current {@link edu.kit.rose.infrastructure.Position}.
+   * Rotates the given {@link Segment} on its current {@link edu.kit.rose.infrastructure.Position}
+   * by a given amount of degrees.
    *
    * @param segment the {@link Segment} to rotate.
    */
-  void rotateSegment(Segment segment);
-
-  /**
-   * Rotates the given {@link Segment}s on its current {@link edu.kit.rose.infrastructure.Position}.
-   *
-   * @param segments the {@link Segment}s to rotate.
-   */
-  void rotateSegments(Collection<Segment> segments);
+  void rotateSegment(Segment segment, int degrees);
 
   /**
    * Provides the {@link TimeSliceSetting} this RoadSystem uses.

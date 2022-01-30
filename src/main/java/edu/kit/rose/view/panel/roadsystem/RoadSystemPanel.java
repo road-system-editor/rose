@@ -43,9 +43,14 @@ import javafx.scene.layout.StackPane;
  */
 public class RoadSystemPanel extends FxmlContainer
     implements DualSetObserver<Element, Connection, RoadSystem> {
+
+  @Inject
   private ApplicationController applicationController;
+  @Inject
   private RoadSystemController roadSystemController;
+  @Inject
   private AttributeController attributeController;
+  @Inject
   private MeasurementController measurementController;
 
   /**
@@ -65,7 +70,6 @@ public class RoadSystemPanel extends FxmlContainer
   @FXML
   private ZoomableScrollPane zoomContainer;
 
-  @FXML
   private Grid editorGridSurface;
 
   private List<SegmentView<? extends Segment>> segmentViews;
@@ -95,6 +99,8 @@ public class RoadSystemPanel extends FxmlContainer
   public void init(Injector injector) {
     super.init(injector);
     injector.injectMembers(this.zoomContainer);
+
+    this.editorGridSurface = this.zoomContainer.getGrid();
   }
 
   @Override

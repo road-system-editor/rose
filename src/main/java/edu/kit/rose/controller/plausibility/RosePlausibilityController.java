@@ -136,6 +136,7 @@ public class RosePlausibilityController extends Controller implements Plausibili
     Collection<Segment> offendingSegments = violation.offendingSegments();
     double sumX = 0;
     double sumY = 0;
+    this.selectionBuffer.removeAllSelections();
     for (Segment segment : offendingSegments) {
       this.selectionBuffer.addSegmentSelection(segment);
       sumX += segment.getCenter().getX();

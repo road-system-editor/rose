@@ -1,5 +1,6 @@
 package edu.kit.rose.view.panel.roadsystem;
 
+import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.view.commons.SegmentView;
 import java.util.Collection;
@@ -7,7 +8,7 @@ import java.util.LinkedList;
 import java.util.function.BiConsumer;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
-import javafx.scene.effect.Light;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
@@ -21,6 +22,7 @@ import javafx.scene.shape.Line;
  */
 public class Grid extends Pane {
 
+  private static final int LOWER_GRID_BORDER = 0;
   private static final int HEIGHT = 3000;
   private static final int WIDTH = 3000;
   private static final int HORIZONTAL_LINE_SPACING = 5;
@@ -30,7 +32,7 @@ public class Grid extends Pane {
   private static final float LINE_WIDTH = 0.5f;
 
   private SelectionBox selectionBox;
-  private BiConsumer<Point2D, Point2D> eventHandler;
+  private BiConsumer<Position, Position> onAreaSelectedEventHandler;
 
   /**
    * creates new Grid.
@@ -51,25 +53,57 @@ public class Grid extends Pane {
   }
 
   private void setEventListeners() {
-    this.setOnMouseDragged(mouseDragEvent -> {
-      if (mouseDragEvent.isControlDown() && mouseDragEvent.isPrimaryButtonDown()) {
-        if (this.selectionBox == null) {
-          selectionBox = new SelectionBox(
-              new Point2D(mouseDragEvent.getX(), mouseDragEvent.getY()));
-          this.getChildren().add(selectionBox);
-        } else {
-          selectionBox.update(new Point2D(mouseDragEvent.getX(), mouseDragEvent.getY()));
-        }
-        mouseDragEvent.consume();
-      }
-    });
+    this.setOnMouseDragged(this::onMouseDragged);
+    this.setOnMouseReleased(this::onMouseDragReleased);
+  }
 
-    this.setOnMouseReleased(mouseDragReleasedEvent -> {
-      if (selectionBox != null) {
-        this.getChildren().remove(selectionBox);
+  private void onMouseDragged(MouseEvent mouseDragEvent) {
+    if (mouseDragEvent.isControlDown() && mouseDragEvent.isPrimaryButtonDown()) {
+      if (this.selectionBox == null) {
+        selectionBox = new SelectionBox(
+            new Point2D(mouseDragEvent.getX(), mouseDragEvent.getY()));
+        this.getChildren().add(selectionBox);
+      } else {
+        selectionBox.update(new Point2D(mouseDragEvent.getX(), mouseDragEvent.getY()));
+      }
+      mouseDragEvent.consume();
+    }
+  }
+
+  private void onMouseDragReleased(MouseEvent mouseEvent) {
+    if (selectionBox != null) {
+
+      this.getChildren().remove(selectionBox);
+      if (onAreaSelectedEventHandler != null) {
+
+        Position validLastMousePosition = new Position(
+            (int) Math.round(
+                getCoordinateInBorder(selectionBox.getLastMousePosition().getX(), WIDTH)),
+            (int) Math.round(
+                getCoordinateInBorder(selectionBox.getLastMousePosition().getY(), HEIGHT)));
+        Position startingPosition = new Position(
+            (int) Math.round(selectionBox.getStartingPoint().getX()),
+            (int) Math.round(selectionBox.getStartingPoint().getY()));
+
+        // Set it to before to the call of onAreaSelectedEventHandler, to ensure selectionBox
+        // is null if the event handler throws an exception.
+        selectionBox = null;
+
+        onAreaSelectedEventHandler.accept(validLastMousePosition, startingPosition);
+      } else {
         selectionBox = null;
       }
-    });
+
+
+    }
+  }
+
+  private double getCoordinateInBorder(double coordinate, double upperBorder) {
+    if (coordinate < LOWER_GRID_BORDER) {
+      return LOWER_GRID_BORDER;
+    } else {
+      return Math.min(coordinate, upperBorder);
+    }
   }
 
   /**
@@ -77,18 +111,10 @@ public class Grid extends Pane {
    *
    * @param eventHandler the area selected event handler
    */
-  public void setOnAreaSelected(BiConsumer<Point2D, Point2D> eventHandler) {
-    this.eventHandler = eventHandler;
+  public void setOnAreaSelected(BiConsumer<Position, Position> eventHandler) {
+    this.onAreaSelectedEventHandler = eventHandler;
   }
 
-  /**
-   * Returns the event handler that gets called when an area of the {@link Grid} is selected.
-   *
-   * @return the area selected event handler
-   */
-  public BiConsumer<Point2D, Point2D> getOnAreaSelected() {
-    return eventHandler;
-  }
 
   /**
    * Adds a segment view and displays it on the grid.

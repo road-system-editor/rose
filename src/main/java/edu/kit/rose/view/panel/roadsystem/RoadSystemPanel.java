@@ -94,10 +94,8 @@ public class RoadSystemPanel extends FxmlContainer
     this.navigator.setOnIn(zoomContainer::zoomIn);
     this.navigator.setOnOut(zoomContainer::zoomOut);
 
-    this.roadSystemGrid.setOnAreaSelected((point1, point2) ->
-        this.roadSystemController.selectSegmentsInRectangle(
-            new Position((int) Math.round(point1.getX()), (int) Math.round(point1.getY())),
-            new Position((int) Math.round(point2.getX()), (int) Math.round(point2.getY()))));
+    this.roadSystemGrid.setOnAreaSelected((position1, position2) ->
+        this.roadSystemController.selectSegmentsInRectangle(position1, position2));
   }
 
   @Override

@@ -65,10 +65,10 @@ public class ShortCutHelpWindow extends RoseWindow {
     stage.setWidth(WIDTH);
     stage.setHeight(HEIGHT);
     stage.setResizable(false);
-    updateTranslatableStrings(stage);
 
-    configureTranslatorSubscription(stage);
     setupTable();
+    configureTranslatorSubscription(stage);
+    updateTranslatableStrings(stage);
   }
 
   private void configureTranslatorSubscription(Stage stage) {

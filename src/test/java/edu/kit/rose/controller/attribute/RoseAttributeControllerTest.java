@@ -1,6 +1,7 @@
 package edu.kit.rose.controller.attribute;
 
 import edu.kit.rose.controller.command.ChangeCommandBuffer;
+import edu.kit.rose.controller.command.RoseChangeCommandBuffer;
 import edu.kit.rose.controller.commons.StorageLock;
 import edu.kit.rose.controller.navigation.Navigator;
 import edu.kit.rose.controller.selection.SelectionBuffer;
@@ -34,8 +35,9 @@ public class RoseAttributeControllerTest {
   void setUp() {
     var modelFactory = new ModelFactory(CONFIG_PATH);
     applicationDataSystem = modelFactory.createApplicationDataSystem();
+    ChangeCommandBuffer changeCommandBuffer = new RoseChangeCommandBuffer();
     attributeController = new RoseAttributeController(
-        Mockito.mock(ChangeCommandBuffer.class),
+        changeCommandBuffer,
         Mockito.mock(SelectionBuffer.class),
         Mockito.mock(StorageLock.class),
         Mockito.mock(Navigator.class),

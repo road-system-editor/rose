@@ -85,23 +85,22 @@ public class ShortCutHelpWindow extends RoseWindow {
     shortCutTable.setSelectionModel(null);
 
     shortCutColumn = new TableColumn<>();
-    shortCutColumn.setReorderable(false);
-    shortCutColumn.setResizable(false);
-    shortCutColumn.setSortable(false);
-    shortCutColumn.setCellValueFactory(columnEntry ->
-        new SimpleStringProperty(columnEntry.getValue().shortCut()));
-    shortCutTable.getColumns().add(shortCutColumn);
+    setUpAndAddColumn(shortCutColumn);
 
     descriptionColumn = new TableColumn<>();
-    descriptionColumn.setReorderable(false);
-    descriptionColumn.setResizable(false);
-    descriptionColumn.setSortable(false);
-    descriptionColumn.setCellValueFactory(columnEntry ->
-        new SimpleStringProperty(columnEntry.getValue().description()));
-    shortCutTable.getColumns().add(descriptionColumn);
+    setUpAndAddColumn(descriptionColumn);
 
     descriptionColumn.prefWidthProperty()
         .bind(shortCutTable.widthProperty().subtract(shortCutColumn.getWidth()));
+  }
+
+  private void setUpAndAddColumn(TableColumn<ShortcutTableEntry, String> column) {
+    column.setReorderable(false);
+    column.setResizable(false);
+    column.setSortable(false);
+    column.setCellValueFactory(columnEntry ->
+        new SimpleStringProperty(columnEntry.getValue().description()));
+    shortCutTable.getColumns().add(column);
   }
 
 

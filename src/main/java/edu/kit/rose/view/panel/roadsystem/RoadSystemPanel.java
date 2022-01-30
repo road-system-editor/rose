@@ -21,9 +21,11 @@ import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.elements.Connection;
 import edu.kit.rose.model.roadsystem.elements.Connector;
 import edu.kit.rose.model.roadsystem.elements.Element;
+import edu.kit.rose.model.roadsystem.elements.Entrance;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import edu.kit.rose.model.roadsystem.measurements.Measurement;
+import edu.kit.rose.view.commons.EntranceSegmentView;
 import edu.kit.rose.view.commons.FxmlContainer;
 import edu.kit.rose.view.commons.SegmentView;
 import edu.kit.rose.view.panel.segment.SegmentEditorPanel;
@@ -98,12 +100,18 @@ public class RoadSystemPanel extends FxmlContainer
 
     this.roadSystemGrid.setOnAreaSelected((position1, position2) ->
         this.roadSystemController.selectSegmentsInRectangle(position1, position2));
+
+
   }
 
   @Override
   public void init(Injector injector) {
     super.init(injector);
     injector.injectMembers(this.zoomContainer);
+
+    Entrance e = new Entrance();
+    roadSystemGrid.getChildren()
+        .add(new EntranceSegmentView(e, roadSystemController, getTranslator()));
   }
 
   @Override

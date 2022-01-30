@@ -73,10 +73,13 @@ public abstract class SegmentView<T extends Segment> extends Pane implements Uni
     this.setOnMousePressed(mouseEvent -> {
       startDragX = mouseEvent.getX();
       startDragY = mouseEvent.getY();
+
+      mouseEvent.consume();
     });
 
     this.setOnDragDetected(mouseEvent -> {
       startFullDrag();
+      mouseEvent.consume();
     });
 
     this.setOnMouseDragged(mouseEvent -> {
@@ -90,11 +93,14 @@ public abstract class SegmentView<T extends Segment> extends Pane implements Uni
       Position position = new Position(
           (int) Math.round(mouseEvent.getX()),
           (int) Math.round(mouseEvent.getY()));
+
+      mouseEvent.consume();
     });
   }
 
   private double startDragX;
   private double startDragY;
+
 
   /**
    * Returns the segment that is represented by the segment view.

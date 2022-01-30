@@ -1,6 +1,7 @@
 package edu.kit.rose.view.commons;
 
 import edu.kit.rose.controller.roadsystem.RoadSystemController;
+import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.infrastructure.UnitObserver;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.model.roadsystem.elements.Element;
@@ -69,7 +70,31 @@ public abstract class SegmentView<T extends Segment> extends Pane implements Uni
 
     this.getChildren().add(canvas);
 
+    this.setOnMousePressed(mouseEvent -> {
+      startDragX = mouseEvent.getX();
+      startDragY = mouseEvent.getY();
+    });
+
+    this.setOnDragDetected(mouseEvent -> {
+      startFullDrag();
+    });
+
+    this.setOnMouseDragged(mouseEvent -> {
+      this.setLayoutX(this.getLayoutX() + mouseEvent.getX() - startDragX);
+      this.setLayoutY(this.getLayoutY() + mouseEvent.getY() - startDragY);
+      mouseEvent.consume();
+
+    });
+
+    this.setOnMouseDragReleased(mouseEvent -> {
+      Position position = new Position(
+          (int) Math.round(mouseEvent.getX()),
+          (int) Math.round(mouseEvent.getY()));
+    });
   }
+
+  private double startDragX;
+  private double startDragY;
 
   /**
    * Returns the segment that is represented by the segment view.

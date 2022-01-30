@@ -5,7 +5,6 @@ import edu.kit.rose.model.Project;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Group;
 import edu.kit.rose.model.roadsystem.elements.Segment;
-import edu.kit.rose.model.roadsystem.elements.SegmentFactory;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +18,7 @@ public class DeleteStreetSegmentCommand implements ChangeCommand {
 
   private final Project project;
   private Segment segment;
-  private final List<Group> segmentParentGroups;
+  private List<Group> segmentParentGroups;
 
   /**
    * Creates a {@link DeleteStreetSegmentCommand} that deletes a street segment.
@@ -36,7 +35,12 @@ public class DeleteStreetSegmentCommand implements ChangeCommand {
 
   @Override
   public void execute() {
+    storeParentGroups();
 
+    this.project.getRoadSystem().removeElement(segment);
+  }
+
+  private void storeParentGroups() {
     for (Element element : this.project.getRoadSystem().getElements()) {
       if (element.isContainer()) {
         Group g = (Group) element;
@@ -47,14 +51,12 @@ public class DeleteStreetSegmentCommand implements ChangeCommand {
         }
       }
     }
-
-    this.project.getRoadSystem().removeElement(segment);
   }
 
   @Override
   public void unexecute() {
-    SegmentFactory segmentFactory = new SegmentFactory();
-    this.segment = segmentFactory.createSegmentFrom(this.segment);
+    SegmentFactory segmentFactory = new SegmentFactory(this.project, this.segment);
+    this.segment = segmentFactory.createSegment();
 
     segmentParentGroups.forEach(group -> group.addElement(this.segment));
     segmentParentGroups.clear();

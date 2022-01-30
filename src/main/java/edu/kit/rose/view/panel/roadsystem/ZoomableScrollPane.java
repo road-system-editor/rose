@@ -37,6 +37,15 @@ public class ZoomableScrollPane extends ScrollPane {
   }
 
   /**
+   * Returns the content grid of the {@link ZoomableScrollPane}.
+   *
+   * @return content of the {@link ZoomableScrollPane}
+   */
+  public Grid getGrid() {
+    return grid;
+  }
+
+  /**
    * Move scrollbar up by set amount.
    */
   public void moveUp() {

@@ -28,6 +28,11 @@ public interface SelectionBuffer extends SetObservable<Segment, SelectionBuffer>
   void removeSegmentSelection(Segment segment);
 
   /**
+   * Removes all segments from the selection buffer.
+   */
+  void removeAllSelections();
+
+  /**
    * Toggle the selection status of a given segment.
    *
    * @param segment the segment to toggle its selection status

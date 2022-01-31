@@ -68,33 +68,18 @@ public class SegmentFactory {
 
   private static void transferAttributeAccessorValue(
       AttributeAccessor<?> newAccessor, AttributeAccessor<?> oldAccessor) {
+    if (newAccessor.getAttributeType().getDataType()
+        != oldAccessor.getAttributeType().getDataType()) {
+      return;
+    }
 
     switch (newAccessor.getAttributeType().getDataType()) {
-      case STRING -> {
-        if (oldAccessor.getAttributeType().getDataType() == DataType.STRING) {
-          SegmentFactory.<String>executeTransfer(newAccessor, oldAccessor);
-        }
-      }
-      case BOOLEAN -> {
-        if (oldAccessor.getAttributeType().getDataType() == DataType.BOOLEAN) {
-          SegmentFactory.<Boolean>executeTransfer(newAccessor, oldAccessor);
-        }
-      }
-      case INTEGER -> {
-        if (oldAccessor.getAttributeType().getDataType() == DataType.INTEGER) {
-          SegmentFactory.<Integer>executeTransfer(newAccessor, oldAccessor);
-        }
-      }
-      case FRACTIONAL -> {
-        if (oldAccessor.getAttributeType().getDataType() == DataType.FRACTIONAL) {
-          SegmentFactory.<Double>executeTransfer(newAccessor, oldAccessor);
-        }
-      }
-      default -> {
-        throw new IllegalArgumentException(INVALID_ATTRIBUTE_ACCESSOR_DATA_TYPE_MESSAGE);
-      }
+      case STRING -> SegmentFactory.<String>executeTransfer(newAccessor, oldAccessor);
+      case BOOLEAN -> SegmentFactory.<Boolean>executeTransfer(newAccessor, oldAccessor);
+      case INTEGER -> SegmentFactory.<Integer>executeTransfer(newAccessor, oldAccessor);
+      case FRACTIONAL -> SegmentFactory.<Double>executeTransfer(newAccessor, oldAccessor);
+      default -> throw new IllegalArgumentException(INVALID_ATTRIBUTE_ACCESSOR_DATA_TYPE_MESSAGE);
     }
-    ;
   }
 
   private static <T> void executeTransfer(

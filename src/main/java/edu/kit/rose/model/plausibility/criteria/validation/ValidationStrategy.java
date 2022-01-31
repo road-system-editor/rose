@@ -8,7 +8,7 @@ package edu.kit.rose.model.plausibility.criteria.validation;
  *
  * @param <T> The Type of value this Operator uses.
  */
-abstract class ValidationStrategy<T> {
+public abstract class ValidationStrategy<T> {
 
   protected final ValidationType validationType;
 

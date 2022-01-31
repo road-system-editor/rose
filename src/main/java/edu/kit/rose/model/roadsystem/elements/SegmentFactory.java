@@ -31,43 +31,4 @@ public class SegmentFactory {
   public Entrance createEntranceSegment() {
     return null;
   }
-
-  /**
-   * Creates a new {@link Segment} and uses the {@link Connector}s,
-   * the {@link edu.kit.rose.model.roadsystem.measurements.Measurement}s and
-   * the {@link edu.kit.rose.model.roadsystem.attributes.AttributeAccessor}s
-   * of the segment parameter for the new segment.
-   *
-   * @param segment the segment with target {@link Connector}s,
-   *                {@link edu.kit.rose.model.roadsystem.measurements.Measurement}s
-   *                and {@link edu.kit.rose.model.roadsystem.attributes.AttributeAccessor}s
-   * @return the new created segment
-   *
-   * @throws IllegalArgumentException thrown if segment parameter is null
-   */
-  public Segment createSegmentFrom(Segment segment) throws IllegalArgumentException {
-    if (segment == null) {
-      throw new IllegalArgumentException("Can not create a new segment out of an old segment, if"
-          + " the old segment is null");
-    }
-
-    return switch (segment.getSegmentType()) {
-      case BASE -> createBaseFrom((Base) segment);
-      case EXIT -> createExitFrom((Exit) segment);
-      case ENTRANCE -> createEntranceFrom((Entrance) segment);
-    };
-  }
-
-  private Base createBaseFrom(Base baseSegment) {
-    Base newBaseSegment = new Base();
-    return null;
-  }
-
-  private Exit createExitFrom(Exit exit) {
-    return null;
-  }
-
-  private Entrance createEntranceFrom(Entrance entrance) {
-    return null;
-  }
 }

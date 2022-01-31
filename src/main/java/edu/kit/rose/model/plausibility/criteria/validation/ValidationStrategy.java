@@ -10,6 +10,17 @@ package edu.kit.rose.model.plausibility.criteria.validation;
  */
 public abstract class ValidationStrategy<T> {
 
+  protected final ValidationType validationType;
+
+  /**
+   * Constructor.
+   *
+   * @param validationType the validationType of the ValidationStrategy.
+   */
+  public ValidationStrategy(ValidationType validationType) {
+    this.validationType = validationType;
+  }
+
   /**
    * Validates if the two given values are a legal combination in sense of the ValidationStrategy.
    *
@@ -20,8 +31,8 @@ public abstract class ValidationStrategy<T> {
   public abstract boolean validate(T first, T second);
 
   /**
-   * Validates if the difference between the two given values are smaller than the given
-   * legalDiscrepancy.
+   * Validates if the two given values are a legal combination in sense of the ValidationStrategy.
+   * The legalDiscrepancy is used to widen the range of what is a legal combination.
    * If this Validation Strategy does not support a Discrepancy, the third parameter is ignored.
    *
    * @param first            The first value to check with the other.
@@ -32,5 +43,13 @@ public abstract class ValidationStrategy<T> {
    */
   public abstract boolean validate(T first, T second, double legalDiscrepancy);
 
+  /**
+   * Provides the ValidationType of this ValidationStrategy.
+   *
+   * @return the ValidationType of this ValidationStrategy.
+   */
+  public ValidationType getValidationType() {
+    return this.validationType;
+  }
 
 }

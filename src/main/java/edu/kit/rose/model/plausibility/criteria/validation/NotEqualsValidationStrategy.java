@@ -5,14 +5,22 @@ package edu.kit.rose.model.plausibility.criteria.validation;
  *
  * @param <T> The Type that this ValidationStrategy is applied to.
  */
-public class NotEqualsValidationStrategy<T> extends ValidationStrategy<T> {
+class NotEqualsValidationStrategy<T> extends ValidationStrategy<T> {
+
+  /**
+   * Standard Constructor.
+   */
+  public NotEqualsValidationStrategy() {
+    super(ValidationType.NOT_EQUALS);
+  }
+
   @Override
   public boolean validate(Object first, Object second) {
-    return false;
+    return !first.equals(second);
   }
 
   @Override
   public boolean validate(T first, T second, double legalDiscrepancy) {
-    return false;
+    return this.validate(first, second);
   }
 }

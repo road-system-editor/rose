@@ -15,8 +15,7 @@ public class ChangeButtonPanel extends FxmlContainer {
   /**
    * Creates a new FXMLPanel and immediately mounts the components
    * specified in the given FXML file ({@code fxmlResourceName}.
-   * Requires {@link #setTranslator(LocalizedTextProvider)} +
-   * {@link #setController(ApplicationController)}
+   * Requires {@link #setController(ApplicationController)}
    */
   public ChangeButtonPanel() {
     super("change_button_panel.fxml");

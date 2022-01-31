@@ -3,7 +3,7 @@ package edu.kit.rose.controller.plausibility;
 
 import edu.kit.rose.model.plausibility.criteria.CompatibilityCriterion;
 import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterionType;
-import edu.kit.rose.model.plausibility.criteria.validation.OperatorType;
+import edu.kit.rose.model.plausibility.criteria.validation.ValidationType;
 import edu.kit.rose.model.plausibility.violation.Violation;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
@@ -16,12 +16,9 @@ import edu.kit.rose.model.roadsystem.elements.SegmentType;
 public interface PlausibilityController {
 
   /**
-   * Adds a compatibility criterion of the given type to the
-   * plausibility system.
-   *
-   * @param type the type of the new plausibility criterion
+   * Adds a compatibility criterion to the plausibility system.
    */
-  void addCompatibilityCriterion(PlausibilityCriterionType type);
+  void addCompatibilityCriterion();
 
 
   /**
@@ -60,13 +57,13 @@ public interface PlausibilityController {
                                               AttributeType attributeType);
 
   /**
-   * Sets the {@link OperatorType} of an {@link CompatibilityCriterion}.
+   * Sets the {@link ValidationType} of an {@link CompatibilityCriterion}.
    *
    * @param criterion    the criterion to set the operator type
-   * @param operatorType the new operator type
+   * @param validationType the new operator type
    */
-  void setCompatibilityCriterionOperatorType(CompatibilityCriterion criterion,
-                                             OperatorType operatorType);
+  void setCompatibilityCriterionValidationType(CompatibilityCriterion criterion,
+                                             ValidationType validationType);
 
   /**
    * Sets the discrepancy of an {@link CompatibilityCriterion}.
@@ -84,6 +81,11 @@ public interface PlausibilityController {
    * @param criterion the criterion to delete
    */
   void deleteCompatibilityCriterion(CompatibilityCriterion criterion);
+
+  /**
+   * Deletes all compatibility criteria from the plausibility system.
+   */
+  void deleteAllCompatibilityCriteria();
 
   /**
    * Opens a file chooser and imports the compatibility criteria

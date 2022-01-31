@@ -3,7 +3,9 @@ package edu.kit.rose.model.roadsystem.elements;
 
 import edu.kit.rose.infrastructure.Box;
 import edu.kit.rose.infrastructure.RoseBox;
+import edu.kit.rose.infrastructure.RoseSortedBox;
 import edu.kit.rose.infrastructure.RoseUnitObservable;
+import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.infrastructure.UnitObservable;
 import edu.kit.rose.infrastructure.UnitObserver;
 import java.util.Arrays;
@@ -32,8 +34,8 @@ public class Connection extends RoseUnitObservable<Connection> {
    *
    * @return The {@link Connector}s that are connected with this Connection.
    */
-  public Box<Connector> getConnectors() {
-    return new RoseBox<>(List.of(connector1, connector2));
+  public SortedBox<Connector> getConnectors() {
+    return new RoseSortedBox<>(connector1, connector2);
   }
 
   /**

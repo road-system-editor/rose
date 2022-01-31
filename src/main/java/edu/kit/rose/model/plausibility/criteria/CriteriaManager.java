@@ -11,6 +11,7 @@ import edu.kit.rose.model.roadsystem.RoadSystem;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+
 /**
  * A CriteriaManager holds {@link PlausibilityCriterion}s .
  * It provides functions to create and remove Criteria as well as getters for them.

@@ -5,6 +5,7 @@ import edu.kit.rose.infrastructure.Box;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Group;
+import edu.kit.rose.model.roadsystem.elements.Segment;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,7 +26,7 @@ public class CreateGroupCommand implements ChangeCommand {
    * @param project  the model facade to execute the {@link CreateGroupCommand} on
    * @param elements the elements that will be in the group
    */
-  public CreateGroupCommand(Project project, List<Element> elements) {
+  public CreateGroupCommand(Project project, List<Segment> elements) {
     this.project = project;
     this.elements = new ArrayList<>(elements);
     this.parentMap = new HashMap<>();

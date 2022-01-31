@@ -42,5 +42,10 @@ public interface SelectionBuffer extends SetObservable<Segment, SelectionBuffer>
    */
   boolean isSegmentSelected(Segment segment);
 
-  List<Element> getSelectedSegments();
+  /**
+   * Returns all selected segments.
+   *
+   * @return all selected segments
+   */
+  List<Segment> getSelectedSegments();
 }

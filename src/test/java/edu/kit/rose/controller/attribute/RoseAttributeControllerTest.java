@@ -1,21 +1,27 @@
 package edu.kit.rose.controller.attribute;
 
+import edu.kit.rose.controller.command.ChangeCommandBuffer;
 import edu.kit.rose.controller.command.RoseChangeCommandBuffer;
-import edu.kit.rose.controller.commons.RoseStorageLock;
+import edu.kit.rose.controller.commons.StorageLock;
 import edu.kit.rose.controller.navigation.Navigator;
+import edu.kit.rose.controller.selection.SelectionBuffer;
 import edu.kit.rose.model.ApplicationDataSystem;
 import edu.kit.rose.model.ModelFactory;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
+import java.nio.file.Path;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 /**
- * Tests the {@link RoseAttributeController} class.
+ * Tests the {@link RoseAttributeController} class, except for bulk edit.
+ *
+ * @see RoseAttributeControllerBulkEditTest
  */
 public class RoseAttributeControllerTest {
+  private static final Path CONFIG_PATH = Path.of("build/tmp/tests/config");
 
   private RoseAttributeController attributeController;
   private ApplicationDataSystem applicationDataSystem;
@@ -27,10 +33,15 @@ public class RoseAttributeControllerTest {
 
   @BeforeEach
   void setUp() {
-    var modelFactory = new ModelFactory(null);
+    var modelFactory = new ModelFactory(CONFIG_PATH);
     applicationDataSystem = modelFactory.createApplicationDataSystem();
-    attributeController = new RoseAttributeController(new RoseChangeCommandBuffer(),
-        new RoseStorageLock(), Mockito.mock(Navigator.class), modelFactory.createProject(),
+    ChangeCommandBuffer changeCommandBuffer = new RoseChangeCommandBuffer();
+    attributeController = new RoseAttributeController(
+        changeCommandBuffer,
+        Mockito.mock(SelectionBuffer.class),
+        Mockito.mock(StorageLock.class),
+        Mockito.mock(Navigator.class),
+        modelFactory.createProject(),
         applicationDataSystem);
     accessor = new AttributeAccessor<>(
         AttributeType.LANE_COUNT,

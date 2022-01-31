@@ -119,6 +119,21 @@ public class RoadSystemPanel extends FxmlContainer
       }
 
       @Override
+      public void rotate(int degrees) {
+
+      }
+
+      @Override
+      public int getRotation() {
+        return 0;
+      }
+
+      @Override
+      public Position getRotatedConnectorPosition(Connector connector) {
+        return null;
+      }
+
+      @Override
       public SortedBox<AttributeAccessor<?>> getAttributeAccessors() {
         return new RoseSortedBox<>(List.of(
             new AttributeAccessor<>(AttributeType.LANE_COUNT, () -> this.laneCount,

@@ -3,7 +3,7 @@ package edu.kit.rose.model.plausibility.criteria;
 import edu.kit.rose.infrastructure.Box;
 import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.infrastructure.SortedBox;
-import edu.kit.rose.model.plausibility.criteria.validation.OperatorType;
+import edu.kit.rose.model.plausibility.criteria.validation.ValidationType;
 import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.elements.Element;
@@ -46,27 +46,27 @@ public class CompatibilityCriterion implements PlausibilityCriterion {
    *
    * @return the type of Operator this Criterion is using.
    */
-  public OperatorType getOperatorType() {
+  public ValidationType getOperatorType() {
     return null;
   }
 
   /**
    * Sets the Type of Operator this Criterion is supposed to use.
    *
-   * @param operatorType the Type of Operator this Criterion is supposed to use.
+   * @param validationType the Type of Operator this Criterion is supposed to use.
    */
-  public void setOperatorType(OperatorType operatorType) {
+  public void setOperatorType(ValidationType validationType) {
 
   }
 
   /**
-   * Gives a {@link SortedBox} of {@link OperatorType}s that contains all Types that are
+   * Gives a {@link SortedBox} of {@link ValidationType}s that contains all Types that are
    * compatible with this criterion.
    * (This is depending on the AttributeType this criterion has)
    *
-   * @return containing all {@link OperatorType}s that are compatible with this criterion.
+   * @return containing all {@link ValidationType}s that are compatible with this criterion.
    */
-  public SortedBox<OperatorType> getCompatibleOperatorTypes() {
+  public SortedBox<ValidationType> getCompatibleOperatorTypes() {
     return null;
   }
 
@@ -143,5 +143,15 @@ public class CompatibilityCriterion implements PlausibilityCriterion {
   @Override
   public PlausibilityCriterion getThis() {
     return this;
+  }
+
+  @Override
+  public void notifyAddition(Element unit) {
+
+  }
+
+  @Override
+  public void notifyRemoval(Element unit) {
+
   }
 }

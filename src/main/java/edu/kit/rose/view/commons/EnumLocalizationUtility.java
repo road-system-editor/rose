@@ -1,6 +1,7 @@
 package edu.kit.rose.view.commons;
 
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
+import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterionType;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.measurements.MeasurementType;
 
@@ -8,12 +9,34 @@ import edu.kit.rose.model.roadsystem.measurements.MeasurementType;
  * Utility class that helps with localizing enum value names.
  */
 public final class EnumLocalizationUtility {
+  private static final String MEASUREMENT_TYPE_PREFIX = "measurementType";
+  private static final String CRITERION_TYPE_PREFIX = "criterionType";
+
   /**
    * Returns the localized title of a measurement type.
    */
   public static String localizeMeasurementTypeTitle(LocalizedTextProvider translator,
                                                     MeasurementType type) {
-    return translator.getLocalizedText(String.format("measurementType.%s.title", type.toString()));
+    return translator.getLocalizedText(
+        String.format("%s.%s.title", MEASUREMENT_TYPE_PREFIX, type.toString()));
+  }
+
+  /**
+   * Returns the localized short description of a plausibility criterion type.
+   */
+  public static String localizeCriterionTypeShortDescription(LocalizedTextProvider translator,
+                                                             PlausibilityCriterionType type) {
+    return translator.getLocalizedText(
+        String.format("%s.%s.shortDescription", CRITERION_TYPE_PREFIX, type.toString()));
+  }
+
+  /**
+   * Returns the localized detailed description of a plausibility criterion type.
+   */
+  public static String localizeCriterionTypeDetailedDescription(LocalizedTextProvider translator,
+                                                                PlausibilityCriterionType type) {
+    return translator.getLocalizedText(
+        String.format("%s.%s.detailedDescription", CRITERION_TYPE_PREFIX, type.toString()));
   }
 
   /**

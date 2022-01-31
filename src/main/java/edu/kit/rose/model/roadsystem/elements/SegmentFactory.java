@@ -6,29 +6,15 @@ package edu.kit.rose.model.roadsystem.elements;
 public class SegmentFactory {
 
   /**
-   * creates a new {@link Base} segment.
+   * creates a new segment by type.
    *
    * @return the new base segment
    */
-  public Base createBaseSegment() {
-    return null;
-  }
-
-  /**
-   * creates a new {@link Exit} segment.
-   *
-   * @return the new exit segment
-   */
-  public Exit createExitSegment() {
-    return null;
-  }
-
-  /**
-   * creates a new {@link Entrance} segment.
-   *
-   * @return the new entrance segment
-   */
-  public Entrance createEntranceSegment() {
-    return null;
+  public static Segment createSegment(SegmentType segmentType) {
+    return switch (segmentType) {
+      case BASE -> new Base();
+      case ENTRANCE -> new Entrance();
+      case EXIT -> new Exit();
+    };
   }
 }

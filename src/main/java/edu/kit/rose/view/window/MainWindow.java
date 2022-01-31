@@ -4,9 +4,9 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import edu.kit.rose.view.commons.FxmlUtility;
 import edu.kit.rose.view.panel.hierarchy.HierarchyPanel;
-import edu.kit.rose.view.panel.problem.ProblemOverviewPanel;
 import edu.kit.rose.view.panel.roadsystem.RoadSystemPanel;
 import edu.kit.rose.view.panel.segmentbox.SegmentBoxPanel;
+import edu.kit.rose.view.panel.violation.ViolationOverviewPanel;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -26,7 +26,7 @@ public class MainWindow extends RoseWindow {
   @FXML
   private RoadSystemPanel roadSystemPanel;
   @FXML
-  private ProblemOverviewPanel problemOverviewPanel;
+  private ViolationOverviewPanel violationOverviewPanel;
   @FXML
   private SegmentBoxPanel segmentBoxPanel;
 
@@ -61,7 +61,7 @@ public class MainWindow extends RoseWindow {
     this.roseMenuBar.init(injector);
     this.hierarchyPanel.init(injector);
     this.roadSystemPanel.init(injector);
-    this.problemOverviewPanel.init(injector);
+    this.violationOverviewPanel.init(injector);
     this.segmentBoxPanel.init(injector);
   }
 }

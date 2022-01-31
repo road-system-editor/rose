@@ -47,4 +47,27 @@ public interface Segment extends Element, Comparable<Segment> {
    * @param movement the movement that is to be applied.
    */
   void move(Movement movement);
+
+  /**
+   * Increase the rotation ba a given amount of degrees.
+   *
+   * @param degrees the degrees by which to increase the rotation of this segment.
+   */
+  void rotate(int degrees);
+
+  /**
+   * Provides the rotation of a segment in degrees.
+   *
+   * @return the rotation.
+   */
+  int getRotation();
+
+  /**
+   * Provides the position of a {@link Connector} of this Segment when factoring in the current
+   * rotation of this segment.
+   *
+   * @param connector the connector, must be of this segment!
+   * @return the Position the Connector has when factoring in the rotation.
+   */
+  Position getRotatedConnectorPosition(Connector connector);
 }

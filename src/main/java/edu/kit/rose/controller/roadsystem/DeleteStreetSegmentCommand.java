@@ -5,8 +5,6 @@ import edu.kit.rose.model.Project;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Group;
 import edu.kit.rose.model.roadsystem.elements.Segment;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Encapsulates the functionality of deleting a street segment
@@ -18,7 +16,7 @@ public class DeleteStreetSegmentCommand implements ChangeCommand {
 
   private final Project project;
   private Segment segment;
-  private List<Group> segmentParentGroups;
+  private Group segmentParentGroup;
 
   /**
    * Creates a {@link DeleteStreetSegmentCommand} that deletes a street segment.
@@ -29,8 +27,6 @@ public class DeleteStreetSegmentCommand implements ChangeCommand {
   public DeleteStreetSegmentCommand(Project project, Segment segment) {
     this.project = project;
     this.segment = segment;
-
-    this.segmentParentGroups = new ArrayList<>();
   }
 
   @Override
@@ -46,7 +42,7 @@ public class DeleteStreetSegmentCommand implements ChangeCommand {
         Group g = (Group) element;
         if (g.contains(this.segment)) {
           g.removeElement(this.segment);
-          segmentParentGroups.add(g);
+          segmentParentGroup = g;
           break;
         }
       }
@@ -57,8 +53,7 @@ public class DeleteStreetSegmentCommand implements ChangeCommand {
   public void unexecute() {
     SegmentFactory segmentFactory = new SegmentFactory(this.project, this.segment);
     this.segment = segmentFactory.createSegment();
-
-    segmentParentGroups.forEach(group -> group.addElement(this.segment));
-    segmentParentGroups.clear();
+    this.segmentParentGroup.addElement(this.segment);
+    this.segmentParentGroup = null;
   }
 }

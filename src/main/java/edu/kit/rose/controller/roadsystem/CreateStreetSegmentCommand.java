@@ -23,7 +23,7 @@ public class CreateStreetSegmentCommand implements ChangeCommand {
   private final Project project;
   private final SegmentType segmentType;
   private Segment segment;
-  private final List<Group> segmentParentGroups;
+  private Group segmentParentGroup;
 
   /**
    * Creates a {@link CreateStreetSegmentCommand} that creates a streetsegment of a specified type.
@@ -34,7 +34,6 @@ public class CreateStreetSegmentCommand implements ChangeCommand {
   public CreateStreetSegmentCommand(Project project, SegmentType segmentType) {
     this.project = project;
     this.segmentType = segmentType;
-    this.segmentParentGroups = new ArrayList<>();
   }
 
   @Override
@@ -45,8 +44,8 @@ public class CreateStreetSegmentCommand implements ChangeCommand {
       SegmentFactory segmentFactory = new SegmentFactory(this.project, this.segment);
       this.segment = segmentFactory.createSegment();
 
-      segmentParentGroups.forEach(group -> group.addElement(this.segment));
-      segmentParentGroups.clear();
+      this.segmentParentGroup.addElement(this.segment);
+      this.segmentParentGroup = null;
     }
   }
 
@@ -62,7 +61,7 @@ public class CreateStreetSegmentCommand implements ChangeCommand {
         Group g = (Group) element;
         if (g.contains(this.segment)) {
           g.removeElement(this.segment);
-          segmentParentGroups.add(g);
+          segmentParentGroup = g;
           break;
         }
       }

@@ -14,9 +14,9 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 
 /**
- * Tests the {@link DragStreetSegmentCommand} class.
+ * Tests the {@link DragStreetSegmentsCommand} class.
  */
-public class DragStreetSegmentCommandTest {
+public class DragStreetSegmentsCommandTest {
 
   private Project project;
   private RoadSystem roadSystem;
@@ -55,8 +55,8 @@ public class DragStreetSegmentCommandTest {
       return null;
     }).when(roadSystem).moveSegments(ArgumentMatchers.anyCollection(), ArgumentMatchers.any());
 
-    DragStreetSegmentCommand command
-        = new DragStreetSegmentCommand(this.project, segments, this.movement);
+    DragStreetSegmentsCommand command
+        = new DragStreetSegmentsCommand(this.project, segments, this.movement);
     command.execute();
 
     Assertions.assertTrue(called.get());
@@ -82,8 +82,8 @@ public class DragStreetSegmentCommandTest {
       return null;
     }).when(roadSystem).moveSegments(ArgumentMatchers.anyCollection(), ArgumentMatchers.any());
 
-    DragStreetSegmentCommand command
-        = new DragStreetSegmentCommand(this.project, segments, this.movement);
+    DragStreetSegmentsCommand command
+        = new DragStreetSegmentsCommand(this.project, segments, this.movement);
     command.unexecute();
 
     Assertions.assertTrue(called.get());

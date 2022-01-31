@@ -10,21 +10,21 @@ import java.util.List;
  * Encapsulates the functionality of a street segment dragging
  * and makes it changeable.
  */
-public class DragStreetSegmentCommand implements ChangeCommand {
+public class DragStreetSegmentsCommand implements ChangeCommand {
 
   private final Project project;
   private final List<Segment> segments;
   private final Movement movement;
 
   /**
-   * Creates a {@link DragStreetSegmentCommand}
+   * Creates a {@link DragStreetSegmentsCommand}
    * that drags a given set of segments by a specified movement.
    *
-   * @param project          the model facade to execute {@link DragStreetSegmentCommand on}
+   * @param project          the model facade to execute {@link DragStreetSegmentsCommand on}
    * @param segments         the segments to drag
    * @param movement         the translation of the segments
    */
-  public DragStreetSegmentCommand(Project project, List<Segment> segments, Movement movement) {
+  public DragStreetSegmentsCommand(Project project, List<Segment> segments, Movement movement) {
     this.project = project;
     this.segments = segments;
     this.movement = movement;

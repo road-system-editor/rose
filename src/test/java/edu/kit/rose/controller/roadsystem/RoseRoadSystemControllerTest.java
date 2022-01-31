@@ -7,16 +7,16 @@ import edu.kit.rose.controller.selection.SelectionBuffer;
 import edu.kit.rose.infrastructure.Movement;
 import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.infrastructure.RoseBox;
-import edu.kit.rose.infrastructure.UnitObserver;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.ZoomSetting;
 import edu.kit.rose.model.roadsystem.RoadSystem;
-import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.elements.Connector;
-import edu.kit.rose.model.roadsystem.elements.ConnectorType;
 import edu.kit.rose.model.roadsystem.elements.Element;
+import edu.kit.rose.model.roadsystem.elements.Entrance;
+import edu.kit.rose.model.roadsystem.elements.Exit;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
@@ -24,7 +24,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 
 /**
@@ -136,7 +135,7 @@ public class RoseRoadSystemControllerTest {
 
 
   @Test
-  public void testDragStreetSegment() {
+  public void testStreetSegmentDragging() {
     final Position initialPosition = new Position(10, 10);
     final Position endPosition = new Position(20, 20);
 
@@ -169,6 +168,46 @@ public class RoseRoadSystemControllerTest {
     roadSystemController.endDragStreetSegment(endPosition);
 
     Assertions.assertTrue(called.get());
+  }
+
+  @Test
+  public void testDragStreetSegments() {
+    List<Segment> segments = new ArrayList<>();
+
+    Mockito.when(this.selectionBuffer.getSelectedSegments()).thenReturn(segments);
+    Mockito.doAnswer(invocation -> {
+      if (!segments.contains(invocation.getArgument(0, Segment.class))) {
+        segments.add(invocation.getArgument(0, Segment.class));
+      }
+      return null;
+    }).when(this.selectionBuffer).addSegmentSelection(ArgumentMatchers.any(Segment.class));
+    Mockito.doAnswer(invocation -> {
+      segments.remove(invocation.getArgument(0, Segment.class));
+      return null;
+    }).when(this.selectionBuffer).removeSegmentSelection(ArgumentMatchers.any(Segment.class));
+
+    Segment segment = new Exit();
+    Segment segment1 = new Entrance();
+    int segment1Offset = 10;
+    segment1.move(new Movement(segment1Offset, segment1Offset));
+
+    roadSystemController.addSegmentSelection(segment);
+    roadSystemController.addSegmentSelection(segment1);
+
+    Movement movement = new Movement(50, 50);
+    roadSystemController.dragStreetSegments(movement);
+
+    Assertions.assertEquals(movement.getX(), segment.getCenter().getX());
+    Assertions.assertEquals(movement.getY(), segment.getCenter().getY());
+
+    Assertions.assertEquals(movement.getX() + segment1Offset, segment1.getCenter().getX());
+    Assertions.assertEquals(movement.getY() +  segment1Offset, segment1.getCenter().getY());
+
+    roadSystemController.removeSegmentSelection(segment1);
+    roadSystemController.dragStreetSegments(movement);
+
+    Assertions.assertEquals(movement.getX() * 2, segment.getCenter().getX());
+    Assertions.assertEquals(movement.getY() * 2, segment.getCenter().getY());
   }
 
   @Test

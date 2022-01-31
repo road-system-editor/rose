@@ -59,7 +59,7 @@ public interface RoadSystemController extends SetObservable<Segment, RoadSystemC
    *
    * @param interimMovement the interim movement
    */
-  void dragStreetSegment(Movement interimMovement);
+  void dragStreetSegments(Movement interimMovement);
 
   /**
    * Stores the end {@link Position} of the {@link Segment} which was dragged.

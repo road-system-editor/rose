@@ -68,18 +68,13 @@ public class CreateStreetSegmentCommandTest {
 
   @Test
   public void testUnExecute() {
-    AtomicReference<Boolean> called = new AtomicReference<>(false);
-
-    Mockito.doAnswer(invocation -> {
-      called.set(true);
-      return null;
-    }).when(roadSystem).removeElement(ArgumentMatchers.any(Segment.class));
-
     CreateStreetSegmentCommand command
         = new CreateStreetSegmentCommand(this.project, SegmentType.BASE);
 
     command.execute();
     command.unexecute();
-    Assertions.assertTrue(called.get());
+
+    Mockito.verify(roadSystem, Mockito.times(1))
+        .removeElement(ArgumentMatchers.any(Segment.class));
   }
 }

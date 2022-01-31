@@ -101,11 +101,8 @@ public class RoseRoadSystemController extends Controller
   }
 
   @Override
-  public void dragStreetSegment(Position interimPosition) {
-    Movement movement = new Movement(
-        interimPosition.getX() - initialSegmentDragPosition.getX(),
-        interimPosition.getY() - initialSegmentDragPosition.getY());
-    this.selectionBuffer.getSelectedSegments().forEach(segment -> segment.move(movement));
+  public void dragStreetSegment(Movement interimMovement) {
+    this.selectionBuffer.getSelectedSegments().forEach(segment -> segment.move(interimMovement));
   }
 
 

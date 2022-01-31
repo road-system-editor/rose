@@ -1,5 +1,6 @@
 package edu.kit.rose.controller.roadsystem;
 
+import edu.kit.rose.infrastructure.Movement;
 import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.infrastructure.SetObservable;
 import edu.kit.rose.model.roadsystem.elements.Connector;
@@ -53,10 +54,12 @@ public interface RoadSystemController extends SetObservable<Segment, RoadSystemC
 
   /**
    * Updates the position of a street segment.
+   * This method allows multiple segments to be dragged
+   * fluently.
    *
-   * @param interimPosition the interim position
+   * @param interimMovement the interim movement
    */
-  void dragStreetSegment(Position interimPosition);
+  void dragStreetSegment(Movement interimMovement);
 
   /**
    * Stores the end {@link Position} of the {@link Segment} which was dragged.

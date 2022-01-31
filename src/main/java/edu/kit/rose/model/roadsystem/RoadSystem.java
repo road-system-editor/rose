@@ -63,18 +63,6 @@ public interface RoadSystem
   void removeElement(Element element);
 
   /**
-   * Returns a {@link SortedBox} of all shared {@link AttributeAccessor}s of the given
-   * {@link Element}s.
-   * The AttributeAccessors will set their respective attribute in all elements of
-   * the given collection.
-   *
-   * @param elements The Collection of {@link Element}s to get the {@link AttributeAccessor}s from.
-   * @return A {@link SortedBox} containing all shared {@link AttributeAccessor}s of the
-   *        {@link Element}s. Or null in case of an Error.
-   */
-  SortedBox<AttributeAccessor<?>> getSharedAttributeAccessors(Collection<Element> elements);
-
-  /**
    * Returns the {@link Connection} of the two given {@link Connector}s if there is one.
    *
    * @param segment1Connector The first {@link Connector}

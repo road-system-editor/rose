@@ -2,6 +2,7 @@ package edu.kit.rose.infrastructure;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -45,7 +46,7 @@ public class RoseBox<T> implements Box<T> {
 
   @Override
   public Iterator<T> iterator() {
-    return content.iterator();
+    return Collections.unmodifiableCollection(content).iterator();
   }
 
   protected List<T> getContent() {

@@ -113,7 +113,7 @@ public class RoseApplication extends Application implements Navigator {
         }
         this.criteriaWindow.show();
       }
-      case ROADSYSTEM, Attribute, MEASUREMENT_EDITOR -> this.mainWindow.show();
+      case ROADSYSTEM, ATTRIBUTE, MEASUREMENT_EDITOR -> this.mainWindow.show();
       case MEASUREMENT_OVERVIEW -> {
         if (!canBeShown(measurementsWindow)) {
           measurementsWindow = new MeasurementsWindow(this.injector);

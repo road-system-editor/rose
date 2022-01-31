@@ -58,25 +58,25 @@ public class RoseHierarchyController extends Controller
   public void createGroup() {
     ChangeCommand createGroupCommand = new CreateGroupCommand(this.project,
             this.selectionBuffer.getSelectedSegments());
-    addAndExecute(createGroupCommand);
+    this.changeCommandBuffer.addAndExecuteCommand(createGroupCommand);
   }
 
   @Override
   public void deleteGroup(Group group) {
     ChangeCommand deleteGroupCommand = new DeleteGroupCommand(this.project, group);
-    addAndExecute(deleteGroupCommand);
+    this.changeCommandBuffer.addAndExecuteCommand(deleteGroupCommand);
   }
 
   @Override
   public void addElementToGroup(Element element, Group group) {
     ChangeCommand addElementCommand = new AddElementToGroupCommand(this.project, element, group);
-    addAndExecute(addElementCommand);
+    this.changeCommandBuffer.addAndExecuteCommand(addElementCommand);
   }
 
   @Override
   public void setGroupName(Group group, String name) {
     ChangeCommand setGroupNamCommand = new SetGroupNameCommand(group, name);
-    addAndExecute(setGroupNamCommand);
+    this.changeCommandBuffer.addAndExecuteCommand(setGroupNamCommand);
   }
 
   @Override
@@ -108,11 +108,6 @@ public class RoseHierarchyController extends Controller
   @Override
   public void notifyChange(SelectionBuffer unit) {
 
-  }
-
-  private void addAndExecute(ChangeCommand command) {
-    this.changeCommandBuffer.addCommand(command);
-    command.execute();
   }
 
 }

@@ -23,9 +23,9 @@ public class RoseChangeCommandBufferTest {
     this.command3 = new TestChangeCommand(3);
     this.buffer = new RoseChangeCommandBuffer();
 
-    this.buffer.addCommand(command1);
-    this.buffer.addCommand(command2);
-    this.buffer.addCommand(command3);
+    this.buffer.addAndExecuteCommand(command1);
+    this.buffer.addAndExecuteCommand(command2);
+    this.buffer.addAndExecuteCommand(command3);
   }
 
   @Test
@@ -33,7 +33,7 @@ public class RoseChangeCommandBufferTest {
     this.buffer.undo();
     this.buffer.undo();
 
-    Assertions.assertEquals("", this.command1.getMessage());
+    Assertions.assertEquals("executed0", this.command1.getMessage());
     Assertions.assertEquals("unexecuted2", this.command2.getMessage());
     Assertions.assertEquals("unexecuted3", this.command3.getMessage());
   }
@@ -44,7 +44,7 @@ public class RoseChangeCommandBufferTest {
     this.buffer.undo();
     this.buffer.redo();
 
-    Assertions.assertEquals("", this.command1.getMessage());
+    Assertions.assertEquals("executed0", this.command1.getMessage());
     Assertions.assertEquals("executed2", this.command2.getMessage());
     Assertions.assertEquals("unexecuted3", this.command3.getMessage());
   }
@@ -55,9 +55,9 @@ public class RoseChangeCommandBufferTest {
     this.buffer.undo();
 
     // if the buffer is cleared then undo will not change the initial state of the commands
-    Assertions.assertEquals("", this.command1.getMessage());
-    Assertions.assertEquals("", this.command2.getMessage());
-    Assertions.assertEquals("", this.command3.getMessage());
+    Assertions.assertEquals("executed0", this.command1.getMessage());
+    Assertions.assertEquals("executed0", this.command2.getMessage());
+    Assertions.assertEquals("executed0", this.command3.getMessage());
   }
 
   private static class TestChangeCommand implements ChangeCommand {
@@ -70,7 +70,11 @@ public class RoseChangeCommandBufferTest {
 
     @Override
     public void execute() {
-      this.message = "executed" + this.id;
+      if (this.message.equals("")) {
+        this.message = "executed0";
+      } else {
+        this.message = "executed" + this.id;
+      }
     }
 
     @Override

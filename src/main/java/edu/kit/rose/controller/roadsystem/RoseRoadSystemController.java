@@ -82,7 +82,7 @@ public class RoseRoadSystemController extends Controller
     CreateStreetSegmentCommand createStreetSegmentCommand
         = new CreateStreetSegmentCommand(this.project, segmentType);
 
-    changeCommandBuffer.addCommand(createStreetSegmentCommand);
+    changeCommandBuffer.addAndExecuteCommand(createStreetSegmentCommand);
     createStreetSegmentCommand.execute();
   }
 
@@ -91,7 +91,7 @@ public class RoseRoadSystemController extends Controller
     DeleteStreetSegmentCommand deleteStreetSegmentCommand
         = new DeleteStreetSegmentCommand(this.project, segment);
 
-    changeCommandBuffer.addCommand(deleteStreetSegmentCommand);
+    changeCommandBuffer.addAndExecuteCommand(deleteStreetSegmentCommand);
     deleteStreetSegmentCommand.execute();
     selectionBuffer.removeSegmentSelection(segment);
   }
@@ -119,7 +119,7 @@ public class RoseRoadSystemController extends Controller
         this.selectionBuffer.getSelectedSegments(),
         draggingTransition);
 
-    changeCommandBuffer.addCommand(dragStreetSegmentsCommand);
+    changeCommandBuffer.addAndExecuteCommand(dragStreetSegmentsCommand);
     dragStreetSegmentsCommand.execute();
 
     initialSegmentDragPosition = null;
@@ -199,8 +199,7 @@ public class RoseRoadSystemController extends Controller
     DragSegmentEndCommand dragSegmentEndCommand
         = new DragSegmentEndCommand((MovableConnector) dragConnector, draggingTransition);
 
-    changeCommandBuffer.addCommand(dragSegmentEndCommand);
-    dragSegmentEndCommand.execute();
+    changeCommandBuffer.addAndExecuteCommand(dragSegmentEndCommand);
 
     dragConnector = null;
     initialConnectorDragPosition = null;
@@ -209,7 +208,7 @@ public class RoseRoadSystemController extends Controller
   @Override
   public void rotateSegment() {
     if (selectionBuffer.getSelectedSegments().size() == SEGMENTS_ROTATION_ALLOWED_AMOUNT) {
-      this.project.getRoadSystem().rotateSegment(selectionBuffer.getSelectedSegments().get(0));
+      this.project.getRoadSystem().rotateSegment(selectionBuffer.getSelectedSegments().get(0), 15);
     }
   }
 

@@ -46,6 +46,8 @@ public class CriteriaManager extends RoseSetObservable<PlausibilityCriterion, Cr
       this.criterionFactory = new CriterionFactory(roadSystem, violationManager);
       this.criterion.addAll(this.criterionFactory.createValueCriteria());
       this.criterion.add(this.criterionFactory.createCompletenessCriterion());
+    } else {
+      throw new IllegalStateException("the roadSystem can be set only one time");
     }
   }
 

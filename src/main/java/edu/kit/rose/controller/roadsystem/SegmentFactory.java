@@ -13,6 +13,10 @@ import edu.kit.rose.model.roadsystem.elements.Segment;
  * {@link edu.kit.rose.model.roadsystem.elements.Segment}s.
  */
 public class SegmentFactory {
+
+  private static final String INVALID_ATTRIBUTE_ACCESSOR_DATA_TYPE_MESSAGE
+      = "Invalid attribute accessor datatype.";
+
   private final Project project;
   private final Segment oldSegment;
 
@@ -68,35 +72,35 @@ public class SegmentFactory {
     switch (newAccessor.getAttributeType().getDataType()) {
       case STRING -> {
         if (oldAccessor.getAttributeType().getDataType() == DataType.STRING) {
-          AttributeAccessor<String> newStringAccessor = (AttributeAccessor<String>) newAccessor;
-          AttributeAccessor<String> oldStringAccessor = (AttributeAccessor<String>) oldAccessor;
-          newStringAccessor.setValue(oldStringAccessor.getValue());
+          SegmentFactory.<String>executeTransfer(newAccessor, oldAccessor);
         }
       }
       case BOOLEAN -> {
         if (oldAccessor.getAttributeType().getDataType() == DataType.BOOLEAN) {
-          AttributeAccessor<Boolean> newStringAccessor = (AttributeAccessor<Boolean>) newAccessor;
-          AttributeAccessor<Boolean> oldStringAccessor = (AttributeAccessor<Boolean>) oldAccessor;
-          newStringAccessor.setValue(oldStringAccessor.getValue());
+          SegmentFactory.<Boolean>executeTransfer(newAccessor, oldAccessor);
         }
       }
       case INTEGER -> {
         if (oldAccessor.getAttributeType().getDataType() == DataType.INTEGER) {
-          AttributeAccessor<Integer> newStringAccessor = (AttributeAccessor<Integer>) newAccessor;
-          AttributeAccessor<Integer> oldStringAccessor = (AttributeAccessor<Integer>) oldAccessor;
-          newStringAccessor.setValue(oldStringAccessor.getValue());
+          SegmentFactory.<Integer>executeTransfer(newAccessor, oldAccessor);
         }
       }
       case FRACTIONAL -> {
         if (oldAccessor.getAttributeType().getDataType() == DataType.FRACTIONAL) {
-          AttributeAccessor<Double> newStringAccessor = (AttributeAccessor<Double>) newAccessor;
-          AttributeAccessor<Double> oldStringAccessor = (AttributeAccessor<Double>) oldAccessor;
-          newStringAccessor.setValue(oldStringAccessor.getValue());
+          SegmentFactory.<Double>executeTransfer(newAccessor, oldAccessor);
         }
       }
       default -> {
+        throw new IllegalArgumentException(INVALID_ATTRIBUTE_ACCESSOR_DATA_TYPE_MESSAGE);
       }
     }
     ;
+  }
+
+  private static <T> void executeTransfer(
+      AttributeAccessor<?> newAccessor, AttributeAccessor<?> oldAccessor) {
+    AttributeAccessor<T> newStringAccessor = (AttributeAccessor<T>) newAccessor;
+    AttributeAccessor<T> oldStringAccessor = (AttributeAccessor<T>) oldAccessor;
+    newStringAccessor.setValue(oldStringAccessor.getValue());
   }
 }

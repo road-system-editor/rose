@@ -11,9 +11,9 @@ import edu.kit.rose.model.plausibility.criteria.validation.EqualsValidationStrat
 import edu.kit.rose.model.plausibility.criteria.validation.LessThanValidationStrategy;
 import edu.kit.rose.model.plausibility.criteria.validation.NorValidationStrategy;
 import edu.kit.rose.model.plausibility.criteria.validation.NotEqualsValidationStrategy;
-import edu.kit.rose.model.plausibility.criteria.validation.OperatorType;
 import edu.kit.rose.model.plausibility.criteria.validation.OrValidationStrategy;
 import edu.kit.rose.model.plausibility.criteria.validation.ValidationStrategy;
+import edu.kit.rose.model.plausibility.criteria.validation.ValidationType;
 import edu.kit.rose.model.plausibility.violation.Violation;
 import edu.kit.rose.model.plausibility.violation.ViolationManager;
 import edu.kit.rose.model.roadsystem.RoadSystem;
@@ -39,7 +39,7 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
   private static final boolean NOT_USE_DISCREPANCY = false;
   private String name;
   private AttributeType attributeType;
-  private OperatorType operatorType;
+  private ValidationType operatorType;
   private double discrepancy;
   private final Set<SegmentType> segmentTypes;
   private final RoadSystem roadSystem;
@@ -85,7 +85,7 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
    *
    * @return the type of Operator this Criterion is using.
    */
-  public OperatorType getOperatorType() {
+  public ValidationType getOperatorType() {
     return this.operatorType;
   }
 
@@ -94,20 +94,20 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
    *
    * @param operatorType the Type of Operator this Criterion is supposed to use.
    */
-  public void setOperatorType(OperatorType operatorType) {
+  public void setOperatorType(ValidationType operatorType) {
     this.operatorType = operatorType;
     notifySubscribers();
   }
 
   /**
-   * Gives a {@link SortedBox} of {@link OperatorType}s that contains all Types that are
+   * Gives a {@link SortedBox} of {@link ValidationType}s that contains all Types that are
    * compatible with this criterion.
    * (This is depending on the AttributeType this criterion has)
    *
-   * @return containing all {@link OperatorType}s that are compatible with this criterion.
+   * @return containing all {@link ValidationType}s that are compatible with this criterion.
    */
-  public SortedBox<OperatorType> getCompatibleOperatorTypes() {
-    return new RoseSortedBox<>(Arrays.stream(OperatorType.values()).filter(e -> e.getCompatible()
+  public SortedBox<ValidationType> getCompatibleOperatorTypes() {
+    return new RoseSortedBox<>(Arrays.stream(ValidationType.values()).filter(e -> e.getCompatible()
             .contains(this.attributeType.getDataType())).collect(Collectors.toList()));
   }
 
@@ -174,28 +174,28 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
   @Override
   public void notifyChange(Element unit) {
     ArrayList<Segment> invalidSegments;
-    if (!this.operatorType.equals(OperatorType.DEFAULT) && !unit.isContainer()) {
+    if (!this.operatorType.equals(ValidationType.DEFAULT) && !unit.isContainer()) {
       ValidationStrategy strategy;
 
       switch (this.operatorType) {
         case EQUALS -> {
-          strategy = new EqualsValidationStrategy<>();
+          strategy = new EqualsValidationStrategy();
           invalidSegments = getInvalidSegments(strategy, (Segment) unit, NOT_USE_DISCREPANCY);
         }
         case LESS_THAN -> {
-          strategy = new LessThanValidationStrategy<>();
+          strategy = new LessThanValidationStrategy();
           invalidSegments = getInvalidSegments(strategy, (Segment) unit, USE_DISCREPANCY);
         }
         case NOR -> {
-          strategy = new NorValidationStrategy<>();
+          strategy = new NorValidationStrategy();
           invalidSegments = getInvalidSegments(strategy, (Segment) unit, NOT_USE_DISCREPANCY);
         }
         case NOT_EQUALS -> {
-          strategy = new NotEqualsValidationStrategy<>();
+          strategy = new NotEqualsValidationStrategy();
           invalidSegments = getInvalidSegments(strategy, (Segment) unit, NOT_USE_DISCREPANCY);
         }
         case OR -> {
-          strategy = new OrValidationStrategy<>();
+          strategy = new OrValidationStrategy();
           invalidSegments = getInvalidSegments(strategy, (Segment) unit, NOT_USE_DISCREPANCY);
         }
         default -> throw new IllegalArgumentException("invalid operator type");

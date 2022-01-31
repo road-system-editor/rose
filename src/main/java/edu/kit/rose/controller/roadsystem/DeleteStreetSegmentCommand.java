@@ -53,7 +53,9 @@ public class DeleteStreetSegmentCommand implements ChangeCommand {
   public void unexecute() {
     SegmentFactory segmentFactory = new SegmentFactory(this.project, this.segment);
     this.segment = segmentFactory.createSegment();
-    this.segmentParentGroup.addElement(this.segment);
-    this.segmentParentGroup = null;
+    if (this.segmentParentGroup != null) {
+      this.segmentParentGroup.addElement(this.segment);
+      this.segmentParentGroup = null;
+    }
   }
 }

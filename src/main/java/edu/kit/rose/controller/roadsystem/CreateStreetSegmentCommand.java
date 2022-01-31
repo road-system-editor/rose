@@ -38,12 +38,8 @@ public class CreateStreetSegmentCommand implements ChangeCommand {
 
   @Override
   public void execute() {
-    if (segment == null) {
-      this.segment = project.getRoadSystem().createSegment(this.segmentType);
-    } else {
-      SegmentFactory segmentFactory = new SegmentFactory(this.project, this.segment);
-      this.segment = segmentFactory.createSegment();
-
+    this.segment = project.getRoadSystem().createSegment(this.segmentType);
+    if (this.segmentParentGroup != null) {
       this.segmentParentGroup.addElement(this.segment);
       this.segmentParentGroup = null;
     }

@@ -93,6 +93,7 @@ public class RoseRoadSystemController extends Controller
 
     changeCommandBuffer.addCommand(deleteStreetSegmentCommand);
     deleteStreetSegmentCommand.execute();
+    selectionBuffer.removeSegmentSelection(segment);
   }
 
   @Override

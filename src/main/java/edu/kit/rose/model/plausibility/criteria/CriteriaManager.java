@@ -23,23 +23,30 @@ public class CriteriaManager extends RoseSetObservable<PlausibilityCriterion, Cr
         UnitObserver<PlausibilityCriterion> {
 
   private ViolationManager violationManager;
+  private RoadSystem roadSystem;
+  private CriterionFactory criterionFactory;
   private final ArrayList<PlausibilityCriterion> criterion;
-  private final CriterionFactory criterionFactory;
 
   /**
    * Constructor.
-   *
-   * @param roadSystem        the road system whose elements
-   *                          will be observed by created criteria
-   * @param violationManager  the violation manager that will receive the
-   *                          {@link edu.kit.rose.model.plausibility.violation.Violation}s
-   *                          of {@link PlausibilityCriterion} in this CriteriaManager.
    */
-  public CriteriaManager(RoadSystem roadSystem, ViolationManager violationManager) {
+  public CriteriaManager() {
     this.criterion = new ArrayList<>();
-    this.criterionFactory = new CriterionFactory(roadSystem, violationManager);
-    this.criterion.addAll(this.criterionFactory.createValueCriteria());
-    this.criterion.add(this.criterionFactory.createCompletenessCriterion());
+  }
+
+  /**
+   * Sets only once a roadSystem to this CriteriaManager.
+   *
+   * @param roadSystem the road system whose elements
+   *     will be observed by created criteria
+   */
+  public void setRoadSystem(RoadSystem roadSystem) {
+    if (this.roadSystem == null) {
+      this.roadSystem = roadSystem;
+      this.criterionFactory = new CriterionFactory(roadSystem, violationManager);
+      this.criterion.addAll(this.criterionFactory.createValueCriteria());
+      this.criterion.add(this.criterionFactory.createCompletenessCriterion());
+    }
   }
 
   /**

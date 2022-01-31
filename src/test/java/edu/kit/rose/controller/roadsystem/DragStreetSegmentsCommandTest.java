@@ -30,9 +30,7 @@ public class DragStreetSegmentsCommandTest {
     this.project = Mockito.mock(Project.class);
     this.roadSystem = Mockito.mock(RoadSystem.class);
 
-    movement = Mockito.mock(Movement.class);
-    Mockito.when(movement.getX()).thenReturn(10);
-    Mockito.when(movement.getY()).thenReturn(20);
+    movement = new Movement(10, 20);
   }
 
   @Test

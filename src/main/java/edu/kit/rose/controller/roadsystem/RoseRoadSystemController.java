@@ -130,6 +130,16 @@ public class RoseRoadSystemController extends Controller
   }
 
   @Override
+  public void addSegmentSelection(Segment segment) {
+    this.selectionBuffer.addSegmentSelection(segment);
+  }
+
+  @Override
+  public void removeSegmentSelection(Segment segment) {
+    this.selectionBuffer.removeSegmentSelection(segment);
+  }
+
+  @Override
   public void selectSegmentsInRectangle(Position firstSelectionCorner,
                                         Position secondSelectionCorner) {
 

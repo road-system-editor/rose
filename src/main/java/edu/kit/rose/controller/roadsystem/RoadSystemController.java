@@ -76,6 +76,20 @@ public interface RoadSystemController extends SetObservable<Segment, RoadSystemC
   void toggleSegmentSelection(Segment segment);
 
   /**
+   * Marks a segment as selected.
+   *
+   * @param segment the segment to select
+   */
+  void addSegmentSelection(Segment segment);
+
+  /**
+   * Marks a segment as unselected.
+   *
+   * @param segment the segment to unselect
+   */
+  void removeSegmentSelection(Segment segment);
+
+  /**
    * Selects all segments that have a connector inside the rectangle
    * which the given positions determine.
    * The positions have to be located diagonally to each other on the rectangle.

@@ -67,6 +67,11 @@ public class RoseExportStrategyTest {
     new RoseExportStrategy(project).exportToFile(EXPORT_FILE.toFile());
 
     assertTrue(Files.exists(EXPORT_FILE));
+    RoseExportStrategy.importToProject(new RoseProject(new CriteriaManager()), EXPORT_FILE.toFile());
+  }
+
+  @Test
+  void testImportProject() {
   }
 
   @SuppressWarnings("unchecked")

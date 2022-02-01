@@ -1,6 +1,7 @@
 package edu.kit.rose.model;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
@@ -21,12 +22,7 @@ class RoseExportStrategy extends ExportStrategy {
 
   @Override
   void exportToFile(File file) {
-    var factory = new YAMLFactory()
-        .disable(YAMLGenerator.Feature.WRITE_DOC_START_MARKER)
-        .enable(YAMLGenerator.Feature.MINIMIZE_QUOTES);
-    var mapper = new ObjectMapper(factory);
-    mapper.findAndRegisterModules();
-    mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+    var mapper = createObjectMapper();
 
     var jsonProject = new SerializedRoadSystem(project.getRoadSystem());
 
@@ -35,5 +31,30 @@ class RoseExportStrategy extends ExportStrategy {
     } catch (IOException e) {
       e.printStackTrace();
     }
+  }
+
+  private static ObjectMapper createObjectMapper() {
+    var factory = new YAMLFactory()
+        .disable(YAMLGenerator.Feature.WRITE_DOC_START_MARKER)
+        .enable(YAMLGenerator.Feature.MINIMIZE_QUOTES);
+    var mapper = new ObjectMapper(factory);
+    mapper.findAndRegisterModules();
+    mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+
+    return mapper;
+  }
+
+  public static void importToProject(Project project, File file) {
+    var mapper = createObjectMapper();
+
+    SerializedRoadSystem serialized;
+    try { //TODO
+      serialized = mapper.readValue(file, SerializedRoadSystem.class);
+    } catch (IOException e) {
+      e.printStackTrace();
+      return;
+    }
+
+    serialized.populateRoadSystem(project.getRoadSystem());
   }
 }

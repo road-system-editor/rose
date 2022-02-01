@@ -1,24 +1,32 @@
 package edu.kit.rose.model;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import edu.kit.rose.infrastructure.RoseSortedBox;
 import edu.kit.rose.model.plausibility.criteria.CriteriaManager;
+import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterion;
 import edu.kit.rose.model.roadsystem.GraphRoadSystem;
 import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.TimeSliceSetting;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.elements.Base;
+import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Exit;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Iterator;
 import java.util.List;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -67,7 +75,61 @@ public class RoseExportStrategyTest {
     new RoseExportStrategy(project).exportToFile(EXPORT_FILE.toFile());
 
     assertTrue(Files.exists(EXPORT_FILE));
-    RoseExportStrategy.importToProject(new RoseProject(new CriteriaManager()), EXPORT_FILE.toFile());
+
+    var criteriaManager = mock(CriteriaManager.class);
+    when(criteriaManager.getCriteria()).thenReturn(new RoseSortedBox<>());
+
+    var roadSystem = new GraphRoadSystem(criteriaManager, new TimeSliceSetting());
+
+    Project p = mock(Project.class);
+    when(p.getRoadSystem()).thenReturn(roadSystem);
+
+    RoseExportStrategy.importToProject(p, EXPORT_FILE.toFile());
+    assertEquals(2, roadSystem.getElements().getSize());
+
+    Base baseSegment = null;
+    Exit exitSegment = null;
+    for (var element : roadSystem.getElements()) {
+      assertFalse(element.isContainer());
+
+      var type = ((Segment) element).getSegmentType();
+      if (type == SegmentType.BASE) {
+        baseSegment = (Base) element;
+      } else if (type == SegmentType.EXIT) {
+        exitSegment = (Exit) element;
+      }
+    }
+
+    assertNotNull(baseSegment);
+    assertEquals("GWBFRStuttgart", baseSegment.getName());
+    assertEquals(3000,
+        RoseExportStrategyTest.<Integer>getAttributeValue(baseSegment, AttributeType.LENGTH));
+
+
+    assertNotNull(exitSegment);
+    assertEquals("AusfahrtKarlsbadFRStuttgart", exitSegment.getName());
+    assertEquals(250,
+        RoseExportStrategyTest.<Integer>getAttributeValue(exitSegment, AttributeType.LENGTH));
+    assertEquals(2,
+        RoseExportStrategyTest.<Integer>getAttributeValue(exitSegment, AttributeType.SLOPE));
+    assertEquals(60,
+        RoseExportStrategyTest.<Integer>getAttributeValue(exitSegment, AttributeType.MAX_SPEED_RAMP));
+
+    assertEquals(1, roadSystem.getConnections(baseSegment).getSize());
+    var connection = roadSystem.getConnections(baseSegment).iterator().next();
+    // TODO check whether connection is between the correct ends
+  }
+
+  @SuppressWarnings("unchecked")
+  private static <T> T getAttributeValue(Element element, AttributeType type) {
+    for (var accessor : element.getAttributeAccessors()) {
+      if (accessor.getAttributeType() == type) {
+        return ((AttributeAccessor<T>) accessor).getValue();
+      }
+    }
+
+    fail("missing attribute");
+    return null;
   }
 
   @Test

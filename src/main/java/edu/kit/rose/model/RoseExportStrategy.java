@@ -1,11 +1,9 @@
 package edu.kit.rose.model;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
 import java.io.File;
 import java.io.IOException;
 
@@ -34,9 +32,7 @@ class RoseExportStrategy extends ExportStrategy {
   }
 
   private static ObjectMapper createObjectMapper() {
-    var factory = new YAMLFactory()
-        .disable(YAMLGenerator.Feature.WRITE_DOC_START_MARKER)
-        .enable(YAMLGenerator.Feature.MINIMIZE_QUOTES);
+    var factory = new YAMLFactory();
     var mapper = new ObjectMapper(factory);
     mapper.findAndRegisterModules();
     mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);

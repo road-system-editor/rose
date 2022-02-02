@@ -1,21 +1,33 @@
 package edu.kit.rose.view.panel.segmentbox;
 
+import com.google.inject.Inject;
+import com.google.inject.Injector;
 import edu.kit.rose.controller.roadsystem.RoadSystemController;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
+import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import edu.kit.rose.view.commons.FxmlContainer;
 import java.util.Collection;
 import java.util.List;
+import javafx.fxml.FXML;
+import javafx.scene.control.ListView;
+
 
 /**
  * The segment box panel provides an overview over the available street segment types which can
  * be created, as specified in PF11.1.7.
  */
 public class SegmentBoxPanel extends FxmlContainer {
+
+  @FXML
+  private ListView<SegmentType> blueprintListView;
+
   /**
    * The controller to use for segment creation.
    */
+  @Inject
   private RoadSystemController controller;
+
   /**
    * A scrollable list of segment blueprints is contained within the panel.
    */
@@ -23,19 +35,13 @@ public class SegmentBoxPanel extends FxmlContainer {
 
   /**
    * Creates a new segment box panel.
-   * Requires {@link #setController(RoadSystemController)}
    */
   public SegmentBoxPanel() {
     super("SegmentBoxPanel.fxml");
-  }
 
-  /**
-   * Sets the controller of this panel.
-   *
-   * @param controller the controller to use to create segments.
-   */
-  public void setController(RoadSystemController controller) {
-    this.controller = controller;
+    blueprintListView.setCellFactory(
+            listView -> new SegmentBoxListCell(this.controller, getTranslator()));
+    blueprintListView.getItems().addAll(SegmentType.values());
   }
 
   @Override

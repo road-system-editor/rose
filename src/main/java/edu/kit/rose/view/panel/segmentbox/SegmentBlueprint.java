@@ -48,6 +48,7 @@ class SegmentBlueprint extends Pane {
     this.type = type;
     this.renderer = new SegmentViewFactory(translator, controller).createForSegment(
         getSegmentDataForType(type));
+    this.setOnMouseClicked(mouseEvent -> {if (mouseEvent.getClickCount() == 2) {System.out.println(type.toString());}});
   }
 
   private Segment getSegmentDataForType(SegmentType type) {

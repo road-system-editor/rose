@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import edu.kit.rose.infrastructure.Movement;
 import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.model.roadsystem.RoadSystem;
@@ -249,11 +250,13 @@ class SerializedProject {
   @JsonTypeInfo(
       use = JsonTypeInfo.Id.NAME,
       include = JsonTypeInfo.As.PROPERTY,
-      property = "isContainer"
+      property = "elementType"
   )
   @JsonSubTypes({
-      @JsonSubTypes.Type(value = SerializedGroup.class, name = "true"),
-      @JsonSubTypes.Type(value = SerializedSegment.class, name = "false")
+      @JsonSubTypes.Type(value = SerializedGroup.class, name = "GROUP"),
+      @JsonSubTypes.Type(value = SerializedBaseSegment.class, name = "BASE_SEGMENT"),
+      @JsonSubTypes.Type(value = SerializedEntranceSegment.class, name = "ENTRANCE_SEGMENT"),
+      @JsonSubTypes.Type(value = SerializedExitSegment.class, name = "EXIT_SEGMENT")
   })
   private abstract static class SerializedElement<T extends Element> {
     @JsonIgnore
@@ -334,6 +337,9 @@ class SerializedProject {
     }
   }
 
+  /**
+   * Serializable data model for {@link Group}s.
+   */
   private static class SerializedGroup extends SerializedElement<Group> {
     @JsonProperty("childrenIndices")
     private List<Integer> childrenIndices;
@@ -371,20 +377,7 @@ class SerializedProject {
    *
    * @param <T> the concrete segment type.
    */
-  @JsonTypeInfo(
-      use = JsonTypeInfo.Id.NAME,
-      include = JsonTypeInfo.As.PROPERTY,
-      property = "type"
-  )
-  @JsonSubTypes({
-      @JsonSubTypes.Type(value = SerializedBaseSegment.class, name = "BASE"),
-      @JsonSubTypes.Type(value = SerializedEntranceSegment.class, name = "ENTRANCE"),
-      @JsonSubTypes.Type(value = SerializedExitSegment.class, name = "EXIT")
-  })
   private abstract static class SerializedSegment<T extends Segment> extends SerializedElement<T> {
-    @SuppressWarnings("unused")
-    @JsonProperty("type")
-    private SegmentType type;
     @JsonProperty("length")
     private Integer length;
     @JsonProperty("slope")
@@ -412,7 +405,6 @@ class SerializedProject {
     }
 
     private void populateAttributes() {
-      this.type = this.roseElement.getSegmentType();
       this.length = getAttributeValue(AttributeType.LENGTH);
       this.slope = getAttributeValue(AttributeType.SLOPE);
       this.laneCount = getAttributeValue(AttributeType.LANE_COUNT);
@@ -440,6 +432,9 @@ class SerializedProject {
     }
   }
 
+  /**
+   * Serializable data model for {@link Base} segments.
+   */
   private static class SerializedBaseSegment extends SerializedSegment<Base> {
     @JsonProperty("entranceConnectedSegmentId")
     private Integer entranceConnectedSegmentId;
@@ -523,6 +518,9 @@ class SerializedProject {
     }
   }
 
+  /**
+   * Serializable data model for {@link Entrance}s.
+   */
   private static class SerializedEntranceSegment extends SerializedSegment<Entrance> {
     @JsonProperty("laneCountRamp")
     private Integer laneCountRamp;
@@ -621,6 +619,9 @@ class SerializedProject {
     }
   }
 
+  /**
+   * Serializable data model for {@link Exit}s.
+   */
   private static class SerializedExitSegment extends SerializedSegment<Exit> {
     @JsonProperty("laneCountRamp")
     private Integer laneCountRamp;

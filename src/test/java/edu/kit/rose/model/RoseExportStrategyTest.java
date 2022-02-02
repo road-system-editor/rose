@@ -33,7 +33,7 @@ import org.junit.jupiter.api.Test;
  * Unit tests for {@link RoseExportStrategy}.
  */
 public class RoseExportStrategyTest {
-  private static final Path EXPORT_FILE = Path.of("build/tmp/rose-export.yml");
+  private static final Path EXPORT_FILE = Path.of("build/tmp/rose-export-strategy-test.rose.json");
   private static final Position ZOOM_CENTER_POSITION = new Position(420, 69);
   private static final int ZOOM_LEVEL = 10;
   private static final Position BASE_CENTER = new Position(12, 34);

@@ -31,4 +31,14 @@ class BaseSegmentView extends SegmentView<Base> {
   public void notifyChange(Element unit) {
 
   }
+
+  @Override
+  public void notifyAddition(Element unit) {
+
+  }
+
+  @Override
+  public void notifyRemoval(Element unit) {
+
+  }
 }

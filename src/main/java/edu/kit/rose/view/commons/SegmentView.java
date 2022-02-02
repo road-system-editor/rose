@@ -2,6 +2,7 @@ package edu.kit.rose.view.commons;
 
 import edu.kit.rose.controller.roadsystem.RoadSystemController;
 import edu.kit.rose.infrastructure.Position;
+import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.infrastructure.UnitObserver;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.model.roadsystem.elements.Element;
@@ -18,7 +19,8 @@ import javafx.scene.layout.Pane;
  * @implNote A {@link SegmentView} is supposed to be placed on a managed pane.
  *     It then draws itself on that pane.
  */
-public abstract class SegmentView<T extends Segment> extends Pane implements UnitObserver<Element> {
+public abstract class SegmentView<T extends Segment> extends Pane
+    implements SetObserver<Element, Element> {
 
   /**
    * The segment which this segment view represents.
@@ -69,7 +71,7 @@ public abstract class SegmentView<T extends Segment> extends Pane implements Uni
     this.heightProperty().addListener(e -> draw());
 
     this.getChildren().add(canvas);
-
+/*
     this.setOnMousePressed(mouseEvent -> {
       startDragX = mouseEvent.getX();
       startDragY = mouseEvent.getY();
@@ -90,7 +92,7 @@ public abstract class SegmentView<T extends Segment> extends Pane implements Uni
       Position position = new Position(
           (int) Math.round(mouseEvent.getX()),
           (int) Math.round(mouseEvent.getY()));
-    });
+    });*/
   }
 
   private double startDragX;

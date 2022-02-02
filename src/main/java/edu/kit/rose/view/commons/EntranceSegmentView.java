@@ -33,4 +33,14 @@ class EntranceSegmentView extends SegmentView<Entrance> {
   public void notifyChange(Element unit) {
 
   }
+
+  @Override
+  public void notifyAddition(Element unit) {
+
+  }
+
+  @Override
+  public void notifyRemoval(Element unit) {
+
+  }
 }

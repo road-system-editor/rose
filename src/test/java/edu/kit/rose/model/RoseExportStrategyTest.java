@@ -8,10 +8,10 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import edu.kit.rose.infrastructure.Movement;
 import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.infrastructure.RoseSortedBox;
 import edu.kit.rose.model.plausibility.criteria.CriteriaManager;
-import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterion;
 import edu.kit.rose.model.roadsystem.GraphRoadSystem;
 import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.TimeSliceSetting;
@@ -25,9 +25,7 @@ import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Iterator;
 import java.util.List;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -36,8 +34,12 @@ import org.junit.jupiter.api.Test;
  */
 public class RoseExportStrategyTest {
   private static final Path EXPORT_FILE = Path.of("build/tmp/rose-export.yml");
-  private static final Position CENTER_POSITION = new Position(420, 69);
+  private static final Position ZOOM_CENTER_POSITION = new Position(420, 69);
   private static final int ZOOM_LEVEL = 10;
+  private static final Position BASE_CENTER = new Position(12, 34);
+  private static final int BASE_ROTATION = 31;
+  private static final Position EXIT_CENTER = new Position(56, 78);
+  private static final int EXIT_ROTATION = 93;
 
   Project project;
 
@@ -51,26 +53,30 @@ public class RoseExportStrategyTest {
         new TimeSliceSetting(15, 10)
     );
 
-    Base segment1 = (Base) rs.createSegment(SegmentType.BASE);
-    setAttributeValue(segment1, AttributeType.NAME, "GWBFRStuttgart");
-    setAttributeValue(segment1, AttributeType.LENGTH, 3000);
-    setAttributeValue(segment1, AttributeType.LANE_COUNT, 2);
-    setAttributeValue(segment1, AttributeType.CONURBATION, true);
-    setAttributeValue(segment1, AttributeType.MAX_SPEED, -1);
+    Base base = (Base) rs.createSegment(SegmentType.BASE);
+    base.move(toMovement(BASE_CENTER));
+    base.rotate(BASE_ROTATION);
+    setAttributeValue(base, AttributeType.NAME, "GWBFRStuttgart");
+    setAttributeValue(base, AttributeType.LENGTH, 3000);
+    setAttributeValue(base, AttributeType.LANE_COUNT, 2);
+    setAttributeValue(base, AttributeType.CONURBATION, true);
+    setAttributeValue(base, AttributeType.MAX_SPEED, -1);
 
-    Exit segment2 = (Exit) rs.createSegment(SegmentType.EXIT);
-    setAttributeValue(segment2, AttributeType.NAME, "AusfahrtKarlsbadFRStuttgart");
-    setAttributeValue(segment2, AttributeType.LENGTH, 250);
-    setAttributeValue(segment2, AttributeType.LANE_COUNT, 2);
-    setAttributeValue(segment2, AttributeType.SLOPE, 2);
-    setAttributeValue(segment2, AttributeType.CONURBATION, true);
-    setAttributeValue(segment2, AttributeType.MAX_SPEED, -1);
-    setAttributeValue(segment2, AttributeType.MAX_SPEED_RAMP, 60);
+    Exit exit = (Exit) rs.createSegment(SegmentType.EXIT);
+    exit.move(toMovement(EXIT_CENTER));
+    exit.rotate(EXIT_ROTATION);
+    setAttributeValue(exit, AttributeType.NAME, "AusfahrtKarlsbadFRStuttgart");
+    setAttributeValue(exit, AttributeType.LENGTH, 250);
+    setAttributeValue(exit, AttributeType.LANE_COUNT, 2);
+    setAttributeValue(exit, AttributeType.SLOPE, 2);
+    setAttributeValue(exit, AttributeType.CONURBATION, true);
+    setAttributeValue(exit, AttributeType.MAX_SPEED, -1);
+    setAttributeValue(exit, AttributeType.MAX_SPEED_RAMP, 60);
 
-    rs.connectConnectors(segment1.getExit(), segment2.getEntry());
+    rs.connectConnectors(base.getExit(), exit.getEntry());
 
     var zoomSetting = new ZoomSetting();
-    zoomSetting.setCenterOfView(CENTER_POSITION);
+    zoomSetting.setCenterOfView(ZOOM_CENTER_POSITION);
     zoomSetting.setZoomLevel(ZOOM_LEVEL);
 
     project = mock(Project.class);
@@ -112,24 +118,29 @@ public class RoseExportStrategyTest {
 
     assertNotNull(baseSegment);
     assertEquals("GWBFRStuttgart", baseSegment.getName());
-    assertEquals(3000,
-        RoseExportStrategyTest.<Integer>getAttributeValue(baseSegment, AttributeType.LENGTH));
+    assertEquals(3000, RoseExportStrategyTest
+        .<Integer>getAttributeValue(baseSegment, AttributeType.LENGTH));
+    assertEquals(BASE_CENTER, baseSegment.getCenter());
+    assertEquals(BASE_ROTATION, baseSegment.getRotation());
+    // TODO assert movable connector positions once that is merged into main
 
 
     assertNotNull(exitSegment);
     assertEquals("AusfahrtKarlsbadFRStuttgart", exitSegment.getName());
-    assertEquals(250,
-        RoseExportStrategyTest.<Integer>getAttributeValue(exitSegment, AttributeType.LENGTH));
-    assertEquals(2,
-        RoseExportStrategyTest.<Integer>getAttributeValue(exitSegment, AttributeType.SLOPE));
-    assertEquals(60,
-        RoseExportStrategyTest.<Integer>getAttributeValue(exitSegment, AttributeType.MAX_SPEED_RAMP));
+    assertEquals(250, RoseExportStrategyTest
+        .<Integer>getAttributeValue(exitSegment, AttributeType.LENGTH));
+    assertEquals(2, RoseExportStrategyTest
+        .<Integer>getAttributeValue(exitSegment, AttributeType.SLOPE));
+    assertEquals(60, RoseExportStrategyTest
+        .<Integer>getAttributeValue(exitSegment, AttributeType.MAX_SPEED_RAMP));
+    assertEquals(EXIT_CENTER, exitSegment.getCenter());
+    assertEquals(EXIT_ROTATION, exitSegment.getRotation());
 
     assertEquals(1, roadSystem.getConnections(baseSegment).getSize());
     var connection = roadSystem.getConnections(baseSegment).iterator().next();
     // TODO check whether connection is between the correct ends
 
-    assertEquals(CENTER_POSITION, imported.getZoomSetting().getCenterOfView());
+    assertEquals(ZOOM_CENTER_POSITION, imported.getZoomSetting().getCenterOfView());
     assertEquals(ZOOM_LEVEL, imported.getZoomSetting().getZoomLevel());
   }
 
@@ -158,5 +169,9 @@ public class RoseExportStrategyTest {
       }
     }
     throw new RuntimeException();
+  }
+
+  private static Movement toMovement(Position position) {
+    return new Movement(position.getX(), position.getY());
   }
 }

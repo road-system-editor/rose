@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import edu.kit.rose.infrastructure.Movement;
 import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.TimeSliceSetting;
@@ -58,7 +59,7 @@ class SerializedProject {
    */
   private static class SerializedZoomSetting {
     @JsonProperty("center")
-    private SerializedPosition center;
+    private SerializedVector center;
     @JsonProperty("zoomLevel")
     private int zoomLevel;
 
@@ -68,7 +69,7 @@ class SerializedProject {
     public SerializedZoomSetting(ZoomSetting source) {
       Objects.requireNonNull(source);
 
-      this.center = new SerializedPosition(source.getCenterOfView());
+      this.center = new SerializedVector(source.getCenterOfView());
       this.zoomLevel = source.getZoomLevel();
     }
 
@@ -88,18 +89,18 @@ class SerializedProject {
   }
 
   /**
-   * Serializable data model for {@link Position} objects.
+   * Serializable data model for {@link Position} and {@link Movement }objects.
    */
-  private static class SerializedPosition {
-    @JsonProperty("x")
+  private static class SerializedVector {
+    @JsonProperty("coordinateX")
     private int coordinateX;
-    @JsonProperty("y")
+    @JsonProperty("coordinateY")
     private int coordinateY;
 
     /**
      * Creates a new serialized position with the data from the given {@code source}.
      */
-    public SerializedPosition(Position source) {
+    public SerializedVector(Position source) {
       Objects.requireNonNull(source);
 
       this.coordinateX = source.getX();
@@ -109,17 +110,27 @@ class SerializedProject {
     /**
      * Empty constructor to be used by Jackson when de-serializing a file into this model.
      */
-    private SerializedPosition() {
+    private SerializedVector() {
     }
 
     /**
-     * Creates a new ROSE position object with this object's data.
+     * Creates a new ROSE {@link Position} object with this object's data.
      */
     public Position createPosition() {
       return new Position(this.coordinateX, this.coordinateY);
     }
+
+    /**
+     * Creates a new ROSE {@link Movement} object with this object's data.
+     */
+    public Movement createMovement() {
+      return new Movement(this.coordinateX, this.coordinateY);
+    }
   }
 
+  /**
+   * Serializable data model for {@link RoadSystem} objects.
+   */
   private static class SerializedRoadSystem {
     @JsonIgnore
     private final RoadSystem roadSystem;
@@ -230,6 +241,11 @@ class SerializedProject {
 
   }
 
+  /**
+   * Serializable data model for {@link Element}s.
+   *
+   * @param <T> the concrete element type.
+   */
   @JsonTypeInfo(
       use = JsonTypeInfo.Id.NAME,
       include = JsonTypeInfo.As.PROPERTY,
@@ -252,13 +268,21 @@ class SerializedProject {
     @JsonProperty("isContainer")
     private boolean isContainer;
 
-    protected SerializedElement(int index, T roseElement) {
+    /**
+     * Creates a new serialized element with the data of the given ROSE element.
+     *
+     * @param index the index of the serialized element in the {@link SerializedRoadSystem}.
+     */
+    protected SerializedElement(int index, T source) {
       this.index = index;
-      this.roseElement = roseElement;
+      this.roseElement = source;
 
       this.populateAttributes();
     }
 
+    /**
+     * Empty constructor to be used by Jackson when de-serializing a file into this model.
+     */
     protected SerializedElement() {
       this.roseElement = null;
     }
@@ -342,6 +366,11 @@ class SerializedProject {
     }
   }
 
+  /**
+   * Serializable data model for {@link Segment}s.
+   *
+   * @param <T> the concrete segment type.
+   */
   @JsonTypeInfo(
       use = JsonTypeInfo.Id.NAME,
       include = JsonTypeInfo.As.PROPERTY,
@@ -367,6 +396,11 @@ class SerializedProject {
     @JsonProperty("maxSpeed")
     private Integer maxSpeed;
 
+    @JsonProperty("centerPosition")
+    private SerializedVector centerPosition;
+    @JsonProperty("rotation")
+    private int rotation;
+
     SerializedSegment(int index, T sourceSegment) {
       super(index, sourceSegment);
 
@@ -384,6 +418,9 @@ class SerializedProject {
       this.laneCount = getAttributeValue(AttributeType.LANE_COUNT);
       this.conurbation = getAttributeValue(AttributeType.CONURBATION);
       this.maxSpeed = getAttributeValue(AttributeType.MAX_SPEED);
+
+      this.centerPosition = new SerializedVector(getRoseElement().getCenter());
+      this.rotation = getRoseElement().getRotation();
     }
 
     public abstract Connector getConnectorForConnectionTo(int connectedIndex);
@@ -397,6 +434,9 @@ class SerializedProject {
       this.setAttributeValue(AttributeType.LANE_COUNT, this.laneCount);
       this.setAttributeValue(AttributeType.CONURBATION, this.conurbation);
       this.setAttributeValue(AttributeType.MAX_SPEED, this.maxSpeed);
+
+      this.getRoseElement().move(this.centerPosition.createMovement());
+      this.getRoseElement().rotate(this.rotation);
     }
   }
 
@@ -405,12 +445,27 @@ class SerializedProject {
     private Integer entranceConnectedSegmentId;
     @JsonProperty("exitConnectedSegmentId")
     private Integer exitConnectedSegmentId;
+    @JsonProperty("entrancePosition")
+    private SerializedVector entrancePosition;
+    @JsonProperty("exitPosition")
+    private SerializedVector exitPosition;
 
-    SerializedBaseSegment(int index, Base roseBase) {
+    /**
+     * Creates a new serialized base segment with the data from the given ROSE base segment.
+     *
+     * @param index the index of this element in the containing {@link SerializedRoadSystem}.
+     */
+    public SerializedBaseSegment(int index, Base roseBase) {
       super(index, roseBase);
+
+      this.entrancePosition = new SerializedVector(roseBase.getEntry().getPosition());
+      this.exitPosition = new SerializedVector(roseBase.getExit().getPosition());
     }
 
-    SerializedBaseSegment() {
+    /**
+     * Empty constructor to be used by Jackson when de-serializing a file into this model.
+     */
+    private SerializedBaseSegment() {
       super();
     }
 
@@ -425,6 +480,9 @@ class SerializedProject {
     @Override
     public void createRoseElement(RoadSystem target) {
       this.roseElement = (Base) target.createSegment(SegmentType.BASE);
+      /* TODO uncomment once movable connectors are merged
+      this.roseElement.getEntry().move(this.entrancePosition.createMovement());
+      this.roseElement.getExit().move(this.exitPosition.createMovement());*/
     }
 
     @Override

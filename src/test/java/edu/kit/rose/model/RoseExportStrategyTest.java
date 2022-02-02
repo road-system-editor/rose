@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.infrastructure.RoseSortedBox;
 import edu.kit.rose.model.plausibility.criteria.CriteriaManager;
 import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterion;
@@ -35,6 +36,8 @@ import org.junit.jupiter.api.Test;
  */
 public class RoseExportStrategyTest {
   private static final Path EXPORT_FILE = Path.of("build/tmp/rose-export.yml");
+  private static final Position CENTER_POSITION = new Position(420, 69);
+  private static final int ZOOM_LEVEL = 10;
 
   Project project;
 
@@ -66,7 +69,12 @@ public class RoseExportStrategyTest {
 
     rs.connectConnectors(segment1.getExit(), segment2.getEntry());
 
+    var zoomSetting = new ZoomSetting();
+    zoomSetting.setCenterOfView(CENTER_POSITION);
+    zoomSetting.setZoomLevel(ZOOM_LEVEL);
+
     project = mock(Project.class);
+    when(project.getZoomSetting()).thenReturn(zoomSetting);
     when(project.getRoadSystem()).thenReturn(rs);
   }
 
@@ -79,12 +87,14 @@ public class RoseExportStrategyTest {
     var criteriaManager = mock(CriteriaManager.class);
     when(criteriaManager.getCriteria()).thenReturn(new RoseSortedBox<>());
 
+
+    Project imported = mock(Project.class);
     var roadSystem = new GraphRoadSystem(criteriaManager, new TimeSliceSetting());
+    when(imported.getRoadSystem()).thenReturn(roadSystem);
+    var zoomSetting = new ZoomSetting();
+    when(imported.getZoomSetting()).thenReturn(zoomSetting);
 
-    Project p = mock(Project.class);
-    when(p.getRoadSystem()).thenReturn(roadSystem);
-
-    RoseExportStrategy.importToProject(p, EXPORT_FILE.toFile());
+    RoseExportStrategy.importToProject(imported, EXPORT_FILE.toFile());
     assertEquals(2, roadSystem.getElements().getSize());
 
     Base baseSegment = null;
@@ -118,6 +128,9 @@ public class RoseExportStrategyTest {
     assertEquals(1, roadSystem.getConnections(baseSegment).getSize());
     var connection = roadSystem.getConnections(baseSegment).iterator().next();
     // TODO check whether connection is between the correct ends
+
+    assertEquals(CENTER_POSITION, imported.getZoomSetting().getCenterOfView());
+    assertEquals(ZOOM_LEVEL, imported.getZoomSetting().getZoomLevel());
   }
 
   @SuppressWarnings("unchecked")

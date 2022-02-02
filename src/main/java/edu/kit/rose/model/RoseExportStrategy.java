@@ -22,10 +22,10 @@ class RoseExportStrategy extends ExportStrategy {
   void exportToFile(File file) {
     var mapper = createObjectMapper();
 
-    var jsonProject = new SerializedRoadSystem(project.getRoadSystem());
+    var serialized = new SerializedProject(project);
 
     try { //TODO
-      mapper.writeValue(file, jsonProject);
+      mapper.writeValue(file, serialized);
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -43,14 +43,14 @@ class RoseExportStrategy extends ExportStrategy {
   public static void importToProject(Project project, File file) {
     var mapper = createObjectMapper();
 
-    SerializedRoadSystem serialized;
-    try { //TODO
-      serialized = mapper.readValue(file, SerializedRoadSystem.class);
+    SerializedProject serialized;
+    try {
+      serialized = mapper.readValue(file, SerializedProject.class);
     } catch (IOException e) {
       e.printStackTrace();
       return;
     }
 
-    serialized.populateRoadSystem(project.getRoadSystem());
+    serialized.populateProject(project);
   }
 }

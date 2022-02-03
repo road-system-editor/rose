@@ -16,7 +16,6 @@ import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.TimeSliceSetting;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -24,6 +23,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -31,26 +31,93 @@ import org.junit.jupiter.api.Test;
  * Unit tests for {@link RoseApplicationDataSystem}.
  */
 public class RoseApplicationDataSystemTest {
-  static final Path CONFIG_FILE = Path.of("build/tmp/test_workspace/config");
+  static final Path CONFIG_FILE = Path.of("build/tmp/config.json");
   static final Path CRITERIA_EXPORT_FILE = Path.of("build/tmp/criteria-export.criteria.json");
   static final URL CRITERIA_IMPORT_URL =
       RoseApplicationDataSystemTest.class.getResource("import-sample.criteria.json");
+  static final URL SAMPLE_CONFIG_URL =
+      RoseApplicationDataSystemTest.class.getResource("config-sample.json");
   static final int CRITERIA_IMPORT_AMOUNT = 2;
+
+  static int defaultCriteriaAmount;
 
   ApplicationDataSystem applicationDataSystem;
   SetObserver<AttributeType, ApplicationDataSystem> observer;
+  /**
+   * Required for criteria manager creation.
+   */
+  RoadSystem roadSystem;
+
+  @BeforeAll
+  static void beforeAll() throws IOException {
+    Files.deleteIfExists(CONFIG_FILE);
+    defaultCriteriaAmount = new RoseApplicationDataSystem(CONFIG_FILE)
+        .getCriteriaManager()
+        .getCriteria()
+        .getSize();
+  }
 
   @BeforeEach
   void beforeEach() throws IOException {
+    Files.deleteIfExists(CRITERIA_EXPORT_FILE);
+    Files.deleteIfExists(CONFIG_FILE);
+
     applicationDataSystem = new RoseApplicationDataSystem(CONFIG_FILE);
     var criteriaManager = applicationDataSystem.getCriteriaManager();
     var timeSliceSetting = mock(TimeSliceSetting.class);
-    criteriaManager.setRoadSystem(new GraphRoadSystem(criteriaManager, timeSliceSetting));
+    this.roadSystem = new GraphRoadSystem(criteriaManager, timeSliceSetting);
+    criteriaManager.setRoadSystem(this.roadSystem);
 
     observer = mockObserver();
     applicationDataSystem.addSubscriber(observer);
+  }
 
-    Files.deleteIfExists(CRITERIA_EXPORT_FILE);
+  @Test
+  void testLoad() throws URISyntaxException {
+    Assumptions.assumeTrue(SAMPLE_CONFIG_URL != null);
+    var configPath = Paths.get(SAMPLE_CONFIG_URL.toURI());
+    var ads = new RoseApplicationDataSystem(configPath);
+    ads.getCriteriaManager().setRoadSystem(this.roadSystem);
+
+    assertEquals(2, ads.getShownAttributeTypes().getSize());
+    assertTrue(ads.getShownAttributeTypes().contains(AttributeType.SLOPE));
+    assertTrue(ads.getShownAttributeTypes().contains(AttributeType.COMMENT));
+
+    assertEquals(defaultCriteriaAmount, ads.getCriteriaManager().getCriteria().getSize());
+
+    assertSame(Language.GERMAN, ads.getLanguage());
+  }
+
+  @Test
+  void testSaveOnLanguageChanged() {
+    // the following should trigger a save since GERMAN is not the default language
+    applicationDataSystem.setLanguage(Language.GERMAN);
+    assertTrue(Files.exists(CONFIG_FILE));
+  }
+
+  @Test
+  void testSaveOnCriterionChanges() throws IOException {
+    var criterion = applicationDataSystem.getCriteriaManager().createCompatibilityCriterion();
+    assertTrue(Files.exists(CONFIG_FILE));
+    Files.delete(CONFIG_FILE);
+
+    criterion.setName("Totally creative name!");
+    assertTrue(Files.exists(CONFIG_FILE));
+    Files.delete(CONFIG_FILE);
+
+    applicationDataSystem.getCriteriaManager().removeCriterion(criterion);
+    assertTrue(Files.exists(CONFIG_FILE));
+    Files.delete(CONFIG_FILE);
+  }
+
+  @Test
+  void testSaveOnShownAttributesChanged() throws IOException {
+    applicationDataSystem.addShownAttributeType(AttributeType.LANE_COUNT_RAMP);
+    assertTrue(Files.exists(CONFIG_FILE));
+    Files.delete(CONFIG_FILE);
+
+    applicationDataSystem.removeShownAttributeType(AttributeType.LANE_COUNT_RAMP);
+    assertTrue(Files.exists(CONFIG_FILE));
   }
 
   @Test
@@ -138,9 +205,9 @@ public class RoseApplicationDataSystemTest {
     assertTrue(Files.exists(CRITERIA_EXPORT_FILE));
   }
 
-  @SuppressWarnings("ConstantConditions")
   @Test
   void testImportCriteria() throws URISyntaxException {
+    Assumptions.assumeTrue(CRITERIA_IMPORT_URL != null);
     var criteriaPath = Paths.get(CRITERIA_IMPORT_URL.toURI());
 
     var defaultAmount = applicationDataSystem.getCriteriaManager().getCriteria().getSize();

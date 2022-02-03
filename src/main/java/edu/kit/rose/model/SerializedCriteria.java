@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Serializable data model for criteria exports and imports.
  */
-class SerializableCriteria {
+class SerializedCriteria {
   @JsonProperty("criteria")
   private List<SerializedPlausibilityCriterion<? extends PlausibilityCriterion>> criteria;
 
@@ -24,7 +24,7 @@ class SerializableCriteria {
    * Creates a new serializable criteria export with the criteria of the given
    * {@code criteriaManager}.
    */
-  public SerializableCriteria(CriteriaManager criteriaManager) {
+  public SerializedCriteria(CriteriaManager criteriaManager) {
     this.criteria = new ArrayList<>(criteriaManager.getCriteria().getSize());
     for (var criterion : criteriaManager.getCriteria()) {
       var serialized = SerializedPlausibilityCriterion.forRoseCriterion(criterion);
@@ -38,7 +38,7 @@ class SerializableCriteria {
    * Empty constructor to be used by Jackson when de-serializing a file into this model.
    */
   @SuppressWarnings("unused")
-  public SerializableCriteria() {
+  public SerializedCriteria() {
   }
 
   /**

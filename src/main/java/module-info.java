@@ -11,6 +11,7 @@ module edu.kit.rose.entwurf {
   opens edu.kit.rose.model to com.fasterxml.jackson.databind;
   opens edu.kit.rose.model.plausibility.criteria.validation to com.fasterxml.jackson.databind;
   opens edu.kit.rose.model.roadsystem.attributes to com.fasterxml.jackson.databind;
+  opens edu.kit.rose.infrastructure.language to com.fasterxml.jackson.databind;
   opens edu.kit.rose.view to javafx.fxml, com.google.guice;
   opens edu.kit.rose.view.commons to javafx.fxml, com.google.guice;
   opens edu.kit.rose.view.panel.criterion to javafx.fxml, com.google.guice;

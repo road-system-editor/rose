@@ -6,10 +6,12 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import edu.kit.rose.infrastructure.Box;
 import edu.kit.rose.infrastructure.RoseBox;
 import edu.kit.rose.infrastructure.RoseSetObservable;
+import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.model.plausibility.criteria.CriteriaManager;
 import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterion;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
+import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.HashSet;
@@ -22,10 +24,30 @@ import java.util.Set;
  */
 class RoseApplicationDataSystem extends RoseSetObservable<AttributeType, ApplicationDataSystem>
     implements ApplicationDataSystem {
-  private final ObjectMapper serializationObjectMapper = new ObjectMapper(new JsonFactory())
-      .enable(SerializationFeature.INDENT_OUTPUT);
+  /**
+   * This adapter calls {@link #save()} once a plausibility criterion changes.
+   */
+  private final SetObserver<SegmentType, PlausibilityCriterion> criterionChangedSaveAdapter =
+      new SetObserver<>() {
+        @Override
+        public void notifyAddition(SegmentType unit) {
+          RoseApplicationDataSystem.this.save();
+        }
+
+        @Override
+        public void notifyRemoval(SegmentType unit) {
+          RoseApplicationDataSystem.this.save();
+        }
+
+        @Override
+        public void notifyChange(PlausibilityCriterion unit) {
+          RoseApplicationDataSystem.this.save();
+        }
+      };
 
   private final Path configFilePath;
+  private final ObjectMapper serializationObjectMapper = new ObjectMapper(new JsonFactory())
+      .enable(SerializationFeature.INDENT_OUTPUT);
   private final CriteriaManager criteriaManager;
   private final Set<AttributeType> shownAttributeTypes;
   private Language language = Language.DEFAULT;
@@ -39,6 +61,7 @@ class RoseApplicationDataSystem extends RoseSetObservable<AttributeType, Applica
   public RoseApplicationDataSystem(Path configFilePath) {
     this.configFilePath = configFilePath;
     this.criteriaManager = new CriteriaManager();
+    this.criteriaManager.addSubscriber(this);
     this.shownAttributeTypes = new HashSet<>(); //fill with standard AttributeTypes
 
     // or get from config file
@@ -56,6 +79,7 @@ class RoseApplicationDataSystem extends RoseSetObservable<AttributeType, Applica
   public void setLanguage(Language language) {
     this.language = language;
     notifySubscribers();
+    this.save();
   }
 
   @Override
@@ -74,6 +98,7 @@ class RoseApplicationDataSystem extends RoseSetObservable<AttributeType, Applica
 
     if (added) {
       getSubscriberIterator().forEachRemaining(sub -> sub.notifyAddition(attributeType));
+      this.save();
     }
   }
 
@@ -83,14 +108,15 @@ class RoseApplicationDataSystem extends RoseSetObservable<AttributeType, Applica
 
     if (removed) {
       getSubscriberIterator().forEachRemaining(sub -> sub.notifyRemoval(attributeType));
+      this.save();
     }
   }
 
   @Override
   public void importCriteriaFromFile(Path path) {
-    SerializableCriteria export;
+    SerializedCriteria export;
     try {
-      export = serializationObjectMapper.readValue(path.toFile(), SerializableCriteria.class);
+      export = serializationObjectMapper.readValue(path.toFile(), SerializedCriteria.class);
     } catch (IOException e) {
       e.printStackTrace();
       // TODO proper exception handling
@@ -102,7 +128,7 @@ class RoseApplicationDataSystem extends RoseSetObservable<AttributeType, Applica
 
   @Override
   public void exportCriteriaToFile(Path path) {
-    SerializableCriteria export = new SerializableCriteria(criteriaManager);
+    SerializedCriteria export = new SerializedCriteria(criteriaManager);
     try {
       serializationObjectMapper.writeValue(path.toFile(), export);
     } catch (IOException e) {
@@ -124,18 +150,42 @@ class RoseApplicationDataSystem extends RoseSetObservable<AttributeType, Applica
   @Override
   public void notifyAddition(PlausibilityCriterion unit) {
     save();
+    unit.addSubscriber(criterionChangedSaveAdapter);
   }
 
   @Override
   public void notifyRemoval(PlausibilityCriterion unit) {
     save();
+    unit.removeSubscriber(criterionChangedSaveAdapter);
   }
 
+  /**
+   * Saves the application data to {@link #configFilePath}.
+   */
   private void save() {
-    //TODO
+    var serialized = new SerializedApplicationData(this);
+    try {
+      serializationObjectMapper.writeValue(this.configFilePath.toFile(), serialized);
+    } catch (IOException e) {
+      e.printStackTrace();
+      // TODO proper exception handling
+    }
   }
 
+  /**
+   * Loads the application data from {@link #configFilePath}.
+   */
   private void load() {
-    //TODO
+    SerializedApplicationData serialized;
+    try {
+      serialized = serializationObjectMapper
+          .readValue(this.configFilePath.toFile(), SerializedApplicationData.class);
+    } catch (IOException e) {
+      e.printStackTrace();
+      // TODO proper exception handling
+      return;
+    }
+
+    serialized.populateApplicationDataSystem(this);
   }
 }

@@ -12,6 +12,8 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 
 /**
  * The zoomable ScrollPane is a ScrollPane that adds pan and zoom gesture support to its content.
@@ -22,7 +24,7 @@ public class ZoomableScrollPane extends ScrollPane {
   private static final double ZOOM_SPEED = .02;
   private static final double BASE_MOVE_SPEED = 0.1;
   private static final int MAX_ZOOM_IN = 3;
-  private static final int MAX_ZOOM_OUT = 1;
+  private static final int MAX_ZOOM_OUT = -100;
   private static final int BUTTON_ZOOM_STRENGTH = 1;
 
   private final Grid grid = new Grid();
@@ -50,18 +52,6 @@ public class ZoomableScrollPane extends ScrollPane {
     setFitToHeight(true);
     setFitToWidth(true);
     setupKeyboardControl();
-    grid.setOnMouseClicked(event -> {
-      System.out.print("\ngrid: ");
-      System.out.println(new Point2D(event.getX(), event.getY()));
-    });
-    gridGroup.setOnMouseClicked(event -> {
-      System.out.print("\ngridGroup: ");
-      System.out.println(new Point2D(event.getX(), event.getY()));
-    });
-    gridBox.setOnMouseClicked(event -> {
-      System.out.print("\ngridBox: ");
-      System.out.println(new Point2D(event.getX(), event.getY()));
-    });
   }
 
   private void setupGridGroup() {
@@ -79,6 +69,7 @@ public class ZoomableScrollPane extends ScrollPane {
         }
       }
     });
+
   }
 
   private VBox centeredBox(Group group) {

@@ -44,7 +44,7 @@ public class ExitSegmentView extends SegmentView<Exit> {
                             RoadSystemController controller,
                             LocalizedTextProvider translator) {
     super(segment, controller, translator);
-    //segment.addSubscriber(this);TODO:turn back on when controller is ready
+    segment.addSubscriber(this);
     setup();
   }
 
@@ -79,6 +79,7 @@ public class ExitSegmentView extends SegmentView<Exit> {
   private void updateImagePosition() {
     imageView.relocate(getSegment().getCenter().getX() + IMAGE_POS_OFFSET_X,
         getSegment().getCenter().getY() + IMAGE_POS_OFFSET_Y);
+
   }
 
   private void setupRotation() {

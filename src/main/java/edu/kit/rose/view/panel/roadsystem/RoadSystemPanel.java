@@ -6,33 +6,25 @@ import edu.kit.rose.controller.application.ApplicationController;
 import edu.kit.rose.controller.attribute.AttributeController;
 import edu.kit.rose.controller.measurement.MeasurementController;
 import edu.kit.rose.controller.roadsystem.RoadSystemController;
-import edu.kit.rose.infrastructure.Box;
 import edu.kit.rose.infrastructure.DualSetObserver;
 import edu.kit.rose.infrastructure.Movement;
-import edu.kit.rose.infrastructure.Position;
-import edu.kit.rose.infrastructure.RoseSortedBox;
-import edu.kit.rose.infrastructure.SetObserver;
-import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.roadsystem.RoadSystem;
-import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
-import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.elements.Connection;
-import edu.kit.rose.model.roadsystem.elements.Connector;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Exit;
 import edu.kit.rose.model.roadsystem.elements.Segment;
-import edu.kit.rose.model.roadsystem.elements.SegmentType;
-import edu.kit.rose.model.roadsystem.measurements.Measurement;
 import edu.kit.rose.view.commons.ExitSegmentView;
 import edu.kit.rose.view.commons.FxmlContainer;
 import edu.kit.rose.view.commons.SegmentView;
-import edu.kit.rose.view.panel.segment.SegmentEditorPanel;
 import java.util.Collection;
 import java.util.List;
 import javafx.fxml.FXML;
-import javafx.scene.layout.StackPane;
+import javafx.geometry.Point2D;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 
 
 /**
@@ -96,16 +88,22 @@ public class RoadSystemPanel extends FxmlContainer
     this.navigator.setOnIn(zoomContainer::zoomIn);
     this.navigator.setOnOut(zoomContainer::zoomOut);
 
-    this.roadSystemGrid = this.zoomContainer.getGrid();
+    this.roadSystemGrid = zoomContainer.getGrid();
 
     this.roadSystemGrid.setOnAreaSelected((position1, position2) ->
         this.roadSystemController.selectSegmentsInRectangle(position1, position2));
 
     var exit = new Exit();
-    exit.rotate(45);
     exit.move(new Movement(1500, 1500));
-    roadSystemGrid.getChildren().add(
-        new ExitSegmentView(exit, roadSystemController, getTranslator()));
+    var exitView = new ExitSegmentView(exit, roadSystemController, getTranslator());
+    roadSystemGrid.getChildren().add(exitView);
+
+    var rectangle = new Rectangle(exitView.getBoundsInParent().getMinX(),
+        exitView.getBoundsInParent().getMinY(), exitView.getBoundsInParent().getWidth(),
+        exitView.getBoundsInParent().getHeight());
+    rectangle.setFill(Color.RED.deriveColor(1, 1, 1, 0.2));
+    roadSystemGrid.getChildren().add(rectangle);
+
   }
 
   @Override

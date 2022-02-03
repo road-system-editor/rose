@@ -11,9 +11,19 @@ import static org.mockito.Mockito.verify;
 
 import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.infrastructure.language.Language;
+import edu.kit.rose.model.roadsystem.GraphRoadSystem;
+import edu.kit.rose.model.roadsystem.RoadSystem;
+import edu.kit.rose.model.roadsystem.TimeSliceSetting;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -22,16 +32,25 @@ import org.junit.jupiter.api.Test;
  */
 public class RoseApplicationDataSystemTest {
   static final Path CONFIG_FILE = Path.of("build/tmp/test_workspace/config");
+  static final Path CRITERIA_EXPORT_FILE = Path.of("build/tmp/criteria-export.criteria.json");
+  static final URL CRITERIA_IMPORT_URL =
+      RoseApplicationDataSystemTest.class.getResource("import-sample.criteria.json");
+  static final int CRITERIA_IMPORT_AMOUNT = 2;
 
   ApplicationDataSystem applicationDataSystem;
   SetObserver<AttributeType, ApplicationDataSystem> observer;
 
   @BeforeEach
-  void beforeEach() {
+  void beforeEach() throws IOException {
     applicationDataSystem = new RoseApplicationDataSystem(CONFIG_FILE);
+    var criteriaManager = applicationDataSystem.getCriteriaManager();
+    var timeSliceSetting = mock(TimeSliceSetting.class);
+    criteriaManager.setRoadSystem(new GraphRoadSystem(criteriaManager, timeSliceSetting));
 
     observer = mockObserver();
     applicationDataSystem.addSubscriber(observer);
+
+    Files.deleteIfExists(CRITERIA_EXPORT_FILE);
   }
 
   @Test
@@ -109,6 +128,25 @@ public class RoseApplicationDataSystemTest {
   @Test
   void testGetCriteriaManager() {
     assertNotNull(applicationDataSystem.getCriteriaManager());
+  }
+
+  @Test
+  void testExportCriteria() {
+    Assumptions.assumeFalse(Files.exists(CRITERIA_EXPORT_FILE));
+
+    applicationDataSystem.exportCriteriaToFile(CRITERIA_EXPORT_FILE);
+    assertTrue(Files.exists(CRITERIA_EXPORT_FILE));
+  }
+
+  @SuppressWarnings("ConstantConditions")
+  @Test
+  void testImportCriteria() throws URISyntaxException {
+    var criteriaPath = Paths.get(CRITERIA_IMPORT_URL.toURI());
+
+    var defaultAmount = applicationDataSystem.getCriteriaManager().getCriteria().getSize();
+    applicationDataSystem.importCriteriaFromFile(criteriaPath);
+    assertEquals(defaultAmount + CRITERIA_IMPORT_AMOUNT,
+        applicationDataSystem.getCriteriaManager().getCriteria().getSize());
   }
 
   /**

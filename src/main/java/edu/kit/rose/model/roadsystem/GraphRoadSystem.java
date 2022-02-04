@@ -4,11 +4,7 @@ import edu.kit.rose.infrastructure.Box;
 import edu.kit.rose.infrastructure.Movement;
 import edu.kit.rose.infrastructure.RoseBox;
 import edu.kit.rose.infrastructure.RoseDualSetObservable;
-import edu.kit.rose.infrastructure.RoseSortedBox;
-import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.model.plausibility.criteria.CriteriaManager;
-import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
-import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.elements.Connection;
 import edu.kit.rose.model.roadsystem.elements.Connector;
 import edu.kit.rose.model.roadsystem.elements.Element;
@@ -16,20 +12,18 @@ import edu.kit.rose.model.roadsystem.elements.Group;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentFactory;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import org.jgrapht.Graph;
 import org.jgrapht.Graphs;
-import org.jgrapht.graph.DefaultUndirectedGraph;
+import org.jgrapht.graph.Pseudograph;
 
 
 /**
@@ -65,7 +59,7 @@ public class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, 
   public GraphRoadSystem(CriteriaManager criteriaManager, TimeSliceSetting timeSliceSetting) {
     this.criteriaManager = criteriaManager;
     this.timeSliceSetting = timeSliceSetting;
-    this.segmentConnectionGraph = new DefaultUndirectedGraph<>(Connection.class);
+    this.segmentConnectionGraph = new Pseudograph<>(Connection.class);
     this.groups = new LinkedList<>();
     this.elements = new LinkedList<>();
     this.connectorSegmentMap = new HashMap<>();

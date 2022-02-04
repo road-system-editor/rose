@@ -15,7 +15,5 @@ abstract class ExportStrategy {
    *
    * @param file the location to export the Project to.
    */
-  void exportToFile(File file) {
-
-  }
+  abstract void exportToFile(File file);
 }

@@ -7,6 +7,11 @@ import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Segment;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Supplier;
+import javafx.geometry.BoundingBox;
+import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.Pane;
@@ -68,9 +73,7 @@ public abstract class SegmentView<T extends Segment> extends Pane
       startPos = localToParent(mouseEvent.getX(), mouseEvent.getY());
     });
 
-    this.setOnDragDetected(mouseEvent -> {
-      startFullDrag();
-    });
+    this.setOnDragDetected(mouseEvent -> startFullDrag());
 
     this.setOnMouseDragged(mouseEvent -> {
       /*System.out.print("\nX: ");
@@ -81,11 +84,12 @@ public abstract class SegmentView<T extends Segment> extends Pane
       this.setLayoutX(this.getLayoutX() + mouseEvent.getX() - posOnSourceX);
       this.setLayoutY(this.getLayoutY() + mouseEvent.getY() - posOnSourceY);*/
       var currentPos = localToParent(mouseEvent.getX(), mouseEvent.getY());
-      segment.move(new Movement(
-          currentPos.getX() - startPos.getX(),
-          currentPos.getY() - startPos.getY()
-      ));
-      startPos = currentPos;
+      var movement = new Movement(currentPos.getX() - startPos.getX(),
+          currentPos.getY() - startPos.getY());
+      if (canBeMoved(movement)) {
+        segment.move(movement);
+        startPos = currentPos;
+      }
       mouseEvent.consume();
     });
 
@@ -97,6 +101,23 @@ public abstract class SegmentView<T extends Segment> extends Pane
       );
       segment.move(movement);*/
     });
+  }
+
+  private boolean canBeMoved(Movement movement) {
+    final var bounds = getLayoutBounds();
+    final var topLeft = localToParent(bounds.getMinX(), bounds.getMinY());
+    final var topRight = localToParent(bounds.getMaxX(), bounds.getMinY());
+    final var bottomLeft = localToParent(bounds.getMinX(), bounds.getMaxY());
+    final var bottomRight = localToParent(bounds.getMinX(), bounds.getMinY());
+    final var movementVector = new Point2D(movement.getX(), movement.getY());
+    final var gridBounds = getParent().getLayoutBounds();
+    List<Supplier<Boolean>> checks = List.of(
+        () -> gridBounds.contains(topLeft.add(movementVector)),
+        () -> gridBounds.contains(topRight.add(movementVector)),
+        () -> gridBounds.contains(bottomLeft.add(movementVector)),
+        () -> gridBounds.contains(bottomRight.add(movementVector))
+    );
+    return checks.stream().allMatch(Supplier::get);
   }
 
   private double posOnSourceX;

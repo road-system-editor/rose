@@ -104,20 +104,6 @@ public abstract class HighwaySegment
       List<AttributeAccessor<?>> entryAttributesList,
       List<AttributeAccessor<?>> exitAttributesList);
 
-  /*
-  protected void initConnectors(List<AttributeAccessor<?>> entryAttributesList,
-                                List<AttributeAccessor<?>> exitAttributesList) {
-    this.entryConnector = new Connector(ConnectorType.ENTRY,
-        new Position(0, INITIAL_CONNECTOR_DISTANCE_TO_CENTER),
-        entryAttributesList);
-    this.exitConnector = new Connector(ConnectorType.EXIT,
-        new Position(0, -INITIAL_CONNECTOR_DISTANCE_TO_CENTER),
-        exitAttributesList);
-    connectors.add(entryConnector);
-    connectors.add(exitConnector);
-  }
-   */
-
   /**
    * Provides the entry Connector for this Segment.
    *

@@ -96,7 +96,7 @@ public class RoadSystemPanel extends FxmlContainer
     this.roadSystemGrid.setOnAreaSelected((position1, position2) ->
         this.roadSystemController.selectSegmentsInRectangle(position1, position2));
 
-    var exit = new Exit();
+    /*var exit = new Exit();
     exit.move(new Movement(300, 300));
     var exitView = new ExitSegmentView(exit, roadSystemController, getTranslator());
     var circle = new Circle(2, Color.GREEN);
@@ -107,7 +107,7 @@ public class RoadSystemPanel extends FxmlContainer
       if (event.isAltDown()) {
         exit.rotate(2);
       }
-    });
+    });*/
 
     /*var rectangle = new Rectangle(exitView.getBoundsInParent().getMinX(),
         exitView.getBoundsInParent().getMinY(), exitView.getBoundsInParent().getWidth(),
@@ -133,8 +133,20 @@ public class RoadSystemPanel extends FxmlContainer
 
     Base b = new Base();
     b.move(new Movement(600, 600));
-    this.roadSystemGrid.addSegmentView(
-        new BaseSegmentView(b, this.roadSystemController, this.getTranslator()));
+    var baseView = new BaseSegmentView(b, this.roadSystemController, this.getTranslator());
+    this.roadSystemGrid.addSegmentView(baseView);
+    /*var rectangle = new Rectangle(baseView.getBoundsInParent().getMinX(),
+        baseView.getBoundsInParent().getMinY(), baseView.getBoundsInParent().getWidth(),
+        baseView.getBoundsInParent().getHeight());
+    rectangle.setFill(Color.RED.deriveColor(1, 1, 1, 0.2));
+    roadSystemGrid.getChildren().add(rectangle);
+    baseView.setOnMouseMoved(event -> {
+      rectangle.setX(baseView.getBoundsInParent().getMinX());
+      rectangle.setY(baseView.getBoundsInParent().getMinY());
+      rectangle.setWidth(baseView.getBoundsInParent().getWidth());
+      rectangle.setHeight(baseView.getBoundsInParent().getHeight());
+      System.out.println(baseView.getBoundsInParent());
+    });*/
   }
 
   @Override

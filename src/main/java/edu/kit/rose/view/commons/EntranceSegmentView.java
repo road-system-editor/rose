@@ -8,7 +8,7 @@ import edu.kit.rose.model.roadsystem.elements.Entrance;
 /**
  * An entrance segment view is the visual representation of an entrance street segment.
  */
-class EntranceSegmentView extends CanvasSegmentView<Entrance> {
+class EntranceSegmentView extends SegmentView<Entrance> {
 
   /**
    * Creates a new entrance segment view for a given exit {@code segment}.

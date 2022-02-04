@@ -19,8 +19,8 @@ public class BaseSegmentView extends SegmentView<Base> {
 
   private static final double SEGMENT_WIDTH = 20;
 
-  private final ConnectorWrapper<Base> entryConnectorWrapper;
-  private final ConnectorWrapper<Base> exitConnectorWrapper;
+  private final ConnectorObserver<Base> entryConnectorObserver;
+  private final ConnectorObserver<Base> exitConnectorObserver;
 
   private final ConnectorView entryConnectorView;
   private final ConnectorView exitConnectorView;
@@ -45,14 +45,16 @@ public class BaseSegmentView extends SegmentView<Base> {
 
     this.roadSystemController = controller;
 
-    this.entryConnectorView = new ConnectorView(SEGMENT_WIDTH);
-    this.exitConnectorView = new ConnectorView(SEGMENT_WIDTH);
+    this.entryConnectorView =
+        new ConnectorView(SEGMENT_WIDTH, getSegment().getEntry().getPosition());
+    this.exitConnectorView =
+        new ConnectorView(SEGMENT_WIDTH, getSegment().getExit().getPosition());
 
-    entryConnectorWrapper = new ConnectorWrapper<>(segment, segment.getEntry());
-    entryConnectorWrapper.setOnConnectorPositionChangedCallback(this::updateCenterAndRedraw);
+    entryConnectorObserver = new ConnectorObserver<>(segment, segment.getEntry());
+    entryConnectorObserver.setOnConnectorPositionChangedCallback(this::updateCenterAndRedraw);
 
-    exitConnectorWrapper = new ConnectorWrapper<>(segment, segment.getExit());
-    exitConnectorWrapper.setOnConnectorPositionChangedCallback(this::updateCenterAndRedraw);
+    exitConnectorObserver = new ConnectorObserver<>(segment, segment.getExit());
+    exitConnectorObserver.setOnConnectorPositionChangedCallback(this::updateCenterAndRedraw);
 
     curve = new QuadCurve();
     curve.setFill(Color.TRANSPARENT);
@@ -166,8 +168,8 @@ public class BaseSegmentView extends SegmentView<Base> {
   }
 
   private void updateConnectorViewPositions() {
-    this.entryConnectorView.setPosition(getCenter().add(entryConnectorWrapper.getMovement()));
-    this.exitConnectorView.setPosition(getCenter().add(exitConnectorWrapper.getMovement()));
+    this.entryConnectorView.setPosition(getSegment().getEntry().getPosition());
+    this.exitConnectorView.setPosition(getSegment().getExit().getPosition());
   }
 
   private void updateBaseSegmentViewBounds() {
@@ -200,14 +202,14 @@ public class BaseSegmentView extends SegmentView<Base> {
   }
 
   private void redrawCurve() {
-    Position entryPositionRelativeToCenter = getCenter().add(entryConnectorWrapper.getMovement());
-    Position exitPositionRelativeToCenter = getCenter().add(exitConnectorWrapper.getMovement());
-    curve.setStartX(entryPositionRelativeToCenter.getX());
-    curve.setStartY(entryPositionRelativeToCenter.getY());
+    var entryPos = getSegment().getEntry().getPosition();
+    var exitPos = getSegment().getExit().getPosition();
+    curve.setStartX(entryPos.getX());
+    curve.setStartY(entryPos.getY());
     curve.setControlX(getCenter().getX());
     curve.setControlY(getCenter().getY());
-    curve.setEndX(exitPositionRelativeToCenter.getX());
-    curve.setEndY(exitPositionRelativeToCenter.getY());
+    curve.setEndX(exitPos.getX());
+    curve.setEndY(exitPos.getY());
   }
 
 
@@ -220,5 +222,15 @@ public class BaseSegmentView extends SegmentView<Base> {
     return new Position(
         (this.getWidth() / 2),
         (this.getHeight() / 2));
+  }
+
+  @Override
+  public void notifyAddition(Element unit) {
+
+  }
+
+  @Override
+  public void notifyRemoval(Element unit) {
+
   }
 }

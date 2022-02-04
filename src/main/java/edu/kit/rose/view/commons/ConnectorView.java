@@ -21,10 +21,11 @@ public class ConnectorView extends Circle {
    * Creates new ConnectorView.
    *
    */
-  public ConnectorView(double radius) {
+  public ConnectorView(double radius, Position position) {
     super(radius, COLOR);
     setOnMouseEntered(event -> setFill(COLOR_HOVER));
     setOnMouseExited(event -> setFill(COLOR));
+    setPosition(position);
   }
 
 

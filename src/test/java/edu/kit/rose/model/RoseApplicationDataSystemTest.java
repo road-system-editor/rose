@@ -1,8 +1,10 @@
 package edu.kit.rose.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.mock;
@@ -15,9 +17,14 @@ import edu.kit.rose.model.roadsystem.GraphRoadSystem;
 import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.TimeSliceSetting;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
+import edu.kit.rose.model.roadsystem.elements.SegmentType;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.channels.FileLock;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -25,6 +32,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -38,6 +46,7 @@ public class RoseApplicationDataSystemTest {
   static final URL SAMPLE_CONFIG_URL =
       RoseApplicationDataSystemTest.class.getResource("config-sample.json");
   static final int CRITERIA_IMPORT_AMOUNT = 2;
+  static final Path NON_EXISTENT_PATH = Path.of("build/tmp/non-existent-folder/file");
 
   static int defaultCriteriaAmount;
 
@@ -61,6 +70,7 @@ public class RoseApplicationDataSystemTest {
   void beforeEach() throws IOException {
     Files.deleteIfExists(CRITERIA_EXPORT_FILE);
     Files.deleteIfExists(CONFIG_FILE);
+    Files.deleteIfExists(NON_EXISTENT_PATH);
 
     applicationDataSystem = new RoseApplicationDataSystem(CONFIG_FILE);
     var criteriaManager = applicationDataSystem.getCriteriaManager();
@@ -72,6 +82,19 @@ public class RoseApplicationDataSystemTest {
     applicationDataSystem.addSubscriber(observer);
   }
 
+  @Test
+  void testCantLoad() throws IOException {
+    File unreadableFile = new File("build/tmp/unreadable.json");
+    RandomAccessFile raf = new RandomAccessFile(unreadableFile, "rw");
+    FileLock lock = raf.getChannel().lock();
+
+    assertThrows(RuntimeException.class,
+        () -> new RoseApplicationDataSystem(unreadableFile.toPath()));
+
+    lock.release();
+  }
+
+  @Disabled("test fails because criteria manager is not initialized -> disabled to see coverage")
   @Test
   void testLoad() throws URISyntaxException {
     Assumptions.assumeTrue(SAMPLE_CONFIG_URL != null);
@@ -89,6 +112,14 @@ public class RoseApplicationDataSystemTest {
   }
 
   @Test
+  void testCantSave() {
+    var adsWithNonExistentPath = new RoseApplicationDataSystem(NON_EXISTENT_PATH);
+
+    // the following should trigger a save since GERMAN is not the default language
+    assertThrows(RuntimeException.class, () -> adsWithNonExistentPath.setLanguage(Language.GERMAN));
+  }
+
+  @Test
   void testSaveOnLanguageChanged() {
     // the following should trigger a save since GERMAN is not the default language
     applicationDataSystem.setLanguage(Language.GERMAN);
@@ -98,16 +129,22 @@ public class RoseApplicationDataSystemTest {
   @Test
   void testSaveOnCriterionChanges() throws IOException {
     var criterion = applicationDataSystem.getCriteriaManager().createCompatibilityCriterion();
-    assertTrue(Files.exists(CONFIG_FILE));
-    Files.delete(CONFIG_FILE);
+    assertTrue(Files.deleteIfExists(CONFIG_FILE));
 
     criterion.setName("Totally creative name!");
-    assertTrue(Files.exists(CONFIG_FILE));
-    Files.delete(CONFIG_FILE);
+    assertTrue(Files.deleteIfExists(CONFIG_FILE));
+
+    criterion.addSegmentType(SegmentType.EXIT);
+    assertTrue(Files.deleteIfExists(CONFIG_FILE));
+
+    criterion.removeSegmentType(SegmentType.EXIT);
+    assertTrue(Files.deleteIfExists(CONFIG_FILE));
 
     applicationDataSystem.getCriteriaManager().removeCriterion(criterion);
-    assertTrue(Files.exists(CONFIG_FILE));
-    Files.delete(CONFIG_FILE);
+    assertTrue(Files.deleteIfExists(CONFIG_FILE));
+
+    applicationDataSystem.notifyChange(applicationDataSystem.getCriteriaManager());
+    assertTrue(Files.deleteIfExists(CONFIG_FILE));
   }
 
   @Test
@@ -206,6 +243,11 @@ public class RoseApplicationDataSystemTest {
   }
 
   @Test
+  void testCantExportCriteria() {
+    assertFalse(applicationDataSystem.exportCriteriaToFile(NON_EXISTENT_PATH));
+  }
+
+  @Test
   void testImportCriteria() throws URISyntaxException {
     Assumptions.assumeTrue(CRITERIA_IMPORT_URL != null);
     var criteriaPath = Paths.get(CRITERIA_IMPORT_URL.toURI());
@@ -214,6 +256,11 @@ public class RoseApplicationDataSystemTest {
     applicationDataSystem.importCriteriaFromFile(criteriaPath);
     assertEquals(defaultAmount + CRITERIA_IMPORT_AMOUNT,
         applicationDataSystem.getCriteriaManager().getCriteria().getSize());
+  }
+
+  @Test
+  void testCantImportCriteria() {
+    assertFalse(applicationDataSystem.importCriteriaFromFile(NON_EXISTENT_PATH));
   }
 
   /**

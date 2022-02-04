@@ -25,8 +25,7 @@ public abstract class HighwaySegment
 
   protected static final int INITIAL_CONNECTOR_DISTANCE_TO_CENTER = 50;
 
-  protected final ArrayList<AttributeAccessor<?>> attributeAccessors =
-      new ArrayList<>();
+  protected final List<AttributeAccessor<?>> attributeAccessors = new ArrayList<>();
   protected final Set<Connector> connectors = new HashSet<>();
   protected final Set<Measurement<?>> measurements = new HashSet<>();
 
@@ -38,17 +37,23 @@ public abstract class HighwaySegment
   protected Connector exitConnector;
 
   private String name;
+  private final AttributeAccessor<String> nameAccessor;
+  private String comment;
+  private final AttributeAccessor<String> commentAccessor;
   private int length = 2 * INITIAL_CONNECTOR_DISTANCE_TO_CENTER;
+  private final AttributeAccessor<Integer> lengthAccessor;
   private int pitch = 0;
+  private final AttributeAccessor<Integer> slopeAccessor;
   private int nrOfEntryLanes = 1;
+  private final AttributeAccessor<Integer> nrOfEntryLanesAccessor;
   private int nrOfExitLanes = 1;
+  private final AttributeAccessor<Integer> nrOfExitLanesAccessor;
   private boolean conurbation = false;
+  private final AttributeAccessor<Boolean> conurbationAccessor;
   private int speedLimit = 100;
+  private final AttributeAccessor<Integer> speedLimitAccessor;
 
   private int rotation = 0;
-
-
-
 
   HighwaySegment(SegmentType segmentType) {
     this(segmentType, segmentType.name());
@@ -58,41 +63,38 @@ public abstract class HighwaySegment
     this.creationTime = System.nanoTime();
     this.segmentType = segmentType;
     this.name = name;
+
+    this.nameAccessor = new AttributeAccessor<>(AttributeType.NAME, this::getName, this::setName);
+    this.commentAccessor = new AttributeAccessor<>(
+        AttributeType.COMMENT, this::getComment, this::setComment);
+    this.lengthAccessor = new AttributeAccessor<>(
+        AttributeType.LENGTH, this::getLength, this::setLength);
+    this.slopeAccessor = new AttributeAccessor<>(
+        AttributeType.SLOPE, this::getSlope, this::setSlope);
+    this.nrOfEntryLanesAccessor = new AttributeAccessor<>(
+        AttributeType.LANE_COUNT, this::getNrOfEntryLanes, this::setNrOfEntryLanes);
+    this.nrOfExitLanesAccessor = new AttributeAccessor<>(
+        AttributeType.LANE_COUNT, this::getNrOfExitLanes, this::setNrOfExitLanes);
+    this.conurbationAccessor = new AttributeAccessor<>(
+        AttributeType.CONURBATION, this::getConurbation, this::setConurbation);
+    this.speedLimitAccessor = new AttributeAccessor<>(
+        AttributeType.MAX_SPEED, this::getMaxSpeed, this::setMaxSpeed);
+
+    this.attributeAccessors.addAll(List.of(
+        this.nameAccessor,
+        this.commentAccessor,
+        this.lengthAccessor,
+        this.slopeAccessor,
+        this.nrOfEntryLanesAccessor,
+        this.nrOfExitLanesAccessor,
+        this.conurbationAccessor,
+        this.speedLimitAccessor
+    ));
+
     init();
   }
 
   private void init() {
-
-    //Create all AttributeAccessors.
-    AttributeAccessor<String> nameAccessor =
-        new AttributeAccessor<>(AttributeType.NAME, () -> name,
-            s -> name = s);
-    attributeAccessors.add(nameAccessor);
-    AttributeAccessor<Integer> lengthAccessor =
-        new AttributeAccessor<>(AttributeType.LENGTH, () -> length,
-            s -> length = s);
-    attributeAccessors.add(lengthAccessor);
-    AttributeAccessor<Integer> pitchAccessor =
-        new AttributeAccessor<>(AttributeType.SLOPE, () -> pitch,
-            s -> pitch = s);
-    attributeAccessors.add(pitchAccessor);
-    AttributeAccessor<Integer> nrOfEntryLanesAccessor =
-        new AttributeAccessor<>(AttributeType.LANE_COUNT, () -> nrOfEntryLanes,
-            s -> nrOfEntryLanes = s);
-    attributeAccessors.add(nrOfEntryLanesAccessor);
-    AttributeAccessor<Integer> nrOfExitLanesAccessor =
-        new AttributeAccessor<>(AttributeType.LANE_COUNT, () -> nrOfExitLanes,
-            s -> nrOfExitLanes = s);
-    attributeAccessors.add(nrOfExitLanesAccessor);
-    AttributeAccessor<Boolean> conurbationAccessor =
-        new AttributeAccessor<>(AttributeType.CONURBATION, () -> conurbation,
-            s -> conurbation = s);
-    attributeAccessors.add(conurbationAccessor);
-    AttributeAccessor<Integer> speedLimitAccessor =
-        new AttributeAccessor<>(AttributeType.MAX_SPEED, () -> speedLimit,
-            s -> speedLimit = s);
-    attributeAccessors.add(speedLimitAccessor);
-
     List<AttributeAccessor<?>> entryAttributesList =
         Arrays.asList(lengthAccessor, nrOfEntryLanesAccessor);
 
@@ -137,11 +139,6 @@ public abstract class HighwaySegment
   @Override
   public SortedBox<AttributeAccessor<?>> getAttributeAccessors() {
     return new RoseSortedBox<>(this.attributeAccessors);
-  }
-
-  @Override
-  public String getName() {
-    return this.name;
   }
 
   @Override
@@ -230,5 +227,133 @@ public abstract class HighwaySegment
     // translate point back:
     return new Position((int) Math.round(newX + center.getX()),
         (int) Math.round(newY + center.getY()));
+  }
+
+  @Override
+  public String getName() {
+    return this.name;
+  }
+
+  @Override
+  public void setName(String name) {
+    this.name = name;
+
+    this.nameAccessor.notifySubscribers();
+    this.notifySubscribers();
+  }
+
+  @Override
+  public String getComment() {
+    return this.comment;
+  }
+
+  @Override
+  public void setComment(String comment) {
+    this.comment = comment;
+
+    this.commentAccessor.notifySubscribers();
+    this.notifySubscribers();
+  }
+
+  /**
+   * Returns the {@link AttributeType#LENGTH} of this highway segment.
+   */
+  public Integer getLength() {
+    return this.length;
+  }
+
+  /**
+   * Sets the {@link AttributeType#LENGTH} of this highway segment to the given {@code length}.
+   */
+  public void setLength(Integer length) {
+    this.length = length;
+
+    this.lengthAccessor.notifySubscribers();
+    this.notifySubscribers();
+  }
+
+  /**
+   * Returns the {@link AttributeType#SLOPE} of this highway segment.
+   */
+  public Integer getSlope() {
+    return this.pitch;
+  }
+
+  /**
+   * Sets the {@link AttributeType#SLOPE} of this highway segment to the given {@code slope}.
+   */
+  public void setSlope(Integer slope) {
+    this.pitch = slope;
+
+    this.slopeAccessor.notifySubscribers();
+    this.notifySubscribers();
+  }
+
+  /**
+   * Returns the {@link AttributeType#LANE_COUNT} for the entry connector.
+   */
+  public int getNrOfEntryLanes() {
+    return nrOfEntryLanes;
+  }
+
+  /**
+   * Sets the {@link AttributeType#LANE_COUNT} for the entry connector to the given value.
+   */
+  public void setNrOfEntryLanes(int nrOfEntryLanes) {
+    this.nrOfEntryLanes = nrOfEntryLanes;
+
+    this.nrOfEntryLanesAccessor.notifySubscribers();
+    this.notifySubscribers();
+  }
+
+  /**
+   * Returns the {@link AttributeType#LANE_COUNT} for the exit connector.
+   */
+  public int getNrOfExitLanes() {
+    return nrOfExitLanes;
+  }
+
+  /**
+   * Sets the {@link AttributeType#LANE_COUNT} for the exit connector to the given value.
+   */
+  public void setNrOfExitLanes(int nrOfExitLanes) {
+    this.nrOfExitLanes = nrOfExitLanes;
+
+    this.nrOfExitLanesAccessor.notifySubscribers();
+    this.notifySubscribers();
+  }
+
+  /**
+   * Returns the {@link AttributeType#CONURBATION} of this highway segment.
+   */
+  public boolean getConurbation() {
+    return this.conurbation;
+  }
+
+  /**
+   * Sets the {@link AttributeType#CONURBATION} of this highway segment to the given value.
+   */
+  public void setConurbation(boolean conurbation) {
+    this.conurbation = conurbation;
+
+    this.conurbationAccessor.notifySubscribers();
+    this.notifySubscribers();
+  }
+
+  /**
+   * Returns the {@link AttributeType#MAX_SPEED} of this highway segment.
+   */
+  public int getMaxSpeed() {
+    return speedLimit;
+  }
+
+  /**
+   * Sets the {@link AttributeType#MAX_SPEED} of this highway segment to the given value.
+   */
+  public void setMaxSpeed(int maxSpeed) {
+    this.speedLimit = maxSpeed;
+
+    this.speedLimitAccessor.notifySubscribers();
+    this.notifySubscribers();
   }
 }

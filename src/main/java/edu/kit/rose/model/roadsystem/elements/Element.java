@@ -27,6 +27,21 @@ public interface Element extends SetObservable<Element, Element> {
   String getName();
 
   /**
+   * Sets the name of this Element to the given {@code name}.
+   */
+  void setName(String name);
+
+  /**
+   * Returns the user comment on this Element.
+   */
+  String getComment();
+
+  /**
+   * Sets the user comment of this Element to the given {@code comment}.
+   */
+  void setComment(String comment);
+
+  /**
    * Gives a boolean describing if this is a {@link Group} (contains other Elements) or a
    * {@link Segment}.
    *

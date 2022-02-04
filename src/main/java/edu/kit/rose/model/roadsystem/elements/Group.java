@@ -23,7 +23,9 @@ public class Group
   private final List<Element> elements;
   private final SortedBox<AttributeAccessor<?>> accessors;
   private String name;
+  private final AttributeAccessor<String> nameAccessor;
   private String comment;
+  private final AttributeAccessor<String> commentAccessor;
 
   /**
    * Creates a new instance of the {@link Group} class.
@@ -37,17 +39,12 @@ public class Group
    */
   public Group(List<Element> elements) {
     this.elements = elements;
-    accessors = new RoseSortedBox<>(
-        List.of(
-            new AttributeAccessor<>(
-                AttributeType.NAME,
-                () -> this.name,
-                name -> this.name = name),
-            new AttributeAccessor<>(
-                AttributeType.COMMENT,
-                () -> this.comment,
-                comment -> this.comment = comment)
-        ));
+
+    this.nameAccessor = new AttributeAccessor<>(AttributeType.NAME, this::getName, this::setName);
+    this.commentAccessor = new AttributeAccessor<>(
+        AttributeType.COMMENT, this::getComment, this::setComment);
+
+    this.accessors = new RoseSortedBox<>(List.of(nameAccessor, commentAccessor));
   }
 
   @Override
@@ -111,6 +108,27 @@ public class Group
   @Override
   public String getName() {
     return name;
+  }
+
+  @Override
+  public void setName(String name) {
+    this.name = name;
+
+    this.nameAccessor.notifySubscribers();
+    this.notifySubscribers();
+  }
+
+  @Override
+  public String getComment() {
+    return this.comment;
+  }
+
+  @Override
+  public void setComment(String comment) {
+    this.comment = comment;
+
+    this.commentAccessor.notifySubscribers();
+    this.notifySubscribers();
   }
 
   @Override

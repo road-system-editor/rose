@@ -1,10 +1,8 @@
 package edu.kit.rose.view.panel.segmentbox;
 
 import com.google.inject.Inject;
-import com.google.inject.Injector;
 import edu.kit.rose.controller.roadsystem.RoadSystemController;
 import edu.kit.rose.infrastructure.language.Language;
-import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import edu.kit.rose.view.commons.FxmlContainer;
 import java.util.Collection;
@@ -46,7 +44,7 @@ public class SegmentBoxPanel extends FxmlContainer {
 
   @Override
   protected void updateTranslatableStrings(Language lang) {
-
+    blueprintListView.refresh();
   }
 
   @Override

@@ -58,8 +58,10 @@ public class ViolationHandle extends FxmlContainer implements UnitObserver<Viola
 
     segments.setText(messageFactory.generateShortDescription(violation));
     criterion.setText(violation.violatedCriterion().getName());
+    extendedMessage = new Tooltip();
     extendedMessage.setText(messageFactory.generateDetailedDescription(violation));
 
+    Tooltip.install(segments, extendedMessage);
     Tooltip.install(criterion, extendedMessage);
   }
 

@@ -5,7 +5,7 @@ package edu.kit.rose.model.plausibility.criteria.validation;
  *
  * @param <T> The Type that this ValidationStrategy is applied to.
  */
-class EqualsValidationStrategy<T> extends ValidationStrategy<T> {
+public class EqualsValidationStrategy<T> extends ValidationStrategy<T> {
 
   /**
    * Standard Constructor.

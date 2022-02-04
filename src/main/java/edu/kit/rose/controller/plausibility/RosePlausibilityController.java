@@ -56,8 +56,7 @@ public class RosePlausibilityController extends Controller implements Plausibili
 
   @Override
   public void addCompatibilityCriterion() {
-    this.applicationDataSystem.getCriteriaManager()
-            .createCriterionOfType(PlausibilityCriterionType.COMPATIBILITY);
+    this.applicationDataSystem.getCriteriaManager().createCompatibilityCriterion();
   }
 
   @Override

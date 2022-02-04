@@ -39,12 +39,12 @@ public class ExitTest {
    */
   @Test
   public void testGetConnectorPosition() {
-    Assertions.assertEquals(-50, testExit.getEntry().getPosition().getX());
-    Assertions.assertEquals(0, testExit.getEntry().getPosition().getY());
-    Assertions.assertEquals(50, testExit.getExit().getPosition().getX());
-    Assertions.assertEquals(0, testExit.getExit().getPosition().getY());
-    Assertions.assertEquals(0, testExit.getRamp().getPosition().getX());
-    Assertions.assertEquals(-50, testExit.getRamp().getPosition().getY());
+    Assertions.assertEquals(0, testExit.getEntry().getPosition().getX());
+    Assertions.assertEquals(30, testExit.getEntry().getPosition().getY());
+    Assertions.assertEquals(0, testExit.getExit().getPosition().getX());
+    Assertions.assertEquals(-30, testExit.getExit().getPosition().getY());
+    Assertions.assertEquals(32, testExit.getRamp().getPosition().getX());
+    Assertions.assertEquals(14, testExit.getRamp().getPosition().getY());
   }
 
   @Test
@@ -118,12 +118,12 @@ public class ExitTest {
    */
   @Test
   public void testMoveConnectors() {
-    final int startEntryX = -50;
-    final int startEntryY = 0;
-    final int startExitX = 50;
-    final int startExitY = 0;
-    final int startRampX = 0;
-    final int startRampY = -50;
+    final double startEntryX = 0;
+    final double startEntryY = 30;
+    final double startExitX = 0;
+    final double startExitY = -30;
+    final int startRampX = 32;
+    final int startRampY = 14;
     final int movementX = 50;
     final int movementY = 50;
     Movement testMovement = new Movement(movementX, movementY);

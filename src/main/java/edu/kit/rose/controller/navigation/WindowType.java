@@ -31,5 +31,5 @@ public enum WindowType {
   /**
    * References the part of the GUI where attribute values can be edited.
    */
-  Attribute
+  ATTRIBUTE
 }

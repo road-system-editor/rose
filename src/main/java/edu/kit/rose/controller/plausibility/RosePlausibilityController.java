@@ -3,17 +3,22 @@ package edu.kit.rose.controller.plausibility;
 import edu.kit.rose.controller.commons.Controller;
 import edu.kit.rose.controller.commons.StorageLock;
 import edu.kit.rose.controller.navigation.FileDialogType;
+import edu.kit.rose.controller.navigation.FileFormat;
 import edu.kit.rose.controller.navigation.Navigator;
+import edu.kit.rose.controller.selection.SelectionBuffer;
+import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.model.ApplicationDataSystem;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.plausibility.criteria.CompatibilityCriterion;
-import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterion;
 import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterionType;
 import edu.kit.rose.model.plausibility.criteria.validation.ValidationType;
 import edu.kit.rose.model.plausibility.violation.Violation;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
+import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
-import java.nio.file.Path;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 
 /**
@@ -22,9 +27,12 @@ import java.nio.file.Path;
  * the plausibility criteria.
  */
 public class RosePlausibilityController extends Controller implements PlausibilityController {
-
+  private final Navigator navigator;
   private final Project project;
+  private final SelectionBuffer selectionBuffer;
   private final ApplicationDataSystem applicationDataSystem;
+  private final Set<Runnable> onBeginSubscribers;
+  private final Set<Runnable> onDoneSubscribers;
 
   /**
    * Creates a new {@link RosePlausibilityController}.
@@ -35,22 +43,27 @@ public class RosePlausibilityController extends Controller implements Plausibili
    * @param applicationDataSystem the model facade for application data
    */
   public RosePlausibilityController(StorageLock storageLock, Navigator navigator, Project project,
+                                    SelectionBuffer selectionBuffer,
                                     ApplicationDataSystem applicationDataSystem) {
     super(storageLock, navigator);
+    this.navigator = navigator;
     this.project = project;
     this.applicationDataSystem = applicationDataSystem;
-
+    this.onBeginSubscribers = new HashSet<>();
+    this.onDoneSubscribers = new HashSet<>();
+    this.selectionBuffer = selectionBuffer;
   }
 
   @Override
-  public void addCompatibilityCriterion(PlausibilityCriterionType type) {
-    applicationDataSystem.getCriteriaManager().createCriterionOfType(type);
+  public void addCompatibilityCriterion() {
+    this.applicationDataSystem.getCriteriaManager().createCompatibilityCriterion();
   }
 
   @Override
   public void setCompatibilityCriterionName(CompatibilityCriterion criterion,
                                             String criterionName) {
     criterion.setName(criterionName);
+
   }
 
   @Override
@@ -73,8 +86,8 @@ public class RosePlausibilityController extends Controller implements Plausibili
 
   @Override
   public void setCompatibilityCriterionValidationType(CompatibilityCriterion criterion,
-                                                    ValidationType validationType) {
-    criterion.setOperatorType(validationType);
+                                                    ValidationType operatorType) {
+    criterion.setOperatorType(operatorType);
   }
 
   @Override
@@ -83,44 +96,66 @@ public class RosePlausibilityController extends Controller implements Plausibili
     criterion.setLegalDiscrepancy(discrepancy);
   }
 
-
   @Override
   public void deleteCompatibilityCriterion(CompatibilityCriterion criterion) {
-    applicationDataSystem.getCriteriaManager().removeCriterion(criterion);
+    this.applicationDataSystem.getCriteriaManager().removeCriterion(criterion);
   }
 
   @Override
   public void deleteAllCompatibilityCriteria() {
-    for (PlausibilityCriterion criterion :
-        applicationDataSystem.getCriteriaManager().getCriteria()) {
-      applicationDataSystem.getCriteriaManager().removeCriterion(criterion);
+    this.applicationDataSystem.getCriteriaManager().removeAllCriteria();
+  }
+
+  @Override
+  public void importCompatibilityCriteria() {
+    if (!getStorageLock().isStorageLockAcquired()) {
+      getStorageLock().acquireStorageLock();
+      this.onBeginSubscribers.forEach((Runnable::run));
+      this.applicationDataSystem.importCriteriaFromFile(
+              this.navigator.showFileDialog(FileDialogType.LOAD_FILE, FileFormat.CRITERIA));
+      this.onDoneSubscribers.forEach(Runnable::run);
+      getStorageLock().releaseStorageLock();
     }
   }
 
   @Override
-  public void importCompatibilityCriteria() { // TODO criteria file format!
-    Path filePath = getNavigator().showFileDialog(FileDialogType.LOAD_FILE, null);
-    applicationDataSystem.importCriteriaFromFile(filePath);
-  }
-
-  @Override
   public void exportCompatibilityCriteria() {
-    Path filePath = getNavigator().showFileDialog(FileDialogType.SAVE_FILE, null);
-    applicationDataSystem.exportCriteriaToFile(filePath);
+    if (!getStorageLock().isStorageLockAcquired()) {
+      getStorageLock().acquireStorageLock();
+      this.onBeginSubscribers.forEach((Runnable::run));
+      this.applicationDataSystem.exportCriteriaToFile(
+              this.navigator.showFileDialog(FileDialogType.SAVE_FILE, FileFormat.CRITERIA));
+      this.onDoneSubscribers.forEach(Runnable::run);
+      getStorageLock().releaseStorageLock();
+    }
   }
 
   @Override
   public void jumpToCriterionViolation(Violation violation) {
-
+    Collection<Segment> offendingSegments = violation.offendingSegments();
+    double sumX = 0;
+    double sumY = 0;
+    this.selectionBuffer.removeAllSelections();
+    for (Segment segment : offendingSegments) {
+      this.selectionBuffer.addSegmentSelection(segment);
+      sumX += segment.getCenter().getX();
+      sumY += segment.getCenter().getY();
+    }
+    sumX = sumX / offendingSegments.size();
+    sumY = sumY / offendingSegments.size();
+    this.project.getZoomSetting()
+            .setCenterOfView(new Position((int) Math.round(sumX), (int) Math.round(sumY)));
   }
 
   @Override
   public void subscribeToPlausibilityIoAction(Runnable onBegin, Runnable onDone) {
-
+    this.onBeginSubscribers.add(onBegin);
+    this.onDoneSubscribers.add(onDone);
   }
 
   @Override
   public void unsubscribeFromPlausibilityIoAction(Runnable onBegin, Runnable onDone) {
-
+    this.onBeginSubscribers.remove(onBegin);
+    this.onDoneSubscribers.remove(onDone);
   }
 }

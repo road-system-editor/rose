@@ -52,7 +52,7 @@ public class CriteriaOverviewPanel extends FxmlContainer
     super.init(injector);
 
     newButton.addEventHandler(MouseEvent.MOUSE_CLICKED,
-        event -> controller.addCompatibilityCriterion(PlausibilityCriterionType.COMPATIBILITY));
+        event -> controller.addCompatibilityCriterion());
     importButton.addEventHandler(MouseEvent.MOUSE_CLICKED,
         event -> controller.importCompatibilityCriteria());
     exportButton.addEventHandler(MouseEvent.MOUSE_CLICKED,

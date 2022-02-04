@@ -23,7 +23,7 @@ import javafx.scene.transform.Rotate;
 /**
  * An exit segment view is the visual representation of an exit street segment.
  */
-public class ExitSegmentView extends SegmentView<Exit> {
+public class ExitSegmentView extends CanvasSegmentView<Exit> {
 
   private static final String IMAGE_RESOURCE = "exit_segment_raw.png";
   private static final int IMAGE_WIDTH = 60;
@@ -58,14 +58,14 @@ public class ExitSegmentView extends SegmentView<Exit> {
   }
 
   private void setupConnectors() {
-    this.getSegment().getConnectors().forEach(c -> {
+    /*this.getSegment().getConnectors().forEach(c -> {
       switch (c.getType()) {
         case ENTRY -> entryConnectorView = new ConnectorView(c, 15);
         case EXIT -> exitConnectorView = new ConnectorView(c, 15);
         case RAMP_EXIT, RAMP_ENTRY -> rampConnectorView = new ConnectorView(c, 6);
         default -> throw new IllegalStateException("segment is not a exit segment.");
       }
-    });
+    });*/
   }
 
   private void setupImage() {

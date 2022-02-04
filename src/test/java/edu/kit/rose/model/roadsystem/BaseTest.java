@@ -43,10 +43,10 @@ public class BaseTest {
    */
   @Test
   public void testGetConnectorPosition() {
-    Assertions.assertEquals(-50, testBase.getEntry().getPosition().getX());
-    Assertions.assertEquals(0, testBase.getEntry().getPosition().getY());
-    Assertions.assertEquals(50, testBase.getExit().getPosition().getX());
-    Assertions.assertEquals(0, testBase.getExit().getPosition().getY());
+    Assertions.assertEquals(0, testBase.getEntry().getPosition().getX());
+    Assertions.assertEquals(30, testBase.getEntry().getPosition().getY());
+    Assertions.assertEquals(0, testBase.getExit().getPosition().getX());
+    Assertions.assertEquals(-30, testBase.getExit().getPosition().getY());
   }
 
   @Test
@@ -124,12 +124,12 @@ public class BaseTest {
    */
   @Test
   public void testMoveConnectors() {
-    final int startEntryX = -50;
-    final int startEntryY = 0;
-    final int startExitX = 50;
-    final int startExitY = 0;
-    final int movementX = 50;
-    final int movementY = 50;
+    final double startEntryX = 0;
+    final double startEntryY = 30;
+    final double startExitX = 0;
+    final double startExitY = -30;
+    final double movementX = 50;
+    final double movementY = 50;
     Movement testMovement = new Movement(movementX, movementY);
     testBase.move(testMovement);
     Assertions.assertEquals(startEntryX + movementX,
@@ -203,7 +203,7 @@ public class BaseTest {
         connectors.get(0).getPosition().getY());
     testBase.rotate(90);
     Assertions.assertEquals(oldPositionEntry.getX(),
-        -testBase.getRotatedConnectorPosition(connectors.get(0)).getY());
+        testBase.getRotatedConnectorPosition(connectors.get(0)).getY());
     Assertions.assertEquals(oldPositionEntry.getY(),
         testBase.getRotatedConnectorPosition(connectors.get(0)).getX());
   }
@@ -216,7 +216,7 @@ public class BaseTest {
         connectors.get(1).getPosition().getY());
     testBase.rotate(90);
     Assertions.assertEquals(oldPositionExit.getX(),
-        -testBase.getRotatedConnectorPosition(connectors.get(1)).getY());
+        testBase.getRotatedConnectorPosition(connectors.get(1)).getY());
     Assertions.assertEquals(oldPositionExit.getY(),
         testBase.getRotatedConnectorPosition(connectors.get(1)).getX());
   }

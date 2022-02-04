@@ -48,8 +48,6 @@ public abstract class HighwaySegment
   private int rotation = 0;
 
 
-
-
   HighwaySegment(SegmentType segmentType) {
     this(segmentType, segmentType.name());
   }
@@ -102,19 +100,9 @@ public abstract class HighwaySegment
     initConnectors(entryAttributesList, exitAttributesList);
   }
 
-  protected void initConnectors(List<AttributeAccessor<?>> entryAttributesList,
-                                List<AttributeAccessor<?>> exitAttributesList) {
-    this.entryConnector = new Connector(ConnectorType.ENTRY,
-        new Position(getCenter().getX(),
-            getCenter().getY() + INITIAL_CONNECTOR_DISTANCE_TO_CENTER),
-        entryAttributesList);
-    this.exitConnector = new Connector(ConnectorType.EXIT,
-        new Position(getCenter().getX(),
-            getCenter().getY() - INITIAL_CONNECTOR_DISTANCE_TO_CENTER),
-        exitAttributesList);
-    connectors.add(entryConnector);
-    connectors.add(exitConnector);
-  }
+  protected abstract void initConnectors(
+      List<AttributeAccessor<?>> entryAttributesList,
+      List<AttributeAccessor<?>> exitAttributesList);
 
   /**
    * Provides the entry Connector for this Segment.
@@ -167,6 +155,11 @@ public abstract class HighwaySegment
   @Override
   public Position getCenter() {
     return this.center;
+  }
+
+  public void updateCenter(Position newCenter) {
+    this.center.setX(newCenter.getX());
+    this.center.setY(newCenter.getY());
   }
 
   @Override

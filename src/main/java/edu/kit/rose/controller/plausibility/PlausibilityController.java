@@ -16,12 +16,9 @@ import edu.kit.rose.model.roadsystem.elements.SegmentType;
 public interface PlausibilityController {
 
   /**
-   * Adds a compatibility criterion of the given type to the
-   * plausibility system.
-   *
-   * @param type the type of the new plausibility criterion
+   * Adds a compatibility criterion to the plausibility system.
    */
-  void addCompatibilityCriterion(PlausibilityCriterionType type);
+  void addCompatibilityCriterion();
 
 
   /**

@@ -1,13 +1,19 @@
 package edu.kit.rose.view.commons;
 
 import edu.kit.rose.controller.roadsystem.RoadSystemController;
+import edu.kit.rose.infrastructure.Movement;
 import edu.kit.rose.infrastructure.Position;
-import edu.kit.rose.infrastructure.UnitObserver;
+import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Segment;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Supplier;
+import javafx.geometry.BoundingBox;
+import javafx.geometry.Bounds;
+import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
 
 /**
@@ -18,7 +24,8 @@ import javafx.scene.layout.Pane;
  * @implNote A {@link SegmentView} is supposed to be placed on a managed pane.
  *     It then draws itself on that pane.
  */
-public abstract class SegmentView<T extends Segment> extends Pane implements UnitObserver<Element> {
+public abstract class SegmentView<T extends Segment> extends Pane
+    implements SetObserver<Element, Element> {
 
   /**
    * The segment which this segment view represents.
@@ -59,8 +66,64 @@ public abstract class SegmentView<T extends Segment> extends Pane implements Uni
 
     this.widthProperty().addListener(e -> draw());
     this.heightProperty().addListener(e -> draw());
+
+    //TODO: fix for base segments
+    this.setOnMousePressed(mouseEvent -> {
+      //posOnSourceX = mouseEvent.getX();
+      //posOnSourceY = mouseEvent.getY();
+      startPos = localToParent(mouseEvent.getX(), mouseEvent.getY());
+    });
+
+    this.setOnDragDetected(mouseEvent -> startFullDrag());
+
+    this.setOnMouseDragged(mouseEvent -> {
+      /*System.out.print("\nX: ");
+      System.out.print(this.getLayoutX() + mouseEvent.getX() - posOnSourceX);
+      System.out.print("\nY: ");
+      System.out.print(this.getLayoutY() + mouseEvent.getY() - posOnSourceY);
+
+      this.setLayoutX(this.getLayoutX() + mouseEvent.getX() - posOnSourceX);
+      this.setLayoutY(this.getLayoutY() + mouseEvent.getY() - posOnSourceY);*/
+      var currentPos = localToParent(mouseEvent.getX(), mouseEvent.getY());
+      var movement = new Movement(currentPos.getX() - startPos.getX(),
+          currentPos.getY() - startPos.getY());
+      if (canBeMoved(movement)) {
+        segment.move(movement);
+        startPos = currentPos;
+      }
+      mouseEvent.consume();
+    });
+
+    this.setOnMouseDragReleased(mouseEvent -> {
+      /*var currentPos = localToParent(mouseEvent.getX(), mouseEvent.getY());
+      var movement = new Movement(
+          (int) Math.round(currentPos.getX() - startPos.getX()),
+          (int) Math.round(currentPos.getY() - startPos.getY())
+      );
+      segment.move(movement);*/
+    });
   }
 
+  private boolean canBeMoved(Movement movement) {
+    final var bounds = getLayoutBounds();
+    final var topLeft = localToParent(bounds.getMinX(), bounds.getMinY());
+    final var topRight = localToParent(bounds.getMaxX(), bounds.getMinY());
+    final var bottomLeft = localToParent(bounds.getMinX(), bounds.getMaxY());
+    final var bottomRight = localToParent(bounds.getMinX(), bounds.getMinY());
+    final var movementVector = new Point2D(movement.getX(), movement.getY());
+    final var gridBounds = getParent().getLayoutBounds();
+    List<Supplier<Boolean>> checks = List.of(
+        () -> gridBounds.contains(topLeft.add(movementVector)),
+        () -> gridBounds.contains(topRight.add(movementVector)),
+        () -> gridBounds.contains(bottomLeft.add(movementVector)),
+        () -> gridBounds.contains(bottomRight.add(movementVector))
+    );
+    return checks.stream().allMatch(Supplier::get);
+  }
+
+  private double posOnSourceX;
+  private double posOnSourceY;
+  private Point2D startPos;
 
   /**
    * Returns the segment that is represented by the segment view.
@@ -125,6 +188,7 @@ public abstract class SegmentView<T extends Segment> extends Pane implements Uni
 
   /**
    * Draws the segment on a given graphical context.
+   *
    */
   protected abstract void redraw();
 }

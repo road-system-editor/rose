@@ -4,17 +4,32 @@ import com.google.inject.Inject;
 import edu.kit.rose.controller.roadsystem.RoadSystemController;
 import edu.kit.rose.infrastructure.Position;
 import javafx.geometry.Insets;
+import javafx.geometry.Point2D;
+import javafx.geometry.Pos;
+import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 
 /**
  * The zoomable ScrollPane is a ScrollPane that adds pan and zoom gesture support to its content.
+ * Inspired by https://stackoverflow.com/a/44314455
  */
 public class ZoomableScrollPane extends ScrollPane {
 
-  private static final double ZOOM_SPEED = 1.2;
-  private static final double MOVE_SPEED = 0.1;
+  private static final double ZOOM_SPEED = .02;
+  private static final double BASE_MOVE_SPEED = 0.1;
+  private static final int MAX_ZOOM_IN = 3;
+  private static final int MAX_ZOOM_OUT = -100; //TODO: set back to 1
+  private static final int BUTTON_ZOOM_STRENGTH = 1;
 
   private final Grid grid = new Grid();
+  private Group gridGroup;
+  private VBox gridBox;
 
   private double zoomLevel = 1;
 
@@ -26,14 +41,94 @@ public class ZoomableScrollPane extends ScrollPane {
    * Creates a new ZoomableScrollPane.
    */
   public ZoomableScrollPane() {
-    setContent(grid);
-    setVvalue(0.5);
-    setHvalue(0.5);
+    super();
+    setupGridGroup();
+    setupGridBox();
+    setContent(gridBox);
     setPannable(true);
     setPadding(Insets.EMPTY);
     setHbarPolicy(ScrollBarPolicy.NEVER);
     setVbarPolicy(ScrollBarPolicy.NEVER);
-    setup();
+    setFitToHeight(true);
+    setFitToWidth(true);
+    setupKeyboardControl();
+  }
+
+  private void setupGridGroup() {
+    this.gridGroup = new Group(this.grid);
+  }
+
+  private void setupGridBox() {
+    this.gridBox = centeredBox(gridGroup);
+    this.gridBox.setOnScroll(event -> {
+      if (event.isControlDown()) {
+        event.consume();
+        var deltaY = event.getDeltaY();
+        if (canZoomIn(deltaY) || canZoomOut(deltaY)) {
+          zoom(Math.signum(deltaY), new Point2D(event.getX(), event.getY()));
+        }
+      }
+    });
+
+  }
+
+  private VBox centeredBox(Group group) {
+    var box = new VBox(group);
+    box.setAlignment(Pos.CENTER);
+    return box;
+  }
+
+  private void zoom(double strength, Point2D mousePos) {
+    final double zoomFactor = Math.exp(strength * ZOOM_SPEED);
+
+    var innerBounds = gridGroup.getLayoutBounds();
+    var viewportBounds = getViewportBounds();
+
+    final double valX = this.getHvalue() * (innerBounds.getWidth() - viewportBounds.getWidth());
+    final double valY = this.getVvalue() * (innerBounds.getHeight() - viewportBounds.getHeight());
+    this.zoomLevel *= zoomFactor;
+    updateScale();
+    this.layout();
+    var posInZoomTarget = grid.parentToLocal(gridGroup.parentToLocal(mousePos));
+    var adjustment = grid.getLocalToParentTransform().deltaTransform(
+        posInZoomTarget.multiply(zoomFactor - 1));
+    var updatedInnerBounds = gridGroup.getBoundsInLocal();
+    this.setHvalue((valX + adjustment.getX())
+        / (updatedInnerBounds.getWidth() - viewportBounds.getWidth()));
+    this.setVvalue((valY + adjustment.getY())
+        / (updatedInnerBounds.getHeight() - viewportBounds.getHeight()));
+    roadSystemController.setZoomLevel(zoomLevel);
+  }
+
+  private void updateScale() {
+    grid.setScaleX(zoomLevel);
+    grid.setScaleY(zoomLevel);
+  }
+
+  private boolean canZoomOut(double zoomStrength) {
+    return zoomStrength < 0 && zoomLevel >= MAX_ZOOM_OUT;
+  }
+
+  private boolean canZoomIn(double zoomStrength) {
+    return zoomStrength > 0 && zoomLevel <= MAX_ZOOM_IN;
+  }
+
+  /**
+   * Zoom in by set amount.
+   */
+  public void zoomIn() {
+    if (canZoomIn(BUTTON_ZOOM_STRENGTH)) {
+      zoom(BUTTON_ZOOM_STRENGTH, getCenterOfViewPoint());
+    }
+  }
+
+  /**
+   * Zoom in by set amount.
+   */
+  public void zoomOut() {
+    if (canZoomOut(-BUTTON_ZOOM_STRENGTH)) {
+      zoom(-BUTTON_ZOOM_STRENGTH, getCenterOfViewPoint());
+    }
   }
 
   /**
@@ -49,98 +144,82 @@ public class ZoomableScrollPane extends ScrollPane {
    * Move scrollbar up by set amount.
    */
   public void moveUp() {
-    setVvalue(getVvalue() - MOVE_SPEED / zoomLevel);
+    moveV(-getCurrentMoveSpeed());
   }
 
   /**
    * Move scrollbar down by set amount.
    */
   public void moveDown() {
-    setVvalue(getVvalue() + MOVE_SPEED / zoomLevel);
+    moveV(getCurrentMoveSpeed());
   }
 
   /**
    * Move scrollbar left by set amount.
    */
   public void moveLeft() {
-    setHvalue(getHvalue() - MOVE_SPEED / zoomLevel);
+    moveH(-getCurrentMoveSpeed());
   }
 
   /**
    * Move scrollbar right by set amount.
    */
   public void moveRight() {
-    setHvalue(getHvalue() + MOVE_SPEED / zoomLevel);
+    moveH(getCurrentMoveSpeed());
+  }
+
+
+  /**
+   * Centers the currently visible space on the coordinates provided.
+   *
+   * @param x the x coordinate.
+   * @param y the y coordinate.
+   */
+  public void setCenterOfViewPos(int x, int y) {
+    setCenterOfViewPos(new Position(x, y));
   }
 
   /**
-   * Zoom in by set amount.
+   * Centers the currently visible space on the position provided.
+   *
+   * @param position the position.
    */
-  public void zoomIn() {
-    if (grid.getScaleX() < 3) {
-      var zoomLevel = ZOOM_SPEED * grid.getScaleX();
-      grid.setScaleX(zoomLevel);
-      grid.setScaleY(zoomLevel);
+  public void setCenterOfViewPos(Position position) {
+    if (position.getX() < 0 || position.getY() < 0) {
+      throw new IllegalArgumentException("can not jump to negative positions.");
     }
+    var h = position.getX() / grid.getWidth();
+    var v = position.getY() / grid.getHeight();
+    setHvalue(h);
+    setVvalue(v);
+    roadSystemController.setEditorPosition(position);
   }
 
-  /**
-   * Zoom in by set amount.
-   */
-  public void zoomOut() {
-    if (grid.getScaleX() > 1) {
-      var zoomLevel =  grid.getScaleX() / ZOOM_SPEED;
-      grid.setScaleX(zoomLevel);
-      grid.setScaleY(zoomLevel);
-    }
+  private void moveH(double amount) {
+    setHvalue(getHvalue() + amount);
+    roadSystemController.setEditorPosition(getCenterOfViewPos());
   }
 
-  private void setup() {
-    setupZoom();
-    setupDrag();
-    setupScroll();
-    setupButtons();
+  private void moveV(double amount) {
+    setVvalue(getVvalue() + amount);
+    roadSystemController.setEditorPosition(getCenterOfViewPos());
   }
 
-  private void setupZoom() {
-    getContent().setOnScroll(event -> {
-      if (event.isControlDown()) {
-        event.consume();
-        var deltaY = event.getDeltaY();
-        if (deltaY == 0
-            || (deltaY > 0 && grid.getScaleX() >= 3)
-            || (deltaY < 0 && grid.getScaleX() <= 1)) {
-          return;
-        }
-        var zoomFactor = event.getDeltaY() > 0 ? ZOOM_SPEED : 1 / ZOOM_SPEED;
-        var zoomLevel = zoomFactor * grid.getScaleX();
-        grid.setScaleX(zoomLevel);
-        grid.setScaleY(zoomLevel);
-        roadSystemController.setZoomLevel(zoomLevel);
-        this.zoomLevel = zoomLevel;
-      }
-    });
+  private double getCurrentMoveSpeed() {
+    return BASE_MOVE_SPEED / zoomLevel;
   }
 
-  private void setupDrag() {
-    setOnDragDetected(event -> {
-      if (!event.isConsumed() && !event.isControlDown()) {
-        startFullDrag();
-      }
-    });
-
-    setOnMouseDragReleased(event -> {
-      if (!event.isConsumed() && !event.isControlDown()) {
-        updatePosition();
-      }
-    });
+  private Point2D getCenterOfViewPoint() {
+    return gridBox.getParent().parentToLocal(getWidth() / 2, getHeight() / 2);
   }
 
-  private void setupScroll() {
-    setOnScroll(event -> updatePosition());
+  private Position getCenterOfViewPos() {
+    var centerOfViewPoint = getCenterOfViewPoint();
+    return new Position((int) Math.round(centerOfViewPoint.getX()),
+        (int) Math.round(centerOfViewPoint.getY()));
   }
 
-  private void setupButtons() {
+  private void setupKeyboardControl() {
     setOnKeyPressed(event -> {
       switch (event.getCode()) {
         case UP -> moveUp();
@@ -152,12 +231,6 @@ public class ZoomableScrollPane extends ScrollPane {
         default -> { }
       }
     });
-  }
-
-  private void updatePosition() {
-    var newPosition = new Position((int) (getHvalue() * grid.getWidth()),
-            (int) (getVvalue() * grid.getHeight()));
-    roadSystemController.setEditorPosition(newPosition);
   }
 
 }

@@ -4,8 +4,6 @@ import edu.kit.rose.controller.roadsystem.RoadSystemController;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Entrance;
-import edu.kit.rose.model.roadsystem.elements.Exit;
-import javafx.scene.canvas.GraphicsContext;
 
 /**
  * An entrance segment view is the visual representation of an entrance street segment.
@@ -25,12 +23,22 @@ class EntranceSegmentView extends CanvasSegmentView<Entrance> {
   }
 
   @Override
-  protected void redraw(GraphicsContext context) {
+  protected void redraw() {
 
   }
 
   @Override
   public void notifyChange(Element unit) {
+
+  }
+
+  @Override
+  public void notifyAddition(Element unit) {
+
+  }
+
+  @Override
+  public void notifyRemoval(Element unit) {
 
   }
 }

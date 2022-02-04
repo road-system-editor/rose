@@ -3,21 +3,10 @@ package edu.kit.rose.view.commons;
 import com.google.inject.Inject;
 import edu.kit.rose.controller.roadsystem.RoadSystemController;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
-import edu.kit.rose.model.roadsystem.elements.Connector;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Exit;
-import java.net.URL;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.effect.DropShadow;
-import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
-import javafx.scene.shape.Circle;
-import javafx.scene.transform.Affine;
 import javafx.scene.transform.Rotate;
 
 /**
@@ -31,8 +20,8 @@ public class ExitSegmentView extends CanvasSegmentView<Exit> {
   private static final double IMAGE_POS_OFFSET_X = -20.5;
   private static final double IMAGE_POS_OFFSET_Y = -38;
 
+  private Rotate rotation;
   private  ImageView imageView;
-
   private ConnectorView entryConnectorView;
   private ConnectorView exitConnectorView;
   private ConnectorView rampConnectorView;
@@ -52,9 +41,20 @@ public class ExitSegmentView extends CanvasSegmentView<Exit> {
                             RoadSystemController controller,
                             LocalizedTextProvider translator) {
     super(segment, controller, translator);
+    segment.addSubscriber(this);
+    setup();
+  }
+
+  private void setup() {
+    setupRotation();
     setupConnectors();
     setupImage();
-    getChildren().addAll(imageView, entryConnectorView, exitConnectorView, rampConnectorView);
+    updatePosition();
+    getChildren().addAll(imageView, exitConnectorView, entryConnectorView, rampConnectorView);
+
+    relocateConnectorView(entryConnectorView);
+    relocateConnectorView(exitConnectorView);
+    relocateConnectorView(rampConnectorView);
   }
 
   private void setupConnectors() {
@@ -68,6 +68,11 @@ public class ExitSegmentView extends CanvasSegmentView<Exit> {
     });*/
   }
 
+  private void relocateConnectorView(ConnectorView connectorView) {
+    connectorView.setCenterX(connectorView.getCenterX() - IMAGE_POS_OFFSET_X);
+    connectorView.setCenterY(connectorView.getCenterY() - IMAGE_POS_OFFSET_Y);
+  }
+
   private void setupImage() {
     var url = getClass().getResource(IMAGE_RESOURCE);
     var image = new Image(url.toString());
@@ -75,17 +80,38 @@ public class ExitSegmentView extends CanvasSegmentView<Exit> {
     imageView.setPreserveRatio(true);
     imageView.setFitWidth(IMAGE_WIDTH);
     imageView.setFitHeight(IMAGE_HEIGHT);
-    imageView.relocate(getSegment().getCenter().getX() + IMAGE_POS_OFFSET_X,
+  }
+
+  private void updatePosition() {
+    relocate(getSegment().getCenter().getX() + IMAGE_POS_OFFSET_X,
         getSegment().getCenter().getY() + IMAGE_POS_OFFSET_Y);
   }
 
-  @Override
-  public void redraw(GraphicsContext context) {
+  private void setupRotation() {
+    rotation = new Rotate(getSegment().getRotation());
+    rotation.setPivotX(-IMAGE_POS_OFFSET_X);
+    rotation.setPivotY(-IMAGE_POS_OFFSET_Y);
+    getTransforms().add(rotation);
+  }
 
+  @Override
+  public void redraw() {
+    updatePosition();
+    rotation.setPivotX(-IMAGE_POS_OFFSET_X);
+    rotation.setPivotY(-IMAGE_POS_OFFSET_Y);
+    rotation.setAngle(getSegment().getRotation());
   }
 
   @Override
   public void notifyChange(Element unit) {
+    this.draw();
+  }
 
+  @Override
+  public void notifyAddition(Element unit) {
+  }
+
+  @Override
+  public void notifyRemoval(Element unit) {
   }
 }

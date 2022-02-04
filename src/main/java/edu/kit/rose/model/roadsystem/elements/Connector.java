@@ -84,8 +84,9 @@ public class Connector extends RoseUnitObservable<Connector>
    * @param movement the movement that is to be applied.
    */
   void move(Movement movement) {
-    this.position.setX(this.position.getX() + movement.getX());
-    this.position.setY(this.position.getY() + movement.getY());
+    //this.position.setX(this.position.getX() + movement.getX());
+    //this.position.setY(this.position.getY() + movement.getY());
+    //TODO: turn back on, needed for base segments
     notifySubscribers();
   }
 

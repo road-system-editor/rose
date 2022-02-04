@@ -24,7 +24,7 @@ public class ZoomableScrollPane extends ScrollPane {
   private static final double ZOOM_SPEED = .02;
   private static final double BASE_MOVE_SPEED = 0.1;
   private static final int MAX_ZOOM_IN = 3;
-  private static final int MAX_ZOOM_OUT = -100;
+  private static final int MAX_ZOOM_OUT = -100; //TODO: set back to 1
   private static final int BUTTON_ZOOM_STRENGTH = 1;
 
   private final Grid grid = new Grid();

@@ -4,7 +4,6 @@ import edu.kit.rose.controller.roadsystem.RoadSystemController;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.model.roadsystem.elements.Base;
 import edu.kit.rose.model.roadsystem.elements.Element;
-import javafx.scene.canvas.GraphicsContext;
 
 /**
  * A base segment view is the visual representation of a base street segment.
@@ -23,7 +22,7 @@ class BaseSegmentView extends SegmentView<Base> {
   }
 
   @Override
-  protected void redraw(GraphicsContext graphicsContext) {
+  protected void redraw() {
 
   }
 

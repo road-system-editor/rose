@@ -1,14 +1,14 @@
 package edu.kit.rose.view.commons;
 
 import edu.kit.rose.controller.roadsystem.RoadSystemController;
+import edu.kit.rose.infrastructure.Movement;
 import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.infrastructure.SetObserver;
-import edu.kit.rose.infrastructure.UnitObserver;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Segment;
+import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
 
 /**
@@ -26,11 +26,6 @@ public abstract class SegmentView<T extends Segment> extends Pane
    * The segment which this segment view represents.
    */
   private final T segment;
-
-  /**
-   * The canvas on which the segment view is drawn.
-   */
-  private final Canvas canvas;
 
   /**
    * Determines if segment view is drawn with a selection indicator.
@@ -63,18 +58,14 @@ public abstract class SegmentView<T extends Segment> extends Pane
     this.isDraggable = true;
     this.controller = controller;
     this.translator = translator;
-    canvas = new Canvas(getWidth(), getHeight());
-    canvas.widthProperty().bind(this.widthProperty());
-    canvas.heightProperty().bind(this.heightProperty());
 
     this.widthProperty().addListener(e -> draw());
     this.heightProperty().addListener(e -> draw());
 
-    this.getChildren().add(canvas);
-/*
     this.setOnMousePressed(mouseEvent -> {
-      startDragX = mouseEvent.getX();
-      startDragY = mouseEvent.getY();
+      //posOnSourceX = mouseEvent.getX();
+      //posOnSourceY = mouseEvent.getY();
+      startPos = localToParent(mouseEvent.getX(), mouseEvent.getY());
     });
 
     this.setOnDragDetected(mouseEvent -> {
@@ -82,21 +73,35 @@ public abstract class SegmentView<T extends Segment> extends Pane
     });
 
     this.setOnMouseDragged(mouseEvent -> {
-      this.setLayoutX(this.getLayoutX() + mouseEvent.getX() - startDragX);
-      this.setLayoutY(this.getLayoutY() + mouseEvent.getY() - startDragY);
-      mouseEvent.consume();
+      /*System.out.print("\nX: ");
+      System.out.print(this.getLayoutX() + mouseEvent.getX() - posOnSourceX);
+      System.out.print("\nY: ");
+      System.out.print(this.getLayoutY() + mouseEvent.getY() - posOnSourceY);
 
+      this.setLayoutX(this.getLayoutX() + mouseEvent.getX() - posOnSourceX);
+      this.setLayoutY(this.getLayoutY() + mouseEvent.getY() - posOnSourceY);*/
+      var currentPos = localToParent(mouseEvent.getX(), mouseEvent.getY());
+      segment.move(new Movement(
+          currentPos.getX() - startPos.getX(),
+          currentPos.getY() - startPos.getY()
+      ));
+      startPos = currentPos;
+      mouseEvent.consume();
     });
 
     this.setOnMouseDragReleased(mouseEvent -> {
-      Position position = new Position(
-          (int) Math.round(mouseEvent.getX()),
-          (int) Math.round(mouseEvent.getY()));
-    });*/
+      /*var currentPos = localToParent(mouseEvent.getX(), mouseEvent.getY());
+      var movement = new Movement(
+          (int) Math.round(currentPos.getX() - startPos.getX()),
+          (int) Math.round(currentPos.getY() - startPos.getY())
+      );
+      segment.move(movement);*/
+    });
   }
 
-  private double startDragX;
-  private double startDragY;
+  private double posOnSourceX;
+  private double posOnSourceY;
+  private Point2D startPos;
 
   /**
    * Returns the segment that is represented by the segment view.
@@ -111,7 +116,7 @@ public abstract class SegmentView<T extends Segment> extends Pane
    * Draws the segment.
    */
   public void draw() {
-    redraw(canvas.getGraphicsContext2D());
+    redraw();
   }
 
   /**
@@ -162,7 +167,6 @@ public abstract class SegmentView<T extends Segment> extends Pane
   /**
    * Draws the segment on a given graphical context.
    *
-   * @param context graphical context
    */
-  protected abstract void redraw(GraphicsContext context);
+  protected abstract void redraw();
 }

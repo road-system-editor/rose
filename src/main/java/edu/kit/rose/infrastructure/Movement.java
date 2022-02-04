@@ -5,8 +5,8 @@ package edu.kit.rose.infrastructure;
  */
 public class Movement {
 
-  private int xvalue;
-  private int yvalue;
+  private double xvalue;
+  private double yvalue;
 
   /**
    * Standard Constructor.
@@ -23,7 +23,7 @@ public class Movement {
    * @param xvalue the x value of the Vector.
    * @param yvalue the y value of the Vector.
    */
-  public Movement(int xvalue, int yvalue) {
+  public Movement(double xvalue, double yvalue) {
     this.xvalue = xvalue;
     this.yvalue = yvalue;
   }
@@ -33,7 +33,7 @@ public class Movement {
    *
    * @return The x axis value of the Vector.
    */
-  public int getX() {
+  public double getX() {
     return xvalue;
   }
 
@@ -42,7 +42,7 @@ public class Movement {
    *
    * @param x The x axis value of the Vector.
    */
-  public void setX(int x) {
+  public void setX(double x) {
     this.xvalue = x;
   }
 
@@ -51,7 +51,7 @@ public class Movement {
    *
    * @return The y axis value of the Vector.
    */
-  public int getY() {
+  public double getY() {
     return yvalue;
   }
 
@@ -60,7 +60,7 @@ public class Movement {
    *
    * @param y The x axis value of the Vector.
    */
-  public void setY(int y) {
+  public void setY(double y) {
     this.yvalue = y;
   }
 }

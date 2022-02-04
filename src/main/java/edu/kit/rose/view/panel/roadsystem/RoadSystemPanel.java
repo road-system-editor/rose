@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.List;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
@@ -94,16 +95,33 @@ public class RoadSystemPanel extends FxmlContainer
         this.roadSystemController.selectSegmentsInRectangle(position1, position2));
 
     var exit = new Exit();
-    exit.move(new Movement(1500, 1500));
+    exit.move(new Movement(300, 300));
     var exitView = new ExitSegmentView(exit, roadSystemController, getTranslator());
+    var circle = new Circle(2, Color.GREEN);
+    circle.setLayoutX(exit.getCenter().getX());
+    circle.setLayoutY(exit.getCenter().getY());
     roadSystemGrid.getChildren().add(exitView);
+    exitView.setOnMouseMoved(event -> {
+      if (event.isAltDown()) {
+        exit.rotate(2);
+      }
+    });
 
-    var rectangle = new Rectangle(exitView.getBoundsInParent().getMinX(),
+    /*var rectangle = new Rectangle(exitView.getBoundsInParent().getMinX(),
         exitView.getBoundsInParent().getMinY(), exitView.getBoundsInParent().getWidth(),
         exitView.getBoundsInParent().getHeight());
     rectangle.setFill(Color.RED.deriveColor(1, 1, 1, 0.2));
     roadSystemGrid.getChildren().add(rectangle);
+    rectangle.setOnMouseMoved(event -> {
+      exit.rotate(2);
+      rectangle.setX(exitView.getBoundsInParent().getMinX());
+      rectangle.setY(exitView.getBoundsInParent().getMinY());
+      rectangle.setWidth(exitView.getBoundsInParent().getWidth());
+      rectangle.setHeight(exitView.getBoundsInParent().getHeight());
+      System.out.println(exitView.getBoundsInParent());
+    });
 
+    roadSystemGrid.getChildren().add(circle);*/
   }
 
   @Override

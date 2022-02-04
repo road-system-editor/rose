@@ -32,7 +32,6 @@ public class ConnectorView extends Circle implements UnitObserver<Connector> {
 
   @Override
   public void notifyChange(Connector unit) {
-    setPosition(unit.getPosition());
   }
 
   private void setPosition(Position position) {

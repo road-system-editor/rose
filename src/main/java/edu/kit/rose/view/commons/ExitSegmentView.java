@@ -5,11 +5,8 @@ import edu.kit.rose.controller.roadsystem.RoadSystemController;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Exit;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.transform.Rotate;
 
 /**
@@ -52,7 +49,12 @@ public class ExitSegmentView extends SegmentView<Exit> {
     setupRotation();
     setupConnectors();
     setupImage();
-    getChildren().addAll(imageView, entryConnectorView, exitConnectorView, rampConnectorView);
+    updatePosition();
+    getChildren().addAll(imageView, exitConnectorView, entryConnectorView, rampConnectorView);
+
+    relocateConnectorView(entryConnectorView);
+    relocateConnectorView(exitConnectorView);
+    relocateConnectorView(rampConnectorView);
   }
 
   private void setupConnectors() {
@@ -66,6 +68,11 @@ public class ExitSegmentView extends SegmentView<Exit> {
     });
   }
 
+  private void relocateConnectorView(ConnectorView connectorView) {
+    connectorView.setCenterX(connectorView.getCenterX() - IMAGE_POS_OFFSET_X);
+    connectorView.setCenterY(connectorView.getCenterY() - IMAGE_POS_OFFSET_Y);
+  }
+
   private void setupImage() {
     var url = getClass().getResource(IMAGE_RESOURCE);
     var image = new Image(url.toString());
@@ -73,25 +80,25 @@ public class ExitSegmentView extends SegmentView<Exit> {
     imageView.setPreserveRatio(true);
     imageView.setFitWidth(IMAGE_WIDTH);
     imageView.setFitHeight(IMAGE_HEIGHT);
-    updateImagePosition();
   }
 
-  private void updateImagePosition() {
-    imageView.relocate(getSegment().getCenter().getX() + IMAGE_POS_OFFSET_X,
+  private void updatePosition() {
+    relocate(getSegment().getCenter().getX() + IMAGE_POS_OFFSET_X,
         getSegment().getCenter().getY() + IMAGE_POS_OFFSET_Y);
-
   }
 
   private void setupRotation() {
     rotation = new Rotate(getSegment().getRotation());
-    rotation.setPivotX(getSegment().getCenter().getX());
-    rotation.setPivotY(getSegment().getCenter().getY());
+    rotation.setPivotX(-IMAGE_POS_OFFSET_X);
+    rotation.setPivotY(-IMAGE_POS_OFFSET_Y);
     getTransforms().add(rotation);
   }
 
   @Override
-  public void redraw(GraphicsContext context) {
-    updateImagePosition();
+  public void redraw() {
+    updatePosition();
+    rotation.setPivotX(-IMAGE_POS_OFFSET_X);
+    rotation.setPivotY(-IMAGE_POS_OFFSET_Y);
     rotation.setAngle(getSegment().getRotation());
   }
 

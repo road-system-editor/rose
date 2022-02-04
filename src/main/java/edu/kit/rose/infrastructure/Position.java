@@ -5,8 +5,8 @@ package edu.kit.rose.infrastructure;
  */
 public class Position {
 
-  private int xcoordinate;
-  private int ycoordinate;
+  private double xcoordinate;
+  private double ycoordinate;
 
   /**
    * Standard Constructor.
@@ -23,7 +23,7 @@ public class Position {
    * @param xcoordinate the x coordinate for this Position.
    * @param ycoordinate the y coordinate for this Position.
    */
-  public Position(int xcoordinate, int ycoordinate) {
+  public Position(double xcoordinate, double ycoordinate) {
     this.xcoordinate = xcoordinate;
     this.ycoordinate = ycoordinate;
   }
@@ -33,7 +33,7 @@ public class Position {
    *
    * @return The x axis value of the Position.
    */
-  public int getX() {
+  public double getX() {
     return xcoordinate;
   }
 
@@ -42,7 +42,7 @@ public class Position {
    *
    * @param x The x axis value of the Position.
    */
-  public void setX(int x) {
+  public void setX(double x) {
     this.xcoordinate = x;
   }
 
@@ -51,7 +51,7 @@ public class Position {
    *
    * @return The y axis value of the Position.
    */
-  public int getY() {
+  public double getY() {
     return ycoordinate;
   }
 
@@ -60,7 +60,7 @@ public class Position {
    *
    * @param y The x axis value of the Position.
    */
-  public void setY(int y) {
+  public void setY(double y) {
     this.ycoordinate = y;
   }
 }

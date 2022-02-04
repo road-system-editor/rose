@@ -9,8 +9,10 @@ module edu.kit.rose.entwurf {
   requires org.jgrapht.core;
 
   opens edu.kit.rose.model to com.fasterxml.jackson.databind;
+  opens edu.kit.rose.model.plausibility.criteria to com.fasterxml.jackson.databind;
   opens edu.kit.rose.model.plausibility.criteria.validation to com.fasterxml.jackson.databind;
   opens edu.kit.rose.model.roadsystem.attributes to com.fasterxml.jackson.databind;
+  opens edu.kit.rose.model.roadsystem.elements to com.fasterxml.jackson.databind;
   opens edu.kit.rose.infrastructure.language to com.fasterxml.jackson.databind;
   opens edu.kit.rose.view to javafx.fxml, com.google.guice;
   opens edu.kit.rose.view.commons to javafx.fxml, com.google.guice;
@@ -23,7 +25,4 @@ module edu.kit.rose.entwurf {
   opens edu.kit.rose.view.panel.segmentbox to javafx.fxml, com.google.guice;
   opens edu.kit.rose.view.window to javafx.fxml, com.google.guice;
   exports edu.kit.rose.view;
-  exports edu.kit.rose.model;
-  exports edu.kit.rose.model.roadsystem.elements;
-  exports edu.kit.rose.model.plausibility.criteria;
 }

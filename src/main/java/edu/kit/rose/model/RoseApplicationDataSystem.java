@@ -113,27 +113,28 @@ class RoseApplicationDataSystem extends RoseSetObservable<AttributeType, Applica
   }
 
   @Override
-  public void importCriteriaFromFile(Path path) {
+  public boolean importCriteriaFromFile(Path path) {
     SerializedCriteria export;
     try {
       export = serializationObjectMapper.readValue(path.toFile(), SerializedCriteria.class);
     } catch (IOException e) {
       e.printStackTrace();
-      // TODO proper exception handling
-      return;
+      return false;
     }
 
     export.populateCriteriaManager(this.getCriteriaManager());
+    return true;
   }
 
   @Override
-  public void exportCriteriaToFile(Path path) {
+  public boolean exportCriteriaToFile(Path path) {
     SerializedCriteria export = new SerializedCriteria(criteriaManager);
     try {
       serializationObjectMapper.writeValue(path.toFile(), export);
+      return true;
     } catch (IOException e) {
       e.printStackTrace();
-      // TODO proper exception handling
+      return false;
     }
   }
 
@@ -167,8 +168,7 @@ class RoseApplicationDataSystem extends RoseSetObservable<AttributeType, Applica
     try {
       serializationObjectMapper.writeValue(this.configFilePath.toFile(), serialized);
     } catch (IOException e) {
-      e.printStackTrace();
-      // TODO proper exception handling
+      throw new RuntimeException("could not save application data to disk", e);
     }
   }
 
@@ -181,9 +181,7 @@ class RoseApplicationDataSystem extends RoseSetObservable<AttributeType, Applica
       serialized = serializationObjectMapper
           .readValue(this.configFilePath.toFile(), SerializedApplicationData.class);
     } catch (IOException e) {
-      e.printStackTrace();
-      // TODO proper exception handling
-      return;
+      throw new RuntimeException("could not load application data from disk", e);
     }
 
     serialized.populateApplicationDataSystem(this);

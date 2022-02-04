@@ -249,7 +249,6 @@ class SerializedProject {
    */
   @JsonTypeInfo(
       use = JsonTypeInfo.Id.NAME,
-      include = JsonTypeInfo.As.PROPERTY,
       property = "elementType"
   )
   @JsonSubTypes({
@@ -344,8 +343,20 @@ class SerializedProject {
     @JsonProperty("childrenIndices")
     private List<Integer> childrenIndices;
 
+    /**
+     * Creates a new serialized element with the data of the given ROSE {@code group}.
+     *
+     * @param index the index of the serialized element in the {@link SerializedRoadSystem}.
+     */
     SerializedGroup(int index, Group group) {
       super(index, group);
+    }
+
+    /**
+     * Empty constructor to be used by Jackson when de-serializing a file into this model.
+     */
+    private SerializedGroup() {
+      super();
     }
 
     @Override

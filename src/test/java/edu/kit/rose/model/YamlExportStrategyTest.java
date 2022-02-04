@@ -12,7 +12,10 @@ import edu.kit.rose.model.roadsystem.TimeSliceSetting;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.elements.Base;
+import edu.kit.rose.model.roadsystem.elements.Element;
+import edu.kit.rose.model.roadsystem.elements.Entrance;
 import edu.kit.rose.model.roadsystem.elements.Exit;
+import edu.kit.rose.model.roadsystem.elements.Group;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import java.io.File;
@@ -20,6 +23,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Set;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,23 +46,38 @@ public class YamlExportStrategyTest {
         new TimeSliceSetting(15, 10)
     );
 
-    Base segment1 = (Base) rs.createSegment(SegmentType.BASE);
-    setAttributeValue(segment1, AttributeType.NAME, "GWBFRStuttgart");
-    setAttributeValue(segment1, AttributeType.LENGTH, 3000);
-    setAttributeValue(segment1, AttributeType.LANE_COUNT, 2);
-    setAttributeValue(segment1, AttributeType.CONURBATION, true);
-    setAttributeValue(segment1, AttributeType.MAX_SPEED, -1);
+    Base base = (Base) rs.createSegment(SegmentType.BASE);
+    setAttributeValue(base, AttributeType.NAME, "GWBFRStuttgart");
+    setAttributeValue(base, AttributeType.LENGTH, 3000);
+    setAttributeValue(base, AttributeType.LANE_COUNT, 2);
+    setAttributeValue(base, AttributeType.CONURBATION, true);
+    setAttributeValue(base, AttributeType.MAX_SPEED, -1);
 
-    Exit segment2 = (Exit) rs.createSegment(SegmentType.EXIT);
-    setAttributeValue(segment2, AttributeType.NAME, "AusfahrtKarlsbadFRStuttgart");
-    setAttributeValue(segment2, AttributeType.LENGTH, 250);
-    setAttributeValue(segment2, AttributeType.LANE_COUNT, 2);
-    setAttributeValue(segment2, AttributeType.SLOPE, 2);
-    setAttributeValue(segment2, AttributeType.CONURBATION, true);
-    setAttributeValue(segment2, AttributeType.MAX_SPEED, -1);
-    setAttributeValue(segment2, AttributeType.MAX_SPEED_RAMP, 60);
+    Exit exit = (Exit) rs.createSegment(SegmentType.EXIT);
+    setAttributeValue(exit, AttributeType.NAME, "AusfahrtKarlsbadFRStuttgart");
+    setAttributeValue(exit, AttributeType.LENGTH, 250);
+    setAttributeValue(exit, AttributeType.LANE_COUNT, 2);
+    setAttributeValue(exit, AttributeType.SLOPE, 2);
+    setAttributeValue(exit, AttributeType.CONURBATION, true);
+    setAttributeValue(exit, AttributeType.MAX_SPEED, -1);
+    setAttributeValue(exit, AttributeType.MAX_SPEED_RAMP, 60);
 
-    rs.connectConnectors(segment1.getExit(), segment2.getEntry());
+    Entrance entrance = (Entrance) rs.createSegment(SegmentType.ENTRANCE);
+    setAttributeValue(entrance, AttributeType.NAME, "EinfahrtKarlsbadFRStuttgart");
+    setAttributeValue(entrance, AttributeType.LENGTH, 250);
+    setAttributeValue(entrance, AttributeType.LANE_COUNT, 2);
+    setAttributeValue(entrance, AttributeType.SLOPE, 2);
+    setAttributeValue(entrance, AttributeType.CONURBATION, false);
+    setAttributeValue(entrance, AttributeType.MAX_SPEED, -1);
+    setAttributeValue(entrance, AttributeType.MAX_SPEED_RAMP, 60);
+
+    Group g = rs.createGroup(Set.of(entrance, exit));
+    setAttributeValue(g, AttributeType.NAME, "Autobahnkreuz");
+
+    rs.connectConnectors(base.getExit(), exit.getEntry());
+    rs.connectConnectors(base.getEntry(), entrance.getExit());
+    rs.connectConnectors(exit.getExit(), entrance.getEntry());
+    rs.connectConnectors(entrance.getRamp(), exit.getRamp());
 
     project = mock(Project.class);
     when(project.getRoadSystem()).thenReturn(rs);
@@ -79,8 +98,8 @@ public class YamlExportStrategyTest {
   }
 
   @SuppressWarnings("unchecked")
-  static <T> void setAttributeValue(Segment segment, AttributeType type, T value) {
-    for (var acc : segment.getAttributeAccessors()) {
+  static <T> void setAttributeValue(Element element, AttributeType type, T value) {
+    for (var acc : element.getAttributeAccessors()) {
       if (acc.getAttributeType() == type) {
         ((AttributeAccessor<T>) acc).setValue(value);
         return;

@@ -1,10 +1,15 @@
 package edu.kit.rose.model.plausibility.criteria;
 
+import edu.kit.rose.infrastructure.RoseSetObservable;
+import edu.kit.rose.infrastructure.RoseSortedBox;
 import edu.kit.rose.infrastructure.SetObservable;
 import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.infrastructure.UnitObserver;
 import edu.kit.rose.model.plausibility.violation.ViolationManager;
+import edu.kit.rose.model.roadsystem.RoadSystem;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 
 /**
@@ -13,31 +18,48 @@ import edu.kit.rose.model.plausibility.violation.ViolationManager;
  * Provided with a {@link edu.kit.rose.model.roadsystem.RoadSystem} it will set up created
  * Criteria to observe the appropriate {@link edu.kit.rose.model.roadsystem.elements.Segment}s.
  */
-public class CriteriaManager implements SetObservable<PlausibilityCriterion, CriteriaManager>,
-    UnitObserver<PlausibilityCriterion> {
+public class CriteriaManager extends RoseSetObservable<PlausibilityCriterion, CriteriaManager>
+        implements SetObservable<PlausibilityCriterion, CriteriaManager>,
+        UnitObserver<PlausibilityCriterion> {
 
-  @Override
-  public void addSubscriber(SetObserver<PlausibilityCriterion, CriteriaManager> setObserver) {
+  private ViolationManager violationManager;
+  private RoadSystem roadSystem;
+  private CriterionFactory criterionFactory;
+  private final ArrayList<PlausibilityCriterion> criterion;
 
+  /**
+   * Constructor.
+   */
+  public CriteriaManager() {
+    this.criterion = new ArrayList<>();
   }
 
-  @Override
-  public void removeSubscriber(SetObserver<PlausibilityCriterion, CriteriaManager> setObserver) {
-
+  /**
+   * Sets only once a roadSystem to this CriteriaManager.
+   *
+   * @param roadSystem the road system whose elements
+   *     will be observed by created criteria
+   */
+  public void setRoadSystem(RoadSystem roadSystem) {
+    if (this.roadSystem == null) {
+      this.roadSystem = roadSystem;
+      this.criterionFactory = new CriterionFactory(roadSystem, violationManager);
+      this.criterion.addAll(this.criterionFactory.createValueCriteria());
+      this.criterion.add(this.criterionFactory.createCompletenessCriterion());
+    } else {
+      throw new IllegalStateException("the roadSystem can be set only one time");
+    }
   }
 
   /**
    * Sets the {@link ViolationManager} that will receive the
    * {@link edu.kit.rose.model.plausibility.violation.Violation}s
    * of {@link PlausibilityCriterion} in this CriteriaManager.
-   * Sets the {@link ViolationManager} that will receive the
-   * {@link edu.kit.rose.model.plausibility.violation.Violation}s of
-   * {@link PlausibilityCriterion} in this CriteriaManager.
    *
    * @param violationManager the violationManager this CriteriaManager is supposed to use.
    */
   public void setViolationManager(ViolationManager violationManager) {
-
+    this.violationManager = violationManager;
   }
 
   /**
@@ -48,7 +70,7 @@ public class CriteriaManager implements SetObservable<PlausibilityCriterion, Cri
    *        that this CriteriaManager contains.
    */
   public SortedBox<PlausibilityCriterion> getCriteria() {
-    return null;
+    return new RoseSortedBox<>(this.criterion);
   }
 
   /**
@@ -59,15 +81,25 @@ public class CriteriaManager implements SetObservable<PlausibilityCriterion, Cri
    * @return a {@link SortedBox} containing all {@link PlausibilityCriterion} of the given type.
    */
   public SortedBox<PlausibilityCriterion> getCriteriaOfType(PlausibilityCriterionType type) {
-    return null;
+    ArrayList<PlausibilityCriterion> typeCriteria = new ArrayList<>();
+
+    for (PlausibilityCriterion criteria : this.criterion) {
+      if (criteria.getType().equals(type)) {
+        typeCriteria.add(criteria);
+      }
+    }
+    return new RoseSortedBox<>(typeCriteria);
   }
 
   /**
-   * Creates a new {@link PlausibilityCriterion} with the given {@link PlausibilityCriterionType}.
+   * Creates a new {@link CompatibilityCriterion}.
    *
-   * @param type The Type of the new {@link PlausibilityCriterion}.
    */
-  public void createCriterionOfType(PlausibilityCriterionType type) {
+  public void createCompatibilityCriterion() {
+    PlausibilityCriterion newCriteria = this.criterionFactory.createCompatibilityCriterion();
+
+    this.criterion.add(newCriteria);
+    notifyAdditionToSubscribers(newCriteria);
   }
 
   /**
@@ -76,14 +108,16 @@ public class CriteriaManager implements SetObservable<PlausibilityCriterion, Cri
    * @param criteria the Criterion to remove.
    */
   public void removeCriterion(PlausibilityCriterion criteria) {
-
+    this.criterion.remove(criteria);
+    notifyRemovalToSubscribers(criteria);
   }
 
   /**
    * Removes all {@link PlausibilityCriterion} from this CriterionManager.
    */
   public void removeAllCriteria() {
-
+    this.criterion.forEach(this::notifyRemovalToSubscribers);
+    this.criterion.clear();
   }
 
   /**
@@ -93,12 +127,12 @@ public class CriteriaManager implements SetObservable<PlausibilityCriterion, Cri
    * @param type the type of {@link PlausibilityCriterion} to remove.
    */
   public void removeAllCriteriaOfType(PlausibilityCriterionType type) {
-
-  }
-
-  @Override
-  public void notifySubscribers() {
-
+    for (PlausibilityCriterion criteria : this.criterion) {
+      if (criteria.getType() == type) {
+        notifyRemovalToSubscribers(criteria);
+        this.criterion.remove(criteria);
+      }
+    }
   }
 
   @Override
@@ -108,6 +142,22 @@ public class CriteriaManager implements SetObservable<PlausibilityCriterion, Cri
 
   @Override
   public void notifyChange(PlausibilityCriterion unit) {
+    this.notifySubscribers();
+  }
 
+  private void notifyAdditionToSubscribers(PlausibilityCriterion criterion) {
+    Iterator<SetObserver<PlausibilityCriterion,
+            CriteriaManager>> iterator = getSubscriberIterator();
+    while (iterator.hasNext()) {
+      iterator.next().notifyAddition(criterion);
+    }
+  }
+
+  private void notifyRemovalToSubscribers(PlausibilityCriterion criterion) {
+    Iterator<SetObserver<PlausibilityCriterion,
+            CriteriaManager>> iterator = getSubscriberIterator();
+    while (iterator.hasNext()) {
+      iterator.next().notifyRemoval(criterion);
+    }
   }
 }

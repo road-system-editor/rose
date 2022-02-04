@@ -3,7 +3,7 @@ package edu.kit.rose.model.plausibility.criteria.validation;
 /**
  * An Operator describing the logical OR function for two booleans.
  */
-class OrValidationStrategy extends ValidationStrategy<Boolean> {
+public class OrValidationStrategy extends ValidationStrategy<Boolean> {
 
   /**
    * Standard Constructor.

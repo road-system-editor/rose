@@ -42,7 +42,7 @@ abstract class RampSegment extends HighwaySegment {
 
     Position rampConnectorPosition = new Position(
         this.getCenter().getX() + INITIAL_RAMP_DISTANCE_TO_CENTER_X,
-        this.getCenter().getY() - INITIAL_RAMP_DISTANCE_TO_CENTER_Y);
+        this.getCenter().getY() + INITIAL_RAMP_DISTANCE_TO_CENTER_Y);
 
     List<AttributeAccessor<?>> rampAttributesList =
         Arrays.asList(nrOfRampLanesAccessor, rampSpeedLimitAccessor);
@@ -54,6 +54,20 @@ abstract class RampSegment extends HighwaySegment {
 
   protected abstract void initRampConnector(List<AttributeAccessor<?>> rampAttributesList,
                                    Position rampPosition);
+
+  protected void initConnectors(List<AttributeAccessor<?>> entryAttributesList,
+                                List<AttributeAccessor<?>> exitAttributesList) {
+    this.entryConnector = new Connector(ConnectorType.ENTRY,
+        new Position(getCenter().getX(),
+            getCenter().getY() + INITIAL_CONNECTOR_DISTANCE_TO_CENTER),
+        entryAttributesList);
+    this.exitConnector = new Connector(ConnectorType.EXIT,
+        new Position(getCenter().getX(),
+            getCenter().getY() - INITIAL_CONNECTOR_DISTANCE_TO_CENTER),
+        exitAttributesList);
+    connectors.add(entryConnector);
+    connectors.add(exitConnector);
+  }
 
 
   /**

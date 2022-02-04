@@ -4,6 +4,7 @@ import edu.kit.rose.infrastructure.Box;
 import edu.kit.rose.infrastructure.SetObservable;
 import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.infrastructure.UnitObserver;
+import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
@@ -16,7 +17,7 @@ import edu.kit.rose.model.roadsystem.elements.SegmentType;
  * it will create Violations and add them to it.
  */
 public interface PlausibilityCriterion extends
-    SetObserver<Element, Element>, SetObservable<SegmentType, PlausibilityCriterion> {
+        SetObserver<Element, Element>, SetObservable<SegmentType, PlausibilityCriterion> {
 
   /**
    * Provides the name of this Criterion.

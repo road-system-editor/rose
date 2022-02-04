@@ -26,11 +26,6 @@ public abstract class SegmentView<T extends Segment> extends Pane implements Uni
   private final T segment;
 
   /**
-   * The canvas on which the segment view is drawn.
-   */
-  private final Canvas canvas;
-
-  /**
    * Determines if segment view is drawn with a selection indicator.
    */
   private boolean drawAsSelected;
@@ -61,45 +56,10 @@ public abstract class SegmentView<T extends Segment> extends Pane implements Uni
     this.isDraggable = true;
     this.controller = controller;
     this.translator = translator;
-    canvas = new Canvas(getWidth(), getHeight());
-    canvas.widthProperty().bind(this.widthProperty());
-    canvas.heightProperty().bind(this.heightProperty());
 
     this.widthProperty().addListener(e -> draw());
     this.heightProperty().addListener(e -> draw());
-
-    this.getChildren().add(canvas);
-
-    this.setOnMousePressed(mouseEvent -> {
-      startDragX = mouseEvent.getX();
-      startDragY = mouseEvent.getY();
-
-      mouseEvent.consume();
-    });
-
-    this.setOnDragDetected(mouseEvent -> {
-      startFullDrag();
-      mouseEvent.consume();
-    });
-
-    this.setOnMouseDragged(mouseEvent -> {
-      this.setLayoutX(this.getLayoutX() + mouseEvent.getX() - startDragX);
-      this.setLayoutY(this.getLayoutY() + mouseEvent.getY() - startDragY);
-      mouseEvent.consume();
-
-    });
-
-    this.setOnMouseDragReleased(mouseEvent -> {
-      Position position = new Position(
-          (int) Math.round(mouseEvent.getX()),
-          (int) Math.round(mouseEvent.getY()));
-
-      mouseEvent.consume();
-    });
   }
-
-  private double startDragX;
-  private double startDragY;
 
 
   /**
@@ -115,7 +75,7 @@ public abstract class SegmentView<T extends Segment> extends Pane implements Uni
    * Draws the segment.
    */
   public void draw() {
-    redraw(canvas.getGraphicsContext2D());
+    redraw();
   }
 
   /**
@@ -165,8 +125,6 @@ public abstract class SegmentView<T extends Segment> extends Pane implements Uni
 
   /**
    * Draws the segment on a given graphical context.
-   *
-   * @param context graphical context
    */
-  protected abstract void redraw(GraphicsContext context);
+  protected abstract void redraw();
 }

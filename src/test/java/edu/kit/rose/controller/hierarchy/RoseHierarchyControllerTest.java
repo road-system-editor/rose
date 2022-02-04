@@ -39,7 +39,6 @@ class RoseHierarchyControllerTest {
   private RoadSystem roadSystem;
   private RoseHierarchyController controller;
   private AttributeAccessor<String> nameAccessor;
-  private CriteriaManager criteriaManager;
   private Group createMockGroup;
   private Group group;
   private Element element1;
@@ -53,7 +52,6 @@ class RoseHierarchyControllerTest {
     this.project = mock(Project.class);
     this.roadSystem = mock(RoadSystem.class);
     this.element1 = new Base();
-    this.criteriaManager = new CriteriaManager();
 
     when(this.project.getRoadSystem()).thenReturn(this.roadSystem);
     this.controller = new RoseHierarchyController(new RoseStorageLock(),
@@ -70,7 +68,7 @@ class RoseHierarchyControllerTest {
       public SortedBox<AttributeAccessor<?>> getAttributeAccessors() {
         ArrayList<AttributeAccessor<?>> list = new ArrayList<>();
         list.add(nameAccessor);
-        return new RoseSortedBox<AttributeAccessor<?>>(list);
+        return new RoseSortedBox<>(list);
       }
     };
 

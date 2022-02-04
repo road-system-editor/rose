@@ -10,6 +10,8 @@ import java.nio.file.Path;
  */
 class RoseProject implements Project {
 
+  private final ZoomSetting zoomSetting;
+
   /**
    * Constructor.
    * It needs the criteriaManager to give to the plausibilitySystem.
@@ -17,7 +19,7 @@ class RoseProject implements Project {
    * @param criteriaManager the criteriaManager to use.
    */
   public RoseProject(CriteriaManager criteriaManager) {
-
+    zoomSetting = new ZoomSetting();
   }
 
   @Override
@@ -47,6 +49,6 @@ class RoseProject implements Project {
 
   @Override
   public ZoomSetting getZoomSetting() {
-    return null;
+    return zoomSetting;
   }
 }

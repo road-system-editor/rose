@@ -10,7 +10,7 @@ import javafx.scene.canvas.GraphicsContext;
 /**
  * An entrance segment view is the visual representation of an entrance street segment.
  */
-class EntranceSegmentView extends SegmentView<Entrance> {
+class EntranceSegmentView extends CanvasSegmentView<Entrance> {
 
   /**
    * Creates a new entrance segment view for a given exit {@code segment}.

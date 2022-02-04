@@ -4,11 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.TimeSliceSetting;
-import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.elements.Base;
 import edu.kit.rose.model.roadsystem.elements.Connector;
 import edu.kit.rose.model.roadsystem.elements.Entrance;
 import edu.kit.rose.model.roadsystem.elements.Exit;
+import edu.kit.rose.model.roadsystem.elements.HighwaySegment;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import java.io.File;
 import java.util.HashMap;
@@ -108,7 +108,7 @@ class YamlProject {
      * The segment is stored to access the source data model within the population process.
      */
     @JsonIgnore
-    private final Segment segment;
+    private final HighwaySegment segment;
 
     @SuppressWarnings("unused")
     @JsonProperty("Name")
@@ -145,7 +145,7 @@ class YamlProject {
      *
      * @param type the segment type identifier of the YAML format.
      */
-    protected YamlSegment(YamlProject yamlProject, Segment segment, String type) {
+    protected YamlSegment(YamlProject yamlProject, HighwaySegment segment, String type) {
       this.yamlProject = yamlProject;
       this.segment = segment;
 
@@ -155,12 +155,11 @@ class YamlProject {
 
     private void populateAttributes() {
       this.name = segment.getName();
-      this.length = YamlSegment.<Integer>getAttributeValue(segment, AttributeType.LENGTH);
-      this.laneCount = YamlSegment.<Integer>getAttributeValue(segment, AttributeType.LANE_COUNT);
-      this.slope = convertSlope(segment);
-      this.conurbation = convertConurbation(
-          YamlSegment.<Boolean>getAttributeValue(segment, AttributeType.CONURBATION));
-      this.speedLimit = convertSpeedLimit(getAttributeValue(segment, AttributeType.MAX_SPEED));
+      this.length = segment.getLength();
+      this.laneCount = segment.getNrOfEntryLanes(); // TODO entry or exit lane count?
+      this.slope = segment.getSlope();
+      this.conurbation = convertConurbation(segment.getConurbation());
+      this.speedLimit = convertSpeedLimit(segment.getMaxSpeed());
     }
 
     /**
@@ -208,26 +207,12 @@ class YamlProject {
       throw new RuntimeException("couldn't find adjacent segment");
     }
 
-    static int convertSlope(Segment segment) {
-      return YamlSegment.<Integer>getAttributeValue(segment, AttributeType.SLOPE);
-    }
-
     static String convertConurbation(boolean attributeValue) {
       return attributeValue ? "innerhalb" : "außerhalb";
     }
 
     static String convertSpeedLimit(Integer limit) {
       return limit == null ? "ohne" : limit.toString();
-    }
-
-    @SuppressWarnings("unchecked")
-    static <T> T getAttributeValue(Segment segment, AttributeType type) {
-      for (var accessor : segment.getAttributeAccessors()) {
-        if (accessor.getAttributeType() == type) {
-          return (T) accessor.getValue();
-        }
-      }
-      throw new RuntimeException("attribute not found");
     }
   }
 
@@ -277,8 +262,7 @@ class YamlProject {
       super(yamlProject, segment, "Ausfahrt");
       this.segment = segment;
 
-      this.rampSpeed = convertSpeedLimit(
-          YamlSegment.<Integer>getAttributeValue(segment, AttributeType.MAX_SPEED_RAMP));
+      this.rampSpeed = convertSpeedLimit(segment.getMaxSpeedRamp());
     }
 
     @Override
@@ -311,8 +295,7 @@ class YamlProject {
       super(yamlProject, segment, "Einfahrt");
       this.segment = segment;
 
-      this.rampSpeed = convertSpeedLimit(YamlSegment.<Integer>getAttributeValue(segment,
-          AttributeType.MAX_SPEED_RAMP));
+      this.rampSpeed = convertSpeedLimit(segment.getMaxSpeedRamp());
     }
 
     @Override

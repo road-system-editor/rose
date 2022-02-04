@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
 import edu.kit.rose.infrastructure.Movement;
 import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.model.roadsystem.RoadSystem;
@@ -17,6 +16,7 @@ import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Entrance;
 import edu.kit.rose.model.roadsystem.elements.Exit;
 import edu.kit.rose.model.roadsystem.elements.Group;
+import edu.kit.rose.model.roadsystem.elements.HighwaySegment;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import java.util.ArrayList;
@@ -77,6 +77,7 @@ class SerializedProject {
     /**
      * Empty constructor to be used by Jackson when de-serializing a file into this model.
      */
+    @SuppressWarnings("unused")
     public SerializedZoomSetting() {
     }
 
@@ -111,6 +112,7 @@ class SerializedProject {
     /**
      * Empty constructor to be used by Jackson when de-serializing a file into this model.
      */
+    @SuppressWarnings("unused")
     private SerializedVector() {
     }
 
@@ -139,7 +141,7 @@ class SerializedProject {
     @JsonProperty("elements")
     private List<SerializedElement<? extends Element>> elements;
     @JsonProperty("timeSliceSetting")
-    private JsonTimeSliceSetting timeSliceSetting;
+    private SerializedTimeSliceSetting timeSliceSetting;
 
     public SerializedRoadSystem(RoadSystem roadSystem) {
       this.roadSystem = roadSystem;
@@ -148,12 +150,13 @@ class SerializedProject {
       this.linkElements();
 
       this.timeSliceSetting =
-          new JsonTimeSliceSetting(this.roadSystem.getTimeSliceSetting());
+          new SerializedTimeSliceSetting(this.roadSystem.getTimeSliceSetting());
     }
 
     /**
      * Empty constructor to be used by Jackson when de-serializing a file into this model.
      */
+    @SuppressWarnings("unused")
     public SerializedRoadSystem() {
       this.roadSystem = null;
     }
@@ -188,6 +191,8 @@ class SerializedProject {
     public void populateRoadSystem(RoadSystem target) {
       this.elements.forEach(element -> element.createRoseElement(target));
       this.elements.forEach(element -> element.linkRoseElement(this, target));
+
+      this.timeSliceSetting.populateTimeSliceSetting(target.getTimeSliceSetting());
     }
 
     /**
@@ -267,8 +272,6 @@ class SerializedProject {
     private String name;
     @JsonProperty("comment")
     private String comment;
-    @JsonProperty("isContainer")
-    private boolean isContainer;
 
     /**
      * Creates a new serialized element with the data of the given ROSE element.
@@ -299,19 +302,7 @@ class SerializedProject {
 
     private void populateAttributes() {
       this.name = this.roseElement.getName();
-      //this.comment = getAttributeValue(AttributeType.COMMENT); TODO missing in highwaysegment
-      this.isContainer = this.roseElement.isContainer();
-    }
-
-    @SuppressWarnings("unchecked")
-    protected <V> V getAttributeValue(AttributeType type) {
-      for (var accessor : this.roseElement.getAttributeAccessors()) {
-        if (accessor.getAttributeType() == type) {
-          return (V) accessor.getValue();
-        }
-      }
-
-      throw new RuntimeException("element does not have an attribute of the given type");
+      this.comment = this.roseElement.getComment();
     }
 
     @SuppressWarnings("unchecked")
@@ -331,8 +322,8 @@ class SerializedProject {
     public abstract void createRoseElement(RoadSystem target);
 
     public void linkRoseElement(SerializedRoadSystem source, RoadSystem target) {
-      this.setAttributeValue(AttributeType.NAME, this.name);
-      // TODO this.setAttributeValue(AttributeType.COMMENT, this.comment);
+      this.roseElement.setName(this.name);
+      this.roseElement.setComment(this.comment);
     }
   }
 
@@ -355,6 +346,7 @@ class SerializedProject {
     /**
      * Empty constructor to be used by Jackson when de-serializing a file into this model.
      */
+    @SuppressWarnings("unused")
     private SerializedGroup() {
       super();
     }
@@ -388,7 +380,8 @@ class SerializedProject {
    *
    * @param <T> the concrete segment type.
    */
-  private abstract static class SerializedSegment<T extends Segment> extends SerializedElement<T> {
+  private abstract static class SerializedSegment<T extends HighwaySegment>
+      extends SerializedElement<T> {
     @JsonProperty("length")
     private Integer length;
     @JsonProperty("slope")
@@ -416,11 +409,11 @@ class SerializedProject {
     }
 
     private void populateAttributes() {
-      this.length = getAttributeValue(AttributeType.LENGTH);
-      this.slope = getAttributeValue(AttributeType.SLOPE);
-      this.laneCount = getAttributeValue(AttributeType.LANE_COUNT);
-      this.conurbation = getAttributeValue(AttributeType.CONURBATION);
-      this.maxSpeed = getAttributeValue(AttributeType.MAX_SPEED);
+      this.length = this.roseElement.getLength();
+      this.slope = this.roseElement.getSlope();
+      this.laneCount = this.roseElement.getNrOfEntryLanes(); // TODO entry or exit?
+      this.conurbation = this.roseElement.getConurbation();
+      this.maxSpeed = this.roseElement.getMaxSpeed();
 
       this.centerPosition = new SerializedVector(getRoseElement().getCenter());
       this.rotation = getRoseElement().getRotation();
@@ -471,6 +464,7 @@ class SerializedProject {
     /**
      * Empty constructor to be used by Jackson when de-serializing a file into this model.
      */
+    @SuppressWarnings("unused")
     private SerializedBaseSegment() {
       super();
     }
@@ -496,8 +490,8 @@ class SerializedProject {
       super.linkRoseElement(source, target);
 
       if (entranceConnectedSegmentId != null) {
-        SerializedSegment<? extends Segment> connectedSegment =
-            (SerializedSegment<? extends Segment>)
+        SerializedSegment<? extends HighwaySegment> connectedSegment =
+            (SerializedSegment<? extends HighwaySegment>)
                 source.getElementById(entranceConnectedSegmentId);
         Connector connectedConnector =
             connectedSegment.getConnectorForConnectionTo(this.getIndex());
@@ -506,8 +500,9 @@ class SerializedProject {
       }
 
       if (exitConnectedSegmentId != null) {
-        SerializedSegment<? extends Segment> connectedSegment =
-            (SerializedSegment<? extends Segment>) source.getElementById(exitConnectedSegmentId);
+        SerializedSegment<? extends HighwaySegment> connectedSegment =
+            (SerializedSegment<? extends HighwaySegment>)
+                source.getElementById(exitConnectedSegmentId);
         Connector connectedConnector =
             connectedSegment.getConnectorForConnectionTo(this.getIndex());
 
@@ -550,13 +545,17 @@ class SerializedProject {
       this.populateAttributes();
     }
 
-    SerializedEntranceSegment() {
+    /**
+     * Empty constructor to be used by Jackson when de-serializing a file into this model.
+     */
+    @SuppressWarnings("unused")
+    private SerializedEntranceSegment() {
       super();
     }
 
     private void populateAttributes() {
-      this.laneCountRamp = getAttributeValue(AttributeType.LANE_COUNT_RAMP);
-      this.maxSpeedRamp = getAttributeValue(AttributeType.MAX_SPEED_RAMP);
+      this.laneCountRamp = this.roseElement.getNrOfRampLanes();
+      this.maxSpeedRamp = this.roseElement.getMaxSpeedRamp();
     }
 
     @Override
@@ -585,8 +584,8 @@ class SerializedProject {
       this.setAttributeValue(AttributeType.MAX_SPEED_RAMP, this.maxSpeedRamp);
 
       if (entranceConnectedSegmentId != null) {
-        SerializedSegment<? extends Segment> connectedSegment =
-            (SerializedSegment<? extends Segment>)
+        SerializedSegment<? extends HighwaySegment> connectedSegment =
+            (SerializedSegment<? extends HighwaySegment>)
                 source.getElementById(entranceConnectedSegmentId);
         Connector connectedConnector =
             connectedSegment.getConnectorForConnectionTo(this.getIndex());
@@ -595,8 +594,9 @@ class SerializedProject {
       }
 
       if (exitConnectedSegmentId != null) {
-        SerializedSegment<? extends Segment> connectedSegment =
-            (SerializedSegment<? extends Segment>) source.getElementById(exitConnectedSegmentId);
+        SerializedSegment<? extends HighwaySegment> connectedSegment =
+            (SerializedSegment<? extends HighwaySegment>)
+                source.getElementById(exitConnectedSegmentId);
         Connector connectedConnector =
             connectedSegment.getConnectorForConnectionTo(this.getIndex());
 
@@ -604,8 +604,9 @@ class SerializedProject {
       }
 
       if (rampConnectedSegmentId != null) {
-        SerializedSegment<? extends Segment> connectedSegment =
-            (SerializedSegment<? extends Segment>) source.getElementById(rampConnectedSegmentId);
+        SerializedSegment<? extends HighwaySegment> connectedSegment =
+            (SerializedSegment<? extends HighwaySegment>)
+                source.getElementById(rampConnectedSegmentId);
         Connector connectedConnector =
             connectedSegment.getConnectorForConnectionTo(this.getIndex());
 
@@ -651,13 +652,17 @@ class SerializedProject {
       this.populateAttributes();
     }
 
-    SerializedExitSegment() {
+    /**
+     * Empty constructor to be used by Jackson when de-serializing a file into this model.
+     */
+    @SuppressWarnings("unused")
+    private SerializedExitSegment() {
       super();
     }
 
     private void populateAttributes() {
-      this.laneCountRamp = getAttributeValue(AttributeType.LANE_COUNT_RAMP);
-      this.maxSpeedRamp = getAttributeValue(AttributeType.MAX_SPEED_RAMP);
+      this.laneCountRamp = this.roseElement.getNrOfRampLanes();
+      this.maxSpeedRamp = this.roseElement.getMaxSpeedRamp();
     }
 
     @Override
@@ -683,8 +688,8 @@ class SerializedProject {
       this.setAttributeValue(AttributeType.MAX_SPEED_RAMP, this.maxSpeedRamp);
 
       if (entranceConnectedSegmentId != null) {
-        SerializedSegment<? extends Segment> connectedSegment =
-            (SerializedSegment<? extends Segment>)
+        SerializedSegment<? extends HighwaySegment> connectedSegment =
+            (SerializedSegment<? extends HighwaySegment>)
                 source.getElementById(entranceConnectedSegmentId);
         Connector connectedConnector =
             connectedSegment.getConnectorForConnectionTo(this.getIndex());
@@ -693,8 +698,9 @@ class SerializedProject {
       }
 
       if (exitConnectedSegmentId != null) {
-        SerializedSegment<? extends Segment> connectedSegment =
-            (SerializedSegment<? extends Segment>) source.getElementById(exitConnectedSegmentId);
+        SerializedSegment<? extends HighwaySegment> connectedSegment =
+            (SerializedSegment<? extends HighwaySegment>)
+                source.getElementById(exitConnectedSegmentId);
         Connector connectedConnector =
             connectedSegment.getConnectorForConnectionTo(this.getIndex());
 
@@ -702,8 +708,9 @@ class SerializedProject {
       }
 
       if (rampConnectedSegmentId != null) {
-        SerializedSegment<? extends Segment> connectedSegment =
-            (SerializedSegment<? extends Segment>) source.getElementById(rampConnectedSegmentId);
+        SerializedSegment<? extends HighwaySegment> connectedSegment =
+            (SerializedSegment<? extends HighwaySegment>)
+                source.getElementById(rampConnectedSegmentId);
         Connector connectedConnector =
             connectedSegment.getConnectorForConnectionTo(this.getIndex());
 
@@ -728,19 +735,36 @@ class SerializedProject {
     }
   }
 
-  private static class JsonTimeSliceSetting {
+  /**
+   * Serializable data model for {@link TimeSliceSetting} objects.
+   */
+  private static class SerializedTimeSliceSetting {
     @JsonProperty("timeSliceLength")
     private int timeSliceLength;
     @JsonProperty("numberOfTimeSlices")
     private int numberOfTimeSlices;
 
-    JsonTimeSliceSetting(TimeSliceSetting timeSliceSetting) {
+    /**
+     * Creates a new serialized time slice setting with data from the given {@code source}.
+     */
+    public SerializedTimeSliceSetting(TimeSliceSetting timeSliceSetting) {
       this.timeSliceLength = timeSliceSetting.getTimeSliceLength();
       this.numberOfTimeSlices = timeSliceSetting.getNumberOfTimeSlices();
     }
 
-    JsonTimeSliceSetting() {
-      // nothing...
+    /**
+     * Empty constructor to be used by Jackson when de-serializing a file into this model.
+     */
+    @SuppressWarnings("unused")
+    private SerializedTimeSliceSetting() {
+    }
+
+    /**
+     * Populates the given {@code target} with the data from this object.
+     */
+    public void populateTimeSliceSetting(TimeSliceSetting target) {
+      target.setTimeSliceLength(this.timeSliceLength);
+      target.setNumberOfTimeSlices(this.numberOfTimeSlices);
     }
   }
 }

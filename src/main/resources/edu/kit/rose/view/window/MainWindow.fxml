@@ -4,20 +4,33 @@
 <?import edu.kit.rose.view.panel.violation.ViolationOverviewPanel?>
 <?import edu.kit.rose.view.panel.hierarchy.HierarchyPanel?>
 <?import edu.kit.rose.view.window.RoseMenuBar?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.RowConstraints?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml">
     <top>
         <RoseMenuBar fx:id="roseMenuBar"/>
     </top>
     <left>
-        <BorderPane>
-            <top>
-                <SegmentBoxPanel fx:id="segmentBoxPanel"/>
-            </top>
-            <bottom>
-                <ViolationOverviewPanel fx:id="violationOverviewPanel"/>
-            </bottom>
-        </BorderPane>
+        <GridPane prefWidth="250">
+            <columnConstraints>
+                <ColumnConstraints percentWidth="100"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints percentHeight="70" vgrow="ALWAYS" />
+                <RowConstraints percentHeight="30" vgrow="NEVER"
+                                valignment="BOTTOM"/>
+            </rowConstraints>
+            <SegmentBoxPanel
+                    fx:id="segmentBoxPanel"
+                    GridPane.columnIndex="0"
+                    GridPane.rowIndex="0"/>
+            <ViolationOverviewPanel
+                    fx:id="violationOverviewPanel"
+                    GridPane.columnIndex="0"
+                    GridPane.rowIndex="1"/>
+        </GridPane>
     </left>
     <center>
         <RoadSystemPanel fx:id="roadSystemPanel"/>

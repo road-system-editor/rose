@@ -82,7 +82,7 @@ public class ViolationManager extends RoseSetObservable<Violation, ViolationMana
    * @return A {@link SortedBox} containing all {@link Violation}s.
    */
   public SortedBox<Violation> getViolations() {
-    return new RoseSortedBox<>(criterionViolationMap.values().toArray(new Violation[0]));
+    return new RoseSortedBox<>(criterionViolationMap.values().stream().toList());
   }
 
   @Override

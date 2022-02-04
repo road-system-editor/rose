@@ -36,7 +36,7 @@ import org.jgrapht.graph.DefaultUndirectedGraph;
  * A Standard implementation of a {@link RoadSystem}
  * using a Graph for holding the connections between the {@link Segment}s.
  */
-class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, RoadSystem>
+public class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, RoadSystem>
     implements RoadSystem {
 
   private final CriteriaManager criteriaManager;

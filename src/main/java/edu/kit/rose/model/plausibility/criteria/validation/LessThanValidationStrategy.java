@@ -5,7 +5,7 @@ package edu.kit.rose.model.plausibility.criteria.validation;
  *
  * @param <T> The Type that this ValidationStrategy is applied to.
  */
-class LessThanValidationStrategy<T extends Number> extends ValidationStrategy<T> {
+public class LessThanValidationStrategy<T extends Number> extends ValidationStrategy<T> {
 
   /**
    * Standard Constructor.

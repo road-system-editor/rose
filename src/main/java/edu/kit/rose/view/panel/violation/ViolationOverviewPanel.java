@@ -6,14 +6,21 @@ import edu.kit.rose.controller.plausibility.PlausibilityController;
 import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.model.Project;
+import edu.kit.rose.model.plausibility.criteria.CompatibilityCriterion;
 import edu.kit.rose.model.plausibility.violation.Violation;
 import edu.kit.rose.model.plausibility.violation.ViolationManager;
+import edu.kit.rose.model.roadsystem.elements.Base;
+import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.view.commons.FxmlContainer;
 import edu.kit.rose.view.panel.problem.MessageFactory;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.layout.VBox;
 
 /**
@@ -33,7 +40,7 @@ public class ViolationOverviewPanel extends FxmlContainer
   private Project project;
 
   @FXML
-  private VBox violationBox;
+  private ListView<Violation> violationList;
   @FXML
   private Label violationLabel;
   @FXML
@@ -58,24 +65,23 @@ public class ViolationOverviewPanel extends FxmlContainer
   }
 
   private void initViolationBox() {
-    /* TODO
-    violationBox.getChildren().clear();
+    violationList.setCellFactory(
+        violation -> new ViolationListCell(this.controller, this.messageFactory));
 
     for (Violation violation : project.getPlausibilitySystem().getViolationManager()
         .getViolations()) {
-      violationBox.getChildren().add(new ViolationHandle(controller, messageFactory, violation));
+      violationList.getItems().add(violation);
     }
-    */
   }
 
   @Override
   public void notifyAddition(Violation unit) {
-    violationBox.getChildren().add(new ViolationHandle(controller, messageFactory, unit));
+    violationList.getItems().add(unit);
   }
 
   @Override
   public void notifyRemoval(Violation unit) {
-    violationBox.getChildren().removeIf(item -> ((ViolationHandle) item).getViolation() == unit);
+    violationList.getItems().removeIf(item -> item == unit);
   }
 
   @Override
@@ -93,7 +99,6 @@ public class ViolationOverviewPanel extends FxmlContainer
 
   @Override
   protected Collection<FxmlContainer> getSubFxmlContainer() {
-    return List.of();
-    //TODO return List.of((ViolationHandle) violationBox.getChildren());
+    return null;
   }
 }

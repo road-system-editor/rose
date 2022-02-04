@@ -35,7 +35,7 @@ public class ViolationManager extends RoseSetObservable<Violation, ViolationMana
    *
    * @param violation The {@link Violation} to add.
    */
-  void addViolation(Violation violation) {
+  public void addViolation(Violation violation) {
     criterionViolationMap.put(violation.violatedCriterion(), violation);
     getSubscriberIterator().forEachRemaining(sub -> sub.notifyAddition(violation));
   }
@@ -45,7 +45,7 @@ public class ViolationManager extends RoseSetObservable<Violation, ViolationMana
    *
    * @param violation The {@link Violation} to remove.
    */
-  void removeViolation(Violation violation) {
+  public void removeViolation(Violation violation) {
     criterionViolationMap.removeMapping(violation.violatedCriterion(), violation);
     getSubscriberIterator().forEachRemaining(sub -> sub.notifyRemoval(violation));
   }
@@ -82,7 +82,7 @@ public class ViolationManager extends RoseSetObservable<Violation, ViolationMana
    * @return A {@link SortedBox} containing all {@link Violation}s.
    */
   public SortedBox<Violation> getViolations() {
-    return new RoseSortedBox<>(criterionViolationMap.values().toArray(new Violation[0]));
+    return new RoseSortedBox<>(criterionViolationMap.values().stream().toList());
   }
 
   @Override

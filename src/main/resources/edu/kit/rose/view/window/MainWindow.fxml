@@ -5,7 +5,6 @@
 <?import edu.kit.rose.view.panel.hierarchy.HierarchyPanel?>
 <?import edu.kit.rose.view.window.RoseMenuBar?>
 <?import javafx.scene.layout.GridPane?>
-<?import edu.kit.rose.view.panel.roadsystem.ChangeButtonPanel?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.RowConstraints?>
 <BorderPane xmlns="http://javafx.com/javafx"
@@ -19,17 +18,18 @@
                 <ColumnConstraints percentWidth="100"/>
             </columnConstraints>
             <rowConstraints>
-                <RowConstraints vgrow="ALWAYS" />
-                <RowConstraints minHeight="200" vgrow="NEVER"/>
+                <RowConstraints percentHeight="70" vgrow="ALWAYS" />
+                <RowConstraints percentHeight="30" vgrow="NEVER"
+                                valignment="BOTTOM"/>
             </rowConstraints>
-                <SegmentBoxPanel
-                        fx:id="segmentBoxPanel"
-                        GridPane.columnIndex="0"
-                        GridPane.rowIndex="0"/>
-                <ViolationOverviewPanel
-                        fx:id="violationOverviewPanel"
-                        GridPane.columnIndex="0"
-                        GridPane.rowIndex="1"/>
+            <SegmentBoxPanel
+                    fx:id="segmentBoxPanel"
+                    GridPane.columnIndex="0"
+                    GridPane.rowIndex="0"/>
+            <ViolationOverviewPanel
+                    fx:id="violationOverviewPanel"
+                    GridPane.columnIndex="0"
+                    GridPane.rowIndex="1"/>
         </GridPane>
     </left>
     <center>

@@ -3,6 +3,7 @@ package edu.kit.rose.model.plausibility.criteria;
 import edu.kit.rose.model.plausibility.violation.ViolationManager;
 import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
+import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.elements.Base;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
@@ -55,14 +56,23 @@ class CompletenessCriterionTest {
   void testNotifyChange() {
     Segment segment = new Base();
 
+    for (AttributeAccessor<?> accessor : segment.getAttributeAccessors()) {
+      if (accessor.getAttributeType().equals(AttributeType.NAME)) {
+        AttributeAccessor<?> auxAccessor = (AttributeAccessor<?>) accessor;
+        auxAccessor.setValue(null);
+      }
+    }
+
     criterion.addSegmentType(SegmentType.BASE);
     criterion.notifyChange(segment);
 
     Assertions.assertEquals(1, violationManager.getViolations().getSize());
 
     for (AttributeAccessor<?> accessor : segment.getAttributeAccessors()) {
-      AttributeAccessor<Object> auxAccessor = (AttributeAccessor<Object>) accessor;
-      auxAccessor.setValue(new Object());
+      if (accessor.getAttributeType().equals(AttributeType.NAME)) {
+        AttributeAccessor<String> auxAccessor = (AttributeAccessor<String>) accessor;
+        auxAccessor.setValue("test");
+      }
     }
     criterion.notifyChange(segment);
 
@@ -73,6 +83,13 @@ class CompletenessCriterionTest {
   void testNotifyAddition() {
     Segment segment = new Base();
 
+    for (AttributeAccessor<?> accessor : segment.getAttributeAccessors()) {
+      if (accessor.getAttributeType().equals(AttributeType.NAME)) {
+        AttributeAccessor<?> auxAccessor = (AttributeAccessor<?>) accessor;
+        auxAccessor.setValue(null);
+      }
+    }
+
     criterion.addSegmentType(SegmentType.BASE);
     criterion.notifyAddition(segment);
 
@@ -82,6 +99,13 @@ class CompletenessCriterionTest {
   @Test
   void testNotifyRemoval() {
     Segment segment = new Base();
+
+    for (AttributeAccessor<?> accessor : segment.getAttributeAccessors()) {
+      if (accessor.getAttributeType().equals(AttributeType.NAME)) {
+        AttributeAccessor<?> auxAccessor = (AttributeAccessor<?>) accessor;
+        auxAccessor.setValue(null);
+      }
+    }
 
     criterion.addSegmentType(SegmentType.BASE);
     criterion.notifyChange(segment);

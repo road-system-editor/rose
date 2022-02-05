@@ -25,13 +25,14 @@ class CompatibilityCriterionTest {
 
   @BeforeEach
   public void setUp() {
-    this.roadSystem = new GraphRoadSystem(new CriteriaManager(), Mockito.mock(TimeSliceSetting.class));
+    this.roadSystem = new GraphRoadSystem(new CriteriaManager(),
+            Mockito.mock(TimeSliceSetting.class));
     this.violationManager = new ViolationManager();
     this.criterion = new CompatibilityCriterion(roadSystem, this.violationManager);
   }
 
   @Test
-  void TestGetAndSetAttributeType() {
+  void testGetAndSetAttributeType() {
     criterion.setAttributeType(AttributeType.NAME);
 
     Assertions.assertEquals(AttributeType.NAME, this.criterion.getAttributeType());
@@ -39,14 +40,14 @@ class CompatibilityCriterionTest {
 
 
   @Test
-  void TestGetAndSetOperatorType() {
+  void testGetAndSetOperatorType() {
     criterion.setOperatorType(ValidationType.EQUALS);
 
     Assertions.assertEquals(ValidationType.EQUALS, this.criterion.getOperatorType());
   }
 
   @Test
-  void getCompatibleOperatorTypes() {
+  void testGetCompatibleOperatorTypes() {
     criterion.setAttributeType(AttributeType.NAME);
     SortedBox<ValidationType> box = criterion.getCompatibleOperatorTypes();
 
@@ -59,21 +60,21 @@ class CompatibilityCriterionTest {
   }
 
   @Test
-  void TestGetAndSetLegalDiscrepancy() {
+  void testGetAndSetLegalDiscrepancy() {
     criterion.setLegalDiscrepancy(0);
 
     Assertions.assertEquals(0, criterion.getLegalDiscrepancy());
   }
 
   @Test
-  void TestGetAndSetName() {
+  void testGetAndSetName() {
     criterion.setName("name");
 
     Assertions.assertEquals("name", criterion.getName());
   }
 
   @Test
-  void getSegmentTypes() {
+  void testGetSegmentTypes() {
     criterion.addSegmentType(SegmentType.BASE);
 
     Assertions.assertEquals(1, criterion.getSegmentTypes().getSize());
@@ -81,12 +82,12 @@ class CompatibilityCriterionTest {
   }
 
   @Test
-  void getType() {
+  void testGetType() {
     Assertions.assertEquals(PlausibilityCriterionType.COMPATIBILITY, criterion.getType());
   }
 
   @Test
-  void removeSegmentType() {
+  void testRemoveSegmentType() {
     criterion.addSegmentType(SegmentType.BASE);
     criterion.addSegmentType(SegmentType.EXIT);
     criterion.removeSegmentType(SegmentType.EXIT);
@@ -97,7 +98,7 @@ class CompatibilityCriterionTest {
   }
 
   @Test
-  void notifyChange() {
+  void testNotifyChange() {
     Segment segment1 = roadSystem.createSegment(SegmentType.BASE);
     Segment segment2 = roadSystem.createSegment(SegmentType.BASE);
 
@@ -142,11 +143,7 @@ class CompatibilityCriterionTest {
   }
 
   @Test
-  void notifyAddition() {
-  }
-
-  @Test
-  void notifyRemoval() {
+  void testNotifyRemoval() {
     Segment segment1 = roadSystem.createSegment(SegmentType.BASE);
     Segment segment2 = roadSystem.createSegment(SegmentType.BASE);
 

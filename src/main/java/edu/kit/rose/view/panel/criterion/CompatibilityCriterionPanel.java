@@ -19,6 +19,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 
 /**
  * The compatibility criterion panel allows the user to configure a given compatibility criterion.
@@ -35,6 +36,8 @@ class CompatibilityCriterionPanel
   private ApplicableSegmentsSelector applicableSegmentsSelector;
   @FXML
   private Label criterionLabel;
+  @FXML
+  private VBox criterionLayout;
   @FXML
   private ComboBox<AttributeType> attributeSelector;
   @FXML
@@ -87,6 +90,12 @@ class CompatibilityCriterionPanel
                                  AttributeType oldValue, AttributeType newValue) {
     if (oldValue != newValue) {
       getController().setCompatibilityCriterionAttributeType(getCriterion(), newValue);
+
+      this.validationSelector.getSelectionModel().clearSelection();
+      this.validationSelector.getItems().clear();
+      for (var validationType : getCriterion().getCompatibleOperatorTypes()) {
+        this.validationSelector.getItems().add(validationType);
+      }
     }
   }
 
@@ -94,6 +103,18 @@ class CompatibilityCriterionPanel
                                  ValidationType oldValue, ValidationType newValue) {
     if (oldValue != newValue) {
       getController().setCompatibilityCriterionValidationType(getCriterion(), newValue);
+
+      if (newValue != null) {
+        setDiscrepancyFieldEnabled(newValue.hasDiscrepancy());
+      }
+    }
+  }
+
+  private void setDiscrepancyFieldEnabled(boolean enabled) {
+    if (!this.criterionLayout.getChildren().contains(this.valueField) && enabled) {
+      this.criterionLayout.getChildren().add(this.valueField);
+    } else if (this.criterionLayout.getChildren().contains(this.valueField) && !enabled) {
+      this.criterionLayout.getChildren().remove(this.valueField);
     }
   }
 
@@ -135,6 +156,8 @@ class CompatibilityCriterionPanel
   protected void updateTranslatableStrings(Language lang) {
     this.nameLabel.setText(getTranslator().getLocalizedText(
         "view.panel.criterion.criterionPanel.name"));
+    this.applicableSegmentsLabel.setText(getTranslator().getLocalizedText(
+        "view.panel.criterion.criterionPanel.applicableSegments"));
     this.criterionLabel.setText(getTranslator().getLocalizedText(
         "view.panel.criterion.criterionPanel.criterion"));
     this.attributeSelector.setPromptText(getTranslator().getLocalizedText(

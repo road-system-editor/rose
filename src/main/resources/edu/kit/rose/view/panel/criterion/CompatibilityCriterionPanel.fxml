@@ -9,10 +9,10 @@
     <VBox>
         <Label fx:id="nameLabel"/>
         <TextField fx:id="nameField"/>
-        <!-- segment selector -->
+        <Label fx:id="applicableSegmentsLabel"/>
         <ApplicableSegmentsSelector fx:id="applicableSegmentsSelector"/>
         <Label fx:id="criterionLabel"/>
-        <VBox>
+        <VBox fx:id="criterionLayout">
             <ComboBox fx:id="attributeSelector"/>
             <ComboBox fx:id="validationSelector"/>
             <TextField fx:id="valueField"/>

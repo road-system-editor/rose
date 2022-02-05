@@ -107,7 +107,7 @@ class CompletenessCriterion extends RoseSetObservable<SegmentType, PlausibilityC
       if (!violated) {
         if (elementViolationMap.containsKey(unit)) {
           violationManager.removeViolation(elementViolationMap.get(unit));
-
+          elementViolationMap.remove(unit);
         }
       }
     }

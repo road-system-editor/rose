@@ -73,6 +73,8 @@ public class CriteriaOverviewPanel extends FxmlContainer
             .getCriteriaOfType(PlausibilityCriterionType.COMPATIBILITY)) {
       criteriaList.getItems().add(criterion);
     }
+
+    applicationDataSystem.getCriteriaManager().addSubscriber(this);
   }
 
   /**

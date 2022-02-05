@@ -20,6 +20,9 @@ import javafx.stage.Stage;
  * selection of a criterion in the overview panel and the editor panel.
  */
 public class CriteriaWindow extends RoseWindow {
+  private static final int DEFAULT_WIDTH = 640;
+  private static final int DEFAULT_HEIGHT = 360;
+
   @Inject
   private PlausibilityController plausibilityController;
   @Inject
@@ -56,8 +59,8 @@ public class CriteriaWindow extends RoseWindow {
     var scene = new Scene(tree);
 
     stage.setScene(scene);
-    stage.setWidth(640); // TODO magic numbers
-    stage.setHeight(360);
+    stage.setWidth(DEFAULT_WIDTH);
+    stage.setHeight(DEFAULT_HEIGHT);
 
     getTranslator().subscribeToOnLanguageChanged(lang -> updateTranslatableStrings(stage));
     updateTranslatableStrings(stage);

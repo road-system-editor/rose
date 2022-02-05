@@ -10,6 +10,7 @@ import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import edu.kit.rose.view.commons.EnumLocalizationUtility;
 import edu.kit.rose.view.commons.FxmlContainer;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -55,6 +56,8 @@ class CompatibilityCriterionPanel
     super.init(injector);
 
     this.nameField.textProperty().addListener(this::onNameChange);
+
+    this.applicableSegmentsSelector.setCriterion(getCriterion());
 
     this.attributeSelector.setCellFactory(this::createAttributeSelectorCell);
     this.attributeSelector.setButtonCell(this.createAttributeSelectorCell(null));
@@ -144,7 +147,7 @@ class CompatibilityCriterionPanel
 
   @Override
   protected Collection<FxmlContainer> getSubFxmlContainer() {
-    return null;
+    return List.of(this.applicableSegmentsSelector);
   }
 
   private ListCell<AttributeType> createAttributeSelectorCell(ListView<AttributeType> ignored) {

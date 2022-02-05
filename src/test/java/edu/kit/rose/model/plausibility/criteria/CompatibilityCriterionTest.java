@@ -124,6 +124,11 @@ class CompatibilityCriterionTest {
     this.criterion.notifyChange(segment1);
 
     Assertions.assertEquals(1, this.violationManager.getViolations().getSize());
+
+    this.<Integer>setValueToAccessor(accessors1, 1, AttributeType.LENGTH);
+    this.criterion.notifyChange(segment1);
+
+    Assertions.assertEquals(0, this.violationManager.getViolations().getSize());
   }
 
   private <T> void setValueToAccessor(SortedBox<AttributeAccessor<?>> attributeAccessor, T value,

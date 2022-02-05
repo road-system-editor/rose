@@ -27,6 +27,8 @@ public class CriteriaWindow extends RoseWindow {
   private PlausibilityController plausibilityController;
   @Inject
   private ApplicationDataSystem applicationData;
+  @Inject
+  private Injector injector;
 
   /**
    * The criterion overview panel is contained in the criteria window.
@@ -75,8 +77,7 @@ public class CriteriaWindow extends RoseWindow {
 
   private void onSelect(PlausibilityCriterion plausibilityCriterion) {
     // implementation detail
-    criterion = CriterionPanel.forCriterion(getTranslator(), this.plausibilityController,
-        plausibilityCriterion);
+    criterion = CriterionPanel.forCriterion(injector, plausibilityCriterion);
     criterionContainer.setContent(criterion);
   }
 }

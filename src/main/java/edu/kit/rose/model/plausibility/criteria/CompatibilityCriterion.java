@@ -224,6 +224,9 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
         Violation violation = new Violation(this, invalidSegments);
         this.violationManager.addViolation(violation);
         this.elementViolationMap.put(unit, violation);
+      } else if (elementViolationMap.containsKey(unit)) {
+        this.violationManager.removeViolation(elementViolationMap.get(unit));
+        elementViolationMap.remove(unit);
       }
     }
   }

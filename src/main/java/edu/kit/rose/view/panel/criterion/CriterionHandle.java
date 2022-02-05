@@ -1,27 +1,26 @@
 package edu.kit.rose.view.panel.criterion;
 
 import edu.kit.rose.controller.plausibility.PlausibilityController;
-import edu.kit.rose.infrastructure.UnitObserver;
+import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.model.plausibility.criteria.CompatibilityCriterion;
 import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterion;
 import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterionType;
+import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import edu.kit.rose.view.commons.FxmlContainer;
 import java.util.Collection;
 import java.util.function.Consumer;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
 
 /**
  * Criterion handles are the entries in the {@link CriteriaOverviewPanel} that each represent
  * one plausibility criterion.
  */
 class CriterionHandle extends FxmlContainer
-    implements UnitObserver<PlausibilityCriterion> {
+    implements SetObserver<SegmentType, PlausibilityCriterion> {
   private final PlausibilityController controller;
   private final PlausibilityCriterion criterion;
   private boolean selected = false;
@@ -52,6 +51,8 @@ class CriterionHandle extends FxmlContainer
       this.deleteButton.addEventHandler(MouseEvent.MOUSE_CLICKED,
           event -> controller.deleteCompatibilityCriterion((CompatibilityCriterion) criterion));
     }
+
+    this.criterion.addSubscriber(this);
   }
 
   /**
@@ -89,5 +90,15 @@ class CriterionHandle extends FxmlContainer
   @Override
   protected Collection<FxmlContainer> getSubFxmlContainer() {
     return null;
+  }
+
+  @Override
+  public void notifyAddition(SegmentType unit) {
+    // ignore, segment types are not shown in the handle
+  }
+
+  @Override
+  public void notifyRemoval(SegmentType unit) {
+    // ignore, segment types are not shown in the handle
   }
 }

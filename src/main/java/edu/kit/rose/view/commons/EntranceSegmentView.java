@@ -6,39 +6,51 @@ import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Entrance;
 
 /**
- * An entrance segment view is the visual representation of an entrance street segment.
+ * An exit segment view is the visual representation of an exit street segment.
  */
-class EntranceSegmentView extends SegmentView<Entrance> {
+public class EntranceSegmentView extends RampSegmentView<Entrance> {
+
+  private static final String IMAGE_RESOURCE = "entrance_segment_raw.png";
+  private static final int IMAGE_WIDTH = 60;
+  private static final int IMAGE_HEIGHT = 70;
+  private static final double IMAGE_POS_OFFSET_X = -22;
+  private static final double IMAGE_POS_OFFSET_Y = -38;
 
   /**
-   * Creates a new entrance segment view for a given exit {@code segment}.
+   * Creates a new segment view that acts as visual representation of a given segment.
    *
-   * @param segment the segment to display.
-   * @param controller the controller to use for handling position updates.
-   * @param translator the translator to use for localizing label.
+   * @param segment    the segment to create a visual representation for
+   * @param controller the road system controller.
+   * @param translator the translator.
    */
-  public EntranceSegmentView(Entrance segment, RoadSystemController controller,
+  public EntranceSegmentView(Entrance segment,
+                         RoadSystemController controller,
                          LocalizedTextProvider translator) {
     super(segment, controller, translator);
   }
 
   @Override
-  protected void redraw() {
-
+  protected double getImagePosOffsetX() {
+    return IMAGE_POS_OFFSET_X;
   }
 
   @Override
-  public void notifyChange(Element unit) {
-
+  protected double getImagePosOffsetY() {
+    return IMAGE_POS_OFFSET_Y;
   }
 
   @Override
-  public void notifyAddition(Element unit) {
-
+  protected String getImageResource() {
+    return IMAGE_RESOURCE;
   }
 
   @Override
-  public void notifyRemoval(Element unit) {
+  protected int getImageWidth() {
+    return IMAGE_WIDTH;
+  }
 
+  @Override
+  protected int getImageHeight() {
+    return IMAGE_HEIGHT;
   }
 }

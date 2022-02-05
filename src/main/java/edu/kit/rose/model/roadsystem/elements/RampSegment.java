@@ -11,8 +11,7 @@ import java.util.List;
  */
 abstract class RampSegment extends HighwaySegment {
 
-  private static final int INITIAL_RAMP_DISTANCE_TO_CENTER_X = 32;
-  private static final int INITIAL_RAMP_DISTANCE_TO_CENTER_Y = -14;
+  protected static final int INITIAL_RAMP_DISTANCE_TO_CENTER_Y = -14;
   private int nrOfRampLanes = 1;
   private int rampSpeedLimit = 100;
 
@@ -40,19 +39,15 @@ abstract class RampSegment extends HighwaySegment {
               s -> rampSpeedLimit = s);
     attributeAccessors.add(rampSpeedLimitAccessor);
 
-    Position rampConnectorPosition = new Position(INITIAL_RAMP_DISTANCE_TO_CENTER_X,
-        INITIAL_RAMP_DISTANCE_TO_CENTER_Y);
-
     List<AttributeAccessor<?>> rampAttributesList =
         Arrays.asList(nrOfRampLanesAccessor, rampSpeedLimitAccessor);
 
-    initRampConnector(rampAttributesList, rampConnectorPosition);
+    initRampConnector(rampAttributesList);
 
     this.connectors.add(rampConnector);
   }
 
-  protected abstract void initRampConnector(List<AttributeAccessor<?>> rampAttributesList,
-                                   Position rampPosition);
+  protected abstract void initRampConnector(List<AttributeAccessor<?>> rampAttributesList);
 
   protected void initConnectors(List<AttributeAccessor<?>> entryAttributesList,
                                 List<AttributeAccessor<?>> exitAttributesList) {

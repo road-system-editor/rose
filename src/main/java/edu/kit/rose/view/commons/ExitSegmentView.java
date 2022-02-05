@@ -12,23 +12,13 @@ import javafx.scene.transform.Rotate;
 /**
  * An exit segment view is the visual representation of an exit street segment.
  */
-public class ExitSegmentView extends SegmentView<Exit> {
+public class ExitSegmentView extends RampSegmentView<Exit> {
 
   private static final String IMAGE_RESOURCE = "exit_segment_raw.png";
   private static final int IMAGE_WIDTH = 60;
   private static final int IMAGE_HEIGHT = 70;
   private static final double IMAGE_POS_OFFSET_X = -20.5;
   private static final double IMAGE_POS_OFFSET_Y = -38;
-
-  private Rotate rotation;
-  private  ImageView imageView;
-  private ConnectorView entryConnectorView;
-  private ConnectorView exitConnectorView;
-  private ConnectorView rampConnectorView;
-
-  @Inject
-  private RoadSystemController roadSystemController;
-
 
   /**
    * Creates a new segment view that acts as visual representation of a given segment.
@@ -38,80 +28,33 @@ public class ExitSegmentView extends SegmentView<Exit> {
    * @param translator the translator.
    */
   public ExitSegmentView(Exit segment,
-                            RoadSystemController controller,
-                            LocalizedTextProvider translator) {
+                         RoadSystemController controller,
+                         LocalizedTextProvider translator) {
     super(segment, controller, translator);
-    segment.addSubscriber(this);
-    setup();
-  }
-
-  private void setup() {
-    setupRotation();
-    setupConnectors();
-    setupImage();
-    updatePosition();
-    getChildren().addAll(imageView, exitConnectorView, entryConnectorView, rampConnectorView);
-
-    relocateConnectorView(entryConnectorView);
-    relocateConnectorView(exitConnectorView);
-    relocateConnectorView(rampConnectorView);
-  }
-
-  private void setupConnectors() {
-    this.getSegment().getConnectors().forEach(c -> {
-      switch (c.getType()) {
-        case ENTRY -> entryConnectorView = new ConnectorView(15, c.getPosition());
-        case EXIT -> exitConnectorView = new ConnectorView(15, c.getPosition());
-        case RAMP_EXIT, RAMP_ENTRY -> rampConnectorView = new ConnectorView(6, c.getPosition());
-        default -> throw new IllegalStateException("segment is not a exit segment.");
-      }
-    });
-  }
-
-  private void relocateConnectorView(ConnectorView connectorView) {
-    connectorView.setCenterX(connectorView.getCenterX() - IMAGE_POS_OFFSET_X);
-    connectorView.setCenterY(connectorView.getCenterY() - IMAGE_POS_OFFSET_Y);
-  }
-
-  private void setupImage() {
-    var url = getClass().getResource(IMAGE_RESOURCE);
-    var image = new Image(url.toString());
-    imageView = new ImageView(image);
-    imageView.setPreserveRatio(true);
-    imageView.setFitWidth(IMAGE_WIDTH);
-    imageView.setFitHeight(IMAGE_HEIGHT);
-  }
-
-  private void updatePosition() {
-    relocate(getSegment().getCenter().getX() + IMAGE_POS_OFFSET_X,
-        getSegment().getCenter().getY() + IMAGE_POS_OFFSET_Y);
-  }
-
-  private void setupRotation() {
-    rotation = new Rotate(getSegment().getRotation());
-    rotation.setPivotX(-IMAGE_POS_OFFSET_X);
-    rotation.setPivotY(-IMAGE_POS_OFFSET_Y);
-    getTransforms().add(rotation);
   }
 
   @Override
-  public void redraw() {
-    updatePosition();
-    rotation.setPivotX(-IMAGE_POS_OFFSET_X);
-    rotation.setPivotY(-IMAGE_POS_OFFSET_Y);
-    rotation.setAngle(getSegment().getRotation());
+  protected double getImagePosOffsetX() {
+    return IMAGE_POS_OFFSET_X;
   }
 
   @Override
-  public void notifyChange(Element unit) {
-    this.draw();
+  protected double getImagePosOffsetY() {
+    return IMAGE_POS_OFFSET_Y;
   }
 
   @Override
-  public void notifyAddition(Element unit) {
+  protected String getImageResource() {
+    return IMAGE_RESOURCE;
   }
 
   @Override
-  public void notifyRemoval(Element unit) {
+  protected int getImageWidth() {
+    return IMAGE_WIDTH;
+  }
+
+  @Override
+  protected int getImageHeight() {
+    return IMAGE_HEIGHT;
   }
 }

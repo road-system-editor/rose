@@ -22,7 +22,7 @@ class CompletenessCriterionTest {
   }
 
   @Test
-  void TestGetAndSetName() {
+  void testGetAndSetName() {
     criterion.setName("name");
 
     Assertions.assertEquals("name", criterion.getName());
@@ -30,19 +30,19 @@ class CompletenessCriterionTest {
 
 
   @Test
-  void TestGetAndAddSegmentTypes() {
+  void testGetAndAddSegmentTypes() {
     criterion.addSegmentType(SegmentType.EXIT);
 
     Assertions.assertTrue(criterion.getSegmentTypes().contains(SegmentType.EXIT));
   }
 
   @Test
-  void TestGetType() {
+  void testGetType() {
     Assertions.assertEquals(PlausibilityCriterionType.COMPLETENESS, criterion.getType());
   }
 
   @Test
-  void TestRemoveSegmentType() {
+  void testRemoveSegmentType() {
     criterion.addSegmentType(SegmentType.BASE);
     criterion.addSegmentType(SegmentType.EXIT);
     criterion.removeSegmentType(SegmentType.BASE);
@@ -52,7 +52,7 @@ class CompletenessCriterionTest {
   }
 
   @Test
-  void notifyChange() {
+  void testNotifyChange() {
     Segment segment = new Base();
 
     criterion.addSegmentType(SegmentType.BASE);
@@ -70,11 +70,7 @@ class CompletenessCriterionTest {
   }
 
   @Test
-  void getThis() {
-  }
-
-  @Test
-  void notifyAddition() {
+  void testNotifyAddition() {
     Segment segment = new Base();
 
     criterion.addSegmentType(SegmentType.BASE);
@@ -84,7 +80,7 @@ class CompletenessCriterionTest {
   }
 
   @Test
-  void notifyRemoval() {
+  void testNotifyRemoval() {
     Segment segment = new Base();
 
     criterion.addSegmentType(SegmentType.BASE);

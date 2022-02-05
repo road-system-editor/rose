@@ -73,7 +73,11 @@ public class ApplicableSegmentsSelector extends FxmlContainer
 
     if (this.criterion != null) {
       this.criterion.addSubscriber(this);
-      this.notifyChange(this.criterion);
+
+      this.typeSelector.getSelectionModel().clearSelection();
+      for (var selected : this.criterion.getSegmentTypes()) {
+        this.typeSelector.getSelectionModel().select(selected);
+      }
     }
   }
 

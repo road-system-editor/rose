@@ -82,6 +82,7 @@ class SegmentBlueprint extends StackPane {
     ClipboardContent content = new ClipboardContent();
     content.putString(type.toString());
     db.setContent(content);
+    db.setDragView(this.renderer.snapshot(null, null));
     event.consume();
   }
 

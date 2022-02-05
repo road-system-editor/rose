@@ -10,6 +10,7 @@ import edu.kit.rose.infrastructure.RoseBox;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.ZoomSetting;
 import edu.kit.rose.model.roadsystem.RoadSystem;
+import edu.kit.rose.model.roadsystem.elements.Base;
 import edu.kit.rose.model.roadsystem.elements.Connector;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Entrance;
@@ -38,6 +39,7 @@ public class RoseRoadSystemControllerTest {
   private RoadSystem roadSystem;
 
   private RoadSystemController roadSystemController;
+  private ZoomSetting zoomSetting;
 
   /**
    * Sets up mock objects.
@@ -47,7 +49,10 @@ public class RoseRoadSystemControllerTest {
     selectionBuffer = Mockito.mock(SelectionBuffer.class);
     project = Mockito.mock(Project.class);
     roadSystem = Mockito.mock(RoadSystem.class);
+    zoomSetting = Mockito.mock(ZoomSetting.class);
 
+    Mockito.when(zoomSetting.getCenterOfView()).thenReturn(new Position(0, 0));
+    Mockito.when(project.getZoomSetting()).thenReturn(zoomSetting);
     Mockito.when(project.getRoadSystem()).thenReturn(roadSystem);
 
     ChangeCommandBuffer changeCommandBuffer = Mockito.mock(ChangeCommandBuffer.class);
@@ -107,7 +112,7 @@ public class RoseRoadSystemControllerTest {
     Mockito.doAnswer(invocation -> {
       Assertions.assertEquals(SegmentType.BASE, invocation.getArgument(0));
       called.set(true);
-      return null;
+      return new Base();
     }).when(roadSystem).createSegment(Mockito.any(SegmentType.class));
 
     roadSystemController.createStreetSegment(SegmentType.BASE);

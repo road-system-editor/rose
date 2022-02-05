@@ -1,7 +1,9 @@
 package edu.kit.rose.controller.roadsystem;
 
+import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.infrastructure.RoseBox;
 import edu.kit.rose.model.Project;
+import edu.kit.rose.model.ZoomSetting;
 import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.elements.Base;
 import edu.kit.rose.model.roadsystem.elements.Element;
@@ -26,6 +28,8 @@ public class CreateStreetSegmentCommandTest {
 
   private Project project;
 
+  private ZoomSetting zoomSetting;
+
   /**
    * Sets up all mock objects.
    */
@@ -33,9 +37,12 @@ public class CreateStreetSegmentCommandTest {
   public void setUp() {
     this.roadSystem = Mockito.mock(RoadSystem.class);
     this.project = Mockito.mock(Project.class);
+    this.zoomSetting = Mockito.mock(ZoomSetting.class);
 
+    Mockito.when(zoomSetting.getCenterOfView()).thenReturn(new Position(0, 0));
     Mockito.when(project.getRoadSystem()).thenReturn(roadSystem);
     Mockito.when(roadSystem.getElements()).thenReturn(new RoseBox<Element>());
+    Mockito.when(project.getZoomSetting()).thenReturn(zoomSetting);
 
     Mockito.when(roadSystem.createSegment(ArgumentMatchers.any(SegmentType.class)))
         .thenAnswer(invocation -> createSegment(invocation.getArgument(0)));
@@ -56,7 +63,7 @@ public class CreateStreetSegmentCommandTest {
     Mockito.when(roadSystem.createSegment(Mockito.any(SegmentType.class)))
         .thenAnswer(invocation -> {
           called.set(true);
-          return null;
+          return new Base();
         });
 
     CreateStreetSegmentCommand command

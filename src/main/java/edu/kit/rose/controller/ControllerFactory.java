@@ -89,8 +89,8 @@ public class ControllerFactory {
    * @return hierarchy controller instance
    */
   public HierarchyController getHierarchyController() {
-    return new RoseHierarchyController(this.storageLock,
-            this.changeCommandBuffer, this.selectionBuffer, this.project, this.navigator);
+    return new RoseHierarchyController(this.storageLock, this.changeCommandBuffer,
+        this.selectionBuffer, this.project, this.navigator, this.replacementLog);
   }
 
   /**

@@ -3,6 +3,7 @@ package edu.kit.rose.controller.hierarchy;
 import edu.kit.rose.controller.command.ChangeCommand;
 import edu.kit.rose.controller.command.ChangeCommandBuffer;
 import edu.kit.rose.controller.commons.Controller;
+import edu.kit.rose.controller.commons.ReplacementLog;
 import edu.kit.rose.controller.commons.StorageLock;
 import edu.kit.rose.controller.navigation.Navigator;
 import edu.kit.rose.controller.selection.SelectionBuffer;
@@ -12,6 +13,7 @@ import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Group;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.BiConsumer;
 
@@ -33,6 +35,7 @@ public class RoseHierarchyController extends Controller
   private final Project project;
   private final SelectionBuffer selectionBuffer;
   private final Set<BiConsumer<Segment, Boolean>> consumers;
+  private final ReplacementLog replacementLog;
 
   /**
    * Creates a new {@link RoseHierarchyController}.
@@ -42,21 +45,23 @@ public class RoseHierarchyController extends Controller
    * @param selectionBuffer     the container that stores selected segments
    * @param project             the model facade for project data
    * @param navigator           the navigator for the controller
+   * @param replacementLog      the replacement log to use for commands.
    */
   public RoseHierarchyController(StorageLock storageLock, ChangeCommandBuffer changeCommandBuffer,
                                  SelectionBuffer selectionBuffer, Project project,
-                                 Navigator navigator) {
+                                 Navigator navigator, ReplacementLog replacementLog) {
     super(storageLock, navigator);
     this.changeCommandBuffer = changeCommandBuffer;
     this.selectionBuffer = selectionBuffer;
     selectionBuffer.addSubscriber(this);
     this.project = project;
     this.consumers = new HashSet<>();
+    this.replacementLog = Objects.requireNonNull(replacementLog);
   }
 
   @Override
   public void createGroup() {
-    ChangeCommand createGroupCommand = new CreateGroupCommand(this.project,
+    ChangeCommand createGroupCommand = new CreateGroupCommand(this.replacementLog, this.project,
             this.selectionBuffer.getSelectedSegments());
     this.changeCommandBuffer.addAndExecuteCommand(createGroupCommand);
   }

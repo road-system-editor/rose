@@ -1,6 +1,7 @@
 package edu.kit.rose.controller.hierarchy;
 
 import edu.kit.rose.controller.command.ChangeCommand;
+import edu.kit.rose.controller.commons.ReplacementLog;
 import edu.kit.rose.infrastructure.Box;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.roadsystem.elements.Element;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -17,6 +19,7 @@ import java.util.Set;
  * and makes it changeable.
  */
 public class CreateGroupCommand implements ChangeCommand {
+  private final ReplacementLog replacementLog;
   private final Project project;
   private final Set<Element> elements;
   private Group group;
@@ -28,9 +31,12 @@ public class CreateGroupCommand implements ChangeCommand {
    * @param project  the model facade to execute the {@link CreateGroupCommand} on
    * @param elements the elements that will be in the group
    */
-  public CreateGroupCommand(Project project, List<Segment> elements) {
-    this.project = project;
-    this.elements = new HashSet<>(elements);
+  public CreateGroupCommand(ReplacementLog replacementLog,
+                            Project project,
+                            List<Segment> elements) {
+    this.replacementLog = Objects.requireNonNull(replacementLog);
+    this.project = Objects.requireNonNull(project);
+    this.elements = new HashSet<>(Objects.requireNonNull(elements));
     this.parentMap = new HashMap<>();
   }
 
@@ -38,7 +44,11 @@ public class CreateGroupCommand implements ChangeCommand {
   public void execute() {
     this.storeParentsForElements();
     this.removeChildrenFromParents();
+    var oldGroup = this.group;
     this.group = this.project.getRoadSystem().createGroup(this.elements);
+    if (oldGroup != null) {
+      this.replacementLog.replaceElement(oldGroup, this.group);
+    }
   }
 
   @Override

@@ -6,6 +6,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import edu.kit.rose.controller.command.RoseChangeCommandBuffer;
+import edu.kit.rose.controller.commons.ReplacementLog;
 import edu.kit.rose.controller.commons.RoseStorageLock;
 import edu.kit.rose.controller.navigation.Navigator;
 import edu.kit.rose.controller.selection.RoseSelectionBuffer;
@@ -56,7 +57,7 @@ class RoseHierarchyControllerTest {
     when(this.project.getRoadSystem()).thenReturn(this.roadSystem);
     this.controller = new RoseHierarchyController(new RoseStorageLock(),
             new RoseChangeCommandBuffer(), new RoseSelectionBuffer(), this.project,
-            mock(Navigator.class));
+            mock(Navigator.class), mock(ReplacementLog.class));
 
     this.group = new Group() {
       @Override
@@ -73,22 +74,11 @@ class RoseHierarchyControllerTest {
     };
 
 
-    this.nameAccessor = new AttributeAccessor<String>(AttributeType.NAME,
-            mock(Supplier.class), mock(Consumer.class)) {
-      @Override
-      public AttributeType getAttributeType() {
-        return AttributeType.NAME;
-      }
-
-      @Override
-      public void setValue(String str) {
-        name = str;
-      }
-
-      public String getValue() {
-        return name;
-      }
-    };
+    this.nameAccessor = new AttributeAccessor<>(
+        AttributeType.NAME,
+        () -> this.name,
+        str -> this.name = str
+    );
 
     doAnswer(e -> {
       this.createMockGroup = new Group();

@@ -115,7 +115,7 @@ public class Grid extends Pane {
       s.setDrawAsSelected(false);
       s.draw();
     });
-    mouseEvent.consume();
+    //mouseEvent.consume();
   }
 
   private void drawSegmentViewsAsSelected() {

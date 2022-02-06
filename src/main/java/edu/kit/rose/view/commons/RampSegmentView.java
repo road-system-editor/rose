@@ -2,10 +2,15 @@ package edu.kit.rose.view.commons;
 
 import com.google.inject.Inject;
 import edu.kit.rose.controller.roadsystem.RoadSystemController;
+import edu.kit.rose.infrastructure.Movement;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Exit;
 import edu.kit.rose.model.roadsystem.elements.Segment;
+import java.util.List;
+import java.util.function.Supplier;
+import javafx.geometry.Bounds;
+import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.transform.Rotate;
@@ -22,6 +27,10 @@ public abstract class RampSegmentView<T extends Segment> extends SegmentView<T> 
   private ConnectorView rampConnectorView;
   private Image defaultImage;
   private Image selectedImage;
+
+  private Point2D startPos;
+  private double posOnSourceX;
+  private double posOnSourceY;
 
   @Inject
   private RoadSystemController roadSystemController;
@@ -46,6 +55,7 @@ public abstract class RampSegmentView<T extends Segment> extends SegmentView<T> 
     setupRotation();
     setupConnectors();
     setupImage();
+    setupDragging();
     updatePosition();
     getChildren().addAll(imageView, exitConnectorView, entryConnectorView, rampConnectorView);
 
@@ -91,6 +101,50 @@ public abstract class RampSegmentView<T extends Segment> extends SegmentView<T> 
     rotation.setPivotX(-getImagePosOffsetX());
     rotation.setPivotY(-getImagePosOffsetY());
     getTransforms().add(rotation);
+  }
+
+  private void setupDragging() {
+    this.setOnMousePressed(mouseEvent -> {
+      startPos = localToParent(mouseEvent.getX(), mouseEvent.getY());
+    });
+
+    this.setOnDragDetected(mouseEvent -> startFullDrag());
+
+    this.setOnMouseDragged(mouseEvent -> {
+      var currentPos = localToParent(mouseEvent.getX(), mouseEvent.getY());
+      var movement = new Movement(currentPos.getX() - startPos.getX(),
+          currentPos.getY() - startPos.getY());
+      if (canBeMoved(movement)) {
+        getSegment().move(movement);
+        startPos = currentPos;
+      }
+      mouseEvent.consume();
+    });
+
+    this.setOnMouseDragReleased(mouseEvent -> {
+      var currentPos = localToParent(mouseEvent.getX(), mouseEvent.getY());
+      var movement = new Movement(
+          currentPos.getX() - startPos.getX(),
+          currentPos.getY() - startPos.getY());
+      getSegment().move(movement);
+    });
+  }
+
+  private boolean canBeMoved(Movement movement) {
+    final Bounds bounds = this.getLayoutBounds();
+    final Point2D topLeft = localToParent(bounds.getMinX(), bounds.getMinY());
+    final Point2D topRight = localToParent(bounds.getMaxX(), bounds.getMinY());
+    final Point2D bottomLeft = localToParent(bounds.getMinX(), bounds.getMaxY());
+    final Point2D bottomRight = localToParent(bounds.getMinX(), bounds.getMinY());
+    final Point2D movementVector = new Point2D(movement.getX(), movement.getY());
+    final Bounds gridBounds = getParent().getLayoutBounds();
+    List<Supplier<Boolean>> checks = List.of(
+        () -> gridBounds.contains(topLeft.add(movementVector)),
+        () -> gridBounds.contains(topRight.add(movementVector)),
+        () -> gridBounds.contains(bottomLeft.add(movementVector)),
+        () -> gridBounds.contains(bottomRight.add(movementVector))
+    );
+    return checks.stream().allMatch(Supplier::get);
   }
 
   @Override

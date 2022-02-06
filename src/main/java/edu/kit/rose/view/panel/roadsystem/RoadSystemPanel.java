@@ -11,27 +11,16 @@ import edu.kit.rose.infrastructure.Movement;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.roadsystem.RoadSystem;
-import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
-import edu.kit.rose.model.roadsystem.attributes.AttributeType;
-import edu.kit.rose.model.roadsystem.elements.Base;
 import edu.kit.rose.model.roadsystem.elements.Connection;
 import edu.kit.rose.model.roadsystem.elements.Element;
+import edu.kit.rose.model.roadsystem.elements.Entrance;
 import edu.kit.rose.model.roadsystem.elements.Exit;
-import edu.kit.rose.model.roadsystem.elements.Segment;
-import edu.kit.rose.model.roadsystem.elements.SegmentType;
-import edu.kit.rose.model.roadsystem.measurements.Measurement;
-import edu.kit.rose.view.commons.BaseSegmentView;
+import edu.kit.rose.view.commons.EntranceSegmentView;
 import edu.kit.rose.view.commons.ExitSegmentView;
 import edu.kit.rose.view.commons.FxmlContainer;
-import edu.kit.rose.view.commons.SegmentView;
 import java.util.Collection;
 import java.util.List;
 import javafx.fxml.FXML;
-import javafx.geometry.Point2D;
-import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
 
 
 /**
@@ -95,35 +84,6 @@ public class RoadSystemPanel extends FxmlContainer
 
     this.roadSystemGrid.setOnAreaSelected((position1, position2) ->
         this.roadSystemController.selectSegmentsInRectangle(position1, position2));
-
-    /*var exit = new Exit();
-    exit.move(new Movement(300, 300));
-    var exitView = new ExitSegmentView(exit, roadSystemController, getTranslator());
-    var circle = new Circle(2, Color.GREEN);
-    circle.setLayoutX(exit.getCenter().getX());
-    circle.setLayoutY(exit.getCenter().getY());
-    roadSystemGrid.getChildren().add(exitView);
-    exitView.setOnMouseMoved(event -> {
-      if (event.isAltDown()) {
-        exit.rotate(2);
-      }
-    });*/
-
-    /*var rectangle = new Rectangle(exitView.getBoundsInParent().getMinX(),
-        exitView.getBoundsInParent().getMinY(), exitView.getBoundsInParent().getWidth(),
-        exitView.getBoundsInParent().getHeight());
-    rectangle.setFill(Color.RED.deriveColor(1, 1, 1, 0.2));
-    roadSystemGrid.getChildren().add(rectangle);
-    rectangle.setOnMouseMoved(event -> {
-      exit.rotate(2);
-      rectangle.setX(exitView.getBoundsInParent().getMinX());
-      rectangle.setY(exitView.getBoundsInParent().getMinY());
-      rectangle.setWidth(exitView.getBoundsInParent().getWidth());
-      rectangle.setHeight(exitView.getBoundsInParent().getHeight());
-      System.out.println(exitView.getBoundsInParent());
-    });
-
-    roadSystemGrid.getChildren().add(circle);*/
   }
 
   @Override
@@ -131,22 +91,15 @@ public class RoadSystemPanel extends FxmlContainer
     super.init(injector);
     injector.injectMembers(this.zoomContainer);
 
-    Base b = new Base();
-    b.move(new Movement(600, 600));
-    var baseView = new BaseSegmentView(b, this.roadSystemController, this.getTranslator());
-    this.roadSystemGrid.addSegmentView(baseView);
-    /*var rectangle = new Rectangle(baseView.getBoundsInParent().getMinX(),
-        baseView.getBoundsInParent().getMinY(), baseView.getBoundsInParent().getWidth(),
-        baseView.getBoundsInParent().getHeight());
-    rectangle.setFill(Color.RED.deriveColor(1, 1, 1, 0.2));
-    roadSystemGrid.getChildren().add(rectangle);
-    baseView.setOnMouseMoved(event -> {
-      rectangle.setX(baseView.getBoundsInParent().getMinX());
-      rectangle.setY(baseView.getBoundsInParent().getMinY());
-      rectangle.setWidth(baseView.getBoundsInParent().getWidth());
-      rectangle.setHeight(baseView.getBoundsInParent().getHeight());
-      System.out.println(baseView.getBoundsInParent());
-    });*/
+    var exit = new Exit();
+    exit.move(new Movement(200, 200));
+    var exitView = new ExitSegmentView(exit, roadSystemController, getTranslator());
+    roadSystemGrid.getChildren().add(exitView);
+
+    var entrance = new Entrance();
+    entrance.move(new Movement(300, 200));
+    var entranceView = new EntranceSegmentView(entrance, roadSystemController, getTranslator());
+    roadSystemGrid.getChildren().add(entranceView);
   }
 
   @Override

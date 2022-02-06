@@ -14,7 +14,8 @@ import javafx.scene.transform.Rotate;
  */
 public class ExitSegmentView extends RampSegmentView<Exit> {
 
-  private static final String IMAGE_RESOURCE = "exit_segment_raw.png";
+  private static final String IMAGE_RESOURCE_DEFAULT = "exit_segment_raw.png";
+  private static final String IMAGE_RESOURCE_SELECTED = "exit_segment_raw_selected.png";
   private static final int IMAGE_WIDTH = 60;
   private static final int IMAGE_HEIGHT = 70;
   private static final double IMAGE_POS_OFFSET_X = -20.5;
@@ -44,8 +45,13 @@ public class ExitSegmentView extends RampSegmentView<Exit> {
   }
 
   @Override
-  protected String getImageResource() {
-    return IMAGE_RESOURCE;
+  protected String getDefaultImageResource() {
+    return IMAGE_RESOURCE_DEFAULT;
+  }
+
+  @Override
+  protected String getSelectedImageResource() {
+    return IMAGE_RESOURCE_SELECTED;
   }
 
   @Override

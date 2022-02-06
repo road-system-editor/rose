@@ -16,10 +16,12 @@ import javafx.scene.transform.Rotate;
 public abstract class RampSegmentView<T extends Segment> extends SegmentView<T> {
 
   private Rotate rotation;
-  private  ImageView imageView;
+  private ImageView imageView;
   private ConnectorView entryConnectorView;
   private ConnectorView exitConnectorView;
   private ConnectorView rampConnectorView;
+  private Image defaultImage;
+  private Image selectedImage;
 
   @Inject
   private RoadSystemController roadSystemController;
@@ -69,9 +71,11 @@ public abstract class RampSegmentView<T extends Segment> extends SegmentView<T> 
   }
 
   private void setupImage() {
-    var url = getClass().getResource(getImageResource());
-    var image = new Image(url.toString());
-    imageView = new ImageView(image);
+    var defaultUrl = getClass().getResource(getDefaultImageResource());
+    var selectedUrl = getClass().getResource(getSelectedImageResource());
+    defaultImage = new Image(defaultUrl.toString());
+    selectedImage = new Image(selectedUrl.toString());
+    imageView = new ImageView(defaultImage);
     imageView.setPreserveRatio(true);
     imageView.setFitWidth(getImageWidth());
     imageView.setFitHeight(getImageHeight());
@@ -92,6 +96,11 @@ public abstract class RampSegmentView<T extends Segment> extends SegmentView<T> 
   @Override
   public void redraw() {
     updatePosition();
+    if (getDrawAsSelected()) {
+      imageView.setImage(selectedImage);
+    } else {
+      imageView.setImage(defaultImage);
+    }
     rotation.setPivotX(-getImagePosOffsetX());
     rotation.setPivotY(-getImagePosOffsetY());
     rotation.setAngle(getSegment().getRotation());
@@ -114,7 +123,9 @@ public abstract class RampSegmentView<T extends Segment> extends SegmentView<T> 
 
   protected abstract double getImagePosOffsetY();
 
-  protected abstract String getImageResource();
+  protected abstract String getDefaultImageResource();
+
+  protected abstract String getSelectedImageResource();
 
   protected abstract int getImageWidth();
 

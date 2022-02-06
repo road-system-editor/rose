@@ -10,7 +10,8 @@ import edu.kit.rose.model.roadsystem.elements.Entrance;
  */
 public class EntranceSegmentView extends RampSegmentView<Entrance> {
 
-  private static final String IMAGE_RESOURCE = "entrance_segment_raw.png";
+  private static final String IMAGE_RESOURCE_DEFAULT = "entrance_segment_raw.png";
+  private static final String IMAGE_RESOURCE_SELECTED = "entrance_segment_raw_selected.png";
   private static final int IMAGE_WIDTH = 60;
   private static final int IMAGE_HEIGHT = 70;
   private static final double IMAGE_POS_OFFSET_X = -22;
@@ -40,8 +41,13 @@ public class EntranceSegmentView extends RampSegmentView<Entrance> {
   }
 
   @Override
-  protected String getImageResource() {
-    return IMAGE_RESOURCE;
+  protected String getDefaultImageResource() {
+    return IMAGE_RESOURCE_DEFAULT;
+  }
+
+  @Override
+  protected String getSelectedImageResource() {
+    return IMAGE_RESOURCE_SELECTED;
   }
 
   @Override

@@ -8,9 +8,12 @@ import edu.kit.rose.view.commons.ExitSegmentView;
 import edu.kit.rose.view.commons.SegmentView;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.stream.Collectors;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
+import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -36,6 +39,7 @@ public class Grid extends Pane {
 
   private SelectionBox selectionBox;
   private BiConsumer<Position, Position> onAreaSelectedEventHandler;
+  private List<Node> lines;
 
   /**
    * creates new Grid.
@@ -53,7 +57,8 @@ public class Grid extends Pane {
         CornerRadii.EMPTY,
         Insets.EMPTY)));
     getChildren().addAll(getLines());
-
+    lines = new LinkedList<>();
+    lines.addAll(getChildren());
   }
 
   private void setEventListeners() {
@@ -62,6 +67,7 @@ public class Grid extends Pane {
   }
 
   private void onMouseDragged(MouseEvent mouseDragEvent) {
+    deselectAllSegmentsViews(mouseDragEvent);
     if (mouseDragEvent.isControlDown() && mouseDragEvent.isPrimaryButtonDown()) {
       if (this.selectionBox == null) {
         selectionBox = new SelectionBox(
@@ -80,7 +86,7 @@ public class Grid extends Pane {
       this.getChildren().remove(selectionBox);
       if (onAreaSelectedEventHandler != null) {
 
-        Position validLastMousePosition = new Position(
+        /*Position validLastMousePosition = new Position(
             (int) Math.round(
                 getCoordinateInBorder(selectionBox.getLastMousePosition().getX(), WIDTH)),
             (int) Math.round(
@@ -89,17 +95,55 @@ public class Grid extends Pane {
             (int) Math.round(selectionBox.getStartingPoint().getX()),
             (int) Math.round(selectionBox.getStartingPoint().getY()));
 
+        onAreaSelectedEventHandler.accept(validLastMousePosition, startingPosition);
+        TODO: add when project.getRoadSystem is ready
+         */
+        drawSegmentViewsAsSelected();
+
         // Set it to before to the call of onAreaSelectedEventHandler, to ensure selectionBox
         // is null if the event handler throws an exception.
         selectionBox = null;
-
-        onAreaSelectedEventHandler.accept(validLastMousePosition, startingPosition);
       } else {
         selectionBox = null;
       }
-
-
     }
+    mouseEvent.consume();
+  }
+
+  private void deselectAllSegmentsViews(MouseEvent mouseEvent) {
+    getSegmentViews().forEach(s -> {
+      s.setDrawAsSelected(false);
+      s.draw();
+    });
+    mouseEvent.consume();
+  }
+
+  private void drawSegmentViewsAsSelected() {
+    getSegmentViews()
+        .forEach(segmentView -> {
+          var centerX = segmentView.getSegment().getCenter().getX();
+          var centerY = segmentView.getSegment().getCenter().getY();
+          segmentView.setDrawAsSelected(
+              centerX >= selectionBox.getStartingPoint().getX()
+                  && centerX <= selectionBox.getLastMousePosition().getX()
+                  && centerY >= selectionBox.getStartingPoint().getY()
+                  && centerY <= selectionBox.getLastMousePosition().getY()
+          );
+          segmentView.draw();
+        });
+  }
+
+  private List<SegmentView<?>> getSegmentViews() {
+    return getChildren().stream()
+        .filter(child -> !lines.contains(child) && child != selectionBox)
+        .map(child -> {
+          try {
+            return (SegmentView<?>) child;
+          } catch (ClassCastException e) {
+            throw new IllegalStateException("Grids may only hold segment views");
+          }
+        })
+        .collect(Collectors.toList());
   }
 
   private double getCoordinateInBorder(double coordinate, double upperBorder) {

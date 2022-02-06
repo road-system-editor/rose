@@ -83,7 +83,6 @@ public class RoseRoadSystemController extends Controller
         = new CreateStreetSegmentCommand(this.project, segmentType);
 
     changeCommandBuffer.addAndExecuteCommand(createStreetSegmentCommand);
-    createStreetSegmentCommand.execute();
   }
 
   @Override
@@ -92,7 +91,6 @@ public class RoseRoadSystemController extends Controller
         = new DeleteStreetSegmentCommand(this.project, segment);
 
     changeCommandBuffer.addAndExecuteCommand(deleteStreetSegmentCommand);
-    deleteStreetSegmentCommand.execute();
     selectionBuffer.removeSegmentSelection(segment);
   }
 
@@ -120,7 +118,6 @@ public class RoseRoadSystemController extends Controller
         draggingTransition);
 
     changeCommandBuffer.addAndExecuteCommand(dragStreetSegmentsCommand);
-    dragStreetSegmentsCommand.execute();
 
     initialSegmentDragPosition = null;
   }

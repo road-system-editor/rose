@@ -1,27 +1,43 @@
 package edu.kit.rose.model.plausibility.violation;
 
-import edu.kit.rose.infrastructure.SetObservable;
-import edu.kit.rose.infrastructure.SetObserver;
+import edu.kit.rose.infrastructure.RoseSetObservable;
+import edu.kit.rose.infrastructure.RoseSortedBox;
 import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterion;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
+import org.apache.commons.collections4.MultiValuedMap;
+import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
+
 
 /**
  * A ViolationManager provides currently active Violations, violations can be added and removed
  * (from inside this package). Violations held by this ViolationManager are mutually distinct.
  */
-public class ViolationManager
-    implements SetObservable<Violation, ViolationManager>, Iterable<Violation> {
+public class ViolationManager extends RoseSetObservable<Violation, ViolationManager>
+    implements Iterable<Violation> {
+
+  private final MultiValuedMap<PlausibilityCriterion, Violation> criterionViolationMap;
+
+  /**
+   * Constructor.
+   */
+  public ViolationManager() {
+    criterionViolationMap = new HashSetValuedHashMap<>();
+  }
+
 
   /**
    * Adds a given {@link Violation} to the ViolationManager.
    *
    * @param violation The {@link Violation} to add.
    */
-  void addViolation(Violation violation) {
-
+  public void addViolation(Violation violation) {
+    criterionViolationMap.put(violation.violatedCriterion(), violation);
+    getSubscriberIterator().forEachRemaining(sub -> sub.notifyAddition(violation));
   }
 
   /**
@@ -29,8 +45,9 @@ public class ViolationManager
    *
    * @param violation The {@link Violation} to remove.
    */
-  void removeViolation(Violation violation) {
-
+  public void removeViolation(Violation violation) {
+    criterionViolationMap.removeMapping(violation.violatedCriterion(), violation);
+    getSubscriberIterator().forEachRemaining(sub -> sub.notifyRemoval(violation));
   }
 
   /**
@@ -40,39 +57,37 @@ public class ViolationManager
    * @param criterion The {@link PlausibilityCriterion} that the searched
    *        {@link Violation} offends against.
    * @param offendingSegments The {@link Segment}s that cause the {@link Violation}
-   * @return the violation agoinst the given Criterion by the given Segments.
+   * @return the violation against the given Criterion by the given Segments. Or null if the
+   *        Violation is not in the ViolationManager.
    */
   Violation getViolation(PlausibilityCriterion criterion, Collection<Segment> offendingSegments) {
-    return null;
-  }
+    Collection<Violation> violationsAgainstCriterion = criterionViolationMap.get(criterion);
+    List<Violation> matches =
+        violationsAgainstCriterion.stream().filter((violation ->
+            violation.offendingSegments().containsAll(offendingSegments)
+        && offendingSegments.containsAll(violation.offendingSegments()))).toList();
 
-  @Override
-  public void addSubscriber(SetObserver<Violation, ViolationManager> observer) {
-
-  }
-
-  @Override
-  public void removeSubscriber(SetObserver<Violation, ViolationManager> observer) {
-
+    if (matches.size() > 1) {
+      throw new IllegalStateException("Multiple entries for the same criterion and segments");
+    } else if (matches.size() == 1) {
+      return matches.get(0);
+    } else {
+      return null;
+    }
   }
 
   /**
-   * Returns all {@link Violation}s currentl held by the ViolationManager.
+   * Returns all {@link Violation}s currently held by the ViolationManager.
    *
    * @return A {@link SortedBox} containing all {@link Violation}s.
    */
   public SortedBox<Violation> getViolations() {
-    return null;
+    return new RoseSortedBox<>(criterionViolationMap.values().stream().toList());
   }
 
   @Override
   public Iterator<Violation> iterator() {
-    return null;
-  }
-
-  @Override
-  public void notifySubscribers() {
-
+    return Collections.unmodifiableCollection(criterionViolationMap.values()).iterator();
   }
 
   @Override

@@ -45,6 +45,8 @@ public abstract class HighwaySegment
   private boolean conurbation = false;
   private int speedLimit = 100;
 
+  private int rotation = 0;
+
 
 
 
@@ -192,5 +194,41 @@ public abstract class HighwaySegment
 
   private Long getCreationTime() {
     return this.creationTime;
+  }
+
+  @Override
+  public void rotate(int degrees) {
+    this.rotation = Math.floorMod(this.rotation + degrees, 360);
+    this.subscribers.forEach(s -> s.notifyChange(this));
+  }
+
+  @Override
+  public int getRotation() {
+    return this.rotation;
+  }
+
+  @Override
+  public Position getRotatedConnectorPosition(Connector connector) {
+    if (!this.connectors.contains(connector)) {
+      throw new IllegalArgumentException("connector is not part of this segment");
+    }
+
+    var s = Math.sin(Math.toRadians(rotation));
+    var c = Math.cos(Math.toRadians(rotation));
+
+    var x = connector.getPosition().getX();
+    var y = connector.getPosition().getY();
+
+    // translate point back to origin:
+    x -= center.getX();
+    y -= center.getY();
+
+    // rotate point
+    double newX = y * s - x * c;
+    double newY = -x * s - y * c;
+
+    // translate point back:
+    return new Position((int) Math.round(newX + center.getX()),
+        (int) Math.round(newY + center.getY()));
   }
 }

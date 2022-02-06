@@ -43,9 +43,10 @@ public class RoseChangeCommandBuffer implements ChangeCommandBuffer {
   }
 
   @Override
-  public void addCommand(ChangeCommand changeCommand) {
+  public void addAndExecuteCommand(ChangeCommand changeCommand) {
     deleteCommandsAfterPointer();
     this.changeCommandStack.push(changeCommand);
+    changeCommand.execute();
     this.undoRedoPointer++;
   }
 

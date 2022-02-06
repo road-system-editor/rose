@@ -1,27 +1,36 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import edu.kit.rose.view.panel.roadsystem.RoadSystemPanel?>
 <?import edu.kit.rose.view.panel.segmentbox.SegmentBoxPanel?>
-<?import edu.kit.rose.view.panel.problem.ProblemOverviewPanel?>
+<?import edu.kit.rose.view.panel.violation.ViolationOverviewPanel?>
 <?import edu.kit.rose.view.panel.hierarchy.HierarchyPanel?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.SeparatorMenuItem?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
 <?import edu.kit.rose.view.window.RoseMenuBar?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.RowConstraints?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml">
     <top>
         <RoseMenuBar fx:id="roseMenuBar"/>
     </top>
     <left>
-        <BorderPane>
-            <top>
-                <SegmentBoxPanel fx:id="segmentBoxPanel"/>
-            </top>
-            <bottom>
-                <ProblemOverviewPanel fx:id="problemOverviewPanel"/>
-            </bottom>
-        </BorderPane>
+        <GridPane prefWidth="250">
+            <columnConstraints>
+                <ColumnConstraints percentWidth="100"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints percentHeight="70" vgrow="ALWAYS" />
+                <RowConstraints percentHeight="30" vgrow="NEVER"
+                                valignment="BOTTOM"/>
+            </rowConstraints>
+            <SegmentBoxPanel
+                    fx:id="segmentBoxPanel"
+                    GridPane.columnIndex="0"
+                    GridPane.rowIndex="0"/>
+            <ViolationOverviewPanel
+                    fx:id="violationOverviewPanel"
+                    GridPane.columnIndex="0"
+                    GridPane.rowIndex="1"/>
+        </GridPane>
     </left>
     <center>
         <RoadSystemPanel fx:id="roadSystemPanel"/>

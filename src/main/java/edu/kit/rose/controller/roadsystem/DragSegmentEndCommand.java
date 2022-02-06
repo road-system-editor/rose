@@ -4,7 +4,9 @@ import edu.kit.rose.controller.command.ChangeCommand;
 import edu.kit.rose.infrastructure.Movement;
 import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.model.Project;
+import edu.kit.rose.model.roadsystem.elements.Connection;
 import edu.kit.rose.model.roadsystem.elements.Connector;
+import edu.kit.rose.model.roadsystem.elements.MovableConnector;
 
 /**
  * Encapsulates the functionality of a street segment end dragging
@@ -12,27 +14,32 @@ import edu.kit.rose.model.roadsystem.elements.Connector;
  */
 public class DragSegmentEndCommand implements ChangeCommand {
 
+  private final MovableConnector connector;
+  private final Movement movement;
+
   /**
    * Creates a {@link DragSegmentEndCommand}
    * that drags a given end of a segments by a specified movement.
    *
-   * @param project          the model facade to execute {@link DragStreetSegmentCommand on}
    * @param segmentEnd       the segment end to drag
-   * @param startingPosition the starting position of the segment end
    * @param translation      the translation of the segment end
    */
-  public DragSegmentEndCommand(Project project, Connector segmentEnd, Position startingPosition,
-                               Movement translation) {
-
+  public DragSegmentEndCommand(MovableConnector segmentEnd, Movement translation) {
+    this.connector = segmentEnd;
+    this.movement = translation;
   }
 
   @Override
   public void execute() {
-
+    connector.move(movement);
   }
 
   @Override
   public void unexecute() {
+    connector.move(getInverseMovement(movement));
+  }
 
+  private static Movement getInverseMovement(Movement movement) {
+    return new Movement(-movement.getX(), -movement.getY());
   }
 }

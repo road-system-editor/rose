@@ -14,10 +14,8 @@ class ZoomSettingTest {
 
   @Test
   public void testSetAndGet() {
-    ZoomSetting setting = new ZoomSetting();
     Position position = new Position(X, Y);
-    setting.setCenterOfView(position);
-    setting.setZoomLevel(ZOOM_LEVEL);
+    ZoomSetting setting = new ZoomSetting(position, ZOOM_LEVEL);
 
     Assertions.assertEquals(X, setting.getCenterOfView().getX());
     Assertions.assertEquals(Y, setting.getCenterOfView().getY());

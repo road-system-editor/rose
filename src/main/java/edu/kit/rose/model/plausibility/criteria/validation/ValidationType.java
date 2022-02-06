@@ -30,7 +30,7 @@ public enum ValidationType {
    *
    * @return All {@link DataType}s that are compatible with this ValidationType.
    */
-  Collection<DataType> getCompatible() {
+  public Collection<DataType> getCompatible() {
     return List.of(this.compatibleDataTypes);
   }
 

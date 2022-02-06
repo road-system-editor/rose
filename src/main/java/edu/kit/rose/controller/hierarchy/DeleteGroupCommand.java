@@ -7,6 +7,7 @@ import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Group;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 
 /**
@@ -44,7 +45,7 @@ public class DeleteGroupCommand implements ChangeCommand {
     for (Element element : this.elements) {
       list.add(element);
     }
-    Group group = this.project.getRoadSystem().createGroup(list);
+    Group group = this.project.getRoadSystem().createGroup(new HashSet<>(list));
     SortedBox<AttributeAccessor<?>> accessors = group.getAttributeAccessors();
     Iterator<AttributeAccessor<?>> iteratorTo = accessors.iterator();
     Iterator<AttributeAccessor<?>> iteratorFrom = this.accessors.iterator();

@@ -8,7 +8,9 @@ import edu.kit.rose.model.roadsystem.elements.Group;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Encapsulates the functionality of creating a new group
@@ -16,7 +18,7 @@ import java.util.List;
  */
 public class CreateGroupCommand implements ChangeCommand {
   private final Project project;
-  private final List<Element> elements;
+  private final Set<Element> elements;
   private Group group;
   private final HashMap<Group, ArrayList<Element>> parentMap;
 
@@ -28,7 +30,7 @@ public class CreateGroupCommand implements ChangeCommand {
    */
   public CreateGroupCommand(Project project, List<Segment> elements) {
     this.project = project;
-    this.elements = new ArrayList<>(elements);
+    this.elements = new HashSet<>(elements);
     this.parentMap = new HashMap<>();
   }
 

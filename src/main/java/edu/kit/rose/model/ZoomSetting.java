@@ -16,12 +16,17 @@ public class ZoomSetting implements UnitObservable<ZoomSetting> {
   private int zoomLevel;
   private final List<UnitObserver<ZoomSetting>> observers = new ArrayList<>();
 
+  public ZoomSetting(Position centerOfView, int zoomLevel) {
+    this.centerOfView = centerOfView;
+    this.zoomLevel = zoomLevel;
+  }
+
   /**
    * Provides the Position of the center of the View.
    *
    * @return the Position of the center of the View.
    */
-  Position getCenterOfView() {
+  public Position getCenterOfView() {
     return new Position(this.centerOfView.getX(), this.centerOfView.getY());
   }
 
@@ -30,7 +35,7 @@ public class ZoomSetting implements UnitObservable<ZoomSetting> {
    *
    * @param position the new Position of the view.
    */
-  void setCenterOfView(Position position) {
+  public void setCenterOfView(Position position) {
     this.centerOfView = position;
     notifySubscribers();
   }
@@ -40,7 +45,7 @@ public class ZoomSetting implements UnitObservable<ZoomSetting> {
    *
    * @return the level of Zoom the View has.
    */
-  int getZoomLevel() {
+  public int getZoomLevel() {
     return this.zoomLevel;
   }
 
@@ -49,7 +54,7 @@ public class ZoomSetting implements UnitObservable<ZoomSetting> {
    *
    * @param zoomLevel the new level of zoom of the view.
    */
-  void setZoomLevel(int zoomLevel) {
+  public void setZoomLevel(int zoomLevel) {
     this.zoomLevel = zoomLevel;
     notifySubscribers();
   }

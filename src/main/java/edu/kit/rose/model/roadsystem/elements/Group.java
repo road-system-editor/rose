@@ -3,12 +3,12 @@ package edu.kit.rose.model.roadsystem.elements;
 import edu.kit.rose.infrastructure.Box;
 import edu.kit.rose.infrastructure.RoseSetObservable;
 import edu.kit.rose.infrastructure.RoseSortedBox;
-import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -20,7 +20,7 @@ public class Group
     extends RoseSetObservable<Element, Element>
     implements Element, Iterable<Element> {
 
-  private final List<Element> elements = new ArrayList<>();
+  private final List<Element> elements;
   private final SortedBox<AttributeAccessor<?>> accessors;
   private String name;
   private String comment;
@@ -29,6 +29,14 @@ public class Group
    * Creates a new instance of the {@link Group} class.
    */
   public Group() {
+    this(new LinkedList<>());
+  }
+
+  /**
+   * Creates a new instance of the {@link Group} class.
+   */
+  public Group(List<Element> elements) {
+    this.elements = elements;
     accessors = new RoseSortedBox<>(
         List.of(
             new AttributeAccessor<>(
@@ -82,7 +90,7 @@ public class Group
    * @return a {@link Box} of all {@link Element}s in the Group.
    */
   public SortedBox<Element> getElements() {
-    return new RoseSortedBox<>(elements);
+    return new RoseSortedBox<>(new ArrayList<>(elements));
   }
 
   /**

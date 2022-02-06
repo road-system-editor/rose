@@ -1,0 +1,34 @@
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.control.ListView?>
+<fx:root xmlns="http://javafx.com/javafx"
+         xmlns:fx="http://javafx.com/fxml" type="Pane"
+         fx:id="parentContainer">
+
+    <GridPane
+        prefWidth="${parentContainer.width}"
+        prefHeight="${parentContainer.height}">
+        <rowConstraints>
+            <RowConstraints vgrow="NEVER" fillHeight="false"/>
+            <RowConstraints vgrow="SOMETIMES"/>
+        </rowConstraints>
+        <columnConstraints>
+            <ColumnConstraints percentWidth="100"/>
+        </columnConstraints>
+        <HBox GridPane.columnIndex="0" GridPane.rowIndex="0">
+            <Label fx:id="violationLabel" prefWidth="175" prefHeight="30"
+                   alignment="CENTER"
+                   style="-fx-border-width: 1; -fx-border-style: solid; -fx-border-color: black"/>
+            <Label fx:id="segmentLabel" prefWidth="250" prefHeight = "30"
+                   alignment="CENTER"
+                   style="-fx-border-width: 1; -fx-border-style: solid; -fx-border-color: black"/>
+        </HBox>
+        <ListView fx:id="violationList" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+    </GridPane>
+
+</fx:root>
+

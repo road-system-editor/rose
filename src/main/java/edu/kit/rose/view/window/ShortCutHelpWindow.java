@@ -92,7 +92,6 @@ public class ShortCutHelpWindow extends RoseWindow {
 
     descriptionColumn.prefWidthProperty()
         .bind(shortCutTable.widthProperty().subtract(shortCutColumn.getWidth()));
-    System.out.println(descriptionColumn.getWidth());
   }
 
   private void updateTranslatableStrings(Stage stage) {

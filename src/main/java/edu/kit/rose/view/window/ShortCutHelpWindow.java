@@ -20,7 +20,7 @@ import javafx.stage.Stage;
  */
 public class ShortCutHelpWindow extends RoseWindow {
 
-  private static final int WIDTH = 385;
+  private static final int WIDTH = 430;
   private static final int HEIGHT = 385;
   private static final List<String> shortCutLocalizationKeys =
       List.of(
@@ -39,13 +39,14 @@ public class ShortCutHelpWindow extends RoseWindow {
       );
   private Consumer<Language> languageConsumer;
 
-
-  private TableColumn<ShortcutTableEntry, String> shortCutColumn;
-  private TableColumn<ShortcutTableEntry, String> descriptionColumn;
-
-
   @FXML
   private TableView<ShortcutTableEntry> shortCutTable;
+
+  @FXML
+  private TableColumn<ShortcutTableEntry, String> shortCutColumn;
+
+  @FXML
+  private TableColumn<ShortcutTableEntry, String> descriptionColumn;
 
   /**
    * Creates new ShortCutHelpWindow.
@@ -71,41 +72,28 @@ public class ShortCutHelpWindow extends RoseWindow {
     updateTranslatableStrings(stage);
   }
 
+  @Override
+  public void close() {
+    super.close();
+    getTranslator().unsubscribeFromOnLanguageChanged(languageConsumer);
+  }
+
   private void configureTranslatorSubscription(Stage stage) {
     languageConsumer = language -> updateTranslatableStrings(stage);
     getTranslator().subscribeToOnLanguageChanged(languageConsumer);
-
-    stage.setOnCloseRequest(
-        event -> getTranslator().unsubscribeFromOnLanguageChanged(languageConsumer));
   }
 
   private void setupTable() {
-    shortCutTable.setBorder(Border.EMPTY);
-    shortCutTable.setPadding(Insets.EMPTY);
-    shortCutTable.setSelectionModel(null);
-
-    shortCutColumn = new TableColumn<>();
     shortCutColumn.setCellValueFactory(columnEntry ->
         new SimpleStringProperty(columnEntry.getValue().shortCut()));
-    setUpAndAddColumn(shortCutColumn);
 
-    descriptionColumn = new TableColumn<>();
     descriptionColumn.setCellValueFactory(columnEntry ->
         new SimpleStringProperty(columnEntry.getValue().description()));
-    setUpAndAddColumn(descriptionColumn);
 
     descriptionColumn.prefWidthProperty()
         .bind(shortCutTable.widthProperty().subtract(shortCutColumn.getWidth()));
+    System.out.println(descriptionColumn.getWidth());
   }
-
-  private void setUpAndAddColumn(TableColumn<ShortcutTableEntry, String> column) {
-    column.setReorderable(false);
-    column.setResizable(false);
-    column.setSortable(false);
-
-    shortCutTable.getColumns().add(column);
-  }
-
 
   private void updateTranslatableStrings(Stage stage) {
     stage.setTitle(getTranslator().getLocalizedText("view.window.shortCutHelp.title"));

@@ -8,6 +8,7 @@ import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.elements.Base;
 import edu.kit.rose.model.roadsystem.elements.Connector;
+import edu.kit.rose.model.roadsystem.elements.MovableConnector;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import java.util.LinkedList;
 import org.junit.jupiter.api.Assertions;
@@ -130,16 +131,29 @@ public class BaseTest {
     final double startExitY = -30;
     final double movementX = 50;
     final double movementY = 50;
+
     Movement testMovement = new Movement(movementX, movementY);
     testBase.move(testMovement);
-    Assertions.assertEquals(startEntryX + movementX,
+
+    Assertions.assertEquals(startEntryX,
         testBase.getEntry().getPosition().getX());
-    Assertions.assertEquals(startEntryY + movementY,
+    Assertions.assertEquals(startEntryY,
         testBase.getEntry().getPosition().getY());
-    Assertions.assertEquals(startExitX + movementX,
+    Assertions.assertEquals(startExitX,
         testBase.getExit().getPosition().getX());
-    Assertions.assertEquals(startExitY + movementY,
+    Assertions.assertEquals(startExitY,
         testBase.getExit().getPosition().getY());
+  }
+
+  @Test
+  public void testMoveSingleConnector() {
+    ((MovableConnector) testBase.getEntry()).move(new Movement(0, -10));
+    Assertions.assertEquals(testBase.getEntry().getPosition().getX(), 0);
+    Assertions.assertEquals(testBase.getEntry().getPosition().getY(), 25);
+    Assertions.assertEquals(testBase.getCenter().getX(), 0);
+    Assertions.assertEquals(testBase.getCenter().getY(), -5);
+    Assertions.assertEquals(testBase.getExit().getPosition().getX(), 0);
+    Assertions.assertEquals(testBase.getExit().getPosition().getY(), -25);
   }
 
   /**

@@ -1,5 +1,11 @@
 package edu.kit.rose.controller.roadsystem;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import edu.kit.rose.controller.commons.ReplacementLog;
 import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.infrastructure.RoseBox;
 import edu.kit.rose.model.Project;
@@ -23,12 +29,11 @@ import org.mockito.Mockito;
  * Tests the {@link CreateStreetSegmentCommand} class.
  */
 public class CreateStreetSegmentCommandTest {
-
   private RoadSystem roadSystem;
-
   private Project project;
+  private ReplacementLog replacementLog;
 
-  private ZoomSetting zoomSetting;
+  private CreateStreetSegmentCommand command;
 
   /**
    * Sets up all mock objects.
@@ -37,15 +42,19 @@ public class CreateStreetSegmentCommandTest {
   public void setUp() {
     this.roadSystem = Mockito.mock(RoadSystem.class);
     this.project = Mockito.mock(Project.class);
-    this.zoomSetting = Mockito.mock(ZoomSetting.class);
+    ZoomSetting zoomSetting = Mockito.mock(ZoomSetting.class);
+    this.replacementLog = Mockito.mock(ReplacementLog.class);
 
-    Mockito.when(zoomSetting.getCenterOfView()).thenReturn(new Position(0, 0));
-    Mockito.when(project.getRoadSystem()).thenReturn(roadSystem);
-    Mockito.when(roadSystem.getElements()).thenReturn(new RoseBox<Element>());
-    Mockito.when(project.getZoomSetting()).thenReturn(zoomSetting);
+    when(zoomSetting.getCenterOfView()).thenReturn(new Position(0, 0));
+    when(project.getRoadSystem()).thenReturn(roadSystem);
+    when(roadSystem.getElements()).thenReturn(new RoseBox<>());
+    when(project.getZoomSetting()).thenReturn(zoomSetting);
 
-    Mockito.when(roadSystem.createSegment(ArgumentMatchers.any(SegmentType.class)))
+    when(roadSystem.createSegment(any(SegmentType.class)))
         .thenAnswer(invocation -> createSegment(invocation.getArgument(0)));
+
+    this.command = new CreateStreetSegmentCommand(this.replacementLog, this.project,
+        SegmentType.BASE);
   }
 
   private Segment createSegment(SegmentType segmentType) {
@@ -58,30 +67,24 @@ public class CreateStreetSegmentCommandTest {
 
   @Test
   public void testExecute() {
-    AtomicReference<Boolean> called = new AtomicReference<>(false);
-
-    Mockito.when(roadSystem.createSegment(Mockito.any(SegmentType.class)))
-        .thenAnswer(invocation -> {
-          called.set(true);
-          return new Base();
-        });
-
-    CreateStreetSegmentCommand command
-        = new CreateStreetSegmentCommand(this.project, SegmentType.BASE);
-
     command.execute();
-    Assertions.assertTrue(called.get());
+    verify(roadSystem, times(1)).createSegment(SegmentType.BASE);
   }
 
   @Test
   public void testUnExecute() {
-    CreateStreetSegmentCommand command
-        = new CreateStreetSegmentCommand(this.project, SegmentType.BASE);
-
     command.execute();
     command.unexecute();
 
     Mockito.verify(roadSystem, Mockito.times(1))
-        .removeElement(ArgumentMatchers.any(Segment.class));
+        .removeElement(any(Segment.class));
+  }
+
+  @Test
+  public void testReplacement() {
+    command.execute();
+    command.unexecute();
+    command.execute();
+    verify(replacementLog, times(1)).replaceElement(any(), any());
   }
 }

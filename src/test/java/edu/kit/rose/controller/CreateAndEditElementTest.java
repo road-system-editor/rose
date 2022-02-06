@@ -99,7 +99,6 @@ public class CreateAndEditElementTest {
     assertEquals(0, this.roadSystem.getElements().getSize());
 
     // redo all
-
     applicationController.redo();
     segment = findAnySegmentOfType(this.roadSystem, SegmentType.BASE);
     assertNotNull(segment);

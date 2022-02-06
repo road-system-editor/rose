@@ -1,11 +1,12 @@
 package edu.kit.rose.controller.roadsystem;
 
 import edu.kit.rose.controller.command.ChangeCommand;
+import edu.kit.rose.controller.commons.ReplacementLog;
 import edu.kit.rose.infrastructure.Movement;
 import edu.kit.rose.model.Project;
-import edu.kit.rose.model.roadsystem.elements.Group;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
+import java.util.Objects;
 
 /**
  * Encapsulates the functionality of creating a street segment
@@ -15,6 +16,7 @@ public class CreateStreetSegmentCommand implements ChangeCommand {
 
   private final Project project;
   private final SegmentType segmentType;
+  private final ReplacementLog replacementLog;
   private Segment segment;
 
   /**
@@ -23,16 +25,23 @@ public class CreateStreetSegmentCommand implements ChangeCommand {
    * @param project     the model facade to execute {@link CreateStreetSegmentCommand} on
    * @param segmentType the type of the segment to create
    */
-  public CreateStreetSegmentCommand(Project project, SegmentType segmentType) {
+  public CreateStreetSegmentCommand(ReplacementLog replacementLog, Project project,
+                                    SegmentType segmentType) {
+    this.replacementLog = Objects.requireNonNull(replacementLog);
     this.project = project;
     this.segmentType = segmentType;
   }
 
   @Override
   public void execute() {
+    var oldSegment = this.segment;
     this.segment = project.getRoadSystem().createSegment(this.segmentType);
     this.segment.move(new Movement(this.project.getZoomSetting().getCenterOfView().getX(),
             this.project.getZoomSetting().getCenterOfView().getY()));
+
+    if (oldSegment != null) {
+      this.replacementLog.replaceElement(oldSegment, this.segment);
+    }
   }
 
   @Override

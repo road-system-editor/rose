@@ -2,6 +2,7 @@ package edu.kit.rose.controller.roadsystem;
 
 import edu.kit.rose.controller.command.ChangeCommandBuffer;
 import edu.kit.rose.controller.command.RoseChangeCommandBuffer;
+import edu.kit.rose.controller.commons.ReplacementLog;
 import edu.kit.rose.controller.commons.StorageLock;
 import edu.kit.rose.controller.navigation.Navigator;
 import edu.kit.rose.controller.selection.SelectionBuffer;
@@ -58,12 +59,14 @@ public class RoseRoadSystemControllerTest {
     ChangeCommandBuffer changeCommandBuffer = new RoseChangeCommandBuffer();
     StorageLock storageLock = Mockito.mock(StorageLock.class);
     Navigator navigator = Mockito.mock(Navigator.class);
+    ReplacementLog replacementLog = Mockito.mock(ReplacementLog.class);
     roadSystemController = new RoseRoadSystemController(
         changeCommandBuffer,
         storageLock,
         navigator,
         selectionBuffer,
-        project);
+        project,
+        replacementLog);
   }
 
   @Test

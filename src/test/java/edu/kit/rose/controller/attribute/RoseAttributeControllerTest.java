@@ -2,6 +2,7 @@ package edu.kit.rose.controller.attribute;
 
 import edu.kit.rose.controller.command.ChangeCommandBuffer;
 import edu.kit.rose.controller.command.RoseChangeCommandBuffer;
+import edu.kit.rose.controller.commons.ReplacementLog;
 import edu.kit.rose.controller.commons.StorageLock;
 import edu.kit.rose.controller.navigation.Navigator;
 import edu.kit.rose.controller.selection.SelectionBuffer;
@@ -42,7 +43,8 @@ public class RoseAttributeControllerTest {
         Mockito.mock(StorageLock.class),
         Mockito.mock(Navigator.class),
         modelFactory.createProject(),
-        applicationDataSystem);
+        applicationDataSystem,
+        new ReplacementLog());
     accessor = new AttributeAccessor<>(
         AttributeType.LANE_COUNT,
         () -> testInt,

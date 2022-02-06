@@ -2,6 +2,7 @@ package edu.kit.rose.controller.roadsystem;
 
 import edu.kit.rose.controller.command.ChangeCommandBuffer;
 import edu.kit.rose.controller.commons.Controller;
+import edu.kit.rose.controller.commons.ReplacementLog;
 import edu.kit.rose.controller.commons.StorageLock;
 import edu.kit.rose.controller.navigation.Navigator;
 import edu.kit.rose.controller.selection.SelectionBuffer;
@@ -40,6 +41,7 @@ public class RoseRoadSystemController extends Controller
    * The model facade for project specific data.
    */
   private final Project project;
+  private final ReplacementLog replacementLog;
 
   private Position initialSegmentDragPosition;
   private Connector dragConnector;
@@ -58,11 +60,13 @@ public class RoseRoadSystemController extends Controller
    */
   public RoseRoadSystemController(ChangeCommandBuffer changeCommandBuffer, StorageLock storageLock,
                                   Navigator navigator, SelectionBuffer selectionBuffer,
-                                  Project project) {
+                                  Project project,
+                                  ReplacementLog replacementLog) {
     super(storageLock, navigator);
     this.changeCommandBuffer = changeCommandBuffer;
     this.selectionBuffer = selectionBuffer;
     this.project = project;
+    this.replacementLog = replacementLog;
 
     observers = new HashSet<>();
   }
@@ -80,7 +84,7 @@ public class RoseRoadSystemController extends Controller
   @Override
   public void createStreetSegment(SegmentType segmentType) {
     CreateStreetSegmentCommand createStreetSegmentCommand
-        = new CreateStreetSegmentCommand(this.project, segmentType);
+        = new CreateStreetSegmentCommand(this.replacementLog, this.project, segmentType);
 
     changeCommandBuffer.addAndExecuteCommand(createStreetSegmentCommand);
   }

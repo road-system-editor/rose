@@ -1,6 +1,7 @@
 package edu.kit.rose.controller.attribute;
 
 import edu.kit.rose.controller.command.ChangeCommandBuffer;
+import edu.kit.rose.controller.commons.ReplacementLog;
 import edu.kit.rose.controller.commons.StorageLock;
 import edu.kit.rose.controller.navigation.Navigator;
 import edu.kit.rose.controller.selection.SelectionBuffer;
@@ -10,7 +11,6 @@ import edu.kit.rose.model.ApplicationDataSystem;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
-import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
@@ -64,7 +64,8 @@ public class RoseAttributeControllerBulkEditTest {
         Mockito.mock(StorageLock.class),
         Mockito.mock(Navigator.class),
         Mockito.mock(Project.class),
-        Mockito.mock(ApplicationDataSystem.class));
+        Mockito.mock(ApplicationDataSystem.class),
+        Mockito.mock(ReplacementLog.class));
 
     SortedBox<AttributeAccessor<?>> shared = controller.getBulkEditAccessors();
     Assertions.assertEquals(2, shared.getSize());

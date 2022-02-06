@@ -68,7 +68,7 @@ public abstract class SegmentView<T extends Segment> extends Pane
     this.heightProperty().addListener(e -> draw());
 
     //TODO: fix for base segments
-    this.setOnMousePressed(mouseEvent -> {
+    /*this.setOnMousePressed(mouseEvent -> {
       //posOnSourceX = mouseEvent.getX();
       //posOnSourceY = mouseEvent.getY();
       startPos = localToParent(mouseEvent.getX(), mouseEvent.getY());
@@ -77,13 +77,13 @@ public abstract class SegmentView<T extends Segment> extends Pane
     this.setOnDragDetected(mouseEvent -> startFullDrag());
 
     this.setOnMouseDragged(mouseEvent -> {
-      /*System.out.print("\nX: ");
+      System.out.print("\nX: ");
       System.out.print(this.getLayoutX() + mouseEvent.getX() - posOnSourceX);
       System.out.print("\nY: ");
       System.out.print(this.getLayoutY() + mouseEvent.getY() - posOnSourceY);
 
       this.setLayoutX(this.getLayoutX() + mouseEvent.getX() - posOnSourceX);
-      this.setLayoutY(this.getLayoutY() + mouseEvent.getY() - posOnSourceY);*/
+      this.setLayoutY(this.getLayoutY() + mouseEvent.getY() - posOnSourceY);
       var currentPos = localToParent(mouseEvent.getX(), mouseEvent.getY());
       var movement = new Movement(currentPos.getX() - startPos.getX(),
           currentPos.getY() - startPos.getY());
@@ -95,13 +95,13 @@ public abstract class SegmentView<T extends Segment> extends Pane
     });
 
     this.setOnMouseDragReleased(mouseEvent -> {
-      /*var currentPos = localToParent(mouseEvent.getX(), mouseEvent.getY());
+      var currentPos = localToParent(mouseEvent.getX(), mouseEvent.getY());
       var movement = new Movement(
           (int) Math.round(currentPos.getX() - startPos.getX()),
           (int) Math.round(currentPos.getY() - startPos.getY())
       );
-      segment.move(movement);*/
-    });
+      segment.move(movement);
+    });*/
   }
 
   private boolean canBeMoved(Movement movement) {

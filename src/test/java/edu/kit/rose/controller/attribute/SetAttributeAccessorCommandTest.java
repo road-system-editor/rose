@@ -31,15 +31,14 @@ public class SetAttributeAccessorCommandTest {
 
   @Test
   void testConstructor() {
-    Assertions.assertThrows(IllegalArgumentException.class,
-        () -> new SetAttributeAccessorCommand<>(null, null,
-            false, true));
+    Assertions.assertThrows(NullPointerException.class, () -> new SetAttributeAccessorCommand<>(
+            null, false, true));
   }
 
   @Test
   void testExecute() {
     SetAttributeAccessorCommand<Integer> setAttributeAccessorCommand =
-        new SetAttributeAccessorCommand<>(null, accessor, testInt, SET_VALUE);
+        new SetAttributeAccessorCommand<>(accessor, testInt, SET_VALUE);
     setAttributeAccessorCommand.execute();
     Assertions.assertEquals(SET_VALUE, testInt);
   }
@@ -47,7 +46,7 @@ public class SetAttributeAccessorCommandTest {
   @Test
   void testUnexecute() {
     SetAttributeAccessorCommand<Integer> setAttributeAccessorCommand =
-        new SetAttributeAccessorCommand<>(null, accessor, testInt, SET_VALUE);
+        new SetAttributeAccessorCommand<>(accessor, testInt, SET_VALUE);
     setAttributeAccessorCommand.execute();
     setAttributeAccessorCommand.unexecute();
     Assertions.assertEquals(testInt, INITIAL_VALUE);

@@ -1,6 +1,7 @@
 package edu.kit.rose.controller.roadsystem;
 
 import edu.kit.rose.controller.command.ChangeCommandBuffer;
+import edu.kit.rose.controller.command.RoseChangeCommandBuffer;
 import edu.kit.rose.controller.commons.StorageLock;
 import edu.kit.rose.controller.navigation.Navigator;
 import edu.kit.rose.controller.selection.SelectionBuffer;
@@ -39,7 +40,6 @@ public class RoseRoadSystemControllerTest {
   private RoadSystem roadSystem;
 
   private RoadSystemController roadSystemController;
-  private ZoomSetting zoomSetting;
 
   /**
    * Sets up mock objects.
@@ -49,13 +49,13 @@ public class RoseRoadSystemControllerTest {
     selectionBuffer = Mockito.mock(SelectionBuffer.class);
     project = Mockito.mock(Project.class);
     roadSystem = Mockito.mock(RoadSystem.class);
-    zoomSetting = Mockito.mock(ZoomSetting.class);
+    var zoomSetting = Mockito.mock(ZoomSetting.class);
 
     Mockito.when(zoomSetting.getCenterOfView()).thenReturn(new Position(0, 0));
     Mockito.when(project.getZoomSetting()).thenReturn(zoomSetting);
     Mockito.when(project.getRoadSystem()).thenReturn(roadSystem);
 
-    ChangeCommandBuffer changeCommandBuffer = Mockito.mock(ChangeCommandBuffer.class);
+    ChangeCommandBuffer changeCommandBuffer = new RoseChangeCommandBuffer();
     StorageLock storageLock = Mockito.mock(StorageLock.class);
     Navigator navigator = Mockito.mock(Navigator.class);
     roadSystemController = new RoseRoadSystemController(
@@ -104,19 +104,13 @@ public class RoseRoadSystemControllerTest {
 
   @Test
   public void testCreateStreetSegment() {
-
-    AtomicReference<Boolean> called = new AtomicReference<>(false);
-
     RoadSystem roadSystem = Mockito.mock(RoadSystem.class);
     Mockito.when(project.getRoadSystem()).thenReturn(roadSystem);
-    Mockito.doAnswer(invocation -> {
-      Assertions.assertEquals(SegmentType.BASE, invocation.getArgument(0));
-      called.set(true);
-      return new Base();
-    }).when(roadSystem).createSegment(Mockito.any(SegmentType.class));
+    Mockito.when(roadSystem.createSegment(SegmentType.BASE)).thenReturn(new Base());
 
     roadSystemController.createStreetSegment(SegmentType.BASE);
-    Assertions.assertTrue(called.get());
+    Mockito.verify(roadSystem, Mockito.times(1))
+        .createSegment(SegmentType.BASE);
   }
 
   @Test

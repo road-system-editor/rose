@@ -14,7 +14,6 @@ import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -57,7 +56,7 @@ public class RoseAttributeController extends Controller implements AttributeCont
       return;
     }
 
-    var command  = new SetAttributeAccessorCommand<>(project, accessor,
+    var command  = new SetAttributeAccessorCommand<>(accessor,
         accessor.getValue(), value);
     changeCommandBuffer.addAndExecuteCommand(command);
   }

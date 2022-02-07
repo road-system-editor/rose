@@ -6,6 +6,9 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.layout.Background?>
 <fx:root xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml" type="Pane"
          fx:id="parentContainer">
@@ -20,13 +23,27 @@
             <ColumnConstraints percentWidth="100"/>
         </columnConstraints>
         <ListView GridPane.columnIndex="0" GridPane.rowIndex="0" fx:id="criteriaList"/>
-        <HBox GridPane.columnIndex="0" GridPane.rowIndex="1">
-            <Button fx:id="newButton"/>
-            <Button fx:id="exportButton"/>
-            <Button fx:id="importButton"/>
-            <Button fx:id="deleteAllButton"/>
-        </HBox>
-
+        <VBox GridPane.columnIndex="0" GridPane.rowIndex="1">
+            <HBox style="-fx-spacing: 5">
+                <Button fx:id="newButton">
+                    <prefWidth>
+                        100
+                    </prefWidth>
+                    <font>
+                        <Font size = "14" />
+                    </font>
+                    <background>
+                        <!--<Background  = "black"/>-->
+                    </background>
+                </Button>
+                <Button fx:id="exportButton">
+                </Button>
+                <Button fx:id="importButton">
+                </Button>
+            </HBox>
+            <Button fx:id="deleteAllButton">
+            </Button>
+        </VBox>
     </GridPane>
 
 

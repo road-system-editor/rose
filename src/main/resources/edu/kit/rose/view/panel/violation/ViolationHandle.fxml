@@ -5,7 +5,8 @@
 <fx:root xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml" type="Pane">
     <HBox>
-        <Label fx:id="criterion" prefHeight="30" prefWidth="100"/>
+        <Label fx:id="criterion" prefHeight="30" prefWidth="100"
+               maxWidth = "100" style="-fx-wrap-text: true; -fx-label-padding: 0 5 0 0"/>
         <Label fx:id="segments" prefHeight="30" prefWidth="250"/>
     </HBox>
 

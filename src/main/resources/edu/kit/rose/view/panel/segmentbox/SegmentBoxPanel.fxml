@@ -7,6 +7,8 @@
          type="Pane"
          fx:id="parentContainer">
     <AnchorPane
+            style="-fx-border-style: hidden solid solid hidden; -fx-border-width: 1;
+             -fx-border-color: black;"
             prefWidth="${parentContainer.width}" prefHeight="${parentContainer.height}">
         <ListView
                 fx:id="blueprintListView"

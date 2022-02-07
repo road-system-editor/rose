@@ -1,16 +1,19 @@
 package edu.kit.rose.controller.hierarchy;
 
 import edu.kit.rose.controller.command.ChangeCommand;
+import edu.kit.rose.controller.commons.ReplacementLog;
 import edu.kit.rose.infrastructure.Box;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Group;
+import java.util.Objects;
 
 /**
  * Encapsulates the functionality of adding an {@link Element} to a {@link Group}
  * and makes it changeable.
  */
 public class AddElementToGroupCommand implements ChangeCommand {
+  private final ReplacementLog replacementLog;
   private final Project project;
   private final Element element;
   private final Group group;
@@ -19,39 +22,52 @@ public class AddElementToGroupCommand implements ChangeCommand {
   /**
    * Creates a new {@link AddElementToGroupCommand} that adds an {@link Element} to a {@link Group}.
    *
+   * @param replacementLog the replacement log to look up current element versions in.
    * @param project the model facade for project data
    * @param element the element to add
    * @param group   the group to add an element to
    */
-  public AddElementToGroupCommand(Project project, Element element, Group group) {
-    this.project = project;
-    this.element = element;
-    this.group = group;
+  public AddElementToGroupCommand(ReplacementLog replacementLog, Project project, Element element,
+                                  Group group) {
+    this.replacementLog = Objects.requireNonNull(replacementLog);
+    this.project = Objects.requireNonNull(project);
+    this.element = Objects.requireNonNull(element);
+    this.group = Objects.requireNonNull(group);
     this.parent = null;
   }
 
   @Override
   public void execute() {
+    var currentElement = this.replacementLog.getCurrentVersion(this.element);
+
+    // find parent and remove element
     Box<Element> elements = this.project.getRoadSystem().getElements();
     if (elements != null) {
       for (Element auxElement : elements) {
         if (auxElement.isContainer()) {
           Group auxGroup = (Group) auxElement;
-          if (auxGroup.getElements().contains(this.element)) {
-            auxGroup.removeElement(this.element);
+          if (auxGroup.getElements().contains(currentElement)) {
+            auxGroup.removeElement(currentElement);
             this.parent = auxGroup;
           }
         }
       }
     }
-    this.group.addElement(this.element);
+
+    // add element to new group
+    var currentGroup = this.replacementLog.getCurrentVersion(this.group);
+    currentGroup.addElement(currentElement);
   }
 
   @Override
   public void unexecute() {
-    this.group.removeElement(element);
-    if (this.parent != null) {
-      this.parent.addElement(this.element);
+    var currentGroup = this.replacementLog.getCurrentVersion(this.group);
+    var currentElement = this.replacementLog.getCurrentVersion(this.element);
+    var currentParent = this.replacementLog.getCurrentVersion(this.parent);
+
+    currentGroup.removeElement(currentElement);
+    if (currentParent != null) {
+      currentParent.addElement(currentElement);
     }
   }
 }

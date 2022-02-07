@@ -74,7 +74,8 @@ public class RoseHierarchyController extends Controller
 
   @Override
   public void addElementToGroup(Element element, Group group) {
-    ChangeCommand addElementCommand = new AddElementToGroupCommand(this.project, element, group);
+    ChangeCommand addElementCommand = new AddElementToGroupCommand(
+        this.replacementLog, this.project, element, group);
     this.changeCommandBuffer.addAndExecuteCommand(addElementCommand);
   }
 

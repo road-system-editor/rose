@@ -57,7 +57,7 @@ class RoseHierarchyControllerTest {
     when(this.project.getRoadSystem()).thenReturn(this.roadSystem);
     this.controller = new RoseHierarchyController(new RoseStorageLock(),
             new RoseChangeCommandBuffer(), new RoseSelectionBuffer(), this.project,
-            mock(Navigator.class), mock(ReplacementLog.class));
+            mock(Navigator.class), new ReplacementLog());
 
     this.group = new Group() {
       @Override

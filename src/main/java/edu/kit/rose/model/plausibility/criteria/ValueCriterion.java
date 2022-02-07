@@ -114,9 +114,11 @@ class ValueCriterion extends RoseSetObservable<SegmentType, PlausibilityCriterio
         for (AttributeAccessor<?> accessor : accessors) {
           if (accessor.getAttributeType().equals(this.attributeType)) {
             if (!checkValue(accessor)) {
-              Violation violation = new Violation(this, List.of((Segment) unit));
-              this.violationManager.addViolation(violation);
-              this.elementViolationMap.put(unit, violation);
+              if (!this.elementViolationMap.containsKey(unit)) {
+                Violation violation = new Violation(this, List.of((Segment) unit));
+                this.violationManager.addViolation(violation);
+                this.elementViolationMap.put(unit, violation);
+              }
             } else if (elementViolationMap.containsKey(unit)) {
               this.violationManager.removeViolation(elementViolationMap.get(unit));
               this.elementViolationMap.remove(unit);

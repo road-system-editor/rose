@@ -11,6 +11,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
+import javafx.beans.property.ReadOnlyListProperty;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
@@ -28,7 +30,6 @@ import javafx.scene.shape.Line;
  */
 public class Grid extends Pane {
 
-  private static final int LOWER_GRID_BORDER = 0;
   private static final int HEIGHT = 3000;
   private static final int WIDTH = 3000;
   private static final int HORIZONTAL_LINE_SPACING = 5;
@@ -37,6 +38,7 @@ public class Grid extends Pane {
   private static final Color LINE_COLOR = Color.gray(0.7);
   private static final float LINE_WIDTH = 0.5f;
 
+  private final List<SegmentView<?>> segmentViews = new LinkedList<>();
   private SelectionBox selectionBox;
   private BiConsumer<Position, Position> onAreaSelectedEventHandler;
   private List<Node> lines;
@@ -47,6 +49,37 @@ public class Grid extends Pane {
   public Grid() {
     init();
     setEventListeners();
+  }
+
+  /**
+   * Sets the event handler that gets called when an area of the {@link Grid} is selected.
+   *
+   * @param eventHandler the area selected event handler
+   */
+  public void setOnAreaSelected(BiConsumer<Position, Position> eventHandler) {
+    this.onAreaSelectedEventHandler = eventHandler;
+  }
+
+  /**
+   * Adds a segment view and displays it on the grid.
+   *
+   * @param segmentView the segment view to add
+   */
+  public void addSegmentView(SegmentView<? extends Segment> segmentView) {
+    if (!segmentViews.contains(segmentView)) {
+      segmentViews.add(segmentView);
+      getChildren().add(segmentView);
+    }
+  }
+
+  /**
+   * Removes a segment view from the grid.
+   *
+   * @param segmentView the segment view to remove
+   */
+  public void removeSegmentView(SegmentView<? extends Segment> segmentView) {
+    segmentViews.remove(segmentView);
+    getChildren().remove(segmentView);
   }
 
   private void init() {
@@ -111,77 +144,26 @@ public class Grid extends Pane {
   }
 
   private void deselectAllSegmentsViews(MouseEvent mouseEvent) {
-    getSegmentViews().forEach(s -> {
+    segmentViews.forEach(s -> {
       s.setDrawAsSelected(false);
       s.draw();
     });
     mouseEvent.consume();
   }
 
+  //TODO: replace with reading from controller, as this only works for bottom right
   private void drawSegmentViewsAsSelected() {
-    getSegmentViews()
-        .forEach(segmentView -> {
-          var centerX = segmentView.getSegment().getCenter().getX();
-          var centerY = segmentView.getSegment().getCenter().getY();
-          segmentView.setDrawAsSelected(
-              centerX >= selectionBox.getStartingPoint().getX()
-                  && centerX <= selectionBox.getLastMousePosition().getX()
-                  && centerY >= selectionBox.getStartingPoint().getY()
-                  && centerY <= selectionBox.getLastMousePosition().getY()
-          );
-          segmentView.draw();
-        });
-  }
-
-  private List<SegmentView<?>> getSegmentViews() {
-    return getChildren().stream()
-        .filter(child -> !lines.contains(child) && child != selectionBox)
-        .map(child -> {
-          try {
-            return (SegmentView<?>) child;
-          } catch (ClassCastException e) {
-            throw new IllegalStateException("Grids may only hold segment views");
-          }
-        })
-        .collect(Collectors.toList());
-  }
-
-  private double getCoordinateInBorder(double coordinate, double upperBorder) {
-    if (coordinate < LOWER_GRID_BORDER) {
-      return LOWER_GRID_BORDER;
-    } else {
-      return Math.min(coordinate, upperBorder);
-    }
-  }
-
-  /**
-   * Sets the event handler that gets called when an area of the {@link Grid} is selected.
-   *
-   * @param eventHandler the area selected event handler
-   */
-  public void setOnAreaSelected(BiConsumer<Position, Position> eventHandler) {
-    this.onAreaSelectedEventHandler = eventHandler;
-  }
-
-
-  /**
-   * Adds a segment view and displays it on the grid.
-   *
-   * @param segmentView the segment view to add
-   */
-  public void addSegmentView(SegmentView<? extends Segment> segmentView) {
-    if (!getChildren().contains(segmentView)) {
-      getChildren().add(segmentView);
-    }
-  }
-
-  /**
-   * Removes a segment view from the grid.
-   *
-   * @param segmentView the segment view to remove
-   */
-  public void removeSegmentView(SegmentView<? extends Segment> segmentView) {
-    getChildren().remove(segmentView);
+    segmentViews.forEach(segmentView -> {
+      var centerX = segmentView.getSegment().getCenter().getX();
+      var centerY = segmentView.getSegment().getCenter().getY();
+      segmentView.setDrawAsSelected(
+          centerX >= selectionBox.getStartingPoint().getX()
+              && centerX <= selectionBox.getLastMousePosition().getX()
+              && centerY >= selectionBox.getStartingPoint().getY()
+              && centerY <= selectionBox.getLastMousePosition().getY()
+      );
+      segmentView.draw();
+    });
   }
 
   private Collection<Line> getLines() {

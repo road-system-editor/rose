@@ -95,11 +95,12 @@ public class CriteriaManager extends RoseSetObservable<PlausibilityCriterion, Cr
    * Creates a new {@link CompatibilityCriterion}.
    *
    */
-  public void createCompatibilityCriterion() {
-    PlausibilityCriterion newCriteria = this.criterionFactory.createCompatibilityCriterion();
+  public CompatibilityCriterion createCompatibilityCriterion() {
+    CompatibilityCriterion newCriteria = this.criterionFactory.createCompatibilityCriterion();
 
     this.criterion.add(newCriteria);
     notifyAdditionToSubscribers(newCriteria);
+    return newCriteria;
   }
 
   /**

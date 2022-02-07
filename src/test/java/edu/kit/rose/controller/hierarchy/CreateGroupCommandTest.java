@@ -1,5 +1,6 @@
 package edu.kit.rose.controller.hierarchy;
 
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
@@ -100,7 +101,7 @@ class CreateGroupCommandTest {
     doAnswer(e -> this.roadElements.remove((Element) e.getArgument(0)))
             .when(roadSystem).removeElement(any(Element.class));
 
-    this.replacementLog = mock(ReplacementLog.class);
+    this.replacementLog = new ReplacementLog();
     this.command = new CreateGroupCommand(
         this.replacementLog,
         project,
@@ -146,6 +147,52 @@ class CreateGroupCommandTest {
     command.unexecute();
     command.execute();
 
-    verify(replacementLog, times(1)).replaceElement(group, newGroup);
+    assertSame(newGroup, replacementLog.getCurrentVersion(group));
+  }
+
+  /**
+   * Tests whether undo considers replacements when adding the contained elements back to the
+   * parent.
+   */
+  @Test
+  public void testConsidersReplacements() {
+    // simulate that parent1 has been replaced with parentReplacement1
+    var parentReplacement1 = new Group();
+    parentReplacement1.addElement(element1);
+    simulateReplacement(parent1, parentReplacement1);
+
+    command.execute();
+
+    Assertions.assertTrue(this.group.getElements().contains(this.element1));
+    Assertions.assertTrue(this.group.getElements().contains(this.element2));
+
+    Assertions.assertFalse(parentReplacement1.getElements().contains(this.element1));
+    Assertions.assertFalse(this.parent2.getElements().contains(this.element2));
+
+    // simulate that element1 has been replaced with elementReplacement1 and that the group
+    // itself has been replaced with groupReplacement
+    var elementReplacement1 = new Base();
+    simulateReplacement(element1, elementReplacement1);
+    var groupReplacement = new Group();
+    simulateReplacement(group, groupReplacement);
+
+    command.unexecute();
+
+    Assertions.assertFalse(this.roadElements.contains(group));
+    Assertions.assertFalse(this.roadElements.contains(groupReplacement));
+
+    Assertions.assertTrue(parentReplacement1.getElements().contains(elementReplacement1));
+    Assertions.assertTrue(this.parent2.getElements().contains(this.element2));
+
+    command.execute();
+
+    Assertions.assertTrue(this.newGroup.getElements().contains(elementReplacement1));
+  }
+
+  private void simulateReplacement(Element element, Element replacement) {
+    replacementLog.replaceElement(element, replacement);
+    if (this.roadElements.remove(element)) {
+      this.roadElements.add(replacement);
+    }
   }
 }

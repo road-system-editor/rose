@@ -45,7 +45,8 @@ public class CreateGroupCommand implements ChangeCommand {
     this.storeParentsForElements();
     this.removeChildrenFromParents();
     var oldGroup = this.group;
-    this.group = this.project.getRoadSystem().createGroup(this.elements);
+    var newElements = this.replacementLog.getCurrentVersions(this.elements);
+    this.group = this.project.getRoadSystem().createGroup(newElements);
     if (oldGroup != null) {
       this.replacementLog.replaceElement(oldGroup, this.group);
     }
@@ -54,7 +55,8 @@ public class CreateGroupCommand implements ChangeCommand {
   @Override
   public void unexecute() {
     this.addElementsBackToParent();
-    this.project.getRoadSystem().removeElement(this.group);
+    var currentGroup = this.replacementLog.getCurrentVersion(this.group);
+    this.project.getRoadSystem().removeElement(currentGroup);
   }
 
   /**
@@ -89,8 +91,11 @@ public class CreateGroupCommand implements ChangeCommand {
    */
   private void addElementsBackToParent() {
     for (var entry : this.parentMap.entrySet()) {
+      Group parent = this.replacementLog.getCurrentVersion(entry.getKey());
+
       for (Element element : entry.getValue()) {
-        entry.getKey().addElement(element);
+        Element child = this.replacementLog.getCurrentVersion(element);
+        parent.addElement(child);
       }
     }
   }
@@ -101,8 +106,10 @@ public class CreateGroupCommand implements ChangeCommand {
    */
   private void removeChildrenFromParents() {
     for (var entry : this.parentMap.entrySet()) {
+      Group parent = this.replacementLog.getCurrentVersion(entry.getKey());
       for (Element element : entry.getValue()) {
-        entry.getKey().removeElement(element);
+        Element child = this.replacementLog.getCurrentVersion(element);
+        parent.removeElement(child);
       }
     }
   }

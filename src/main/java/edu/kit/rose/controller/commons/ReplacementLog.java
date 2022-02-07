@@ -1,9 +1,17 @@
 package edu.kit.rose.controller.commons;
 
+import edu.kit.rose.infrastructure.Box;
+import edu.kit.rose.infrastructure.RoseBox;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.elements.Element;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * The replacement log keeps track of new versions of {@link Element}s that are created through
@@ -24,6 +32,8 @@ public class ReplacementLog {
    * The old and new element must be of the same class.
    */
   public <T extends Element> void replaceElement(T oldElement, T newElement) {
+    Objects.requireNonNull(oldElement);
+    Objects.requireNonNull(newElement);
     if (oldElement.getClass() != newElement.getClass()) {
       throw new IllegalArgumentException("replacement must have elements of the same class!");
     }
@@ -43,6 +53,15 @@ public class ReplacementLog {
       current = (T) replacements.get(current);
     }
     return current;
+  }
+
+  /**
+   * Finds the current versions of the given elements, considering all known replacements.
+   */
+  public <T extends Element> Set<T> getCurrentVersions(Set<T> elements) {
+    Objects.requireNonNull(elements);
+
+    return elements.stream().map(this::getCurrentVersion).collect(Collectors.toSet());
   }
 
   /**

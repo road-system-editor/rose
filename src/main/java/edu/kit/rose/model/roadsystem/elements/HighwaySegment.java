@@ -75,6 +75,10 @@ public abstract class HighwaySegment
     this.speedLimitAccessor = new AttributeAccessor<>(
         AttributeType.MAX_SPEED, this::getMaxSpeed, this::setMaxSpeed);
 
+    init();
+  }
+
+  private void init() {
     this.attributeAccessors.addAll(List.of(
         this.nameAccessor,
         this.commentAccessor,
@@ -85,10 +89,6 @@ public abstract class HighwaySegment
         this.speedLimitAccessor
     ));
 
-    init();
-  }
-
-  private void init() {
     List<AttributeAccessor<?>> entryAttributesList = List.of(lengthAccessor);
 
     List<AttributeAccessor<?>> exitAttributesList = List.of(lengthAccessor);

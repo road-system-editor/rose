@@ -22,12 +22,9 @@ public class CriteriaManager extends RoseSetObservable<PlausibilityCriterion, Cr
         implements SetObservable<PlausibilityCriterion, CriteriaManager>,
         UnitObserver<PlausibilityCriterion> {
 
-  private final CriterionFactory criterionFactory;
   private final ArrayList<PlausibilityCriterion> criteria;
   private ViolationManager violationManager;
-  private RoadSystem roadSystem;
   private CriterionFactory criterionFactory;
-  private final ArrayList<PlausibilityCriterion> criterion;
 
   /**
    * Constructor.
@@ -132,12 +129,14 @@ public class CriteriaManager extends RoseSetObservable<PlausibilityCriterion, Cr
    * @param type the type of {@link PlausibilityCriterion} to remove.
    */
   public void removeAllCriteriaOfType(PlausibilityCriterionType type) {
+    ArrayList<PlausibilityCriterion> toRemove = new ArrayList<>();
     for (PlausibilityCriterion criteria : this.criteria) {
       if (criteria.getType() == type) {
         notifyRemovalToSubscribers(criteria);
-        this.criteria.remove(criteria);
+        toRemove.add(criteria);
       }
     }
+    this.criteria.removeAll(toRemove);
   }
 
   @Override

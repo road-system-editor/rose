@@ -7,6 +7,7 @@ module edu.kit.rose.entwurf {
   requires com.fasterxml.jackson.databind;
   requires com.fasterxml.jackson.dataformat.yaml;
   requires org.jgrapht.core;
+  requires com.google.common;
 
   opens edu.kit.rose.model to com.fasterxml.jackson.databind;
   opens edu.kit.rose.model.plausibility.criteria to com.fasterxml.jackson.databind;

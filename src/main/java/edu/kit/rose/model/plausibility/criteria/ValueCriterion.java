@@ -38,9 +38,8 @@ class ValueCriterion extends RoseSetObservable<SegmentType, PlausibilityCriterio
   private final AttributeType attributeType;
   private final Range<Double> range;
   private final Set<SegmentType> segmentTypes;
-  private final ViolationManager violationManager;
-  private final HashMap<Element, Violation> elementViolationMap;
   private ViolationManager violationManager;
+  private final HashMap<Element, Violation> elementViolationMap;
 
 
   /**

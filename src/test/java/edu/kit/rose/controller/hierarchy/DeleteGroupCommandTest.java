@@ -167,7 +167,7 @@ class DeleteGroupCommandTest {
   }
 
   private Entrance element2() {
-    Element element = findElementByName(this.roadSystem, ELEMENT_1_NAME);
+    Element element = findElementByName(this.roadSystem, ELEMENT_2_NAME);
     assertTrue(element == null || !element.isContainer());
     Segment segment = (Segment) element;
     assertTrue(segment == null || segment.getSegmentType() == SegmentType.ENTRANCE);

@@ -3,8 +3,7 @@ package edu.kit.rose.model.plausibility.criteria;
 import edu.kit.rose.infrastructure.Box;
 import edu.kit.rose.infrastructure.SetObservable;
 import edu.kit.rose.infrastructure.SetObserver;
-import edu.kit.rose.infrastructure.UnitObserver;
-import edu.kit.rose.model.roadsystem.attributes.AttributeType;
+import edu.kit.rose.model.plausibility.violation.ViolationManager;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
@@ -61,5 +60,12 @@ public interface PlausibilityCriterion extends
    */
   PlausibilityCriterionType getType();
 
-
+  /**
+   * Sets the {@link ViolationManager}
+   * this PlausibilityCriterion is going to use. Violations created by this criterion will be
+   * added to the violationManager.
+   *
+   * @param violationManager the violationManager.
+   */
+  void setViolationManager(ViolationManager violationManager);
 }

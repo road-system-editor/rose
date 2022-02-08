@@ -1,5 +1,8 @@
 package edu.kit.rose.infrastructure;
 
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
+
 /**
  * A Box is a read-only container that contains unsorted Objects of the Type T.
  *
@@ -23,4 +26,12 @@ public interface Box<T> extends Iterable<T> {
    */
   boolean contains(T t);
 
+  /**
+   * Creates a {@link Stream} that can iterate through the content of this Box.
+   *
+   * @return the created stream.
+   */
+  default Stream<T> stream() {
+    return StreamSupport.stream(spliterator(), false);
+  }
 }

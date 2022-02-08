@@ -38,8 +38,8 @@ class ValueCriterion extends RoseSetObservable<SegmentType, PlausibilityCriterio
   private final AttributeType attributeType;
   private final Range<Double> range;
   private final Set<SegmentType> segmentTypes;
-  private final ViolationManager violationManager;
   private final HashMap<Element, Violation> elementViolationMap;
+  private ViolationManager violationManager;
 
 
   /**
@@ -79,6 +79,11 @@ class ValueCriterion extends RoseSetObservable<SegmentType, PlausibilityCriterio
 
   public PlausibilityCriterionType getType() {
     return PlausibilityCriterionType.VALUE;
+  }
+
+  @Override
+  public void setViolationManager(ViolationManager violationManager) {
+    this.violationManager = violationManager;
   }
 
   @Override
@@ -132,7 +137,7 @@ class ValueCriterion extends RoseSetObservable<SegmentType, PlausibilityCriterio
     this.elementViolationMap.remove(unit);
   }
 
-  private boolean checkValue(AttributeAccessor accessor) {
+  private boolean checkValue(AttributeAccessor<?> accessor) {
     if (accessor.getAttributeType().equals(this.attributeType)) {
       switch (accessor.getAttributeType().getDataType()) {
         case INTEGER:

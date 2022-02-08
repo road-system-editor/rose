@@ -1,5 +1,8 @@
 package edu.kit.rose.infrastructure;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -53,6 +56,13 @@ public class RoseSortedBoxTest {
   public void testContains() {
     testArrayList.forEach(i -> Assertions.assertTrue(sortedBox.contains(i)));
     Assertions.assertFalse(sortedBox.contains(numberOfElements));
+  }
+
+  @Test
+  public void testStream() {
+    List<Integer> expected = List.of(0, 1, 4, 9, 16, 25, 36, 49, 64, 81);
+    List<Integer> actual = sortedBox.stream().map(x -> x * x).toList();
+    assertEquals(expected, actual);
   }
 
 }

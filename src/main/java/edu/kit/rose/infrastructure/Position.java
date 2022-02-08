@@ -1,5 +1,7 @@
 package edu.kit.rose.infrastructure;
 
+import java.util.Objects;
+
 /**
  * A Position in a two Dimensional Plane.
  */
@@ -77,13 +79,23 @@ public class Position {
         this.getY() + translation.getY());
   }
 
-  /**
-   * Returns a scalar multiplied version of the current {@link Position}.
-   *
-   * @param scalar the scalar to apply to the current {@link Position}
-   * @return the scalar multiplied {@link Position}
-   */
-  public Position scalarMultiply(int scalar) {
-    return new Position(this.getX() * scalar, this.getY() * scalar);
+  @Override
+  public boolean equals(Object obj) {
+    if (getClass() != obj.getClass()) {
+      return false;
+    }
+
+    Position other = (Position) obj;
+    return getX() == other.getX() && getY() == other.getY();
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(getX(), getY());
+  }
+
+  @Override
+  public String toString() {
+    return String.format("Position [x=%d, y=%d]", getX(), getY());
   }
 }

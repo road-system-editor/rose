@@ -9,7 +9,8 @@ import java.io.File;
  */
 class SumoExportStrategy extends ExportStrategy {
   @Override
-  void exportToFile(File file) {
-
+  boolean exportToFile(File file) {
+    // TODO
+    return false;
   }
 }

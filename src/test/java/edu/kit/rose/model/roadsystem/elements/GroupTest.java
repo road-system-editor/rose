@@ -12,7 +12,6 @@ import org.mockito.Mockito;
  * Tests the {@link Group} class.
  */
 public class GroupTest {
-
   private Element element;
 
   private Segment segment;
@@ -28,11 +27,11 @@ public class GroupTest {
     Group g = new Group();
 
     g.addElement(element);
-    Assertions.assertEquals(element, g.getElements().get(0));
+    Assertions.assertSame(element, g.getElements().get(0));
     Assertions.assertEquals(1, g.getElements().getSize());
 
     g.addElement(element);
-    Assertions.assertEquals(element, g.getElements().get(0));
+    Assertions.assertSame(element, g.getElements().get(0));
     Assertions.assertEquals(1, g.getElements().getSize());
 
     Assertions.assertThrows(IllegalArgumentException.class, () -> g.addElement(null));

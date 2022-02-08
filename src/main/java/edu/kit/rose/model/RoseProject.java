@@ -49,12 +49,16 @@ class RoseProject implements Project {
   @Override
   public boolean exportToFile(ProjectFormat projectFormat, Path filePath) {
     File exportFile = filePath.toFile();
-    ExportStrategy strategy = switch (projectFormat) {
+    ExportStrategy strategy = getExportStrategyForFormat(projectFormat);
+    return strategy.exportToFile(exportFile);
+  }
+
+  private ExportStrategy getExportStrategyForFormat(ProjectFormat format) {
+    return switch (format) {
       case ROSE -> new RoseExportStrategy(this);
       case SUMO -> new SumoExportStrategy();
       case YAML -> new YamlExportStrategy(this);
     };
-    return strategy.exportToFile(exportFile);
   }
 
   @Override

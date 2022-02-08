@@ -11,7 +11,6 @@ import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.measurements.Measurement;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -44,10 +43,8 @@ public abstract class HighwaySegment
   private final AttributeAccessor<Integer> lengthAccessor;
   private int pitch = 0;
   private final AttributeAccessor<Integer> slopeAccessor;
-  private int nrOfEntryLanes = 1;
-  private final AttributeAccessor<Integer> nrOfEntryLanesAccessor;
-  private int nrOfExitLanes = 1;
-  private final AttributeAccessor<Integer> nrOfExitLanesAccessor;
+  private int laneCount = 1;
+  private final AttributeAccessor<Integer> laneCountAccessor;
   private boolean conurbation = false;
   private final AttributeAccessor<Boolean> conurbationAccessor;
   private int speedLimit = 100;
@@ -71,10 +68,8 @@ public abstract class HighwaySegment
         AttributeType.LENGTH, this::getLength, this::setLength);
     this.slopeAccessor = new AttributeAccessor<>(
         AttributeType.SLOPE, this::getSlope, this::setSlope);
-    this.nrOfEntryLanesAccessor = new AttributeAccessor<>(
-        AttributeType.LANE_COUNT, this::getNrOfEntryLanes, this::setNrOfEntryLanes);
-    this.nrOfExitLanesAccessor = new AttributeAccessor<>(
-        AttributeType.LANE_COUNT, this::getNrOfExitLanes, this::setNrOfExitLanes);
+    this.laneCountAccessor = new AttributeAccessor<>(
+        AttributeType.LANE_COUNT, this::getLaneCount, this::setLaneCount);
     this.conurbationAccessor = new AttributeAccessor<>(
         AttributeType.CONURBATION, this::getConurbation, this::setConurbation);
     this.speedLimitAccessor = new AttributeAccessor<>(
@@ -85,8 +80,7 @@ public abstract class HighwaySegment
         this.commentAccessor,
         this.lengthAccessor,
         this.slopeAccessor,
-        this.nrOfEntryLanesAccessor,
-        this.nrOfExitLanesAccessor,
+        this.laneCountAccessor,
         this.conurbationAccessor,
         this.speedLimitAccessor
     ));
@@ -95,11 +89,9 @@ public abstract class HighwaySegment
   }
 
   private void init() {
-    List<AttributeAccessor<?>> entryAttributesList =
-        Arrays.asList(lengthAccessor, nrOfEntryLanesAccessor);
+    List<AttributeAccessor<?>> entryAttributesList = List.of(lengthAccessor);
 
-    List<AttributeAccessor<?>> exitAttributesList =
-        Arrays.asList(lengthAccessor, nrOfExitLanesAccessor);
+    List<AttributeAccessor<?>> exitAttributesList = List.of(lengthAccessor);
 
     initConnectors(entryAttributesList, exitAttributesList);
   }
@@ -292,34 +284,17 @@ public abstract class HighwaySegment
   /**
    * Returns the {@link AttributeType#LANE_COUNT} for the entry connector.
    */
-  public int getNrOfEntryLanes() {
-    return nrOfEntryLanes;
+  public int getLaneCount() {
+    return this.laneCount;
   }
 
   /**
    * Sets the {@link AttributeType#LANE_COUNT} for the entry connector to the given value.
    */
-  public void setNrOfEntryLanes(int nrOfEntryLanes) {
-    this.nrOfEntryLanes = nrOfEntryLanes;
+  public void setLaneCount(int laneCount) {
+    this.laneCount = laneCount;
 
-    this.nrOfEntryLanesAccessor.notifySubscribers();
-    this.notifySubscribers();
-  }
-
-  /**
-   * Returns the {@link AttributeType#LANE_COUNT} for the exit connector.
-   */
-  public int getNrOfExitLanes() {
-    return nrOfExitLanes;
-  }
-
-  /**
-   * Sets the {@link AttributeType#LANE_COUNT} for the exit connector to the given value.
-   */
-  public void setNrOfExitLanes(int nrOfExitLanes) {
-    this.nrOfExitLanes = nrOfExitLanes;
-
-    this.nrOfExitLanesAccessor.notifySubscribers();
+    this.laneCountAccessor.notifySubscribers();
     this.notifySubscribers();
   }
 

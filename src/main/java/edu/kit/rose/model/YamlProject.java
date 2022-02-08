@@ -156,7 +156,7 @@ class YamlProject {
     private void populateAttributes() {
       this.name = segment.getName();
       this.length = segment.getLength();
-      this.laneCount = segment.getNrOfEntryLanes(); // TODO entry or exit lane count?
+      this.laneCount = segment.getLaneCount();
       this.slope = segment.getSlope();
       this.conurbation = convertConurbation(segment.getConurbation());
       this.speedLimit = convertSpeedLimit(segment.getMaxSpeed());

@@ -411,7 +411,7 @@ class SerializedProject {
     private void populateAttributes() {
       this.length = this.roseElement.getLength();
       this.slope = this.roseElement.getSlope();
-      this.laneCount = this.roseElement.getNrOfEntryLanes(); // TODO entry or exit?
+      this.laneCount = this.roseElement.getLaneCount();
       this.conurbation = this.roseElement.getConurbation();
       this.maxSpeed = this.roseElement.getMaxSpeed();
 

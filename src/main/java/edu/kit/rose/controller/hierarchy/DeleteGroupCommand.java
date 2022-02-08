@@ -1,6 +1,7 @@
 package edu.kit.rose.controller.hierarchy;
 
 import edu.kit.rose.controller.command.ChangeCommand;
+import edu.kit.rose.controller.commons.ReplacementLog;
 import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
@@ -15,6 +16,7 @@ import java.util.Iterator;
  * and makes it changeable.
  */
 public class DeleteGroupCommand implements ChangeCommand {
+  private final ReplacementLog replacementLog;
   private final Project project;
   private Group group;
   private SortedBox<AttributeAccessor<?>> accessors;
@@ -26,7 +28,8 @@ public class DeleteGroupCommand implements ChangeCommand {
    * @param project the model facade to execute the {@link DeleteGroupCommand} on
    * @param group   the group to be deleted
    */
-  public DeleteGroupCommand(Project project, Group group) {
+  public DeleteGroupCommand(ReplacementLog replacementLog, Project project, Group group) {
+    this.replacementLog = replacementLog;
     this.project = project;
     this.group = group;
   }

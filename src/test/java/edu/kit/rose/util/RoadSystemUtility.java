@@ -1,9 +1,11 @@
 package edu.kit.rose.util;
 
 import edu.kit.rose.model.roadsystem.RoadSystem;
+import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Group;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
+import java.util.Objects;
 
 /**
  * Utility methods that assist with verifying the correctness of {@link RoadSystem}s.
@@ -18,6 +20,21 @@ public final class RoadSystemUtility {
     for (var element : roadSystem.getElements()) {
       if (element.isContainer()) {
         return (Group) element;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Finds an element in a given road system by exactly matching name.
+   *
+   * @return any element with the given name from the given road system or {@code null} if such
+   *     an element does not exist.
+   */
+  public static Element findElementByName(RoadSystem roadSystem, String name) {
+    for (var element : roadSystem.getElements()) {
+      if (Objects.equals(name, element.getName())) {
+        return element;
       }
     }
     return null;

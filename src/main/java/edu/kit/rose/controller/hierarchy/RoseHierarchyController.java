@@ -68,7 +68,8 @@ public class RoseHierarchyController extends Controller
 
   @Override
   public void deleteGroup(Group group) {
-    ChangeCommand deleteGroupCommand = new DeleteGroupCommand(this.project, group);
+    ChangeCommand deleteGroupCommand = new DeleteGroupCommand(
+        this.replacementLog, this.project, group);
     this.changeCommandBuffer.addAndExecuteCommand(deleteGroupCommand);
   }
 

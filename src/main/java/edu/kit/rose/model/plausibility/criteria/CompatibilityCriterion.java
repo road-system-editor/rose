@@ -37,14 +37,14 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
         PlausibilityCriterion> implements PlausibilityCriterion {
   private static final boolean USE_DISCREPANCY = true;
   private static final boolean NOT_USE_DISCREPANCY = false;
+  private final Set<SegmentType> segmentTypes;
+  private final HashMap<Element, Violation> elementViolationMap;
   private String name;
   private AttributeType attributeType;
   private ValidationType operatorType;
   private double discrepancy;
-  private final Set<SegmentType> segmentTypes;
-  private final RoadSystem roadSystem;
-  private final ViolationManager violationManager;
-  private final HashMap<Element, Violation> elementViolationMap;
+  private RoadSystem roadSystem;
+  private ViolationManager violationManager;
 
   /**
    * Constructor.
@@ -59,6 +59,16 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
     this.violationManager = violationManager;
     this.roadSystem = roadSystem;
     this.elementViolationMap = new HashMap<>();
+  }
+
+  /**
+   * Sets the {@link RoadSystem} used by this CompatibilityCriterion.
+   * Checks do not work until this method has been called at least once with a valid roadSystem.
+   *
+   * @param roadSystem the roadSystem.
+   */
+  public void setRoadSystem(RoadSystem roadSystem) {
+    this.roadSystem = roadSystem;
   }
 
   /**
@@ -154,6 +164,11 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
   }
 
   @Override
+  public void setViolationManager(ViolationManager violationManager) {
+    this.violationManager = violationManager;
+  }
+
+  @Override
   public void addSegmentType(SegmentType type) {
     this.segmentTypes.add(type);
     Iterator<SetObserver<SegmentType, PlausibilityCriterion>> iterator = getSubscriberIterator();
@@ -173,6 +188,9 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
 
   @Override
   public void notifyChange(Element unit) {
+    if (this.roadSystem == null) {
+      throw new IllegalStateException("can not check connections without set roadSystem.");
+    }
     ArrayList<Segment> invalidSegments;
     if (!this.operatorType.equals(ValidationType.DEFAULT) && !unit.isContainer()) {
       ValidationStrategy strategy;

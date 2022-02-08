@@ -27,9 +27,9 @@ class CompletenessCriterion extends RoseSetObservable<SegmentType, PlausibilityC
 
   private String name;
   private final Set<SegmentType> segmentTypes;
-  private final ViolationManager violationManager;
   private final Set<AttributeType> necessaryAttributeTypes;
   private final HashMap<Element, Violation> elementViolationMap;
+  private ViolationManager violationManager;
 
   public CompletenessCriterion(ViolationManager violationManager) {
     this.name = "";
@@ -61,6 +61,11 @@ class CompletenessCriterion extends RoseSetObservable<SegmentType, PlausibilityC
   @Override
   public PlausibilityCriterionType getType() {
     return PlausibilityCriterionType.COMPLETENESS;
+  }
+
+  @Override
+  public void setViolationManager(ViolationManager violationManager) {
+    this.violationManager = violationManager;
   }
 
   @Override

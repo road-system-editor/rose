@@ -67,7 +67,9 @@ public class ElementTreeCell extends TreeCell<Element>
   }
 
   private void updateGroup(Element element) {
-    this.element.removeSubscriber(this);
+    if (this.element != null) {
+      this.element.removeSubscriber(this);
+    }
     this.element = element;
     this.element.addSubscriber(this);
     setGraphic(new GroupView(translator, (Group) element, hierarchyController));

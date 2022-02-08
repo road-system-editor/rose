@@ -16,6 +16,8 @@ import edu.kit.rose.view.commons.FxmlContainer;
 import edu.kit.rose.view.commons.SearchBar;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Predicate;
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TreeItem;
@@ -45,7 +47,7 @@ public class HierarchyPanel extends FxmlContainer
   @FXML
   private BorderPane hierarchyLayout;
 
-  private final TreeItem<Element> rootItem;
+  private final ElementTreeItem rootItem;
 
   /**
    * Creates an empty hierarchy view.
@@ -53,12 +55,35 @@ public class HierarchyPanel extends FxmlContainer
   public HierarchyPanel() {
     super("HierarchyPanel.fxml");
 
-    rootItem = new TreeItem<>(null);
+    rootItem = new ElementTreeItem(null);
 
     setUp();
+
+    Group g = new Group();
+    g.setName("Group 12");
+
+    Group g2 = new Group();
+    g2.setName("Group 4");
+    g.addElement(g2);
+
+    Group g3 = new Group();
+    g3.setName("Group 123");
+    g2.addElement(g3);
+
+    ElementTreeItem e = new ElementTreeItem(g);
+    ElementTreeItem e2 = new ElementTreeItem(g2);
+    ElementTreeItem e3 = new ElementTreeItem(g3);
+
+    e2.getInternalChildren().add(e3);
+    e.getInternalChildren().add(e2);
+    rootItem.getInternalChildren().add(e);
   }
 
   private void setUp() {
+    searchBar.searchStringProperty().addListener(t -> {
+      rootItem.updateFilter(searchBar.getSearchString());
+    });
+
     elementsListView
         .setCellFactory(elementsTree -> new ElementTreeCell(controller, getTranslator()));
     elementsListView.setShowRoot(false);
@@ -126,7 +151,7 @@ public class HierarchyPanel extends FxmlContainer
 
   @Override
   public void notifyAddition(Element unit) {
-    TreeItem<Element> treeItem = new TreeItem<>(unit);
+    ElementTreeItem treeItem = new ElementTreeItem(unit);
     rootItem.getChildren().add(treeItem);
   }
 

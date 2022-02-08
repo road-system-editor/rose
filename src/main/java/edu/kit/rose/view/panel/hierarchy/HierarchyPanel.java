@@ -58,25 +58,6 @@ public class HierarchyPanel extends FxmlContainer
     rootItem = new ElementTreeItem(null);
 
     setUp();
-
-    Group g = new Group();
-    g.setName("Group 12");
-
-    Group g2 = new Group();
-    g2.setName("Group 4");
-    g.addElement(g2);
-
-    Group g3 = new Group();
-    g3.setName("Group 123");
-    g2.addElement(g3);
-
-    ElementTreeItem e = new ElementTreeItem(g);
-    ElementTreeItem e2 = new ElementTreeItem(g2);
-    ElementTreeItem e3 = new ElementTreeItem(g3);
-
-    e2.getInternalChildren().add(e3);
-    e.getInternalChildren().add(e2);
-    rootItem.getInternalChildren().add(e);
   }
 
   private void setUp() {

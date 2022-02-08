@@ -9,6 +9,9 @@ import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import edu.kit.rose.view.commons.SegmentView;
 import edu.kit.rose.view.commons.SegmentViewFactory;
+import java.net.URL;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
@@ -41,10 +44,11 @@ class SegmentBlueprint extends StackPane {
    * The type of segment that this blueprint displays.
    */
   private final SegmentType type;
+
   /**
-   * The renderer for the given segment.
+   * The Preview for the Segment.
    */
-  private final SegmentView<? extends Segment> renderer;
+  private final ImageView view;
 
   /**
    * Creates a new segment blueprint for the given {@code type}.
@@ -55,17 +59,42 @@ class SegmentBlueprint extends StackPane {
                           SegmentType type) {
     this.controller = controller;
     this.type = type;
-    this.renderer = new SegmentViewFactory(translator, controller).createForSegment(
-        getSegmentDataForType(type));
-    setOnMouseClicked(event -> handleDoubleClick(event));
-    setOnDragDetected(event -> handleOnDragDetected(event));
+    setOnMouseClicked(this::handleDoubleClick);
+    setOnDragDetected(this::handleOnDragDetected);
     getStylesheets().add("edu/kit/rose/view/panel/segmentbox/SegmentBoxListView.css");
     getStyleClass().add("segment-blueprint");
     setMaxHeight(HEIGHT);
     setMaxWidth(WIDTH);
     setTranslateX(TRANSLATE_X);
-    this.getChildren().add(renderer);
-    this.renderer.draw();
+    URL baseUrl = this.getClass().getResource("base_segment_raw.png");
+    //TODO: update pngs to be centered.
+    URL exitUrl = this.getClass().getResource("exit_segment_raw.png");
+    URL entranceUrl = this.getClass().getResource("entrance_segment_raw.png");
+    Image image;
+    switch (type) {
+      case BASE -> {
+        image = new Image(baseUrl.toString());
+        view = new ImageView(image);
+        view.setFitWidth(130);
+        view.setFitHeight(50);
+      }
+      case EXIT -> {
+        image = new Image(exitUrl.toString());
+        view = new ImageView(image);
+        view.setFitWidth(80);
+        view.setFitHeight(90);
+      }
+      case ENTRANCE -> {
+        image = new Image(entranceUrl.toString());
+        view = new ImageView(image);
+        view.setFitWidth(80);
+        view.setFitHeight(90);
+      }
+      default -> throw new IllegalArgumentException("SegmentType doesnt exist");
+    }
+
+
+    this.getChildren().add(view);
   }
 
   private Segment getSegmentDataForType(SegmentType type) {
@@ -82,7 +111,7 @@ class SegmentBlueprint extends StackPane {
     ClipboardContent content = new ClipboardContent();
     content.putString(type.toString());
     db.setContent(content);
-    db.setDragView(this.renderer.snapshot(null, null));
+    db.setDragView(this.view.snapshot(null, null));
     event.consume();
   }
 

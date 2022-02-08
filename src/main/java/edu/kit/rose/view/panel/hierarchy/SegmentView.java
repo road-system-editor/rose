@@ -7,6 +7,7 @@ import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.view.commons.FxmlContainer;
 import java.util.Collection;
+import java.util.Objects;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -37,6 +38,10 @@ class SegmentView extends ElementView<Segment> {
 
     deleteSegmentButton.setOnMouseClicked(this::onDeleteSegmentButtonClicked);
     segmentViewSurface.setOnMouseClicked(this::onSegmentViewSurfaceMouseClicked);
+    String styleSheetUrl = Objects.requireNonNull(
+            getClass().getResource(ELEMENT_VIEW_STYLE_CSS_FILE)).toExternalForm();
+    segmentViewSurface.getStylesheets().add(styleSheetUrl);
+    segmentViewSurface.getStyleClass().add(UNSELECTED_STYLE_CLASS);
   }
 
   private void onSegmentViewSurfaceMouseClicked(MouseEvent mouseEvent) {

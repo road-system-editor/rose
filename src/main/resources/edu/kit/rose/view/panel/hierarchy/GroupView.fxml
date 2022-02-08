@@ -31,7 +31,7 @@
             </Label>
             <Button GridPane.columnIndex="1" GridPane.rowIndex="0" fx:id="deleteGroupButton"
                     style="-fx-background-radius: 5.0; -fx-background-color: A0A0A0;
-                           -fx-graphic: url('edu/kit/rose/view/panel/hierarchy/DeleteIcon.png')"/>
+                           -fx-graphic: url('./edu/kit/rose/view/panel/hierarchy/DeleteIcon.png')"/>
         </GridPane>
     </AnchorPane>
 </fx:root>

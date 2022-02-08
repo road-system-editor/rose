@@ -7,6 +7,7 @@ import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Group;
 import edu.kit.rose.view.commons.FxmlContainer;
 import java.util.Collection;
+import java.util.Objects;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -38,7 +39,9 @@ class GroupView extends ElementView<Group> {
     segmentNameLabel.setText(group.getName());
     deleteGroupButton.setOnMouseClicked(this::onDeleteGroupButtonClicked);
     groupViewSurface.setOnMouseClicked(this::onGroupViewSurfaceClicked);
-    groupViewSurface.getStylesheets().add(ELEMENT_VIEW_STYLE_CSS_FILE);
+    String styleSheetUrl = Objects.requireNonNull(
+            getClass().getResource(ELEMENT_VIEW_STYLE_CSS_FILE)).toExternalForm();
+    groupViewSurface.getStylesheets().add(styleSheetUrl);
     groupViewSurface.getStyleClass().add(UNSELECTED_STYLE_CLASS);
   }
 

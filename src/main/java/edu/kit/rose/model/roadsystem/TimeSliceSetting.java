@@ -10,6 +10,9 @@ import edu.kit.rose.infrastructure.UnitObserver;
  */
 public class TimeSliceSetting implements UnitObservable<TimeSliceSetting> {
 
+  private final int defaultNumberOfTimeSlices;
+  private final int defaultTimeSliceLength;
+
   private int numberOfTimeSlices;
   private int timeSlicesLength;
 
@@ -18,8 +21,7 @@ public class TimeSliceSetting implements UnitObservable<TimeSliceSetting> {
    * Initializes the numberOfTimeSlices and the timeSliceLength to 0.
    */
   public TimeSliceSetting() {
-    this.numberOfTimeSlices = 0;
-    this.timeSlicesLength = 0;
+    this(0, 0);
   }
 
   /**
@@ -30,7 +32,9 @@ public class TimeSliceSetting implements UnitObservable<TimeSliceSetting> {
    */
   public TimeSliceSetting(int numberOfTimeSlices, int timeSlicesLength) {
     this.numberOfTimeSlices = numberOfTimeSlices;
+    this.defaultNumberOfTimeSlices = numberOfTimeSlices;
     this.timeSlicesLength = timeSlicesLength;
+    this.defaultTimeSliceLength = timeSlicesLength;
   }
 
   /**
@@ -69,6 +73,10 @@ public class TimeSliceSetting implements UnitObservable<TimeSliceSetting> {
     this.timeSlicesLength = timeSlicesLength;
   }
 
+  void reset() {
+    this.numberOfTimeSlices = defaultNumberOfTimeSlices;
+    this.timeSlicesLength = defaultTimeSliceLength;
+  }
 
   @Override
   public void notifySubscribers() {

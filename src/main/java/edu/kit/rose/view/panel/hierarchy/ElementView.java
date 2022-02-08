@@ -59,4 +59,11 @@ abstract class ElementView<T extends Element> extends FxmlContainer
   public T getElement() {
     return element;
   }
+
+  /**
+   * This method needs to be called when the {@link ElementView} is unmounted.
+   */
+  public void onUnmount() {
+    element.removeSubscriber(this);
+  }
 }

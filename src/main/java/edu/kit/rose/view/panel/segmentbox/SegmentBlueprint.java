@@ -116,7 +116,8 @@ class SegmentBlueprint extends StackPane {
   }
 
   private void handleDoubleClick(MouseEvent event) {
-    if (event.getClickCount() == DOUBLE_CLICK) {
+    if (event.getClickCount() == DOUBLE_CLICK && !event.isConsumed()) {
+      event.consume();
       this.controller.createStreetSegment(type);
     }
   }

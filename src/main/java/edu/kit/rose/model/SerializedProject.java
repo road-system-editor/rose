@@ -178,8 +178,6 @@ class SerializedProject {
           case BASE -> new SerializedBaseSegment(index, (Base) segment);
           case ENTRANCE -> new SerializedEntranceSegment(index, (Entrance) segment);
           case EXIT -> new SerializedExitSegment(index, (Exit) segment);
-          //noinspection UnnecessaryDefault
-          default -> throw new RuntimeException("invalid segment type!");
         };
       }
     }

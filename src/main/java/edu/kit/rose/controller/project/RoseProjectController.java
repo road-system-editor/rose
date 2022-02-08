@@ -45,6 +45,7 @@ public class RoseProjectController extends Controller implements ProjectControll
     Path targetPath = getNavigator().showFileDialog(FileDialogType.SAVE_FILE, FileFormat.ROSE);
     if (targetPath != null) {
       project.save(targetPath);
+      // TODO handle failing save
     }
   }
 

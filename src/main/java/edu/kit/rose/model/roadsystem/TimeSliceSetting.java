@@ -42,7 +42,7 @@ public class TimeSliceSetting implements UnitObservable<TimeSliceSetting> {
    *
    * @return the number of TimeSlices.
    */
-  int getNumberOfTimeSlices() {
+  public int getNumberOfTimeSlices() {
     return this.numberOfTimeSlices;
   }
 
@@ -51,7 +51,7 @@ public class TimeSliceSetting implements UnitObservable<TimeSliceSetting> {
    *
    * @param numberOfTimeSlices the new number of TimeSlices.
    */
-  void setNumberOfTimeSlices(int numberOfTimeSlices) {
+  public void setNumberOfTimeSlices(int numberOfTimeSlices) {
     this.numberOfTimeSlices = numberOfTimeSlices;
   }
 
@@ -60,7 +60,7 @@ public class TimeSliceSetting implements UnitObservable<TimeSliceSetting> {
    *
    * @return the length of the TimeSlices.
    */
-  int getTimeSliceLength() {
+  public int getTimeSliceLength() {
     return this.timeSlicesLength;
   }
 
@@ -69,7 +69,7 @@ public class TimeSliceSetting implements UnitObservable<TimeSliceSetting> {
    *
    * @param timeSlicesLength the new length of the TimeSlices.
    */
-  void setTimeSliceLength(int timeSlicesLength) {
+  public void setTimeSliceLength(int timeSlicesLength) {
     this.timeSlicesLength = timeSlicesLength;
   }
 

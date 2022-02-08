@@ -28,7 +28,8 @@ public class CriteriaManager extends RoseSetObservable<PlausibilityCriterion, Cr
   private final ArrayList<PlausibilityCriterion> criterion;
 
   /**
-   * Constructor.
+   * Creates a new criteria manager. Make sure to call {@link #setRoadSystem(RoadSystem)} before
+   * using this object.
    */
   public CriteriaManager() {
     this.criterion = new ArrayList<>();
@@ -93,13 +94,13 @@ public class CriteriaManager extends RoseSetObservable<PlausibilityCriterion, Cr
 
   /**
    * Creates a new {@link CompatibilityCriterion}.
-   *
    */
-  public void createCompatibilityCriterion() {
-    PlausibilityCriterion newCriteria = this.criterionFactory.createCompatibilityCriterion();
+  public CompatibilityCriterion createCompatibilityCriterion() {
+    CompatibilityCriterion newCriteria = this.criterionFactory.createCompatibilityCriterion();
 
     this.criterion.add(newCriteria);
     notifyAdditionToSubscribers(newCriteria);
+    return newCriteria;
   }
 
   /**

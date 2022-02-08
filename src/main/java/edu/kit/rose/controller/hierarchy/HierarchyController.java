@@ -52,6 +52,25 @@ public interface HierarchyController {
   void toggleSegmentSelection(Segment segment);
 
   /**
+   * Changes the selection state of the segment to selected.
+   *
+   * @param segment to be selected
+   */
+  void addSegmentSelection(Segment segment);
+
+  /**
+   * Changes the selection state of the segment to unselected.
+   *
+   * @param segment to be unselected
+   */
+  void removeSegmentSelection(Segment segment);
+
+  /**
+   * Changes the selection state of all segments to unselected.
+   */
+  void clearSegmentSelection();
+
+  /**
    * Adds a biConsumer to the consumer list.
    *
    * @param consumer to be added

@@ -33,15 +33,6 @@ public interface RoadSystem
   Box<Element> getElements();
 
   /**
-   * Returns a Box of all {@link Element}s with a name similar to the given String.
-   * What will count as similar is left open to the implementation.
-   *
-   * @param name The Name of the {@link Element}s to return.
-   * @return A {@link edu.kit.rose.infrastructure.Box} of all {@link Element}s with the given name.
-   */
-  Box<Element> getElementsByName(String name);
-
-  /**
    * Creates a {@link Segment} with the given {@link SegmentType}.
    *
    * @param segmentType The {@link SegmentType} the {@link Segment} shall have.

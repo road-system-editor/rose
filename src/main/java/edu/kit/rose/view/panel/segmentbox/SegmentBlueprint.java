@@ -9,7 +9,6 @@ import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import edu.kit.rose.view.commons.SegmentView;
 import edu.kit.rose.view.commons.SegmentViewFactory;
-import javafx.scene.control.Label;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
@@ -22,8 +21,9 @@ import javafx.scene.layout.StackPane;
  * Clicking a blueprint will create a segment of the selected type in the editor.
  */
 class SegmentBlueprint extends StackPane {
-  private static final int TRANSLATE_X = 48;
-  private static final int TRANSLATE_Y = 25;
+  private static final int HEIGHT = 90;
+  private static final int WIDTH = 200;
+  private static final int TRANSLATE_X = 10;
   private static final int DOUBLE_CLICK = 2;
 
   /**
@@ -59,12 +59,12 @@ class SegmentBlueprint extends StackPane {
         getSegmentDataForType(type));
     setOnMouseClicked(event -> handleDoubleClick(event));
     setOnDragDetected(event -> handleOnDragDetected(event));
+    getStylesheets().add("edu/kit/rose/view/panel/segmentbox/SegmentBoxListView.css");
+    getStyleClass().add("segment-blueprint");
+    setMaxHeight(HEIGHT);
+    setMaxWidth(WIDTH);
     setTranslateX(TRANSLATE_X);
-    setTranslateY(TRANSLATE_Y);
     this.getChildren().add(renderer);
-    Label segmentLabel = new Label(translator.getLocalizedText("segmentType." + type.toString()));
-    segmentLabel.setTranslateY(-TRANSLATE_Y);
-    this.getChildren().add(segmentLabel);
     this.renderer.draw();
   }
 

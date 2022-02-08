@@ -8,6 +8,7 @@ import edu.kit.rose.view.commons.FxmlContainer;
 import java.util.Collection;
 import java.util.List;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.control.ListView;
 
 
@@ -40,6 +41,11 @@ public class SegmentBoxPanel extends FxmlContainer {
     blueprintListView.setCellFactory(
             listView -> new SegmentBoxListCell(this.controller, getTranslator()));
     blueprintListView.getItems().addAll(SegmentType.values());
+    blueprintListView.getStylesheets()
+            .add("edu/kit/rose/view/panel/segmentbox/SegmentBoxListView.css");
+    blueprintListView.getStyleClass().add("list-cell");
+    blueprintListView.getSelectionModel().clearSelection();
+    blueprintListView.setSelectionModel(new DisabledSelectionModel<>());
   }
 
   @Override

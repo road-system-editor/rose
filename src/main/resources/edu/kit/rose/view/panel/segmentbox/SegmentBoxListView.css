@@ -1,0 +1,15 @@
+.list-view .list-cell:even {
+    -fx-background-color: white;
+}
+.list-view .list-cell:odd {
+    -fx-background-color: white;
+}
+
+.segment-blueprint {
+    -fx-background-color: #f1f2f4;
+    -fx-background-radius: 20;
+}
+
+.list-view {
+    -fx-background-insets: 0;
+}

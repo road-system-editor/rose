@@ -11,6 +11,8 @@ import java.util.Objects;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 
@@ -25,6 +27,8 @@ class SegmentView extends ElementView<Segment> {
   private Button deleteSegmentButton;
   @FXML
   private GridPane segmentViewSurface;
+  @FXML
+  private ImageView deleteGroupButtonImageView;
 
   /**
    * Creates a new segment view for a given {@code segment}.
@@ -42,6 +46,9 @@ class SegmentView extends ElementView<Segment> {
             getClass().getResource(ELEMENT_VIEW_STYLE_CSS_FILE)).toExternalForm();
     segmentViewSurface.getStylesheets().add(styleSheetUrl);
     segmentViewSurface.getStyleClass().add(UNSELECTED_STYLE_CLASS);
+    String deleteButtonImageUrl = Objects.requireNonNull(
+            getClass().getResource(DELETE_BUTTON_IMAGE_URL)).toExternalForm();
+    deleteGroupButtonImageView.setImage(new Image(deleteButtonImageUrl));
   }
 
   private void onSegmentViewSurfaceMouseClicked(MouseEvent mouseEvent) {

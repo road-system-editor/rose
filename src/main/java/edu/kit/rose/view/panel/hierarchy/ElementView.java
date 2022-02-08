@@ -15,6 +15,8 @@ import edu.kit.rose.view.commons.FxmlContainer;
 abstract class ElementView<T extends Element> extends FxmlContainer
     implements SetObserver<Element, Element> {
 
+  protected static final String DELETE_BUTTON_IMAGE_URL =
+          "/edu/kit/rose/view/panel/hierarchy/DeleteIcon.png";
   protected static final String ELEMENT_VIEW_STYLE_CSS_FILE =
           "/edu/kit/rose/view/panel/hierarchy/ElementViewStyle.css";
   protected static final String SELECTED_STYLE_CLASS = "elementViewSelected";

@@ -11,6 +11,8 @@ import java.util.Objects;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 
@@ -25,6 +27,8 @@ class GroupView extends ElementView<Group> {
   private Label segmentNameLabel;
   @FXML
   private Button deleteGroupButton;
+  @FXML
+  private ImageView deleteGroupButtonImageView;
 
   /**
    * Creates a new group view for a given {@code group}.
@@ -43,6 +47,9 @@ class GroupView extends ElementView<Group> {
             getClass().getResource(ELEMENT_VIEW_STYLE_CSS_FILE)).toExternalForm();
     groupViewSurface.getStylesheets().add(styleSheetUrl);
     groupViewSurface.getStyleClass().add(UNSELECTED_STYLE_CLASS);
+    String deleteButtonImageUrl = Objects.requireNonNull(
+            getClass().getResource(DELETE_BUTTON_IMAGE_URL)).toExternalForm();
+    deleteGroupButtonImageView.setImage(new Image(deleteButtonImageUrl));
   }
 
   private void onGroupViewSurfaceClicked(MouseEvent mouseEvent) {

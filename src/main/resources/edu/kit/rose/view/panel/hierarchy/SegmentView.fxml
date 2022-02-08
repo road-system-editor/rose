@@ -4,6 +4,7 @@
 <?import javafx.scene.layout.*?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
 <fx:root xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml"
          type="Pane"
@@ -24,7 +25,11 @@
             <Label GridPane.columnIndex="0" GridPane.rowIndex="0" fx:id="segmentNameLabel" text="Hallo" textFill="white">
             </Label>
             <Button GridPane.columnIndex="1" GridPane.rowIndex="0" fx:id="deleteSegmentButton" text="Delete" textFill="white"
-                    style="-fx-background-radius: 5.0; -fx-background-color: gray;"/>
+                    style="-fx-background-radius: 5.0; -fx-background-color: gray;">
+                <graphic>
+                    <ImageView fx:id="deleteGroupButtonImageView"/>
+                </graphic>
+            </Button>
         </GridPane>
     </AnchorPane>
 </fx:root>

@@ -97,8 +97,7 @@ public class RoseExportStrategyTest {
     rs.connectConnectors(exit.getExit(), entrance.getEntry());
     rs.connectConnectors(entrance.getRamp(), exit.getRamp());
 
-    var zoomSetting = new ZoomSetting();
-    zoomSetting.setCenterOfView(ZOOM_CENTER_POSITION);
+    var zoomSetting = new ZoomSetting(ZOOM_CENTER_POSITION);
     zoomSetting.setZoomLevel(ZOOM_LEVEL);
 
     project = mock(Project.class);
@@ -120,7 +119,7 @@ public class RoseExportStrategyTest {
     Project imported = mock(Project.class);
     var roadSystem = new GraphRoadSystem(criteriaManager, new TimeSliceSetting());
     when(imported.getRoadSystem()).thenReturn(roadSystem);
-    var zoomSetting = new ZoomSetting();
+    var zoomSetting = new ZoomSetting(new Position(1500, 1500));
     when(imported.getZoomSetting()).thenReturn(zoomSetting);
 
     assertTrue(RoseExportStrategy.importToProject(imported, EXPORT_FILE.toFile()));

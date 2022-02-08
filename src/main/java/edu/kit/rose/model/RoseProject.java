@@ -16,7 +16,6 @@ import java.nio.file.Path;
 class RoseProject implements Project {
   private static final int CENTER_OF_VIEW_X = 1500;
   private static final int CENTER_OF_VIEW_Y = 1500;
-  private static final int ZOOM_LEVEL = 1;
 
   private final RoadSystem roadSystem;
   private final PlausibilitySystem plausibilitySystem;
@@ -29,8 +28,7 @@ class RoseProject implements Project {
    * @param criteriaManager the criteriaManager to use.
    */
   public RoseProject(CriteriaManager criteriaManager) {
-    this.zoomSetting = new ZoomSetting(new Position(CENTER_OF_VIEW_X, CENTER_OF_VIEW_Y),
-        ZOOM_LEVEL);
+    this.zoomSetting = new ZoomSetting(new Position(CENTER_OF_VIEW_X, CENTER_OF_VIEW_Y));
     TimeSliceSetting timeSliceSetting = new TimeSliceSetting();
     this.roadSystem = new GraphRoadSystem(criteriaManager, timeSliceSetting);
     this.plausibilitySystem = new RosePlausibilitySystem(criteriaManager, roadSystem);

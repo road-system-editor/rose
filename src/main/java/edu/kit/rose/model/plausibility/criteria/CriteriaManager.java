@@ -24,7 +24,9 @@ public class CriteriaManager extends RoseSetObservable<PlausibilityCriterion, Cr
 
   private final ArrayList<PlausibilityCriterion> criteria;
   private ViolationManager violationManager;
+  private RoadSystem roadSystem;
   private CriterionFactory criterionFactory;
+  private final ArrayList<PlausibilityCriterion> criterion;
 
   /**
    * Constructor.

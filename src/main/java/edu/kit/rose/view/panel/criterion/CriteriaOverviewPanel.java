@@ -17,6 +17,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 
 /**
  * The criteria overview panel allows the user to view the criteria.
@@ -37,6 +39,8 @@ public class CriteriaOverviewPanel extends FxmlContainer
   private Button deleteAllButton;
   @FXML
   private Button newButton;
+  @FXML
+  private VBox buttonVbox;
   @FXML
   private ListView<PlausibilityCriterion> criteriaList;
 

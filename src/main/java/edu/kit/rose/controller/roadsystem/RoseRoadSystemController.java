@@ -25,6 +25,7 @@ public class RoseRoadSystemController extends Controller
     SetObserver<Segment, SelectionBuffer> {
 
   private static final int SEGMENTS_ROTATION_ALLOWED_AMOUNT = 1;
+  private static final double INTERSECT_DISTANCE = 30;
 
   /**
    * The container for selected segments.
@@ -120,10 +121,16 @@ public class RoseRoadSystemController extends Controller
         this.selectionBuffer.getSelectedSegments(),
         draggingTransition);
 
+    dragStreetSegmentsCommand.unexecute();
     changeCommandBuffer.addAndExecuteCommand(dragStreetSegmentsCommand);
-    dragStreetSegmentsCommand.execute();
 
     initialSegmentDragPosition = null;
+  }
+
+  @Override
+  public void endDragStreetSegment(Position segmentPosition, Connector draggedConnector) {
+    endDragStreetSegment(segmentPosition);
+    //TODO: connector connection logik
   }
 
   @Override
@@ -224,6 +231,11 @@ public class RoseRoadSystemController extends Controller
     if (selectionBuffer.getSelectedSegments().size() == SEGMENTS_ROTATION_ALLOWED_AMOUNT) {
       this.project.getRoadSystem().rotateSegment(selectionBuffer.getSelectedSegments().get(0), 15);
     }
+  }
+
+  @Override
+  public double getIntersectionDistance() {
+    return INTERSECT_DISTANCE;
   }
 
 

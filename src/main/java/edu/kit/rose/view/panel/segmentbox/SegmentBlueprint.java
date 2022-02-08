@@ -9,12 +9,16 @@ import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import edu.kit.rose.view.commons.SegmentView;
 import edu.kit.rose.view.commons.SegmentViewFactory;
+import javafx.event.Event;
+import javafx.event.EventType;
 import javafx.scene.control.Label;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 
 /**
  * A segment blueprint represents a segment type by displaying an example of what the segment
@@ -44,7 +48,7 @@ class SegmentBlueprint extends StackPane {
   /**
    * The renderer for the given segment.
    */
-  private final SegmentView<? extends Segment> renderer;
+  private final Circle renderer; //TODO: change back to SegmentView<? extends Segment>
 
   /**
    * Creates a new segment blueprint for the given {@code type}.
@@ -55,17 +59,16 @@ class SegmentBlueprint extends StackPane {
                           SegmentType type) {
     this.controller = controller;
     this.type = type;
-    this.renderer = new SegmentViewFactory(translator, controller).createForSegment(
-        getSegmentDataForType(type));
-    setOnMouseClicked(event -> handleDoubleClick(event));
-    setOnDragDetected(event -> handleOnDragDetected(event));
+    this.renderer = new Circle(30, Color.rgb((int) (Math.random() * 255),
+        (int) (Math.random() * 255), (int) (Math.random() * 255))); //TODO: create segment preview
+    setOnMouseClicked(this::handleDoubleClick);
+    setOnDragDetected(this::handleOnDragDetected);
     setTranslateX(TRANSLATE_X);
     setTranslateY(TRANSLATE_Y);
     this.getChildren().add(renderer);
     Label segmentLabel = new Label(translator.getLocalizedText("segmentType." + type.toString()));
     segmentLabel.setTranslateY(-TRANSLATE_Y);
     this.getChildren().add(segmentLabel);
-    this.renderer.draw();
   }
 
   private Segment getSegmentDataForType(SegmentType type) {
@@ -77,7 +80,7 @@ class SegmentBlueprint extends StackPane {
     return null;
   }
 
-  private void handleOnDragDetected(MouseEvent event) {
+  void handleOnDragDetected(MouseEvent event) {
     Dragboard db = startDragAndDrop(TransferMode.ANY);
     ClipboardContent content = new ClipboardContent();
     content.putString(type.toString());
@@ -86,7 +89,7 @@ class SegmentBlueprint extends StackPane {
     event.consume();
   }
 
-  private void handleDoubleClick(MouseEvent event) {
+  void handleDoubleClick(MouseEvent event) {
     if (event.getClickCount() == DOUBLE_CLICK) {
       this.controller.createStreetSegment(type);
     }

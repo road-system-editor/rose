@@ -46,7 +46,6 @@ public class Grid extends Pane implements SetObserver<Segment, RoadSystemControl
   private static final Color BACKGROUND_COLOR = Color.gray(0.95);
   private static final Color LINE_COLOR = Color.gray(0.7);
   private static final float LINE_WIDTH = 0.5f;
-  private static final double INTERSECT_DISTANCE = 30;
 
   private final RoadSystemController controller;
   private final List<SegmentView<?>> segmentViews = new LinkedList<>();
@@ -55,6 +54,7 @@ public class Grid extends Pane implements SetObserver<Segment, RoadSystemControl
   private final List<Node> lines = new LinkedList<>();
   private SelectionBox selectionBox;
   private BiConsumer<Position, Position> onAreaSelectedEventHandler;
+  private boolean dragInProgress = false;
 
 
   /**
@@ -117,12 +117,17 @@ public class Grid extends Pane implements SetObserver<Segment, RoadSystemControl
   private void setEventListeners() {
     this.setOnMouseDragged(this::onMouseDragged);
     this.setOnMouseReleased(this::onMouseDragReleased);
-    this.setOnMouseClicked(this::deselectAllSegmentsViews);
+    this.setOnMouseClicked(mouseEvent -> {
+      if (!dragInProgress) {
+        controller.clearSegmentSelection();
+      }
+      dragInProgress = false;
+    });
   }
 
   private void onMouseDragged(MouseEvent mouseDragEvent) {
-    deselectAllSegmentsViews(mouseDragEvent);
     if (mouseDragEvent.isControlDown() && mouseDragEvent.isPrimaryButtonDown()) {
+      this.dragInProgress = true;
       if (this.selectionBox == null) {
         selectionBox = new SelectionBox(
             new Point2D(mouseDragEvent.getX(), mouseDragEvent.getY()));
@@ -154,11 +159,6 @@ public class Grid extends Pane implements SetObserver<Segment, RoadSystemControl
         selectionBox = null;
       }
     }
-    mouseEvent.consume();
-  }
-
-  private void deselectAllSegmentsViews(MouseEvent mouseEvent) {
-    controller.clearSegmentSelection();
     mouseEvent.consume();
   }
 
@@ -202,7 +202,7 @@ public class Grid extends Pane implements SetObserver<Segment, RoadSystemControl
   private boolean intersect(ConnectorView connectorView1, ConnectorView connectorView2) {
     var connectorViewPos1 = getConnectorViewPositionOnGrid(connectorView1);
     var connectorViewPos2 = getConnectorViewPositionOnGrid(connectorView2);
-    return connectorViewPos1.distance(connectorViewPos2) <= INTERSECT_DISTANCE;
+    return connectorViewPos1.distance(connectorViewPos2) <= controller.getIntersectionDistance();
   }
 
   private Point2D getConnectorViewPositionOnGrid(ConnectorView connectorView) {

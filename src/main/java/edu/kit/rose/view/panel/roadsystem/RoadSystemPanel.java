@@ -15,9 +15,11 @@ import edu.kit.rose.model.roadsystem.elements.Connection;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Entrance;
 import edu.kit.rose.model.roadsystem.elements.Exit;
+import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.view.commons.EntranceSegmentView;
 import edu.kit.rose.view.commons.ExitSegmentView;
 import edu.kit.rose.view.commons.FxmlContainer;
+import edu.kit.rose.view.commons.SegmentViewFactory;
 import java.util.Collection;
 import java.util.List;
 import javafx.fxml.FXML;
@@ -46,6 +48,7 @@ public class RoadSystemPanel extends FxmlContainer
   /**
    * The project that contains all project specific data.
    */
+  @Inject
   private Project project;
 
   /**
@@ -61,6 +64,8 @@ public class RoadSystemPanel extends FxmlContainer
   private ZoomableScrollPane zoomContainer;
 
   private Grid roadSystemGrid;
+
+  private SegmentViewFactory segmentViewFactory;
 
 
 
@@ -86,6 +91,8 @@ public class RoadSystemPanel extends FxmlContainer
     super.init(injector);
     this.zoomContainer.init(injector);
 
+    this.segmentViewFactory = new SegmentViewFactory(getTranslator(), this.roadSystemController);
+
     this.roadSystemGrid = this.zoomContainer.getGrid();
 
     this.roadSystemGrid.setOnAreaSelected((position1, position2) ->
@@ -93,15 +100,7 @@ public class RoadSystemPanel extends FxmlContainer
 
     this.roadSystemController.addSubscriber(this.roadSystemGrid);
 
-    var exit = new Exit();
-    exit.move(new Movement(200, 200));
-    var exitView = new ExitSegmentView(exit, roadSystemController, getTranslator());
-    roadSystemGrid.addSegmentView(exitView);
-
-    var entrance = new Entrance();
-    entrance.move(new Movement(300, 200));
-    var entranceView = new EntranceSegmentView(entrance, roadSystemController, getTranslator());
-    roadSystemGrid.addSegmentView(entranceView);
+    this.project.getRoadSystem().addSubscriber(this);
   }
 
   @Override
@@ -126,7 +125,11 @@ public class RoadSystemPanel extends FxmlContainer
 
   @Override
   public void notifyAddition(Element unit) {
-
+    if (!unit.isContainer()) {
+      var segment = (Segment) unit;
+      var segmentView = this.segmentViewFactory.createForSegment(segment);
+      roadSystemGrid.addSegmentView(segmentView);
+    }
   }
 
   @Override

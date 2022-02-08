@@ -69,6 +69,15 @@ public interface RoadSystemController extends SetObservable<Segment, RoadSystemC
   void endDragStreetSegment(Position segmentPosition);
 
   /**
+   * Stores the end {@link Position} of the {@link Segment} which was dragged.
+   * The required connector might connect to other connectors in reach.
+   *
+   * @param segmentPosition the final position of the segment
+   * @param draggedConnector the connector
+   */
+  void endDragStreetSegment(Position segmentPosition, Connector draggedConnector);
+
+  /**
    * Toggles the selection status of a {@link Segment}.
    *
    * @param segment the segment whose selection status gets toggle
@@ -133,5 +142,14 @@ public interface RoadSystemController extends SetObservable<Segment, RoadSystemC
    * Rotates a single selected segment, if only that segment is selected.
    */
   void rotateSegment();
+
+  /**
+   * Provides the intersection distance. This distance describes how far two connectors
+   * can be apart before they intersect each other.
+   * Distance between connectors <= getIntersectionDistance() --> intersection
+   *
+   * @return the intersection distance
+   */
+  double getIntersectionDistance();
 
 }

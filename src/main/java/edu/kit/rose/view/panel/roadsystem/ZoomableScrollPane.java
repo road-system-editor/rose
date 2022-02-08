@@ -8,13 +8,8 @@ import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 
 /**
  * The zoomable ScrollPane is a ScrollPane that adds pan and zoom gesture support to its content.
@@ -63,6 +58,12 @@ public class ZoomableScrollPane extends ScrollPane {
     setFitToHeight(true);
     setFitToWidth(true);
     setupKeyboardControl();
+    setHvalue(0.5);
+    setVvalue(0.5);
+    hvalueProperty().addListener((observable, oldValue, newValue) ->
+        roadSystemController.setEditorPosition(getCenterOfViewPos()));
+    vvalueProperty().addListener((observable, oldValue, newValue) ->
+            roadSystemController.setEditorPosition(getCenterOfViewPos()));
   }
 
   private void initGrid() {
@@ -113,6 +114,7 @@ public class ZoomableScrollPane extends ScrollPane {
     this.setVvalue((valY + adjustment.getY())
         / (updatedInnerBounds.getHeight() - viewportBounds.getHeight()));
     roadSystemController.setZoomLevel(zoomLevel);
+    roadSystemController.setEditorPosition(getCenterOfViewPos());
   }
 
   private void updateScale() {
@@ -225,7 +227,11 @@ public class ZoomableScrollPane extends ScrollPane {
   }
 
   private Point2D getCenterOfViewPoint() {
-    return gridBox.getParent().parentToLocal(getWidth() / 2, getHeight() / 2);
+    return grid.parentToLocal(
+        gridGroup.parentToLocal(
+            gridBox.getParent().parentToLocal(getWidth() / 2, getHeight() / 2)
+        )
+    );
   }
 
   private Position getCenterOfViewPos() {

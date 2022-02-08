@@ -292,6 +292,14 @@ public class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, 
   }
 
   @Override
+  public void clear() {
+    var roots = new LinkedList<Element>();
+    getRootElements().forEach(roots::add);
+    roots.forEach(this::removeElement);
+    this.timeSliceSetting.reset();
+  }
+
+  @Override
   public RoadSystem getThis() {
     return this;
   }

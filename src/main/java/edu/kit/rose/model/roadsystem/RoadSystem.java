@@ -155,4 +155,9 @@ public interface RoadSystem
    * @return the used TimeSliceSetting.
    */
   TimeSliceSetting getTimeSliceSetting();
+
+  /**
+   * Clears the RoadSystem. Resets {@link TimeSliceSetting}.
+   */
+  void clear();
 }

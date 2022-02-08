@@ -14,8 +14,8 @@ import java.util.List;
 public class ZoomSetting implements UnitObservable<ZoomSetting> {
   private static final double DEFAULT_ZOOM_LEVEL = 1.0;
 
-  private Position centerOfView = new Position();
-  private double zoomLevel = 1;
+  private Position centerOfView;
+  private double zoomLevel;
   private final List<UnitObserver<ZoomSetting>> observers = new ArrayList<>();
 
   public ZoomSetting(Position centerOfView) {
@@ -56,7 +56,7 @@ public class ZoomSetting implements UnitObservable<ZoomSetting> {
    *
    * @param zoomLevel the new level of zoom of the view.
    */
-  void setZoomLevel(int zoomLevel) {
+  public void setZoomLevel(double zoomLevel) {
     this.zoomLevel = zoomLevel;
     notifySubscribers();
   }

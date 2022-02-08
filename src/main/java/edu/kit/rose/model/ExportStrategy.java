@@ -14,6 +14,8 @@ abstract class ExportStrategy {
    * the given File.
    *
    * @param file the location to export the Project to.
+   *
+   * @return {@code true} if the export was successful and {@code false} otherwise.
    */
-  abstract void exportToFile(File file);
+  abstract boolean exportToFile(File file);
 }

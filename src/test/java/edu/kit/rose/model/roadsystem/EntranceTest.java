@@ -58,16 +58,15 @@ public class EntranceTest {
   @Test
   public void testAttributeAccessors() {
     SortedBox<AttributeAccessor<?>> attributeAccessors = testEntrance.getAttributeAccessors();
-    Assertions.assertEquals(10, attributeAccessors.getSize());
+    Assertions.assertEquals(9, attributeAccessors.getSize());
     Assertions.assertEquals(AttributeType.NAME, attributeAccessors.get(0).getAttributeType());
     Assertions.assertEquals(AttributeType.COMMENT, attributeAccessors.get(1).getAttributeType());
     Assertions.assertEquals(AttributeType.LENGTH, attributeAccessors.get(2).getAttributeType());
     Assertions.assertEquals(AttributeType.SLOPE, attributeAccessors.get(3).getAttributeType());
     Assertions.assertEquals(AttributeType.LANE_COUNT, attributeAccessors.get(4).getAttributeType());
-    Assertions.assertEquals(AttributeType.LANE_COUNT, attributeAccessors.get(5).getAttributeType());
     Assertions.assertEquals(AttributeType.CONURBATION,
-        attributeAccessors.get(6).getAttributeType());
-    Assertions.assertEquals(AttributeType.MAX_SPEED, attributeAccessors.get(7).getAttributeType());
+        attributeAccessors.get(5).getAttributeType());
+    Assertions.assertEquals(AttributeType.MAX_SPEED, attributeAccessors.get(6).getAttributeType());
   }
 
   /**

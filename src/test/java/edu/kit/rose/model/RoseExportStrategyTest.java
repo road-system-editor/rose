@@ -108,7 +108,8 @@ public class RoseExportStrategyTest {
 
   @Test
   void testReImportProject() {
-    new RoseExportStrategy(project).exportToFile(EXPORT_FILE.toFile());
+    var exportStrategy = new RoseExportStrategy(project);
+    assertTrue(exportStrategy.exportToFile(EXPORT_FILE.toFile()));
 
     assertTrue(Files.exists(EXPORT_FILE));
 
@@ -122,7 +123,7 @@ public class RoseExportStrategyTest {
     var zoomSetting = new ZoomSetting();
     when(imported.getZoomSetting()).thenReturn(zoomSetting);
 
-    RoseExportStrategy.importToProject(imported, EXPORT_FILE.toFile());
+    assertTrue(RoseExportStrategy.importToProject(imported, EXPORT_FILE.toFile()));
     assertEquals(4, roadSystem.getElements().getSize());
 
     Base baseSegment = null;

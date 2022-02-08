@@ -21,7 +21,7 @@ class YamlExportStrategy extends ExportStrategy {
   }
 
   @Override
-  void exportToFile(File file) {
+  boolean exportToFile(File file) {
     var factory = new YAMLFactory()
         .disable(YAMLGenerator.Feature.WRITE_DOC_START_MARKER)
         .enable(YAMLGenerator.Feature.MINIMIZE_QUOTES);
@@ -31,10 +31,12 @@ class YamlExportStrategy extends ExportStrategy {
 
     var yamlProject = new YamlProject(project);
 
-    try { //TODO
+    try {
       mapper.writeValue(file, yamlProject);
+      return true;
     } catch (IOException e) {
       e.printStackTrace();
+      return false;
     }
   }
 }

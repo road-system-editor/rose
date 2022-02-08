@@ -21,15 +21,17 @@ class RoseExportStrategy extends ExportStrategy {
   }
 
   @Override
-  void exportToFile(File file) {
+  boolean exportToFile(File file) {
     var mapper = createObjectMapper();
 
     var serialized = new SerializedProject(project);
 
-    try { //TODO
+    try {
       mapper.writeValue(file, serialized);
+      return true;
     } catch (IOException e) {
       e.printStackTrace();
+      return false;
     }
   }
 
@@ -43,7 +45,7 @@ class RoseExportStrategy extends ExportStrategy {
     return mapper;
   }
 
-  public static void importToProject(Project project, File file) {
+  public static boolean importToProject(Project project, File file) {
     var mapper = createObjectMapper();
 
     SerializedProject serialized;
@@ -51,9 +53,10 @@ class RoseExportStrategy extends ExportStrategy {
       serialized = mapper.readValue(file, SerializedProject.class);
     } catch (IOException e) {
       e.printStackTrace();
-      return;
+      return false;
     }
 
     serialized.populateProject(project);
+    return true;
   }
 }

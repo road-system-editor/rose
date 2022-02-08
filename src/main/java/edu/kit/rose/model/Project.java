@@ -35,8 +35,9 @@ public interface Project {
    *
    * @param projectFormat The {@link ProjectFormat} to save in.
    * @param filePath     The {@link Path} of where to store the export.
+   * @return {@code true} if the export was successful and {@code false} otherwise.
    */
-  void exportToFile(ProjectFormat projectFormat, Path filePath);
+  boolean exportToFile(ProjectFormat projectFormat, Path filePath);
 
   /**
    * Saves the Project as a ROSE file. This saves everything the Project needs to be reopened in

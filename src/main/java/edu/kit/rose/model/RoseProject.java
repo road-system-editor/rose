@@ -48,8 +48,9 @@ class RoseProject implements Project {
   }
 
   @Override
-  public void exportToFile(ProjectFormat projectFormat, Path filePath) {
+  public boolean exportToFile(ProjectFormat projectFormat, Path filePath) {
     //TODO: Implement
+    return false;
   }
 
   @Override

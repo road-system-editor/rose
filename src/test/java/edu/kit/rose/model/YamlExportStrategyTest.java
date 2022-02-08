@@ -85,7 +85,8 @@ public class YamlExportStrategyTest {
 
   @Test
   void testExportProject() throws IOException {
-    new YamlExportStrategy(project).exportToFile(EXPORT_FILE.toFile());
+    var exportStrategy = new YamlExportStrategy(project);
+    assertTrue(exportStrategy.exportToFile(EXPORT_FILE.toFile()));
 
     assertTrue(Files.exists(EXPORT_FILE));
 

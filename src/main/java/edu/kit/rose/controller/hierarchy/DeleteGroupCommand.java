@@ -19,7 +19,7 @@ import java.util.Iterator;
 public class DeleteGroupCommand implements ChangeCommand {
   private final ReplacementLog replacementLog;
   private final Project project;
-  private final Group group;
+  private Group group;
   private Group parent;
 
   /**
@@ -53,10 +53,13 @@ public class DeleteGroupCommand implements ChangeCommand {
 
   @Override
   public void unexecute() {
+    // copy group
     var copier = new HierarchyCopier(this.replacementLog, this.project.getRoadSystem());
-    var reCreatedGroup = copier.copyGroup(this.group);
+    var groupToCopy = this.replacementLog.getCurrentVersion(this.group);
+    this.group = copier.copyGroup(groupToCopy);
 
+    // assign parent
     var currentParent = this.replacementLog.getCurrentVersion(this.parent);
-    currentParent.addElement(reCreatedGroup);
+    currentParent.addElement(this.group);
   }
 }

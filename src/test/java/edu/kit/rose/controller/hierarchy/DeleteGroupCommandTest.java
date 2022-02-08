@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static org.mockito.Mockito.mock;
@@ -144,6 +145,45 @@ class DeleteGroupCommandTest {
 
     command.unexecute();
     assertEquals(1, parent().getElements().getSize());
+  }
+
+  @Test
+  void testLogsReplacement() {
+    var oldGroup = group();
+    assumeTrue(oldGroup != null);
+
+    command.execute();
+    command.unexecute();
+    var newGroup = group();
+    assertSame(newGroup, this.replacementLog.getCurrentVersion(oldGroup));
+
+    command.execute();
+    command.unexecute();
+    var newNewGroup = group();
+    assertSame(newNewGroup, this.replacementLog.getCurrentVersion(oldGroup));
+    assertSame(newNewGroup, this.replacementLog.getCurrentVersion(newGroup));
+  }
+
+  /**
+   * Tests whether {@link DeleteGroupCommand} uses replaced versions of affected segments.
+   */
+  @Test
+  void testConsidersReplacement() {
+    command.execute();
+    assertNull(group());
+
+    command.unexecute();
+    var group2 = group();
+    assertNotNull(group2);
+
+    // simulate that group has been un-created and then re-crated
+    this.roadSystem.removeElement(group2);
+    var group3 = this.roadSystem.createGroup(Set.of());
+    this.replacementLog.replaceElement(group2, group3);
+    assertTrue(this.roadSystem.getElements().contains(group3));
+
+    command.execute();
+    assertFalse(this.roadSystem.getElements().contains(group3));
   }
 
   private Group parent() {

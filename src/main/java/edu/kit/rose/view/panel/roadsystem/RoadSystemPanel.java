@@ -79,27 +79,29 @@ public class RoadSystemPanel extends FxmlContainer
     this.navigator.setOnRight(zoomContainer::moveRight);
     this.navigator.setOnIn(zoomContainer::zoomIn);
     this.navigator.setOnOut(zoomContainer::zoomOut);
-
-    this.roadSystemGrid = this.zoomContainer.getGrid();
-
-    this.roadSystemGrid.setOnAreaSelected((position1, position2) ->
-        this.roadSystemController.selectSegmentsInRectangle(position1, position2));
   }
 
   @Override
   public void init(Injector injector) {
     super.init(injector);
-    injector.injectMembers(this.zoomContainer);
+    this.zoomContainer.init(injector);
+
+    this.roadSystemGrid = this.zoomContainer.getGrid();
+
+    this.roadSystemGrid.setOnAreaSelected((position1, position2) ->
+        this.roadSystemController.selectSegmentsInRectangle(position1, position2));
+
+    this.roadSystemController.addSubscriber(this.roadSystemGrid);
 
     var exit = new Exit();
     exit.move(new Movement(200, 200));
     var exitView = new ExitSegmentView(exit, roadSystemController, getTranslator());
-    roadSystemGrid.getChildren().add(exitView);
+    roadSystemGrid.addSegmentView(exitView);
 
     var entrance = new Entrance();
     entrance.move(new Movement(300, 200));
     var entranceView = new EntranceSegmentView(entrance, roadSystemController, getTranslator());
-    roadSystemGrid.getChildren().add(entranceView);
+    roadSystemGrid.addSegmentView(entranceView);
   }
 
   @Override

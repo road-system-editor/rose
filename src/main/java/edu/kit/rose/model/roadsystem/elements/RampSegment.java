@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * A {@link Base} segment with a ramp {@link Connector}.
  */
-abstract class RampSegment extends HighwaySegment {
+public abstract class RampSegment extends HighwaySegment {
 
   protected static final int INITIAL_RAMP_DISTANCE_TO_CENTER_Y = -14;
   private int nrOfRampLanes = 1;

@@ -62,6 +62,7 @@ public class RoseRoadSystemController extends Controller
     super(storageLock, navigator);
     this.changeCommandBuffer = changeCommandBuffer;
     this.selectionBuffer = selectionBuffer;
+    selectionBuffer.addSubscriber(this);
     this.project = project;
 
     observers = new HashSet<>();
@@ -136,9 +137,21 @@ public class RoseRoadSystemController extends Controller
   }
 
   @Override
+  public void putSegmentSelection(Segment segment) {
+    this.selectionBuffer.removeAllSelections();
+    this.selectionBuffer.addSegmentSelection(segment);
+  }
+
+  @Override
   public void removeSegmentSelection(Segment segment) {
     this.selectionBuffer.removeSegmentSelection(segment);
   }
+
+  @Override
+  public void clearSegmentSelection() {
+    this.selectionBuffer.removeAllSelections();
+  }
+
 
   @Override
   public void selectSegmentsInRectangle(Position firstSelectionCorner,

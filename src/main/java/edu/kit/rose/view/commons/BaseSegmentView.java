@@ -8,6 +8,7 @@ import edu.kit.rose.model.roadsystem.elements.Base;
 import edu.kit.rose.model.roadsystem.elements.Connector;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.MovableConnector;
+import java.util.List;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.QuadCurve;
 
@@ -46,9 +47,11 @@ public class BaseSegmentView extends SegmentView<Base> {
     this.roadSystemController = controller;
 
     this.entryConnectorView =
-        new ConnectorView(SEGMENT_WIDTH, getSegment().getEntry().getPosition());
+        new ConnectorView(SEGMENT_WIDTH, getSegment().getEntry(),
+            this::setDraggedConnectorView);
     this.exitConnectorView =
-        new ConnectorView(SEGMENT_WIDTH, getSegment().getExit().getPosition());
+        new ConnectorView(SEGMENT_WIDTH, getSegment().getExit(),
+            this::setDraggedConnectorView);
 
     entryConnectorObserver = new ConnectorObserver<>(segment, segment.getEntry());
     entryConnectorObserver.setOnConnectorPositionChangedCallback(this::updateCenterAndRedraw);
@@ -165,6 +168,11 @@ public class BaseSegmentView extends SegmentView<Base> {
     redrawCurve();
 
 
+  }
+
+  @Override
+  public List<ConnectorView> getConnectorViews() {
+    return null; //TODO: implement when base segment is ready
   }
 
   private void updateConnectorViewPositions() {

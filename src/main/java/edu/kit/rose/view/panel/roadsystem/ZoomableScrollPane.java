@@ -1,6 +1,7 @@
 package edu.kit.rose.view.panel.roadsystem;
 
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 import edu.kit.rose.controller.roadsystem.RoadSystemController;
 import edu.kit.rose.infrastructure.Position;
 import javafx.geometry.Insets;
@@ -27,7 +28,7 @@ public class ZoomableScrollPane extends ScrollPane {
   private static final int MAX_ZOOM_OUT = -100; //TODO: set back to 1
   private static final int BUTTON_ZOOM_STRENGTH = 1;
 
-  private final Grid grid = new Grid();
+  private Grid grid;
   private Group gridGroup;
   private VBox gridBox;
 
@@ -42,6 +43,16 @@ public class ZoomableScrollPane extends ScrollPane {
    */
   public ZoomableScrollPane() {
     super();
+  }
+
+  /**
+   * Initializes this ZoomableScrollPane. Do not use this pane unless this method was called first.
+   *
+   * @param injector the injector
+   */
+  public void init(Injector injector) {
+    injector.injectMembers(this);
+    initGrid();
     setupGridGroup();
     setupGridBox();
     setContent(gridBox);
@@ -52,6 +63,10 @@ public class ZoomableScrollPane extends ScrollPane {
     setFitToHeight(true);
     setFitToWidth(true);
     setupKeyboardControl();
+  }
+
+  private void initGrid() {
+    this.grid = new Grid(roadSystemController);
   }
 
   private void setupGridGroup() {

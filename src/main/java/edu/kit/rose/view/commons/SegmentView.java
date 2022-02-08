@@ -9,11 +9,14 @@ import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
+import javafx.event.Event;
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 
 /**
@@ -35,7 +38,7 @@ public abstract class SegmentView<T extends Segment> extends Pane
   /**
    * Determines if segment view is drawn with a selection indicator.
    */
-  private boolean drawAsSelected;
+  private boolean isSelected;
 
   /**
    * Determines if the segment can drag itself.
@@ -51,6 +54,11 @@ public abstract class SegmentView<T extends Segment> extends Pane
    * The text provider for translated string.
    */
   private final LocalizedTextProvider translator;
+
+  private ConnectorView draggedConnectorView;
+
+  private Consumer<ConnectorView> onConnectorViewDragged;
+  private Consumer<ConnectorView> onConnectorViewDragEnd;
 
   /**
    * Creates a new segment view that acts as visual representation of a given segment.
@@ -69,21 +77,13 @@ public abstract class SegmentView<T extends Segment> extends Pane
 
     //TODO: fix for base segments
     this.setOnMousePressed(mouseEvent -> {
-      //posOnSourceX = mouseEvent.getX();
-      //posOnSourceY = mouseEvent.getY();
       startPos = localToParent(mouseEvent.getX(), mouseEvent.getY());
+      controller.putSegmentSelection(this.getSegment());
     });
 
     this.setOnDragDetected(mouseEvent -> startFullDrag());
 
     this.setOnMouseDragged(mouseEvent -> {
-      /*System.out.print("\nX: ");
-      System.out.print(this.getLayoutX() + mouseEvent.getX() - posOnSourceX);
-      System.out.print("\nY: ");
-      System.out.print(this.getLayoutY() + mouseEvent.getY() - posOnSourceY);
-
-      this.setLayoutX(this.getLayoutX() + mouseEvent.getX() - posOnSourceX);
-      this.setLayoutY(this.getLayoutY() + mouseEvent.getY() - posOnSourceY);*/
       var currentPos = localToParent(mouseEvent.getX(), mouseEvent.getY());
       var movement = new Movement(currentPos.getX() - startPos.getX(),
           currentPos.getY() - startPos.getY());
@@ -91,17 +91,24 @@ public abstract class SegmentView<T extends Segment> extends Pane
         segment.move(movement);
         startPos = currentPos;
       }
+      if (this.draggedConnectorView != null) {
+        if (this.onConnectorViewDragged != null) {
+          this.onConnectorViewDragged.accept(draggedConnectorView);
+        }
+      }
       mouseEvent.consume();
     });
 
     this.setOnMouseDragReleased(mouseEvent -> {
-      /*var currentPos = localToParent(mouseEvent.getX(), mouseEvent.getY());
-      var movement = new Movement(
-          (int) Math.round(currentPos.getX() - startPos.getX()),
-          (int) Math.round(currentPos.getY() - startPos.getY())
-      );
-      segment.move(movement);*/
+      if (this.draggedConnectorView != null) {
+        if (this.onConnectorViewDragEnd != null) {
+          onConnectorViewDragEnd.accept(draggedConnectorView);
+        }
+      }
+      this.draggedConnectorView = null;
     });
+
+    this.setOnMouseClicked(Event::consume);
   }
 
   private boolean canBeMoved(Movement movement) {
@@ -147,7 +154,7 @@ public abstract class SegmentView<T extends Segment> extends Pane
    * @return whether the segment view is drawn with a selection indicator.
    */
   public boolean getDrawAsSelected() {
-    return drawAsSelected;
+    return isSelected;
   }
 
   /**
@@ -156,7 +163,7 @@ public abstract class SegmentView<T extends Segment> extends Pane
    * @param drawAsSelected determines if selection indicator is visible
    */
   public void setDrawAsSelected(boolean drawAsSelected) {
-    this.drawAsSelected = drawAsSelected;
+    this.isSelected = drawAsSelected;
   }
 
   /**
@@ -177,6 +184,14 @@ public abstract class SegmentView<T extends Segment> extends Pane
     this.isDraggable = isDraggable;
   }
 
+  public void setOnConnectorViewDragged(Consumer<ConnectorView> onConnectorViewDragged) {
+    this.onConnectorViewDragged = onConnectorViewDragged;
+  }
+
+  public void setOnConnectorViewDragEnd(Consumer<ConnectorView> onConnectorViewDragEnd) {
+    this.onConnectorViewDragEnd = onConnectorViewDragEnd;
+  }
+
   /**
    * Returns the localized text provider instance of the segment view.
    *
@@ -186,9 +201,20 @@ public abstract class SegmentView<T extends Segment> extends Pane
     return translator;
   }
 
+  protected void setDraggedConnectorView(ConnectorView connectorView) {
+    this.draggedConnectorView = connectorView;
+  }
+
   /**
    * Draws the segment on a given graphical context.
    *
    */
   protected abstract void redraw();
+
+  /**
+   * Provides the {@link ConnectorView}s of this segment view.
+   *
+   * @return the connector views
+   */
+  public abstract List<ConnectorView> getConnectorViews();
 }

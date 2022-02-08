@@ -5,21 +5,29 @@ import edu.kit.rose.controller.roadsystem.RoadSystemController;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Exit;
+import edu.kit.rose.model.roadsystem.elements.RampSegment;
 import edu.kit.rose.model.roadsystem.elements.Segment;
+import java.util.LinkedList;
+import java.util.List;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
 
 /**
  * An exit segment view is the visual representation of an exit street segment.
  */
-public abstract class RampSegmentView<T extends Segment> extends SegmentView<T> {
+public abstract class RampSegmentView<T extends RampSegment> extends SegmentView<T> {
+
+  private static final int MAIN_STREET_WIDTH = 15;
+  private static final int RAMP_WIDTH = 6;
 
   private Rotate rotation;
   private ImageView imageView;
   private ConnectorView entryConnectorView;
   private ConnectorView exitConnectorView;
   private ConnectorView rampConnectorView;
+  private List<ConnectorView> connectorViews;
   private Image defaultImage;
   private Image selectedImage;
 
@@ -55,14 +63,16 @@ public abstract class RampSegmentView<T extends Segment> extends SegmentView<T> 
   }
 
   private void setupConnectors() {
-    this.getSegment().getConnectors().forEach(c -> {
-      switch (c.getType()) {
-        case ENTRY -> entryConnectorView = new ConnectorView(15, c.getPosition());
-        case EXIT -> exitConnectorView = new ConnectorView(15, c.getPosition());
-        case RAMP_EXIT, RAMP_ENTRY -> rampConnectorView = new ConnectorView(6, c.getPosition());
-        default -> throw new IllegalStateException("segment is not a exit segment.");
-      }
-    });
+    entryConnectorView =
+        new ConnectorView(MAIN_STREET_WIDTH,
+            this.getSegment().getEntry(), this::setDraggedConnectorView);
+    exitConnectorView =
+        new ConnectorView(MAIN_STREET_WIDTH,
+            this.getSegment().getExit(), this::setDraggedConnectorView);
+    rampConnectorView =
+        new ConnectorView(RAMP_WIDTH,
+            this.getSegment().getRamp(), this::setDraggedConnectorView);
+    this.connectorViews = List.of(entryConnectorView, exitConnectorView, rampConnectorView);
   }
 
   private void relocateConnectorView(ConnectorView connectorView) {
@@ -117,6 +127,11 @@ public abstract class RampSegmentView<T extends Segment> extends SegmentView<T> 
 
   @Override
   public void notifyRemoval(Element unit) {
+  }
+
+  @Override
+  public List<ConnectorView> getConnectorViews() {
+    return new LinkedList<>(this.connectorViews);
   }
 
   protected abstract double getImagePosOffsetX();

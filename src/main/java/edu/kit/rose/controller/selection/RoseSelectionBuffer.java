@@ -4,6 +4,7 @@ import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -37,11 +38,9 @@ public class RoseSelectionBuffer implements SelectionBuffer {
 
   @Override
   public void removeAllSelections() {
-    for (Segment segment : this.segmentList) {
-      this.segmentList.remove(segment);
-      observers.forEach(e -> e.notifyRemoval(segment));
-      notifySubscribers();
-    }
+    var removedSegments = new LinkedList<>(segmentList);
+    segmentList.clear();
+    removedSegments.forEach(s -> observers.forEach(o -> o.notifyRemoval(s)));
   }
 
   @Override

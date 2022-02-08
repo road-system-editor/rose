@@ -83,11 +83,23 @@ public interface RoadSystemController extends SetObservable<Segment, RoadSystemC
   void addSegmentSelection(Segment segment);
 
   /**
+   * Marks a segment as selected. Unmarks all currently marked segments.
+   *
+   * @param segment the segment that is to be marked
+   */
+  void putSegmentSelection(Segment segment);
+
+  /**
    * Marks a segment as unselected.
    *
    * @param segment the segment to unselect
    */
   void removeSegmentSelection(Segment segment);
+
+  /**
+   * Unmarks all currently marked segments.
+   */
+  void clearSegmentSelection();
 
   /**
    * Selects all segments that have a connector inside the rectangle

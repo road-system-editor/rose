@@ -1,18 +1,26 @@
 package edu.kit.rose.view.panel.roadsystem;
 
+import edu.kit.rose.controller.roadsystem.RoadSystemController;
 import edu.kit.rose.controller.roadsystem.RoseRoadSystemController;
 import edu.kit.rose.infrastructure.Position;
+import edu.kit.rose.infrastructure.SetObserver;
+import edu.kit.rose.model.roadsystem.elements.Connector;
 import edu.kit.rose.model.roadsystem.elements.Exit;
 import edu.kit.rose.model.roadsystem.elements.Segment;
+import edu.kit.rose.view.commons.ConnectorView;
 import edu.kit.rose.view.commons.ExitSegmentView;
 import edu.kit.rose.view.commons.SegmentView;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import javafx.beans.property.ReadOnlyListProperty;
 import javafx.collections.ObservableList;
+import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
@@ -24,11 +32,12 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import javafx.util.Pair;
 
 /**
  * Represents a background surface that shows a grid, on which segment views can be drawn.
  */
-public class Grid extends Pane {
+public class Grid extends Pane implements SetObserver<Segment, RoadSystemController> {
 
   private static final int HEIGHT = 3000;
   private static final int WIDTH = 3000;
@@ -37,17 +46,23 @@ public class Grid extends Pane {
   private static final Color BACKGROUND_COLOR = Color.gray(0.95);
   private static final Color LINE_COLOR = Color.gray(0.7);
   private static final float LINE_WIDTH = 0.5f;
+  private static final double INTERSECT_DISTANCE = 30;
 
+  private final RoadSystemController controller;
   private final List<SegmentView<?>> segmentViews = new LinkedList<>();
+  private final Map<Segment, SegmentView<?>> segmentViewMap = new HashMap<>();
+  private final List<ConnectorView> connectorViews = new LinkedList<>();
+  private final List<Node> lines = new LinkedList<>();
   private SelectionBox selectionBox;
   private BiConsumer<Position, Position> onAreaSelectedEventHandler;
-  private List<Node> lines;
+
 
   /**
    * creates new Grid.
    */
-  public Grid() {
+  public Grid(RoadSystemController controller) {
     init();
+    this.controller = controller;
     setEventListeners();
   }
 
@@ -68,7 +83,11 @@ public class Grid extends Pane {
   public void addSegmentView(SegmentView<? extends Segment> segmentView) {
     if (!segmentViews.contains(segmentView)) {
       segmentViews.add(segmentView);
+      segmentViewMap.put(segmentView.getSegment(), segmentView);
       getChildren().add(segmentView);
+      this.connectorViews.addAll(segmentView.getConnectorViews());
+      segmentView.setOnConnectorViewDragged(this::onConnectorViewDragged);
+      segmentView.setOnConnectorViewDragEnd(this::onConnectorViewDragEnd);
     }
   }
 
@@ -79,7 +98,9 @@ public class Grid extends Pane {
    */
   public void removeSegmentView(SegmentView<? extends Segment> segmentView) {
     segmentViews.remove(segmentView);
+    segmentViewMap.remove(segmentView.getSegment(), segmentView);
     getChildren().remove(segmentView);
+    this.connectorViews.removeAll(segmentView.getConnectorViews());
   }
 
   private void init() {
@@ -90,13 +111,13 @@ public class Grid extends Pane {
         CornerRadii.EMPTY,
         Insets.EMPTY)));
     getChildren().addAll(getLines());
-    lines = new LinkedList<>();
     lines.addAll(getChildren());
   }
 
   private void setEventListeners() {
     this.setOnMouseDragged(this::onMouseDragged);
     this.setOnMouseReleased(this::onMouseDragReleased);
+    this.setOnMouseClicked(this::deselectAllSegmentsViews);
   }
 
   private void onMouseDragged(MouseEvent mouseDragEvent) {
@@ -119,19 +140,12 @@ public class Grid extends Pane {
       this.getChildren().remove(selectionBox);
       if (onAreaSelectedEventHandler != null) {
 
-        /*Position validLastMousePosition = new Position(
-            (int) Math.round(
-                getCoordinateInBorder(selectionBox.getLastMousePosition().getX(), WIDTH)),
-            (int) Math.round(
-                getCoordinateInBorder(selectionBox.getLastMousePosition().getY(), HEIGHT)));
-        Position startingPosition = new Position(
-            (int) Math.round(selectionBox.getStartingPoint().getX()),
-            (int) Math.round(selectionBox.getStartingPoint().getY()));
+        var startingPosition = new Position(selectionBox.getStartingPoint().getX(),
+            selectionBox.getStartingPoint().getY());
+        var lastMousePosition = new Position(selectionBox.getLastMousePosition().getX(),
+            selectionBox.getLastMousePosition().getY());
 
-        onAreaSelectedEventHandler.accept(validLastMousePosition, startingPosition);
-        TODO: add when project.getRoadSystem is ready
-         */
-        drawSegmentViewsAsSelected();
+        controller.selectSegmentsInRectangle(startingPosition, lastMousePosition);
 
         // Set it to before to the call of onAreaSelectedEventHandler, to ensure selectionBox
         // is null if the event handler throws an exception.
@@ -144,10 +158,7 @@ public class Grid extends Pane {
   }
 
   private void deselectAllSegmentsViews(MouseEvent mouseEvent) {
-    segmentViews.forEach(s -> {
-      s.setDrawAsSelected(false);
-      s.draw();
-    });
+    controller.clearSegmentSelection();
     mouseEvent.consume();
   }
 
@@ -164,6 +175,40 @@ public class Grid extends Pane {
       );
       segmentView.draw();
     });
+  }
+
+  private void onConnectorViewDragged(ConnectorView connectorView) {
+    connectorView.setDragMode(true);
+    var intersectingConnectorViews =
+        getIntersectingConnectorViews(connectorView);
+    connectorViews.stream()
+        .filter(c -> c != connectorView)
+        .forEach(c -> c.setConnectMode(intersectingConnectorViews.contains(c)));
+    connectorView.setConnectMode(!intersectingConnectorViews.isEmpty());
+    connectorView.setDragMode(false);
+  }
+
+  private void onConnectorViewDragEnd(ConnectorView connectorView) {
+    connectorViews.forEach(c -> c.setConnectMode(false));
+  }
+
+  private List<ConnectorView> getIntersectingConnectorViews(ConnectorView connectorView) {
+    return this.connectorViews.stream()
+            .filter(c -> c != connectorView)
+            .filter(c -> intersect(connectorView, c))
+            .collect(Collectors.toList());
+  }
+
+  private boolean intersect(ConnectorView connectorView1, ConnectorView connectorView2) {
+    var connectorViewPos1 = getConnectorViewPositionOnGrid(connectorView1);
+    var connectorViewPos2 = getConnectorViewPositionOnGrid(connectorView2);
+    return connectorViewPos1.distance(connectorViewPos2) <= INTERSECT_DISTANCE;
+  }
+
+  private Point2D getConnectorViewPositionOnGrid(ConnectorView connectorView) {
+    assert (connectorView.getParent().getParent() == this);
+    return connectorView.getParent().localToParent(
+        connectorView.getCenterX(), connectorView.getCenterY());
   }
 
   private Collection<Line> getLines() {
@@ -194,6 +239,31 @@ public class Grid extends Pane {
     line.setStroke(LINE_COLOR);
     line.setStrokeWidth(LINE_WIDTH);
     return line;
+  }
+
+  @Override
+  public void notifyAddition(Segment unit) {
+    if (!segmentViewMap.containsKey(unit)) {
+      throw new IllegalArgumentException("unknown segment");
+    }
+    var segmentView = segmentViewMap.get(unit);
+    segmentView.setDrawAsSelected(true);
+    segmentView.draw();
+  }
+
+  @Override
+  public void notifyRemoval(Segment unit) {
+    if (!segmentViewMap.containsKey(unit)) {
+      throw new IllegalArgumentException("unknown segment");
+    }
+    var segmentView = segmentViewMap.get(unit);
+    segmentView.setDrawAsSelected(false);
+    segmentView.draw();
+  }
+
+  @Override
+  public void notifyChange(RoadSystemController unit) {
+
   }
 
   private enum Orientation {

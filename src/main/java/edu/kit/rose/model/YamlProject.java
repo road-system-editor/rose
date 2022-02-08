@@ -255,7 +255,7 @@ class YamlProject {
     @JsonIgnore
     private final Exit segment;
 
-    @JsonProperty("EIN_Geschwindigkeit")
+    @JsonProperty("AUS_Geschwindigkeit")
     String rampSpeed;
 
     YamlExitSegment(YamlProject yamlProject, Exit segment) {
@@ -300,12 +300,12 @@ class YamlProject {
 
     @Override
     protected List<Connector> getPredecessorConnectors() {
-      return List.of(this.segment.getEntry());
+      return List.of(this.segment.getEntry(), this.segment.getRamp());
     }
 
     @Override
     protected List<Connector> getSuccessorConnectors() {
-      return List.of(this.segment.getExit(), this.segment.getRamp());
+      return List.of(this.segment.getExit());
     }
   }
 

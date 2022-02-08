@@ -24,7 +24,6 @@ public class CriteriaManager extends RoseSetObservable<PlausibilityCriterion, Cr
 
   private final CriterionFactory criterionFactory;
   private final ArrayList<PlausibilityCriterion> criteria;
-  private RoadSystem roadSystem;
   private ViolationManager violationManager;
 
   /**
@@ -45,7 +44,6 @@ public class CriteriaManager extends RoseSetObservable<PlausibilityCriterion, Cr
    *     will be observed by created criteria
    */
   public void setRoadSystem(RoadSystem roadSystem) {
-    this.roadSystem = roadSystem;
     this.criterionFactory.setRoadSystem(roadSystem);
     this.criteria.stream()
         .filter(c -> c.getType() == PlausibilityCriterionType.COMPATIBILITY)
@@ -62,6 +60,7 @@ public class CriteriaManager extends RoseSetObservable<PlausibilityCriterion, Cr
    */
   public void setViolationManager(ViolationManager violationManager) {
     this.violationManager = violationManager;
+    this.criterionFactory.setViolationManager(this.violationManager);
     this.criteria.forEach(c -> c.setViolationManager(this.violationManager));
   }
 

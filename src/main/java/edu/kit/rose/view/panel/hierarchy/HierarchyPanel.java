@@ -9,15 +9,12 @@ import edu.kit.rose.model.Project;
 import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.elements.Connection;
 import edu.kit.rose.model.roadsystem.elements.Element;
-import edu.kit.rose.model.roadsystem.elements.Entrance;
 import edu.kit.rose.model.roadsystem.elements.Group;
-import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.view.commons.FxmlContainer;
 import edu.kit.rose.view.commons.SearchBar;
 import java.util.Collection;
 import java.util.List;
-import java.util.function.Predicate;
-import javafx.beans.binding.Bindings;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TreeItem;
@@ -43,7 +40,7 @@ public class HierarchyPanel extends FxmlContainer
   @FXML
   private Button createGroupButton;
   @FXML
-  private TreeView<Element> elementsListView;
+  private TreeView<Element> elementsTreeView;
   @FXML
   private BorderPane hierarchyLayout;
 
@@ -56,7 +53,7 @@ public class HierarchyPanel extends FxmlContainer
     super("HierarchyPanel.fxml");
 
     rootItem = new ElementTreeItem(null);
-
+    rootItem.getInternalChildren().add(new ElementTreeItem(new Group()));
     setUp();
   }
 
@@ -65,13 +62,13 @@ public class HierarchyPanel extends FxmlContainer
       rootItem.updateFilter(searchBar.getSearchString());
     });
 
-    elementsListView
+    elementsTreeView
         .setCellFactory(elementsTree -> new ElementTreeCell(controller, getTranslator()));
-    elementsListView.setShowRoot(false);
-    elementsListView.setRoot(rootItem);
+    elementsTreeView.setShowRoot(false);
+    elementsTreeView.setRoot(rootItem);
 
-    elementsListView.setOnDragOver(this::onDragOver);
-    elementsListView.setOnDragDropped(this::onDragDropped);
+    elementsTreeView.setOnDragOver(this::onDragOver);
+    elementsTreeView.setOnDragDropped(this::onDragDropped);
   }
 
   private void onDragOver(DragEvent dragEvent) {
@@ -122,12 +119,10 @@ public class HierarchyPanel extends FxmlContainer
 
   @Override
   public void notifyAdditionSecond(Connection unit) {
-
   }
 
   @Override
   public void notifyRemovalSecond(Connection unit) {
-
   }
 
   @Override

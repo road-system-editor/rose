@@ -35,12 +35,17 @@ class SegmentView extends ElementView<Segment> {
   SegmentView(LocalizedTextProvider translator, Segment segment, HierarchyController controller) {
     super(translator, "SegmentView.fxml", segment, controller);
 
+    deleteSegmentButton.setOnMouseClicked(this::onDeleteSegmentButtonClicked);
     segmentViewSurface.setOnMouseClicked(this::onSegmentViewSurfaceMouseClicked);
   }
 
   private void onSegmentViewSurfaceMouseClicked(MouseEvent mouseEvent) {
     getController().toggleSegmentSelection(getElement());
     mouseEvent.consume();
+  }
+
+  private void onDeleteSegmentButtonClicked(MouseEvent mouseEvent) {
+    //TODO: delete element
   }
 
   @Override
@@ -64,12 +69,18 @@ class SegmentView extends ElementView<Segment> {
 
   @Override
   public void notifyAddition(Element unit) {
-
+    if (unit == getElement()) {
+      segmentViewSurface.getStyleClass().remove(UNSELECTED_STYLE_CLASS);
+      segmentViewSurface.getStyleClass().add(SELECTED_STYLE_CLASS);
+    }
   }
 
   @Override
   public void notifyRemoval(Element unit) {
-
+    if (unit == getElement()) {
+      segmentViewSurface.getStyleClass().remove(SELECTED_STYLE_CLASS);
+      segmentViewSurface.getStyleClass().add(UNSELECTED_STYLE_CLASS);
+    }
   }
 }
 

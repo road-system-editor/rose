@@ -11,12 +11,15 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
 
 /**
  * A group view represents a {@link Group} in the hierarchy view.
  */
 class GroupView extends ElementView<Group> {
 
+  @FXML
+  private GridPane groupViewSurface;
   @FXML
   private Label segmentNameLabel;
   @FXML
@@ -34,6 +37,13 @@ class GroupView extends ElementView<Group> {
 
     segmentNameLabel.setText(group.getName());
     deleteGroupButton.setOnMouseClicked(this::onDeleteGroupButtonClicked);
+    groupViewSurface.setOnMouseClicked(this::onGroupViewSurfaceClicked);
+    groupViewSurface.getStylesheets().add(ELEMENT_VIEW_STYLE_CSS_FILE);
+    groupViewSurface.getStyleClass().add(UNSELECTED_STYLE_CLASS);
+  }
+
+  private void onGroupViewSurfaceClicked(MouseEvent mouseEvent) {
+    //TODO: traverse group content and select them
   }
 
   private void onDeleteGroupButtonClicked(MouseEvent mouseEvent) {
@@ -56,11 +66,9 @@ class GroupView extends ElementView<Group> {
 
   @Override
   public void notifyAddition(Element unit) {
-
   }
 
   @Override
   public void notifyRemoval(Element unit) {
-
   }
 }

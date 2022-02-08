@@ -37,19 +37,19 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
         PlausibilityCriterion> implements PlausibilityCriterion {
   private static final boolean USE_DISCREPANCY = true;
   private static final boolean NOT_USE_DISCREPANCY = false;
+  private final Set<SegmentType> segmentTypes;
+  private final HashMap<Element, Violation> elementViolationMap;
   private String name;
   private AttributeType attributeType;
   private ValidationType operatorType;
   private double discrepancy;
-  private final Set<SegmentType> segmentTypes;
-  private final RoadSystem roadSystem;
-  private final ViolationManager violationManager;
-  private final HashMap<Element, Violation> elementViolationMap;
+  private RoadSystem roadSystem;
+  private ViolationManager violationManager;
 
   /**
    * Constructor.
    *
-   * @param roadSystem The Roadsystem this Criterion applied to.
+   * @param roadSystem       The Roadsystem this Criterion applied to.
    * @param violationManager manager to which violations will be added
    */
   CompatibilityCriterion(RoadSystem roadSystem, ViolationManager violationManager) {
@@ -59,6 +59,16 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
     this.violationManager = violationManager;
     this.roadSystem = roadSystem;
     this.elementViolationMap = new HashMap<>();
+  }
+
+  /**
+   * Sets the {@link RoadSystem} used by this CompatibilityCriterion.
+   * Checks do not work until this method has been called at least once with a valid roadSystem.
+   *
+   * @param roadSystem the roadSystem.
+   */
+  public void setRoadSystem(RoadSystem roadSystem) {
+    this.roadSystem = roadSystem;
   }
 
   /**
@@ -154,6 +164,11 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
   }
 
   @Override
+  public void setViolationManager(ViolationManager violationManager) {
+    this.violationManager = violationManager;
+  }
+
+  @Override
   public void addSegmentType(SegmentType type) {
     this.segmentTypes.add(type);
     Iterator<SetObserver<SegmentType, PlausibilityCriterion>> iterator = getSubscriberIterator();
@@ -173,6 +188,9 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
 
   @Override
   public void notifyChange(Element unit) {
+    if (this.roadSystem == null) {
+      throw new IllegalStateException("can not check connections without set roadSystem.");
+    }
     ArrayList<Segment> invalidSegments;
     if (!this.operatorType.equals(ValidationType.DEFAULT) && !unit.isContainer()) {
       ValidationStrategy strategy;
@@ -202,10 +220,24 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
       }
       if (!invalidSegments.isEmpty()
               && this.segmentTypes.contains(((Segment) unit).getSegmentType())) {
-        invalidSegments.add((Segment) unit);
-        Violation violation = new Violation(this, invalidSegments);
-        this.violationManager.addViolation(violation);
-        this.elementViolationMap.put(unit, violation);
+        if (!(this.elementViolationMap.containsKey(unit)
+                && this.elementViolationMap.get(unit).offendingSegments().size()
+                == invalidSegments.size()
+                && this.elementViolationMap.get(unit).offendingSegments().containsAll(
+                invalidSegments
+        ))) {
+          if (this.elementViolationMap.containsKey(unit)) {
+            this.violationManager.removeViolation(elementViolationMap.get(unit));
+            elementViolationMap.remove(unit);
+          }
+          invalidSegments.add((Segment) unit);
+          Violation violation = new Violation(this, invalidSegments);
+          this.violationManager.addViolation(violation);
+          this.elementViolationMap.put(unit, violation);
+        }
+      } else if (elementViolationMap.containsKey(unit)) {
+        this.violationManager.removeViolation(elementViolationMap.get(unit));
+        elementViolationMap.remove(unit);
       }
     }
   }
@@ -249,13 +281,13 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
    * Checks the data type of attribute type use for this criterion
    * and casts the right data types to strategy and accessors.
    *
-   * @param strategy        the strategy to be validated
-   * @param accessor1       first accessor to be checked
-   * @param accessor2       second accessor to be checked
-   * @param useDiscrepancy  true the strategy requires discrepancy
-   *                        and false otherwise
-   * @return                true if the accessors are valid to each other according
-   *                        to validation strategy and false otherwise
+   * @param strategy       the strategy to be validated
+   * @param accessor1      first accessor to be checked
+   * @param accessor2      second accessor to be checked
+   * @param useDiscrepancy true the strategy requires discrepancy
+   *                       and false otherwise
+   * @return true if the accessors are valid to each other according
+   *      to validation strategy and false otherwise
    */
   private boolean checkValid(ValidationStrategy strategy,
                              AttributeAccessor accessor1, AttributeAccessor accessor2,
@@ -286,8 +318,8 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
   }
 
   private <T> boolean validateWithType(ValidationStrategy strategy,
-                               AttributeAccessor accessor1, AttributeAccessor accessor2,
-                               boolean useDiscrepancy) {
+                                       AttributeAccessor accessor1, AttributeAccessor accessor2,
+                                       boolean useDiscrepancy) {
     AttributeAccessor<T> auxAccessor1 = (AttributeAccessor<T>) accessor1;
     AttributeAccessor<T> auxAccessor2 = (AttributeAccessor<T>) accessor2;
     ValidationStrategy<T> auxStrategy = (ValidationStrategy<T>) strategy;

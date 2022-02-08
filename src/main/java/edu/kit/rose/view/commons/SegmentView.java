@@ -84,6 +84,7 @@ public abstract class SegmentView<T extends Segment> extends Pane implements Uni
    * Draws the segment.
    */
   public void draw() {
+
     redraw(canvas.getGraphicsContext2D());
   }
 

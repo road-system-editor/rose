@@ -49,7 +49,7 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
   /**
    * Constructor.
    *
-   * @param roadSystem The Roadsystem this Criterion applied to.
+   * @param roadSystem       The Roadsystem this Criterion applied to.
    * @param violationManager manager to which violations will be added
    */
   CompatibilityCriterion(RoadSystem roadSystem, ViolationManager violationManager) {
@@ -220,10 +220,24 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
       }
       if (!invalidSegments.isEmpty()
               && this.segmentTypes.contains(((Segment) unit).getSegmentType())) {
-        invalidSegments.add((Segment) unit);
-        Violation violation = new Violation(this, invalidSegments);
-        this.violationManager.addViolation(violation);
-        this.elementViolationMap.put(unit, violation);
+        if (!(this.elementViolationMap.containsKey(unit)
+                && this.elementViolationMap.get(unit).offendingSegments().size()
+                == invalidSegments.size()
+                && this.elementViolationMap.get(unit).offendingSegments().containsAll(
+                invalidSegments
+        ))) {
+          if (this.elementViolationMap.containsKey(unit)) {
+            this.violationManager.removeViolation(elementViolationMap.get(unit));
+            elementViolationMap.remove(unit);
+          }
+          invalidSegments.add((Segment) unit);
+          Violation violation = new Violation(this, invalidSegments);
+          this.violationManager.addViolation(violation);
+          this.elementViolationMap.put(unit, violation);
+        }
+      } else if (elementViolationMap.containsKey(unit)) {
+        this.violationManager.removeViolation(elementViolationMap.get(unit));
+        elementViolationMap.remove(unit);
       }
     }
   }
@@ -267,13 +281,13 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
    * Checks the data type of attribute type use for this criterion
    * and casts the right data types to strategy and accessors.
    *
-   * @param strategy        the strategy to be validated
-   * @param accessor1       first accessor to be checked
-   * @param accessor2       second accessor to be checked
-   * @param useDiscrepancy  true the strategy requires discrepancy
-   *                        and false otherwise
-   * @return                true if the accessors are valid to each other according
-   *                        to validation strategy and false otherwise
+   * @param strategy       the strategy to be validated
+   * @param accessor1      first accessor to be checked
+   * @param accessor2      second accessor to be checked
+   * @param useDiscrepancy true the strategy requires discrepancy
+   *                       and false otherwise
+   * @return true if the accessors are valid to each other according
+   *      to validation strategy and false otherwise
    */
   private boolean checkValid(ValidationStrategy strategy,
                              AttributeAccessor accessor1, AttributeAccessor accessor2,
@@ -304,8 +318,8 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
   }
 
   private <T> boolean validateWithType(ValidationStrategy strategy,
-                               AttributeAccessor accessor1, AttributeAccessor accessor2,
-                               boolean useDiscrepancy) {
+                                       AttributeAccessor accessor1, AttributeAccessor accessor2,
+                                       boolean useDiscrepancy) {
     AttributeAccessor<T> auxAccessor1 = (AttributeAccessor<T>) accessor1;
     AttributeAccessor<T> auxAccessor2 = (AttributeAccessor<T>) accessor2;
     ValidationStrategy<T> auxStrategy = (ValidationStrategy<T>) strategy;

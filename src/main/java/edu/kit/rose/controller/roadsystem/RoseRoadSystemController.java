@@ -92,8 +92,17 @@ public class RoseRoadSystemController extends Controller
     DeleteStreetSegmentCommand deleteStreetSegmentCommand
         = new DeleteStreetSegmentCommand(this.project, segment);
 
-    changeCommandBuffer.addAndExecuteCommand(deleteStreetSegmentCommand);
     selectionBuffer.removeSegmentSelection(segment);
+    changeCommandBuffer.addAndExecuteCommand(deleteStreetSegmentCommand);
+  }
+
+  @Override
+  public void deleteStreetSegment() { //TODO: can only delete on segment at a time
+    var selectedSegments = selectionBuffer.getSelectedSegments();
+    if (selectedSegments.size() == 1) {
+      var segment = selectedSegments.get(0);
+      deleteStreetSegment(segment);
+    }
   }
 
   @Override

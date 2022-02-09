@@ -12,6 +12,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import javafx.event.Event;
 import javafx.geometry.Point2D;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 
 /**
@@ -87,9 +88,9 @@ public abstract class SegmentView<T extends Segment> extends Pane
         initialPos = new Position(startPoint.getX(), startPoint.getY());
         if (isSelected) {
           return;
-        }
+        } //TODO: deselektion durch ctrl click geht nicht weil sonst das zusammen draggen kaputt ist
         if (mouseEvent.isControlDown()) {
-          controller.addSegmentSelection(this.getSegment());
+          controller.toggleSegmentSelection(this.getSegment());
         } else {
           controller.putSegmentSelection(this.getSegment());
         }
@@ -105,6 +106,7 @@ public abstract class SegmentView<T extends Segment> extends Pane
 
     this.setOnMouseDragged(mouseEvent -> {
       if (isActive()) {
+        mouseEvent.setDragDetect(true);
         var currentPos = localToParent(mouseEvent.getX(), mouseEvent.getY());
         var movement = new Movement(currentPos.getX() - startPoint.getX(),
             currentPos.getY() - startPoint.getY());
@@ -123,6 +125,7 @@ public abstract class SegmentView<T extends Segment> extends Pane
 
     this.setOnMouseDragReleased(mouseEvent -> {
       if (isActive()) {
+        mouseEvent.setDragDetect(false);
         var releasePoint = localToParent(mouseEvent.getX(), mouseEvent.getY());
         var releasePosition = new Position(releasePoint.getX(), releasePoint.getY());
         if (this.draggedConnectorView != null) {

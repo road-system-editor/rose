@@ -97,6 +97,7 @@ public class Grid extends Pane implements SetObserver<Segment, RoadSystemControl
    * @param segmentView the segment view to remove
    */
   public void removeSegmentView(SegmentView<? extends Segment> segmentView) {
+    segmentView.getSegment().removeSubscriber(segmentView);
     segmentViews.remove(segmentView);
     segmentViewMap.remove(segmentView.getSegment(), segmentView);
     getChildren().remove(segmentView);

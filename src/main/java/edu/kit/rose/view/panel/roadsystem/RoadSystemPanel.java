@@ -19,10 +19,15 @@ import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.view.commons.EntranceSegmentView;
 import edu.kit.rose.view.commons.ExitSegmentView;
 import edu.kit.rose.view.commons.FxmlContainer;
+import edu.kit.rose.view.commons.SegmentView;
 import edu.kit.rose.view.commons.SegmentViewFactory;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javafx.fxml.FXML;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 
 
 /**
@@ -67,6 +72,8 @@ public class RoadSystemPanel extends FxmlContainer
 
   private SegmentViewFactory segmentViewFactory;
 
+  private final  Map<Segment, SegmentView<?>> segmentViewMap = new HashMap<>();
+
 
 
   /**
@@ -101,6 +108,8 @@ public class RoadSystemPanel extends FxmlContainer
     this.roadSystemController.addSubscriber(this.roadSystemGrid);
 
     this.project.getRoadSystem().addSubscriber(this);
+
+    setUpEventHandlers();
   }
 
   @Override
@@ -129,16 +138,37 @@ public class RoadSystemPanel extends FxmlContainer
       var segment = (Segment) unit;
       var segmentView = this.segmentViewFactory.createForSegment(segment);
       roadSystemGrid.addSegmentView(segmentView);
+      segmentViewMap.put(segment, segmentView);
     }
   }
 
   @Override
   public void notifyRemoval(Element unit) {
-
+    if (!unit.isContainer()) {
+      var segment = (Segment) unit;
+      var segmentView = segmentViewMap.get(segment);
+      roadSystemGrid.removeSegmentView(segmentView);
+      segmentViewMap.remove(segment, segmentView);
+    }
   }
 
   @Override
   public void notifyChange(RoadSystem unit) {
 
+  }
+
+  private void setUpEventHandlers() {
+    setOnKeyPressed(keyEvent -> getAction(keyEvent).run());
+  }
+
+  private Runnable getAction(KeyEvent keyEvent) {
+    var keyCode = keyEvent.getCode();
+    return switch (keyCode) {
+      case R -> roadSystemController::rotateSegment;
+      case DELETE -> roadSystemController::deleteStreetSegment;
+      case Z -> keyEvent.isControlDown() ? applicationController::undo : () -> {};
+      case Y -> keyEvent.isControlDown() ? applicationController::redo : () -> {};
+      default -> () -> {};
+    };
   }
 }

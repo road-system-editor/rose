@@ -24,7 +24,7 @@ import javafx.scene.layout.StackPane;
  * Clicking a blueprint will create a segment of the selected type in the editor.
  */
 class SegmentBlueprint extends StackPane {
-  private static final int HEIGHT = 90;
+  private static final int HEIGHT = 120;
   private static final int WIDTH = 200;
   private static final int TRANSLATE_X = 10;
   private static final int DOUBLE_CLICK = 2;
@@ -81,15 +81,16 @@ class SegmentBlueprint extends StackPane {
       case EXIT -> {
         image = new Image(exitUrl.toString());
         view = new ImageView(image);
-        view.setFitWidth(80);
+        view.setFitWidth(130);
         view.setFitHeight(90);
       }
       case ENTRANCE -> {
         image = new Image(entranceUrl.toString());
         view = new ImageView(image);
-        view.setFitWidth(80);
+        view.setFitWidth(130);
         view.setFitHeight(90);
       }
+
       default -> throw new IllegalArgumentException("SegmentType doesnt exist");
     }
 

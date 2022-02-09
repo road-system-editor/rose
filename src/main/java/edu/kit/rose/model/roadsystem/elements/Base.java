@@ -38,11 +38,11 @@ public class Base extends HighwaySegment {
                                 List<AttributeAccessor<?>> exitAttributesList) {
     this.entryConnector = new MovableConnector(ConnectorType.ENTRY,
         new Position(getCenter().getX(),
-            getCenter().getY() + INITIAL_CONNECTOR_DISTANCE_TO_CENTER),
+            getCenter().getY() + INITIAL_ENTRY_DISTANCE_TO_CENTER),
         entryAttributesList);
     this.exitConnector = new MovableConnector(ConnectorType.EXIT,
         new Position(getCenter().getX(),
-            getCenter().getY() - INITIAL_CONNECTOR_DISTANCE_TO_CENTER),
+            getCenter().getY() - INITIAL_EXIT_DISTANCE_TO_CENTER),
         exitAttributesList);
     connectors.add(entryConnector);
     connectors.add(exitConnector);

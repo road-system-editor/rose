@@ -120,7 +120,7 @@ public class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, 
 
   private void removeSegment(Segment segment) {
     elements.remove(segment);
-    var connectionsToSegment = segmentConnectionGraph.edgesOf(segment);
+    var connectionsToSegment = new LinkedList<>(segmentConnectionGraph.edgesOf(segment));
     segment.getConnectors().forEach(connectorSegmentMap::remove);
     segmentConnectionGraph.removeVertex(segment);
     subscribers.forEach(s -> connectionsToSegment.forEach(s::notifyRemovalSecond));

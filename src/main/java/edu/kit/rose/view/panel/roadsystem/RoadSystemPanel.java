@@ -12,10 +12,12 @@ import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.elements.Connection;
+import edu.kit.rose.model.roadsystem.elements.Connector;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Entrance;
 import edu.kit.rose.model.roadsystem.elements.Exit;
 import edu.kit.rose.model.roadsystem.elements.Segment;
+import edu.kit.rose.view.commons.ConnectorView;
 import edu.kit.rose.view.commons.EntranceSegmentView;
 import edu.kit.rose.view.commons.ExitSegmentView;
 import edu.kit.rose.view.commons.FxmlContainer;
@@ -25,7 +27,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import javafx.fxml.FXML;
+import javafx.geometry.Point2D;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
@@ -73,6 +77,7 @@ public class RoadSystemPanel extends FxmlContainer
   private SegmentViewFactory segmentViewFactory;
 
   private final  Map<Segment, SegmentView<?>> segmentViewMap = new HashMap<>();
+  private final Map<Connection, ConnectionView> connectionViewMap = new HashMap<>();
 
 
 
@@ -124,12 +129,42 @@ public class RoadSystemPanel extends FxmlContainer
 
   @Override
   public void notifyAdditionSecond(Connection unit) {
+    var connector1 = unit.getConnectors().get(0);
+    var connector2 = unit.getOther(connector1);
+    var segmentViews = segmentViewMap.values();
+    var connectorView1 = getConnectorViewFromSegmentViews(connector1, segmentViews);
+    var connectorView2 = getConnectorViewFromSegmentViews(connector2, segmentViews);
+    var connector1Pos = getConnectorViewPosOnGrid(connectorView1);
+    var connector2Pos = getConnectorViewPosOnGrid(connectorView2);
+    var connectionView = new ConnectionView(connector1Pos, connector2Pos);
+    connectionViewMap.put(unit, connectionView);
+    roadSystemGrid.getChildren().add(connectionView);
+  }
 
+  private Point2D getConnectorViewPosOnGrid(ConnectorView connectorView) {
+    var segment = connectorView.getParent();
+    return segment.localToParent(connectorView.getCenterX(), connectorView.getCenterY());
+  }
+
+  private ConnectorView getConnectorViewFromSegmentViews(Connector connector,
+                                       Collection<SegmentView<?>> segmentViews) {
+    var connectorViewOptional =
+        segmentViews.stream()
+        .flatMap(segmentView -> segmentView.getConnectorViews().stream())
+        .filter(connectorView -> connectorView.getConnector() == connector)
+        .findFirst();
+    if (connectorViewOptional.isPresent()) {
+      return connectorViewOptional.get();
+    } else {
+      throw new IllegalStateException("unknown connector.");
+    }
   }
 
   @Override
   public void notifyRemovalSecond(Connection unit) {
-
+    var connectionView = connectionViewMap.get(unit);
+    roadSystemGrid.getChildren().remove(connectionView);
+    connectionViewMap.remove(unit, connectionView);
   }
 
   @Override

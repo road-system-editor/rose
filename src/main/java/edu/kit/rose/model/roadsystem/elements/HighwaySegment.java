@@ -22,7 +22,8 @@ public abstract class HighwaySegment
     extends RoseSetObservable<Element, Element>
     implements Segment {
 
-  protected static final int INITIAL_CONNECTOR_DISTANCE_TO_CENTER = 30;
+  protected static final int INITIAL_EXIT_DISTANCE_TO_CENTER = 33;
+  protected static final int INITIAL_ENTRY_DISTANCE_TO_CENTER = 27;
 
   protected final List<AttributeAccessor<?>> attributeAccessors = new ArrayList<>();
   protected final Set<Connector> connectors = new HashSet<>();
@@ -39,7 +40,7 @@ public abstract class HighwaySegment
   private final AttributeAccessor<String> nameAccessor;
   private String comment;
   private final AttributeAccessor<String> commentAccessor;
-  private int length = 2 * INITIAL_CONNECTOR_DISTANCE_TO_CENTER;
+  private int length = INITIAL_EXIT_DISTANCE_TO_CENTER + INITIAL_ENTRY_DISTANCE_TO_CENTER;
   private final AttributeAccessor<Integer> lengthAccessor;
   private int pitch = 0;
   private final AttributeAccessor<Integer> slopeAccessor;
@@ -203,13 +204,9 @@ public abstract class HighwaySegment
     var x = connector.getPosition().getX();
     var y = connector.getPosition().getY();
 
-    // translate point back to origin:
-    x -= center.getX();
-    y -= center.getY();
-
     // rotate point
-    double newX = y * s - x * c;
-    double newY = -x * s - y * c;
+    double newX = x * c - y * s;
+    double newY = x * s + y * c;
 
     // translate point back:
     return new Position((int) Math.round(newX + center.getX()),

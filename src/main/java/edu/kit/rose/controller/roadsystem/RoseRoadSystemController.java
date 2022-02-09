@@ -9,12 +9,21 @@ import edu.kit.rose.infrastructure.Movement;
 import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.model.Project;
+import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.elements.Connector;
 import edu.kit.rose.model.roadsystem.elements.MovableConnector;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
+import javafx.collections.transformation.SortedList;
+import javafx.geometry.Point2D;
 
 /**
  * Provides the functionality for managing roadsystems
@@ -42,6 +51,8 @@ public class RoseRoadSystemController extends Controller
    */
   private final Project project;
 
+  private final RoadSystem roadSystem;
+
   private Position initialSegmentDragPosition;
   private Connector dragConnector;
   private Position initialConnectorDragPosition;
@@ -65,6 +76,7 @@ public class RoseRoadSystemController extends Controller
     this.selectionBuffer = selectionBuffer;
     selectionBuffer.addSubscriber(this);
     this.project = project;
+    this.roadSystem = project.getRoadSystem();
 
     observers = new HashSet<>();
   }
@@ -137,7 +149,7 @@ public class RoseRoadSystemController extends Controller
   @Override
   public void endDragStreetSegment(Position segmentPosition, Connector draggedConnector) {
     endDragStreetSegment(segmentPosition);
-    //TODO: connector connection logik
+    buildConnection(draggedConnector);
   }
 
   @Override
@@ -231,6 +243,8 @@ public class RoseRoadSystemController extends Controller
 
     dragConnector = null;
     initialConnectorDragPosition = null;
+
+    buildConnection(dragConnector);
   }
 
   @Override
@@ -279,5 +293,64 @@ public class RoseRoadSystemController extends Controller
   @Override
   public void notifyChange(SelectionBuffer unit) {
     notifySubscribers();
+  }
+
+  private void buildConnection(Connector draggedConnector) {
+    var connectorSegmentMap = getConnectorSegmentMap();
+    var draggedConnectorPosPoint =
+        getConnectorPosPoint(draggedConnector, connectorSegmentMap.get(draggedConnector));
+    var intersectingConnectors =
+        getIntersectingConnectors(draggedConnectorPosPoint, connectorSegmentMap);
+    intersectingConnectors.remove(draggedConnector);
+    if (!intersectingConnectors.isEmpty()) {
+      var closestConnector =
+          getClosestConnectorToPoint(intersectingConnectors, draggedConnectorPosPoint,
+              connectorSegmentMap);
+      this.roadSystem.connectConnectors(draggedConnector, closestConnector);
+    }
+  }
+
+  private Connector getClosestConnectorToPoint(List<Connector> connectors, Point2D point,
+                                     Map<Connector, Segment> connectorSegmentMap) {
+    var connectorList = new LinkedList<>(connectors);
+    connectorList.sort((connector1, connector2) -> {
+      Double distance1 = getDistanceFromConnectorToPoint(connector1, point, connectorSegmentMap);
+      Double distance2 = getDistanceFromConnectorToPoint(connector2, point, connectorSegmentMap);
+      return distance1.compareTo(distance2);
+    });
+    return connectorList.get(0);
+  }
+
+  private List<Connector> getIntersectingConnectors(Point2D draggedConnectorPosPoint,
+                            Map<Connector, Segment> connectorSegmentMap) {
+    return connectorSegmentMap.keySet().stream()
+        .filter(connector -> {
+          var connectorPosPoint =
+              getConnectorPosPoint(connector, connectorSegmentMap.get(connector));
+          return draggedConnectorPosPoint.distance(connectorPosPoint) <= INTERSECT_DISTANCE;
+        }).collect(Collectors.toList());
+  }
+
+  private Map<Connector, Segment> getConnectorSegmentMap() {
+    var connectorSegmentMap = new HashMap<Connector, Segment>();
+    roadSystem.getElements().stream()
+        .filter(element -> !element.isContainer())
+        .map(element -> (Segment) element)
+        .forEach(segment -> {
+          var segmentConnectors = segment.getConnectors();
+          segmentConnectors.forEach(c -> connectorSegmentMap.put(c, segment));
+        });
+    return connectorSegmentMap;
+  }
+
+  private Point2D getConnectorPosPoint(Connector connector, Segment segment) {
+    var connectorPos = segment.getRotatedConnectorPosition(connector);
+    return new Point2D(connectorPos.getX(), connectorPos.getY());
+  }
+
+  private double getDistanceFromConnectorToPoint(Connector connector, Point2D point,
+                                                 Map<Connector, Segment> connectorSegmentMap) {
+    return getConnectorPosPoint(connector, connectorSegmentMap.get(connector))
+        .distance(point);
   }
 }

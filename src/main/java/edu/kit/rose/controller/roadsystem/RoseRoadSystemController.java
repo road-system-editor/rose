@@ -85,7 +85,6 @@ public class RoseRoadSystemController extends Controller
         = new CreateStreetSegmentCommand(this.project, segmentType);
 
     changeCommandBuffer.addAndExecuteCommand(createStreetSegmentCommand);
-    createStreetSegmentCommand.execute();
   }
 
   @Override
@@ -94,7 +93,6 @@ public class RoseRoadSystemController extends Controller
         = new DeleteStreetSegmentCommand(this.project, segment);
 
     changeCommandBuffer.addAndExecuteCommand(deleteStreetSegmentCommand);
-    deleteStreetSegmentCommand.execute();
     selectionBuffer.removeSegmentSelection(segment);
   }
 

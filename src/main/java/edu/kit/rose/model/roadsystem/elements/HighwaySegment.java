@@ -166,7 +166,6 @@ public abstract class HighwaySegment
   public void move(Movement movement) {
     center.setX(center.getX() + movement.getX());
     center.setY(center.getY() + movement.getY());
-    //connectors.forEach(c -> c.move(movement));
     notifySubscribers();
   }
 

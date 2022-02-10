@@ -25,15 +25,13 @@
         <VBox fx:id="buttonVbox" GridPane.columnIndex="0" GridPane.rowIndex="1"
                prefWidth="${parentContainer.width}" style="-fx-padding: 5; -fx-spacing: 5">
             <HBox style="-fx-spacing: 5" prefWidth="${buttonVbox.width}">
-                <Button fx:id="newButton" stylesheets="@../../Button.css"
-                        styleClass="regularButton" prefWidth="100"/>
-                <Button fx:id="exportButton" stylesheets="@../../Button.css"
-                        styleClass="regularButton" prefWidth="100"/>
-                <Button fx:id="importButton" stylesheets="@../../Button.css"
-                        styleClass="regularButton" prefWidth="100"/>
+                <Button fx:id="newButton" prefWidth="100" styleClass="regularButton"/>
+                <Button fx:id="exportButton" prefWidth="100" styleClass="regularButton"/>
+                <Button fx:id="importButton" prefWidth="100" styleClass="regularButton"/>
             </HBox>
-            <Button fx:id="deleteAllButton" stylesheets="@../../Button.css"
-                    styleClass="redButton" prefWidth="${buttonVbox.width}">
+            <Button fx:id="deleteAllButton"
+                    styleClass="redButton"
+                    prefWidth="${buttonVbox.width}">
             </Button>
         </VBox>
     </GridPane>

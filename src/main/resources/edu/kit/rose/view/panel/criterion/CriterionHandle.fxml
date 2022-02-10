@@ -4,16 +4,21 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.Region?>
+<?import javafx.scene.image.ImageView?>
 <fx:root xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml" type="Pane"
-         prefHeight="30"
+         prefHeight="35"
          prefWidth="200"
          fx:id="parentContainer">
     <HBox prefWidth="${parentContainer.width}" prefHeight="${parentContainer.height}"
           alignment="CENTER_RIGHT">
         <Label fx:id="label" HBox.hgrow="ALWAYS"/>
         <Region HBox.hgrow="ALWAYS"/>
-        <Button fx:id="deleteButton"/>
+        <Button fx:id="deleteButton" styleClass="regularButton">
+                <graphic>
+                    <ImageView fx:id="deleteButtonImageView"/>
+                </graphic>
+        </Button>
     </HBox>
 
 </fx:root>

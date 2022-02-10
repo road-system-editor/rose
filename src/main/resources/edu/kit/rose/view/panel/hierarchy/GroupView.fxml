@@ -10,7 +10,7 @@
          type="Pane"
          fx:id="parentContainer">
     <AnchorPane
-        prefWidth="200">
+        prefWidth="180">
         <GridPane fx:id="groupViewSurface"
                   AnchorPane.bottomAnchor="0.0"
                   AnchorPane.leftAnchor="0.0"
@@ -28,7 +28,7 @@
             <rowConstraints>
                 <RowConstraints/>
             </rowConstraints>
-            <Label GridPane.columnIndex="0" GridPane.rowIndex="0" fx:id="segmentNameLabel" text="Hallo" textFill="white">
+            <Label GridPane.columnIndex="0" GridPane.rowIndex="0" fx:id="groupNameLabel" text="Hallo" textFill="white">
             </Label>
             <Button GridPane.columnIndex="1" GridPane.rowIndex="0" fx:id="deleteGroupButton"
                     style="-fx-background-radius: 5.0; -fx-background-color: A0A0A0;">

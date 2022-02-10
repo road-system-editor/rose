@@ -9,7 +9,8 @@
          xmlns:fx="http://javafx.com/fxml"
          type="Pane"
          fx:id="parentContainer">
-    <AnchorPane>
+    <AnchorPane
+        prefWidth="180">
         <GridPane fx:id="segmentViewSurface" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" alignment="BASELINE_LEFT"
                   style="-fx-background-radius: 5.0;">
             <padding>
@@ -17,14 +18,14 @@
             </padding>
             <columnConstraints>
                 <ColumnConstraints percentWidth="80"/>
-                <ColumnConstraints percentWidth="30"/>
+                <ColumnConstraints percentWidth="20"/>
             </columnConstraints>
             <rowConstraints>
                 <RowConstraints/>
             </rowConstraints>
-            <Label GridPane.columnIndex="0" GridPane.rowIndex="0" fx:id="segmentNameLabel" text="Hallo" textFill="white">
+            <Label GridPane.columnIndex="0" GridPane.rowIndex="0" fx:id="segmentNameLabel" textFill="white">
             </Label>
-            <Button GridPane.columnIndex="1" GridPane.rowIndex="0" fx:id="deleteSegmentButton" text="Delete" textFill="white"
+            <Button GridPane.columnIndex="1" GridPane.rowIndex="0" fx:id="deleteSegmentButton" textFill="white"
                     style="-fx-background-radius: 5.0; -fx-background-color: gray;">
                 <graphic>
                     <ImageView fx:id="deleteGroupButtonImageView"/>

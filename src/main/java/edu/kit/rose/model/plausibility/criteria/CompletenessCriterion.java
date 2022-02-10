@@ -27,9 +27,9 @@ class CompletenessCriterion extends RoseSetObservable<SegmentType, PlausibilityC
 
   private String name;
   private final Set<SegmentType> segmentTypes;
-  private final ViolationManager violationManager;
   private final Set<AttributeType> necessaryAttributeTypes;
   private final HashMap<Element, Violation> elementViolationMap;
+  private ViolationManager violationManager;
 
   public CompletenessCriterion(ViolationManager violationManager) {
     this.name = "";
@@ -64,6 +64,11 @@ class CompletenessCriterion extends RoseSetObservable<SegmentType, PlausibilityC
   }
 
   @Override
+  public void setViolationManager(ViolationManager violationManager) {
+    this.violationManager = violationManager;
+  }
+
+  @Override
   public void addSegmentType(SegmentType type) {
     this.segmentTypes.add(type);
     Iterator<SetObserver<SegmentType, PlausibilityCriterion>> iterator = getSubscriberIterator();
@@ -83,15 +88,28 @@ class CompletenessCriterion extends RoseSetObservable<SegmentType, PlausibilityC
 
   @Override
   public void notifyChange(Element unit) {
+    boolean violated = false;
+    Segment segment = (Segment) unit;
     if (!unit.isContainer()) {
       Box<AttributeAccessor<?>> accessors = unit.getAttributeAccessors();
       for (AttributeAccessor<?> accessor : accessors) {
         if (this.necessaryAttributeTypes.contains(accessor.getAttributeType())) {
           if (accessor.getValue() == null) {
-            Violation violation = new Violation(this, List.of((Segment) unit));
-            this.violationManager.addViolation(violation);
-            this.elementViolationMap.put(unit, violation);
+            violated = true;
+            if (segmentTypes.contains(segment.getSegmentType())) {
+              if (!this.elementViolationMap.containsKey(unit)) {
+                Violation violation = new Violation(this, List.of((Segment) unit));
+                this.violationManager.addViolation(violation);
+                this.elementViolationMap.put(unit, violation);
+              }
+            }
           }
+        }
+      }
+      if (!violated) {
+        if (elementViolationMap.containsKey(unit)) {
+          violationManager.removeViolation(elementViolationMap.get(unit));
+          elementViolationMap.remove(unit);
         }
       }
     }

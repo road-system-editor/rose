@@ -1,8 +1,14 @@
 package edu.kit.rose.infrastructure;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -28,7 +34,7 @@ public class RoseBoxTest {
 
   @Test
   public void testGetSize() {
-    Assertions.assertEquals(numberOfElements, box.getSize());
+    assertEquals(numberOfElements, box.getSize());
   }
 
   @Test
@@ -49,5 +55,12 @@ public class RoseBoxTest {
   public void testContains() {
     testArrayList.forEach(i -> Assertions.assertTrue(box.contains(i)));
     Assertions.assertFalse(box.contains(numberOfElements));
+  }
+
+  @Test
+  public void testStream() {
+    List<Integer> expected = new ArrayList<>(List.of(0, 1, 4, 9, 16, 25, 36, 49, 64, 81));
+    expected.removeAll(box.stream().map(x -> x * x).toList());
+    assertTrue(expected.isEmpty());
   }
 }

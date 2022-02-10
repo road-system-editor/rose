@@ -18,6 +18,7 @@ import edu.kit.rose.model.Project;
 import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
+import edu.kit.rose.model.roadsystem.elements.Base;
 import edu.kit.rose.model.roadsystem.elements.Connection;
 import edu.kit.rose.model.roadsystem.elements.Connector;
 import edu.kit.rose.model.roadsystem.elements.Element;
@@ -89,102 +90,7 @@ public class RoadSystemPanel extends FxmlContainer
     super.init(injector);
 
     // remove this when implementing the road system panel, this is for testing the attribute editor
-    Segment segment = new Segment() {
-      private int laneCount = 2;
-      private String name = "hello";
-
-      @Override
-      public SegmentType getSegmentType() {
-        return null;
-      }
-
-      @Override
-      public SortedBox<Measurement<?>> getMeasurements() {
-        return null;
-      }
-
-      @Override
-      public Box<Connector> getConnectors() {
-        return null;
-      }
-
-      @Override
-      public Position getCenter() {
-        return null;
-      }
-
-      @Override
-      public void move(Movement movement) {
-
-      }
-
-      @Override
-      public void rotate(int degrees) {
-
-      }
-
-      @Override
-      public int getRotation() {
-        return 0;
-      }
-
-      @Override
-      public Position getRotatedConnectorPosition(Connector connector) {
-        return null;
-      }
-
-      @Override
-      public SortedBox<AttributeAccessor<?>> getAttributeAccessors() {
-        return new RoseSortedBox<>(List.of(
-            new AttributeAccessor<>(AttributeType.LANE_COUNT, () -> this.laneCount,
-                newLaneCount -> {
-                  this.laneCount = newLaneCount;
-                  System.out.println("new lane count: " + laneCount);
-                }),
-            new AttributeAccessor<>(AttributeType.NAME, () -> this.name,
-                newName -> {
-                  this.name = newName;
-                  System.out.println("new name: " + name);
-                })
-        ));
-      }
-
-      @Override
-      public String getName() {
-        return null;
-      }
-
-      @Override
-      public boolean isContainer() {
-        return false;
-      }
-
-
-      @Override
-      public void addSubscriber(SetObserver<Element, Element> observer) {
-
-      }
-
-      @Override
-      public void removeSubscriber(SetObserver<Element, Element> observer) {
-
-      }
-
-      @Override
-      public void notifySubscribers() {
-
-      }
-
-      @Override
-      public Element getThis() {
-        return null;
-      }
-
-      @Override
-      public int compareTo(Segment o) {
-        return 0;
-      }
-    };
+    Segment segment = new Base("hello");
     SegmentEditorPanel segmentEditorPanel = new SegmentEditorPanel();
     stackPane.getChildren().add(segmentEditorPanel);
     segmentEditorPanel.init(injector);

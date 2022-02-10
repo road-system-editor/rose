@@ -63,4 +63,19 @@ public class Position {
   public void setY(int y) {
     this.ycoordinate = y;
   }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (getClass() != obj.getClass()) {
+      return false;
+    }
+
+    Position other = (Position) obj;
+    return getX() == other.getX() && getY() == other.getY();
+  }
+
+  @Override
+  public String toString() {
+    return String.format("Position [x=%d, y=%d]", getX(), getY());
+  }
 }

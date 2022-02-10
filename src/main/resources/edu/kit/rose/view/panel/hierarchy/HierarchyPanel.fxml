@@ -20,7 +20,7 @@
         </top>
         <center>
             <TreeView
-                    fx:id="elementsListView"
+                    fx:id="elementsTreeView"
                     style="-fx-background-insets: 2; -fx-background-color: #ffffffff;">
                 <BorderPane.margin>
                     <Insets bottom="5" right="5"/>

@@ -11,7 +11,9 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import javafx.event.Event;
+import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
+import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 
@@ -44,7 +46,7 @@ public abstract class SegmentView<T extends Segment> extends Pane
   /**
    * The roadSystemController to notify about drag movements.
    */
-  private final RoadSystemController controller;
+  protected final RoadSystemController controller;
 
   /**
    * The text provider for translated string.
@@ -74,16 +76,18 @@ public abstract class SegmentView<T extends Segment> extends Pane
 
     this.widthProperty().addListener(e -> draw());
     this.heightProperty().addListener(e -> draw());
+
+    setOnMouseClicked(Event::consume);
   }
 
-  private boolean canBeMoved(Movement movement) {
-    final var bounds = getLayoutBounds();
-    final var topLeft = localToParent(bounds.getMinX(), bounds.getMinY());
-    final var topRight = localToParent(bounds.getMaxX(), bounds.getMinY());
-    final var bottomLeft = localToParent(bounds.getMinX(), bounds.getMaxY());
-    final var bottomRight = localToParent(bounds.getMinX(), bounds.getMinY());
-    final var movementVector = new Point2D(movement.getX(), movement.getY());
-    final var gridBounds = getParent().getLayoutBounds();
+  protected boolean canBeMoved(Node target, Movement movement) {
+    final Bounds bounds = target.getLayoutBounds();
+    final Point2D topLeft = localToParent(bounds.getMinX(), bounds.getMinY());
+    final Point2D topRight = localToParent(bounds.getMaxX(), bounds.getMinY());
+    final Point2D bottomLeft = localToParent(bounds.getMinX(), bounds.getMaxY());
+    final Point2D bottomRight = localToParent(bounds.getMaxX(), bounds.getMaxY());
+    final Point2D movementVector = new Point2D(movement.getX(), movement.getY());
+    final Bounds gridBounds = getParent().getLayoutBounds();
     List<Supplier<Boolean>> checks = List.of(
         () -> gridBounds.contains(topLeft.add(movementVector)),
         () -> gridBounds.contains(topRight.add(movementVector)),

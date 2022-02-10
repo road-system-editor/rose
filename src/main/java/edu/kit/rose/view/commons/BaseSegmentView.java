@@ -13,6 +13,7 @@ import java.util.function.Supplier;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.QuadCurve;
 
@@ -82,27 +83,9 @@ public class BaseSegmentView extends SegmentView<Base> {
     setupConnectorViewDragging(exitConnectorView, this.getSegment().getExit());
   }
 
-  private boolean canBeMoved(Node target, Movement movement) {
-    final Bounds bounds = target.getLayoutBounds();
-    final Point2D topLeft = localToParent(bounds.getMinX(), bounds.getMinY());
-    final Point2D topRight = localToParent(bounds.getMaxX(), bounds.getMinY());
-    final Point2D bottomLeft = localToParent(bounds.getMinX(), bounds.getMaxY());
-    final Point2D bottomRight = localToParent(bounds.getMinX(), bounds.getMinY());
-    final Point2D movementVector = new Point2D(movement.getX(), movement.getY());
-    final Bounds gridBounds = getParent().getLayoutBounds();
-    List<Supplier<Boolean>> checks = List.of(
-        () -> gridBounds.contains(topLeft.add(movementVector)),
-        () -> gridBounds.contains(topRight.add(movementVector)),
-        () -> gridBounds.contains(bottomLeft.add(movementVector)),
-        () -> gridBounds.contains(bottomRight.add(movementVector))
-    );
-    return checks.stream().allMatch(Supplier::get);
-  }
-
   private void setupSegmentViewDragging() {
-    this.curve.setOnMousePressed(mouseEvent -> {
-      startPos = localToParent(mouseEvent.getX(), mouseEvent.getY());
-    });
+    this.curve.setOnMousePressed(mouseEvent ->
+        startPos = localToParent(mouseEvent.getX(), mouseEvent.getY()));
 
     this.curve.setOnDragDetected(mouseEvent -> startFullDrag());
 
@@ -110,7 +93,7 @@ public class BaseSegmentView extends SegmentView<Base> {
       Point2D currentPos = localToParent(mouseEvent.getX(), mouseEvent.getY());
       Movement movement = new Movement(currentPos.getX() - startPos.getX(),
           currentPos.getY() - startPos.getY());
-      if (canBeMoved(this, movement)) {
+      if (this.canBeMoved(this, movement)) {
         getSegment().move(movement);
         startPos = currentPos;
       }
@@ -138,7 +121,7 @@ public class BaseSegmentView extends SegmentView<Base> {
       Movement movement = new Movement(currentPosition.getX() - startPos.getX(),
           currentPosition.getY() - startPos.getY());
 
-      if (canBeMoved(targetView, movement)) {
+      if (this.canBeMoved(targetView, movement)) {
         startPos = currentPosition;
         MovableConnector movableConnector = (MovableConnector) targetConnector;
         movableConnector.move(movement);
@@ -147,7 +130,7 @@ public class BaseSegmentView extends SegmentView<Base> {
       mouseEvent.consume();
     });
 
-    targetView.setOnMouseDragReleased(mouseEvent -> mouseEvent.consume());
+    targetView.setOnMouseDragReleased(MouseEvent::consume);
   }
 
 

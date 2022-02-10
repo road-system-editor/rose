@@ -19,7 +19,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
-import javafx.geometry.Point2D;
 
 /**
  * An exit segment view is the visual representation of an exit street segment.
@@ -40,9 +39,6 @@ public abstract class RampSegmentView<T extends RampSegment> extends SegmentView
 
   private Position initialPos;
   private Point2D startPoint;
-
-  @Inject
-  private RoadSystemController roadSystemController;
 
 
   /**
@@ -118,18 +114,18 @@ public abstract class RampSegmentView<T extends RampSegment> extends SegmentView
     this.setOnMousePressed(mouseEvent -> {
       startPoint = localToParent(mouseEvent.getX(), mouseEvent.getY());
       initialPos = new Position(startPoint.getX(), startPoint.getY());
-      if (isSelected) {
+      if (getDrawAsSelected()) {
         return;
       }
       if (mouseEvent.isControlDown()) {
-        roadSystemController.toggleSegmentSelection(this.getSegment());
+        controller.toggleSegmentSelection(this.getSegment());
       } else {
-        roadSystemController.putSegmentSelection(this.getSegment());
+        controller.putSegmentSelection(this.getSegment());
       }
     });
 
     this.setOnDragDetected(mouseEvent -> {
-      roadSystemController.beginDragStreetSegment(this.initialPos);
+      controller.beginDragStreetSegment(this.initialPos);
       startFullDrag();
     });
 
@@ -137,13 +133,13 @@ public abstract class RampSegmentView<T extends RampSegment> extends SegmentView
       var currentPos = localToParent(mouseEvent.getX(), mouseEvent.getY());
       var movement = new Movement(currentPos.getX() - startPoint.getX(),
           currentPos.getY() - startPoint.getY());
-      if (canBeMoved(movement)) {
-        roadSystemController.dragStreetSegments(movement);
+      if (this.canBeMoved(this, movement)) {
+        controller.dragStreetSegments(movement);
         startPoint = currentPos;
       }
-      if (this.draggeConnectorView != null) {
+      if (this.draggedConnectorView != null) {
         if (this.onConnectorViewDragged != null) {
-          this.setOnConnectorViewDragged.accept(setDraggedConnectorView);
+          this.onConnectorViewDragged.accept(draggedConnectorView);
         }
       }
       mouseEvent.consume();
@@ -153,32 +149,15 @@ public abstract class RampSegmentView<T extends RampSegment> extends SegmentView
       var releasePoint = localToParent(mouseEvent.getX(), mouseEvent.getY());
       var releasePosition = new Position(releasePoint.getX(), releasePoint.getY());
       if (this.draggedConnectorView != null) {
-        roadSystemController.endDragStreetSegment(releasePosition, draggedConnectorView.getConnector());
+        controller.endDragStreetSegment(releasePosition, draggedConnectorView.getConnector());
         if (this.onConnectorViewDragEnd != null) {
           onConnectorViewDragEnd.accept(draggedConnectorView);
         }
       } else {
-        roadSystemController.endDragStreetSegment(releasePosition);
+        controller.endDragStreetSegment(releasePosition);
       }
       this.draggedConnectorView = null;
     });
-  }
-
-  private boolean canBeMoved(Movement movement) {
-    final Bounds bounds = this.getLayoutBounds();
-    final Point2D topLeft = localToParent(bounds.getMinX(), bounds.getMinY());
-    final Point2D topRight = localToParent(bounds.getMaxX(), bounds.getMinY());
-    final Point2D bottomLeft = localToParent(bounds.getMinX(), bounds.getMaxY());
-    final Point2D bottomRight = localToParent(bounds.getMinX(), bounds.getMinY());
-    final Point2D movementVector = new Point2D(movement.getX(), movement.getY());
-    final Bounds gridBounds = getParent().getLayoutBounds();
-    List<Supplier<Boolean>> checks = List.of(
-        () -> gridBounds.contains(topLeft.add(movementVector)),
-        () -> gridBounds.contains(topRight.add(movementVector)),
-        () -> gridBounds.contains(bottomLeft.add(movementVector)),
-        () -> gridBounds.contains(bottomRight.add(movementVector))
-    );
-    return checks.stream().allMatch(Supplier::get);
   }
 
   @Override

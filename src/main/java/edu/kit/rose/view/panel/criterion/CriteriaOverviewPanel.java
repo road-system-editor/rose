@@ -43,8 +43,6 @@ public class CriteriaOverviewPanel extends FxmlContainer
   @FXML
   private Button newButton;
   @FXML
-  private VBox buttonVbox;
-  @FXML
   private ListView<PlausibilityCriterion> criteriaList;
 
   /**

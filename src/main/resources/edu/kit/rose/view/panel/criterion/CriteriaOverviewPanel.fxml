@@ -1,39 +1,53 @@
 <?import javafx.scene.layout.Pane?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.control.ListView?>
-<?import javafx.scene.layout.VBox?>
 
 <fx:root xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml" type="Pane"
          fx:id="parentContainer">
     <GridPane fx:id="gridPane"
             prefWidth="${parentContainer.width}"
-            prefHeight="${parentContainer.height}">
+            prefHeight="${parentContainer.height}"
+            hgap="5"
+            vgap="5"
+            style="-fx-padding: 5">
         <rowConstraints>
             <RowConstraints vgrow="ALWAYS"/>
+            <RowConstraints vgrow="SOMETIMES" fillHeight="false" />
             <RowConstraints vgrow="SOMETIMES" fillHeight="false"/>
         </rowConstraints>
         <columnConstraints>
-            <ColumnConstraints percentWidth="100"/>
+            <ColumnConstraints percentWidth="33" hgrow="ALWAYS" />
+            <ColumnConstraints percentWidth="33" hgrow="ALWAYS"/>
+            <ColumnConstraints percentWidth="33" hgrow="ALWAYS"/>
         </columnConstraints>
-        <ListView GridPane.columnIndex="0" GridPane.rowIndex="0" fx:id="criteriaList"/>
-        <VBox fx:id="buttonVbox" GridPane.columnIndex="0" GridPane.rowIndex="1"
-               prefWidth="${parentContainer.width}" style="-fx-padding: 5; -fx-spacing: 5">
-            <HBox style="-fx-spacing: 5" prefWidth="${buttonVbox.width}">
-                <Button fx:id="newButton" prefWidth="100" styleClass="regularButton"/>
-                <Button fx:id="exportButton" prefWidth="100" styleClass="regularButton"/>
-                <Button fx:id="importButton" prefWidth="100" styleClass="regularButton"/>
-            </HBox>
-            <Button fx:id="deleteAllButton"
-                    styleClass="redButton"
-                    prefWidth="${buttonVbox.width}">
-            </Button>
-        </VBox>
+        <ListView GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.columnSpan="3"
+                  fx:id="criteriaList"/>
+        <Button fx:id="newButton"
+                GridPane.columnIndex="0"
+                GridPane.rowIndex="1"
+                styleClass="regularButton"
+                maxWidth="Infinity"/>
+        <Button fx:id="exportButton"
+                GridPane.columnIndex="1"
+                GridPane.rowIndex="1"
+                styleClass="regularButton"
+                maxWidth="Infinity"/>
+        <Button fx:id="importButton"
+                GridPane.columnIndex="2"
+                GridPane.rowIndex="1"
+                styleClass="regularButton"
+                maxWidth="Infinity"/>
+        <Button fx:id="deleteAllButton"
+                styleClass="redButton"
+                GridPane.columnIndex="0"
+                GridPane.columnSpan="3"
+                GridPane.rowIndex="2"
+                maxWidth="Infinity"/>
     </GridPane>
 
 

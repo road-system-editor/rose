@@ -38,7 +38,7 @@ class ValueCriterion extends RoseSetObservable<SegmentType, PlausibilityCriterio
   private final AttributeType attributeType;
   private final Range<Double> range;
   private final Set<SegmentType> segmentTypes;
-  private final ViolationManager violationManager;
+  private ViolationManager violationManager;
   private final HashMap<Element, Violation> elementViolationMap;
 
 
@@ -82,6 +82,11 @@ class ValueCriterion extends RoseSetObservable<SegmentType, PlausibilityCriterio
   }
 
   @Override
+  public void setViolationManager(ViolationManager violationManager) {
+    this.violationManager = violationManager;
+  }
+
+  @Override
   public void addSegmentType(SegmentType type) {
     this.segmentTypes.add(type);
     Iterator<SetObserver<SegmentType, PlausibilityCriterion>> iterator = getSubscriberIterator();
@@ -106,10 +111,17 @@ class ValueCriterion extends RoseSetObservable<SegmentType, PlausibilityCriterio
       if (this.segmentTypes.contains(segment.getSegmentType())) {
         SortedBox<AttributeAccessor<?>> accessors = unit.getAttributeAccessors();
         for (AttributeAccessor<?> accessor : accessors) {
-          if (!checkValue(accessor)) {
-            Violation violation = new Violation(this, List.of((Segment) unit));
-            this.violationManager.addViolation(violation);
-            this.elementViolationMap.put(unit, violation);
+          if (accessor.getAttributeType().equals(this.attributeType)) {
+            if (!checkValue(accessor)) {
+              if (!this.elementViolationMap.containsKey(unit)) {
+                Violation violation = new Violation(this, List.of((Segment) unit));
+                this.violationManager.addViolation(violation);
+                this.elementViolationMap.put(unit, violation);
+              }
+            } else if (elementViolationMap.containsKey(unit)) {
+              this.violationManager.removeViolation(elementViolationMap.get(unit));
+              this.elementViolationMap.remove(unit);
+            }
           }
         }
       }
@@ -133,15 +145,13 @@ class ValueCriterion extends RoseSetObservable<SegmentType, PlausibilityCriterio
   }
 
   private boolean checkValue(AttributeAccessor accessor) {
-    if (accessor.getAttributeType().equals(this.attributeType)) {
-      switch (accessor.getAttributeType().getDataType()) {
-        case INTEGER:
-          return this.range.contains(Double.valueOf((Integer) accessor.getValue()));
-        case FRACTIONAL:
-          return this.range.contains((Double) accessor.getValue());
-        default: return true;
-      }
+    switch (accessor.getAttributeType().getDataType()) {
+      case INTEGER:
+        return this.range.contains(Double.valueOf((Integer) accessor.getValue()));
+      case FRACTIONAL:
+        return this.range.contains((Double) accessor.getValue());
+      default:
+        return true;
     }
-    return true;
   }
 }

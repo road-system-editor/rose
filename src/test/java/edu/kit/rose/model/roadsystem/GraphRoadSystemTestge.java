@@ -70,12 +70,6 @@ public class GraphRoadSystemTestge {
 
   }
 
-  @Test
-  void testGetElementsByName() {
-    var segment = createSegmentWithName(SegmentType.EXIT, "ROSEge");
-    Assertions.assertTrue(testRoadSystem.getElementsByName("R").contains(segment));
-    Assertions.assertEquals(1, testRoadSystem.getElementsByName("R").getSize());
-  }
 
   @Test
   void createSegmentTest() {

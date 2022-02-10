@@ -8,23 +8,30 @@
          xmlns:fx="http://javafx.com/fxml"
          type="Pane"
          fx:id="parentContainer">
-    <AnchorPane>
-        <GridPane fx:id="segmentViewSurface" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" alignment="BASELINE_LEFT"
-                  style="-fx-background-radius: 5.0; -fx-background-color: #bfbfbf;">
+    <AnchorPane
+        prefWidth="200">
+        <GridPane fx:id="groupViewSurface"
+                  AnchorPane.bottomAnchor="0.0"
+                  AnchorPane.leftAnchor="0.0"
+                  AnchorPane.rightAnchor="0.0"
+                  AnchorPane.topAnchor="0.0"
+                  alignment="BASELINE_LEFT"
+                  style="-fx-background-radius: 5.0;">
             <padding>
                 <Insets right="5" top="5" bottom="5" left="5"/>
             </padding>
             <columnConstraints>
                 <ColumnConstraints percentWidth="80"/>
-                <ColumnConstraints percentWidth="30"/>
+                <ColumnConstraints percentWidth="20"/>
             </columnConstraints>
             <rowConstraints>
                 <RowConstraints/>
             </rowConstraints>
             <Label GridPane.columnIndex="0" GridPane.rowIndex="0" fx:id="segmentNameLabel" text="Hallo" textFill="white">
             </Label>
-            <Button GridPane.columnIndex="1" GridPane.rowIndex="0" fx:id="deleteGroupButton" text="Delete" textFill="white"
-                    style="-fx-background-radius: 5.0; -fx-background-color: gray;"/>
+            <Button GridPane.columnIndex="1" GridPane.rowIndex="0" fx:id="deleteGroupButton"
+                    style="-fx-background-radius: 5.0; -fx-background-color: A0A0A0;
+                           -fx-graphic: url('edu/kit/rose/view/panel/hierarchy/DeleteIcon.png')"/>
         </GridPane>
     </AnchorPane>
 </fx:root>

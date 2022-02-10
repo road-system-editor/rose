@@ -1,0 +1,7 @@
+.elementViewUnselected {
+    -fx-background-color: #bfbfbf;
+}
+
+.elementViewSelected {
+    -fx-background-color: #808080;
+}

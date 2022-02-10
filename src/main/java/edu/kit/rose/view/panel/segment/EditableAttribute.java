@@ -66,6 +66,7 @@ abstract class EditableAttribute<T> extends FxmlContainer
   protected void updateTranslatableStrings(Language newLang) {
     label.setText(EnumLocalizationUtility
         .localizeAttributeTypeTitle(getTranslator(), attribute.getAttributeType()));
+    System.out.println(attribute.getAttributeType() + " -- " + label.getText());
   }
 
   /**

@@ -5,6 +5,7 @@ import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.view.commons.FxmlContainer;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.function.Function;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.ObservableList;
@@ -21,10 +22,8 @@ import javafx.scene.control.ListCell;
  * @param <T> the java type of the attribute value.
  */
 abstract class SelectableAttribute<T> extends EditableAttribute<T> {
-  
-  private final ComboBox<T> inputField;
-  
-  private final Collection<T> options;
+
+  private ComboBox<T> inputField;
 
   /**
    * Creates a new selectable attribute editor for the given {@code attribute} with the given
@@ -33,16 +32,12 @@ abstract class SelectableAttribute<T> extends EditableAttribute<T> {
   SelectableAttribute(AttributeAccessor<T> attribute, AttributeController controller,
                       Collection<T> options) {
     super(attribute, controller);
-    this.options = options;
-    this.inputField = new ComboBox<>();
+    this.inputField.getItems().addAll(Objects.requireNonNull(options));
   }
 
   @Override
   protected Node createInputField() {
-    ObservableList<T> o = new SimpleListProperty<>();
-    o.addAll(options);
-    inputField.setItems(o);
-
+    this.inputField = new ComboBox<>();
     inputField.setCellFactory(listView -> new ListCell<>() {
       @Override
       protected void updateItem(T item, boolean empty) {
@@ -59,11 +54,6 @@ abstract class SelectableAttribute<T> extends EditableAttribute<T> {
         (options, old, newVal) -> getController().setAttribute(getAttribute(), newVal));
 
     return inputField;
-  }
-
-  @Override
-  protected void updateTranslatableStrings(Language newLang) {
-
   }
 
   @Override

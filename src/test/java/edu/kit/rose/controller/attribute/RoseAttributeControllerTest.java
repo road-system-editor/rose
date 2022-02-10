@@ -21,7 +21,7 @@ import org.mockito.Mockito;
  * @see RoseAttributeControllerBulkEditTest
  */
 public class RoseAttributeControllerTest {
-  private static final Path CONFIG_PATH = Path.of("build/tmp/tests/config");
+  private static final Path CONFIG_PATH = Path.of("build/tmp/config.json");
 
   private RoseAttributeController attributeController;
   private ApplicationDataSystem applicationDataSystem;

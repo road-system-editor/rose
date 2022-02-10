@@ -13,7 +13,9 @@ abstract class RampSegment extends HighwaySegment {
 
   private static final int INITIAL_RAMP_DISTANCE_TO_CENTER = 50;
   private int nrOfRampLanes = 1;
+  private final AttributeAccessor<Integer> nrOfRampLanesAccessor;
   private int rampSpeedLimit = 100;
+  private final AttributeAccessor<Integer> maxSpeedRampAccessor;
 
   protected Connector rampConnector;
 
@@ -23,27 +25,24 @@ abstract class RampSegment extends HighwaySegment {
 
   public RampSegment(SegmentType segmentType, String name) {
     super(segmentType, name);
+
+    this.nrOfRampLanesAccessor = new AttributeAccessor<>(
+        AttributeType.LANE_COUNT_RAMP, this::getNrOfRampLanes, this::setNrOfRampLanes);
+    this.maxSpeedRampAccessor = new AttributeAccessor<>(
+        AttributeType.MAX_SPEED_RAMP, this::getMaxSpeedRamp, this::setMaxSpeedRamp);
+    super.attributeAccessors.addAll(List.of(this.nrOfRampLanesAccessor, this.maxSpeedRampAccessor));
+
     initRamp();
     connectors.add(rampConnector);
   }
 
 
   private void initRamp() {
-    AttributeAccessor<Integer> nrOfRampLanesAccessor =
-        new AttributeAccessor<>(AttributeType.LANE_COUNT_RAMP, () -> nrOfRampLanes,
-            s -> nrOfRampLanes = s);
-    attributeAccessors.add(nrOfRampLanesAccessor);
-    AttributeAccessor<Integer> rampSpeedLimitAccessor =
-        new AttributeAccessor<>(AttributeType.MAX_SPEED_RAMP,
-            () -> rampSpeedLimit,
-              s -> rampSpeedLimit = s);
-    attributeAccessors.add(rampSpeedLimitAccessor);
-
     Position rampConnectorPosition = new Position(this.getCenter().getX(),
         this.getCenter().getY() - INITIAL_RAMP_DISTANCE_TO_CENTER);
 
     List<AttributeAccessor<?>> rampAttributesList =
-        Arrays.asList(nrOfRampLanesAccessor, rampSpeedLimitAccessor);
+        Arrays.asList(nrOfRampLanesAccessor, this.maxSpeedRampAccessor);
 
     initRampConnector(rampAttributesList, rampConnectorPosition);
 
@@ -63,5 +62,37 @@ abstract class RampSegment extends HighwaySegment {
     return this.rampConnector;
   }
 
+  /**
+   * Returns the {@link AttributeType#LANE_COUNT} for the ramp connector.
+   */
+  public int getNrOfRampLanes() {
+    return this.nrOfRampLanes;
+  }
 
+  /**
+   * Sets the {@link AttributeType#LANE_COUNT} for the ramp connector to the given value.
+   */
+  public void setNrOfRampLanes(int nrOfRampLanes) {
+    this.nrOfRampLanes = nrOfRampLanes;
+
+    this.nrOfRampLanesAccessor.notifySubscribers();
+    this.notifySubscribers();
+  }
+
+  /**
+   * Returns the {@link AttributeType#MAX_SPEED} of the ramp.
+   */
+  public int getMaxSpeedRamp() {
+    return this.rampSpeedLimit;
+  }
+
+  /**
+   * Sets the {@link AttributeType#MAX_SPEED} of the ramp to the given value.
+   */
+  public void setMaxSpeedRamp(int maxSpeedRamp) {
+    this.rampSpeedLimit = maxSpeedRamp;
+
+    this.maxSpeedRampAccessor.notifySubscribers();
+    this.notifySubscribers();
+  }
 }

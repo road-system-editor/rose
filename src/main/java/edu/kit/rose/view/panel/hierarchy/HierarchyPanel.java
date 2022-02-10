@@ -7,6 +7,7 @@ import edu.kit.rose.infrastructure.DualSetObserver;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.roadsystem.RoadSystem;
+import edu.kit.rose.model.roadsystem.elements.Base;
 import edu.kit.rose.model.roadsystem.elements.Connection;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Group;
@@ -51,8 +52,27 @@ public class HierarchyPanel extends FxmlContainer
   public HierarchyPanel() {
     super("HierarchyPanel.fxml");
 
+    DisabledSelectionModel dsm = new DisabledSelectionModel();
+    this.elementsTreeView.setSelectionModel(dsm);
     rootItem = new ElementTreeItem(null);
-    rootItem.getInternalChildren().add(new ElementTreeItem(new Group()));
+    Group g = new Group();
+    g.setName("Group");
+
+    Group g2 = new Group();
+    g2.setName("Group 2");
+    g.addElement(g2);
+
+    Base b = new Base();
+    b.setName("Base");
+    g2.addElement(b);
+
+    ElementTreeItem e = new ElementTreeItem(g);
+    ElementTreeItem eg2 = new ElementTreeItem(g2);
+    ElementTreeItem e2 = new ElementTreeItem(b);
+    e.getInternalChildren().add(eg2);
+    eg2.getInternalChildren().add(e2);
+    rootItem.getInternalChildren().add(e);
+
     setUp();
   }
 

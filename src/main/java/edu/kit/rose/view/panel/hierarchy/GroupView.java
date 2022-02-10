@@ -5,6 +5,7 @@ import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Group;
+import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.view.commons.FxmlContainer;
 import java.util.Collection;
 import java.util.Objects;
@@ -24,7 +25,7 @@ class GroupView extends ElementView<Group> {
   @FXML
   private GridPane groupViewSurface;
   @FXML
-  private Label segmentNameLabel;
+  private Label groupNameLabel;
   @FXML
   private Button deleteGroupButton;
   @FXML
@@ -40,9 +41,12 @@ class GroupView extends ElementView<Group> {
   GroupView(LocalizedTextProvider translator, Group group, HierarchyController controller) {
     super(translator, "GroupView.fxml", group, controller);
 
-    segmentNameLabel.setText(group.getName());
-    deleteGroupButton.setOnMouseClicked(this::onDeleteGroupButtonClicked);
-    groupViewSurface.setOnMouseClicked(this::onGroupViewSurfaceClicked);
+    setupView();
+    setupListener();
+  }
+
+  private void setupView() {
+    groupNameLabel.setText(getElement().getName());
     String styleSheetUrl = Objects.requireNonNull(
             getClass().getResource(ELEMENT_VIEW_STYLE_CSS_FILE)).toExternalForm();
     groupViewSurface.getStylesheets().add(styleSheetUrl);
@@ -52,8 +56,24 @@ class GroupView extends ElementView<Group> {
     deleteGroupButtonImageView.setImage(new Image(deleteButtonImageUrl));
   }
 
+  private void setupListener() {
+    deleteGroupButton.setOnMouseClicked(this::onDeleteGroupButtonClicked);
+    groupViewSurface.setOnMouseClicked(this::onGroupViewSurfaceClicked);
+  }
+
   private void onGroupViewSurfaceClicked(MouseEvent mouseEvent) {
-    //TODO: traverse group content and select them
+    getController().clearSegmentSelection();
+    selectElement(getElement());
+  }
+
+  private void selectElement(Element element) {
+    if (element.isContainer()) {
+      for (Element e : ((Group) element).getElements()) {
+        selectElement(e);
+      }
+    } else {
+      getController().addSegmentSelection((Segment) element);
+    }
   }
 
   private void onDeleteGroupButtonClicked(MouseEvent mouseEvent) {
@@ -62,7 +82,7 @@ class GroupView extends ElementView<Group> {
 
   @Override
   public void notifyChange(Element unit) {
-    segmentNameLabel.setText(getElement().getName());
+    groupNameLabel.setText(getElement().getName());
   }
 
   @Override

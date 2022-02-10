@@ -10,7 +10,7 @@
          fx:id="parentContainer">
 
     <GridPane
-            style="-fx-border-style: hidden solid hidden hidden; -fx-border-width: 1;
+            style="-fx-border-style: hidden hidden hidden hidden; -fx-border-width: 1;
              -fx-border-color: black;"
         prefWidth="${parentContainer.width}"
         prefHeight="${parentContainer.height}">
@@ -21,17 +21,18 @@
         <columnConstraints>
             <ColumnConstraints percentWidth="100"/>
         </columnConstraints>
-        <HBox GridPane.columnIndex="0" GridPane.rowIndex="0">
+        <HBox GridPane.columnIndex="0" GridPane.rowIndex="0" spacing="5">
             <Label fx:id="violationLabel" prefWidth="190" minHeight="30"
                    alignment="CENTER"
-                   style="-fx-border-style: none solid none none; -fx-border-width: 0.5;
-                   -fx-border-color: black; -fx-font-size: 14; -fx-font-weight: bold"/>
+                   style=" -fx-background-color: lightgrey;-fx-font-size: 14; -fx-font-weight: bold"/>
             <Label fx:id="segmentLabel" prefWidth="235" minHeight = "30"
                    alignment="CENTER"
-                   style="-fx-border-style: none solid none none; -fx-border-width: 0.5;
-                   -fx-border-color: black; -fx-font-size: 14; -fx-font-weight: bold"/>
+                   style=" -fx-background-color: lightgrey; -fx-font-size: 14; -fx-font-weight: bold"/>
+            <!--fx-border-style: none solid none none; -fx-border-width: 0.5;
+                   -fx-border-color: black;-->
         </HBox>
-        <ListView fx:id="violationList" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+        <ListView fx:id="violationList" GridPane.columnIndex="0" GridPane.rowIndex="1"
+                  style="-fx-border-style: hidden"/>
     </GridPane>
 
 </fx:root>

@@ -14,7 +14,7 @@ import javafx.scene.shape.Circle;
  */
 public class ConnectorView extends Circle {
 
-  private static final Color COLOR = Color.BLUE;
+  private static final Color COLOR = Color.TRANSPARENT;
   private static final Color COLOR_HOVER = Color.RED.deriveColor(1, 1, 1, 0.5);
 
   /**

@@ -93,10 +93,10 @@ public class RoadSystemPanel extends FxmlContainer
     super.init(injector);
     injector.injectMembers(this.zoomContainer);
 
-    var base = new Base();
-    base.move(new Movement(300, 200));
-    var baseView = new BaseSegmentView(base, roadSystemController, getTranslator());
-    roadSystemGrid.getChildren().add(baseView);
+    var exit = new Base();
+    exit.move(new Movement(200, 200));
+    var exitView = new BaseSegmentView(exit, roadSystemController, getTranslator());
+    roadSystemGrid.getChildren().add(exitView);
   }
 
   @Override

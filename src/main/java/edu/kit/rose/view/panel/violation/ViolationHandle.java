@@ -1,23 +1,30 @@
 package edu.kit.rose.view.panel.violation;
 
 import edu.kit.rose.controller.plausibility.PlausibilityController;
+import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.infrastructure.UnitObserver;
 import edu.kit.rose.infrastructure.language.Language;
+import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterion;
 import edu.kit.rose.model.plausibility.violation.Violation;
+import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import edu.kit.rose.view.commons.FxmlContainer;
 import edu.kit.rose.view.panel.problem.MessageFactory;
 import java.util.Collection;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
-
+import javafx.scene.input.MouseEvent;
+import org.apache.commons.collections4.functors.ComparatorPredicate;
 
 
 /**
  * A {@link ViolationHandle} informs the user about a violation against a
  * {@link edu.kit.rose.model.plausibility.criteria.PlausibilityCriterion}.
  */
-public class ViolationHandle extends FxmlContainer implements UnitObserver<Violation> {
+public class ViolationHandle extends FxmlContainer implements SetObserver<SegmentType,
+    PlausibilityCriterion> {
+  private static final int DOUBLE_CLICK = 2;
+
   /**
    * The controller to use for handling navigation to the affected segments in the road system view.
    */
@@ -56,24 +63,34 @@ public class ViolationHandle extends FxmlContainer implements UnitObserver<Viola
     this.messageFactory = messageFactory;
     this.violation = violation;
 
+    violation.violatedCriterion().addSubscriber(this);
+
     segments.setText(messageFactory.generateShortDescription(violation));
     criterion.setText(violation.violatedCriterion().getName());
     extendedMessage = new Tooltip();
     extendedMessage.setText(messageFactory.generateDetailedDescription(violation));
 
+    segments.setOnMouseClicked(this::handleMouseClicked);
+
     Tooltip.install(segments, extendedMessage);
     Tooltip.install(criterion, extendedMessage);
   }
 
+  private void handleMouseClicked(MouseEvent event) {
+    if (event.getClickCount() == DOUBLE_CLICK && !event.isConsumed()) {
+      event.consume();
+      controller.jumpToCriterionViolation(violation);
+    }
+  }
+
   @Override
-  public void notifyChange(Violation unit) {
-    updateTranslatableStrings(getTranslator().getSelectedLanguage());
+  public void notifyChange(PlausibilityCriterion unit) {
+    criterion.setText(violation.violatedCriterion().getName());
   }
 
   @Override
   protected void updateTranslatableStrings(Language newLang) {
     segments.setText(messageFactory.generateShortDescription(violation));
-    criterion.setText(violation.violatedCriterion().getName());
     extendedMessage.setText(messageFactory.generateDetailedDescription(violation));
   }
 
@@ -85,5 +102,15 @@ public class ViolationHandle extends FxmlContainer implements UnitObserver<Viola
 
   Violation getViolation() {
     return this.violation;
+  }
+
+  @Override
+  public void notifyAddition(SegmentType unit) {
+
+  }
+
+  @Override
+  public void notifyRemoval(SegmentType unit) {
+
   }
 }

@@ -9,6 +9,10 @@ import edu.kit.rose.model.roadsystem.elements.Connector;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.MovableConnector;
 import java.util.List;
+import java.util.function.Supplier;
+import javafx.geometry.Bounds;
+import javafx.geometry.Point2D;
+import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.QuadCurve;
 
@@ -33,6 +37,8 @@ public class BaseSegmentView extends SegmentView<Base> {
 
   private final QuadCurve curve;
 
+  private Point2D startPos;
+
   /**
    * Creates a new base segment view for a given base {@code segment}.
    *
@@ -44,6 +50,8 @@ public class BaseSegmentView extends SegmentView<Base> {
                          LocalizedTextProvider translator) {
     super(segment, controller, translator);
 
+    getSegment().addSubscriber(this);
+
     this.roadSystemController = controller;
 
     this.entryConnectorView =
@@ -54,10 +62,10 @@ public class BaseSegmentView extends SegmentView<Base> {
             this::setDraggedConnectorView);
 
     entryConnectorObserver = new ConnectorObserver<>(segment, segment.getEntry());
-    entryConnectorObserver.setOnConnectorPositionChangedCallback(this::updateCenterAndRedraw);
+    entryConnectorObserver.setOnConnectorPositionChangedCallback(this::draw);
 
     exitConnectorObserver = new ConnectorObserver<>(segment, segment.getExit());
-    exitConnectorObserver.setOnConnectorPositionChangedCallback(this::updateCenterAndRedraw);
+    exitConnectorObserver.setOnConnectorPositionChangedCallback(this::draw);
 
     curve = new QuadCurve();
     curve.setFill(Color.TRANSPARENT);
@@ -69,71 +77,54 @@ public class BaseSegmentView extends SegmentView<Base> {
         this.entryConnectorView,
         this.exitConnectorView);
 
-    setupSegmentDragging();
+    setupSegmentViewDragging();
     setupConnectorViewDragging(entryConnectorView, this.getSegment().getEntry());
     setupConnectorViewDragging(exitConnectorView, this.getSegment().getExit());
   }
 
-  private Position getCenterBetweenPoints(Position position1, Position position2) {
-    double diffX = position1.getX() - position2.getX();
-    double diffY = position1.getY() - position2.getY();
-
-    return new Position(position2.getX() + diffX / 2.0,
-        position2.getY() + diffY / 2.0);
+  private boolean canBeMoved(Node target, Movement movement) {
+    final Bounds bounds = target.getLayoutBounds();
+    final Point2D topLeft = localToParent(bounds.getMinX(), bounds.getMinY());
+    final Point2D topRight = localToParent(bounds.getMaxX(), bounds.getMinY());
+    final Point2D bottomLeft = localToParent(bounds.getMinX(), bounds.getMaxY());
+    final Point2D bottomRight = localToParent(bounds.getMinX(), bounds.getMinY());
+    final Point2D movementVector = new Point2D(movement.getX(), movement.getY());
+    final Bounds gridBounds = getParent().getLayoutBounds();
+    List<Supplier<Boolean>> checks = List.of(
+        () -> gridBounds.contains(topLeft.add(movementVector)),
+        () -> gridBounds.contains(topRight.add(movementVector)),
+        () -> gridBounds.contains(bottomLeft.add(movementVector)),
+        () -> gridBounds.contains(bottomRight.add(movementVector))
+    );
+    return checks.stream().allMatch(Supplier::get);
   }
 
-  private void updateCenterAndRedraw() {
-    Position newCenterPosition = getCenterBetweenPoints(
-        getSegment().getEntry().getPosition(),
-        getSegment().getExit().getPosition());
+  private void setupSegmentViewDragging() {
+    this.curve.setOnMousePressed(mouseEvent -> {
+      startPos = localToParent(mouseEvent.getX(), mouseEvent.getY());
+    });
 
-    getSegment().updateCenter(newCenterPosition);
-    draw();
-  }
+    this.curve.setOnDragDetected(mouseEvent -> startFullDrag());
 
-  private void setupSegmentDragging() {
-    this.setOnMousePressed(mouseEvent -> {
-      startDragX = mouseEvent.getSceneX();
-      startDragY = mouseEvent.getSceneY();
-      /*this.roadSystemController.beginDragStreetSegment(
-          new Position(
-              (mouseEvent.getSceneX()),
-              (mouseEvent.getSceneY())));*/
-
+    this.curve.setOnMouseDragged(mouseEvent -> {
+      Point2D currentPos = localToParent(mouseEvent.getX(), mouseEvent.getY());
+      Movement movement = new Movement(currentPos.getX() - startPos.getX(),
+          currentPos.getY() - startPos.getY());
+      if (canBeMoved(this, movement)) {
+        getSegment().move(movement);
+        startPos = currentPos;
+      }
       mouseEvent.consume();
     });
 
-    this.setOnDragDetected(mouseEvent -> {
-      startFullDrag();
-      mouseEvent.consume();
-    });
-
-    this.setOnMouseDragged(mouseEvent -> {
-      getSegment().move(new Movement(
-          mouseEvent.getSceneX() - startDragX,
-          mouseEvent.getSceneY() - startDragY));
-      startDragX = mouseEvent.getSceneX();
-      startDragY = mouseEvent.getSceneY();
-
-      mouseEvent.consume();
-    });
-
-    this.setOnMouseDragReleased(mouseEvent -> {
-      /*Position position = new Position(
-          (mouseEvent.getX()),
-          (mouseEvent.getY()));*/
-      //roadSystemController.endDragStreetSegment(position);
-      mouseEvent.consume();
+    this.curve.setOnMouseDragReleased(mouseEvent -> {
+      Point2D absolutPoint = localToParent(mouseEvent.getX(), mouseEvent.getY());
     });
   }
 
   private void setupConnectorViewDragging(ConnectorView targetView, Connector targetConnector) {
     targetView.setOnMousePressed(mouseEvent -> {
-      startDragX = mouseEvent.getSceneX();
-      startDragY = mouseEvent.getSceneY();
-      /*this.roadSystemController.beginDragSegmentEnd(targetConnector, new Position(
-              (int) Math.round(mouseEvent.getSceneX()),
-              (int) Math.round(mouseEvent.getSceneY())));*/
+      startPos = localToParent(mouseEvent.getX(), mouseEvent.getY());
       mouseEvent.consume();
     });
 
@@ -143,41 +134,43 @@ public class BaseSegmentView extends SegmentView<Base> {
     });
 
     targetView.setOnMouseDragged(mouseEvent -> {
-      MovableConnector mv = (MovableConnector) targetConnector;
+      Point2D currentPosition = localToParent(mouseEvent.getX(), mouseEvent.getY());
+      Movement movement = new Movement(currentPosition.getX() - startPos.getX(),
+          currentPosition.getY() - startPos.getY());
 
-      mv.move(new Movement(
-          mouseEvent.getSceneX() - startDragX,
-          mouseEvent.getSceneY() - startDragY));
-      startDragX = mouseEvent.getSceneX();
-      startDragY = mouseEvent.getSceneY();
+      if (canBeMoved(targetView, movement)) {
+        startPos = currentPosition;
+        MovableConnector movableConnector = (MovableConnector) targetConnector;
+        movableConnector.move(movement);
+      }
+
       mouseEvent.consume();
     });
 
-    targetView.setOnMouseDragReleased(mouseEvent -> {
-      /*Position position = new Position(
-          (mouseEvent.getX()),
-          (mouseEvent.getY()));*/
-      mouseEvent.consume();
-    });
+    targetView.setOnMouseDragReleased(mouseEvent -> mouseEvent.consume());
   }
+
 
   @Override
   protected void redraw() {
-    updateConnectorViewPositions();
     updateBaseSegmentViewBounds();
+    updateConnectorViewPositions();
     redrawCurve();
-
-
   }
 
   @Override
   public List<ConnectorView> getConnectorViews() {
-    return null; //TODO: implement when base segment is ready
+    return List.of(entryConnectorView, exitConnectorView);
   }
 
   private void updateConnectorViewPositions() {
-    this.entryConnectorView.setPosition(getSegment().getEntry().getPosition());
-    this.exitConnectorView.setPosition(getSegment().getExit().getPosition());
+    Position innerCenter = getInnerCenter();
+    this.entryConnectorView.setPosition(new Position(
+        innerCenter.getX() + getSegment().getEntry().getPosition().getX(),
+        innerCenter.getY() + getSegment().getEntry().getPosition().getY()));
+    this.exitConnectorView.setPosition(new Position(
+        innerCenter.getX() + getSegment().getExit().getPosition().getX(),
+        innerCenter.getY() + getSegment().getExit().getPosition().getY()));
   }
 
   private void updateBaseSegmentViewBounds() {
@@ -193,12 +186,13 @@ public class BaseSegmentView extends SegmentView<Base> {
       rightConnector = getSegment().getEntry();
     }
 
+    Position segmentCenter = getSegment().getCenter();
     if (leftConnector.getPosition().getY() <= rightConnector.getPosition().getY()) {
-      this.setLayoutX(leftConnector.getPosition().getX() - SEGMENT_WIDTH);
-      this.setLayoutY(leftConnector.getPosition().getY() - SEGMENT_WIDTH);
+      this.setLayoutX(segmentCenter.getX() + leftConnector.getPosition().getX() - SEGMENT_WIDTH);
+      this.setLayoutY(segmentCenter.getY() + leftConnector.getPosition().getY() - SEGMENT_WIDTH);
     } else {
-      this.setLayoutX(leftConnector.getPosition().getX() - SEGMENT_WIDTH);
-      this.setLayoutY(rightConnector.getPosition().getY() - SEGMENT_WIDTH);
+      this.setLayoutX(segmentCenter.getX() + leftConnector.getPosition().getX() - SEGMENT_WIDTH);
+      this.setLayoutY(segmentCenter.getY() + rightConnector.getPosition().getY() - SEGMENT_WIDTH);
     }
 
     this.setPrefWidth(
@@ -210,26 +204,32 @@ public class BaseSegmentView extends SegmentView<Base> {
   }
 
   private void redrawCurve() {
-    var entryPos = getSegment().getEntry().getPosition();
-    var exitPos = getSegment().getExit().getPosition();
-    curve.setStartX(entryPos.getX());
-    curve.setStartY(entryPos.getY());
-    curve.setControlX(getCenter().getX());
-    curve.setControlY(getCenter().getY());
-    curve.setEndX(exitPos.getX());
-    curve.setEndY(exitPos.getY());
-  }
+    Position relativeEntryPosition = getSegment().getEntry().getPosition();
+    Position relativeExitPosition = getSegment().getExit().getPosition();
+    Position innerCenter = getInnerCenter();
 
+    curve.setStartX(innerCenter.getX() + relativeEntryPosition.getX());
+    curve.setStartY(innerCenter.getY() + relativeEntryPosition.getY());
+    curve.setControlX(innerCenter.getX());
+    curve.setControlY(innerCenter.getY());
+    curve.setEndX(innerCenter.getX() + relativeExitPosition.getX());
+    curve.setEndY(innerCenter.getY() + relativeExitPosition.getY());
+  }
 
   @Override
   public void notifyChange(Element unit) {
     draw();
   }
 
-  private Position getCenter() {
+  private Position getInnerCenter() {
     return new Position(
         (this.getWidth() / 2),
         (this.getHeight() / 2));
+  }
+
+  private void setCenterInParent(Position position) {
+    this.setLayoutX(position.getX() - this.getWidth() / 2);
+    this.setLayoutY(position.getY() - this.getHeight() / 2);
   }
 
   @Override

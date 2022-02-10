@@ -51,10 +51,10 @@ public abstract class SegmentView<T extends Segment> extends Pane
    */
   private final LocalizedTextProvider translator;
 
-  private ConnectorView draggedConnectorView;
+  protected ConnectorView draggedConnectorView;
 
-  private Consumer<ConnectorView> onConnectorViewDragged;
-  private Consumer<ConnectorView> onConnectorViewDragEnd;
+  protected Consumer<ConnectorView> onConnectorViewDragged;
+  protected Consumer<ConnectorView> onConnectorViewDragEnd;
 
   private Position initialPos;
   private Point2D startPoint;
@@ -74,71 +74,6 @@ public abstract class SegmentView<T extends Segment> extends Pane
 
     this.widthProperty().addListener(e -> draw());
     this.heightProperty().addListener(e -> draw());
-
-    setEventListeners();
-
-    this.setOnMouseClicked(Event::consume);
-  }
-
-  private void setEventListeners() {
-    //TODO: fix for base segments
-    this.setOnMousePressed(mouseEvent -> {
-      if (isActive()) {
-        startPoint = localToParent(mouseEvent.getX(), mouseEvent.getY());
-        initialPos = new Position(startPoint.getX(), startPoint.getY());
-        if (isSelected) {
-          return;
-        } //TODO: deselektion durch ctrl click geht nicht weil sonst das zusammen draggen kaputt ist
-        if (mouseEvent.isControlDown()) {
-          controller.toggleSegmentSelection(this.getSegment());
-        } else {
-          controller.putSegmentSelection(this.getSegment());
-        }
-      }
-    });
-
-    this.setOnDragDetected(mouseEvent -> {
-      if (isActive()) {
-        controller.beginDragStreetSegment(this.initialPos);
-        startFullDrag();
-      }
-    });
-
-    this.setOnMouseDragged(mouseEvent -> {
-      if (isActive()) {
-        mouseEvent.setDragDetect(true);
-        var currentPos = localToParent(mouseEvent.getX(), mouseEvent.getY());
-        var movement = new Movement(currentPos.getX() - startPoint.getX(),
-            currentPos.getY() - startPoint.getY());
-        if (canBeMoved(movement)) {
-          controller.dragStreetSegments(movement);
-          startPoint = currentPos;
-        }
-        if (this.draggedConnectorView != null) {
-          if (this.onConnectorViewDragged != null) {
-            this.onConnectorViewDragged.accept(draggedConnectorView);
-          }
-        }
-        mouseEvent.consume();
-      }
-    });
-
-    this.setOnMouseDragReleased(mouseEvent -> {
-      if (isActive()) {
-        mouseEvent.setDragDetect(false);
-        var releasePoint = localToParent(mouseEvent.getX(), mouseEvent.getY());
-        var releasePosition = new Position(releasePoint.getX(), releasePoint.getY());
-        if (this.draggedConnectorView != null) {
-          controller.endDragStreetSegment(releasePosition, draggedConnectorView.getConnector());
-          if (this.onConnectorViewDragEnd != null) {
-            onConnectorViewDragEnd.accept(draggedConnectorView);
-          }
-        } else {
-          controller.endDragStreetSegment(releasePosition);
-        }
-        this.draggedConnectorView = null;
-      }
-    });
   }
 
   private boolean canBeMoved(Movement movement) {

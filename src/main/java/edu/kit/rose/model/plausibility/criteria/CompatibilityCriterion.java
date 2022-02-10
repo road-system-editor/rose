@@ -53,7 +53,6 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
    * @param violationManager manager to which violations will be added
    */
   public CompatibilityCriterion(RoadSystem roadSystem, ViolationManager violationManager) {
-    //TODO: remove
     this.name = "";
     this.discrepancy = 0;
     this.segmentTypes = new HashSet<>();

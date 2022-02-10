@@ -21,13 +21,15 @@
         <columnConstraints>
             <ColumnConstraints percentWidth="100"/>
         </columnConstraints>
-        <HBox GridPane.columnIndex="0" GridPane.rowIndex="0" spacing="5">
+        <HBox GridPane.columnIndex="0" GridPane.rowIndex="0" spacing="2">
             <Label fx:id="violationLabel" prefWidth="190" minHeight="30"
                    alignment="CENTER"
-                   style=" -fx-background-color: lightgrey;-fx-font-size: 14; -fx-font-weight: bold"/>
+                   style=" -fx-background-color: lightgrey;-fx-font-size: 14; -fx-font-weight: bold;
+                    -fx-background-radius: 2"/>
             <Label fx:id="segmentLabel" prefWidth="235" minHeight = "30"
                    alignment="CENTER"
-                   style=" -fx-background-color: lightgrey; -fx-font-size: 14; -fx-font-weight: bold"/>
+                   style="-fx-background-color: lightgrey; -fx-font-size: 14; -fx-font-weight: bold;
+                    -fx-background-radius: 2"/>
             <!--fx-border-style: none solid none none; -fx-border-width: 0.5;
                    -fx-border-color: black;-->
         </HBox>

@@ -11,10 +11,12 @@ import edu.kit.rose.infrastructure.Movement;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.roadsystem.RoadSystem;
+import edu.kit.rose.model.roadsystem.elements.Base;
 import edu.kit.rose.model.roadsystem.elements.Connection;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Entrance;
 import edu.kit.rose.model.roadsystem.elements.Exit;
+import edu.kit.rose.view.commons.BaseSegmentView;
 import edu.kit.rose.view.commons.EntranceSegmentView;
 import edu.kit.rose.view.commons.ExitSegmentView;
 import edu.kit.rose.view.commons.FxmlContainer;
@@ -91,15 +93,10 @@ public class RoadSystemPanel extends FxmlContainer
     super.init(injector);
     injector.injectMembers(this.zoomContainer);
 
-    var exit = new Exit();
-    exit.move(new Movement(200, 200));
-    var exitView = new ExitSegmentView(exit, roadSystemController, getTranslator());
-    roadSystemGrid.getChildren().add(exitView);
-
-    var entrance = new Entrance();
-    entrance.move(new Movement(300, 200));
-    var entranceView = new EntranceSegmentView(entrance, roadSystemController, getTranslator());
-    roadSystemGrid.getChildren().add(entranceView);
+    var base = new Base();
+    base.move(new Movement(300, 200));
+    var baseView = new BaseSegmentView(base, roadSystemController, getTranslator());
+    roadSystemGrid.getChildren().add(baseView);
   }
 
   @Override

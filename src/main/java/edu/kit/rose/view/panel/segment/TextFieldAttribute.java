@@ -51,7 +51,8 @@ public abstract class TextFieldAttribute<T> extends EditableAttribute<T> {
   @Override
   protected Node createInputField() {
     inputField = new TextField();
-
+    inputField.setStyle("-fx-border-radius: 15; -fx-background-radius: 15; -fx-font-family: "
+        + "Arial; -fx-font-size: 12");
     updateInputField();
 
     inputField.textProperty().addListener(this::onInputFieldUpdate);

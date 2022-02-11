@@ -3,5 +3,7 @@
 <fx:root xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml" type="Pane"
             fx:id="parentContainer">
-    <VBox fx:id="attributeList" prefWidth="${parentContainer.width}"/>
+    <VBox fx:id="attributeList"
+          prefWidth="${parentContainer.width}"
+          spacing="5"/>
 </fx:root>

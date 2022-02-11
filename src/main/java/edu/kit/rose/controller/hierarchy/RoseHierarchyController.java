@@ -82,7 +82,7 @@ public class RoseHierarchyController extends Controller
 
   @Override
   public void setGroupName(Group group, String name) {
-    ChangeCommand setGroupNamCommand = new SetGroupNameCommand(group, name);
+    ChangeCommand setGroupNamCommand = new SetGroupNameCommand(this.replacementLog, group, name);
     this.changeCommandBuffer.addAndExecuteCommand(setGroupNamCommand);
   }
 

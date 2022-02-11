@@ -1,8 +1,12 @@
 package edu.kit.rose.controller.hierarchy;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static org.mockito.Mockito.mock;
 
 import edu.kit.rose.controller.command.ChangeCommand;
+import edu.kit.rose.controller.commons.ReplacementLog;
 import edu.kit.rose.infrastructure.RoseSortedBox;
 import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
@@ -12,6 +16,7 @@ import java.util.ArrayList;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -21,60 +26,48 @@ import org.junit.jupiter.api.Test;
 class SetGroupNameCommandTest {
   private static final String SET = "set";
   private static final String UNSET = "unset";
-  private AttributeAccessor<String> nameAccessor;
+
   private Group group;
-  private String name;
+
+  private ReplacementLog replacementLog;
+
+  private SetGroupNameCommand command;
 
   @BeforeEach
   public void setUp() {
-    this.name = UNSET;
+    this.group = new Group();
+    this.group.setName(UNSET);
 
-    this.group = new Group() {
-      @Override
-      public SortedBox<AttributeAccessor<?>> getAttributeAccessors() {
-        ArrayList<AttributeAccessor<?>> list = new ArrayList<>();
-        list.add(nameAccessor);
-        return new RoseSortedBox<>(list);
-      }
+    this.replacementLog = new ReplacementLog();
 
-      @Override
-      public String getName() {
-        return name;
-      }
-    };
-
-    this.nameAccessor = new AttributeAccessor<String>(AttributeType.NAME,
-            mock(Supplier.class), mock(Consumer.class)) {
-      @Override
-      public AttributeType getAttributeType() {
-        return AttributeType.NAME;
-      }
-
-      @Override
-      public void setValue(String str) {
-        name = str;
-      }
-
-      public String getValue() {
-        return name;
-      }
-    };
+    this.command = new SetGroupNameCommand(this.replacementLog, this.group, SET);
   }
 
   @Test
-  void testExecute() {
-    ChangeCommand setGroupNameCommand = new SetGroupNameCommand(this.group, SET);
-    setGroupNameCommand.execute();
+  void testNameChanged() {
+    assumeTrue(UNSET.equals(this.group.getName()));
 
-    Assertions.assertEquals(SET, this.name);
+    command.execute();
+    assertEquals(SET, this.group.getName());
+
+    command.unexecute();
+    assertEquals(UNSET, this.group.getName());
   }
 
   @Test
-  void testUnexecute() {
-    ChangeCommand setGroupNameCommand = new SetGroupNameCommand(this.group, SET);
-    setGroupNameCommand.execute();
-    setGroupNameCommand.unexecute();
+  void testConsidersReplacement() {
+    var groupReplacement = new Group();
+    groupReplacement.setName(UNSET);
+    replacementLog.replaceElement(group, groupReplacement);
 
-    Assertions.assertEquals(UNSET, this.name);
+    command.execute();
+    assertEquals(SET, groupReplacement.getName());
+
+    var groupReplacementReplacement = new Group();
+    groupReplacementReplacement.setName(SET);
+    replacementLog.replaceElement(groupReplacement, groupReplacementReplacement);
+
+    command.unexecute();
+    assertEquals(UNSET, groupReplacementReplacement.getName());
   }
 }

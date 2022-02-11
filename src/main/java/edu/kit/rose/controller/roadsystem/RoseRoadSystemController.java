@@ -232,18 +232,19 @@ public class RoseRoadSystemController extends Controller
     }
 
     Movement draggingTransition = new Movement(
-        connectorEndPosition.getX() - initialSegmentDragPosition.getX(),
-        connectorEndPosition.getY() - initialSegmentDragPosition.getY());
+        connectorEndPosition.getX() - initialConnectorDragPosition.getX(),
+        connectorEndPosition.getY() - initialConnectorDragPosition.getY());
 
     DragSegmentEndCommand dragSegmentEndCommand
         = new DragSegmentEndCommand((MovableConnector) dragConnector, draggingTransition);
 
+    dragSegmentEndCommand.unexecute();
     changeCommandBuffer.addAndExecuteCommand(dragSegmentEndCommand);
+
+    buildConnection(dragConnector);
 
     dragConnector = null;
     initialConnectorDragPosition = null;
-
-    buildConnection(dragConnector);
   }
 
 

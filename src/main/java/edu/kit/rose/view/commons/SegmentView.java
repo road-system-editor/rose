@@ -15,6 +15,7 @@ import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 
 /**
@@ -78,6 +79,9 @@ public abstract class SegmentView<T extends Segment> extends Pane
     this.heightProperty().addListener(e -> draw());
 
     setOnMouseClicked(Event::consume);
+    setOnMousePressed(this::onMousePressed);
+    setupDrag();
+    setOnMouseDragReleased(this::onMouseDragReleased);
   }
 
   protected boolean canBeMoved(Node target, Movement movement) {
@@ -170,11 +174,66 @@ public abstract class SegmentView<T extends Segment> extends Pane
     this.draggedConnectorView = connectorView;
   }
 
+  protected void onMousePressed(MouseEvent mouseEvent) {
+    startPoint = localToParent(mouseEvent.getX(), mouseEvent.getY());
+    initialPos = new Position(startPoint.getX(), startPoint.getY());
+    if (getDrawAsSelected()) {
+      return;
+    }
+    if (mouseEvent.isControlDown()) {
+      controller.toggleSegmentSelection(this.getSegment());
+    } else {
+      controller.putSegmentSelection(this.getSegment());
+    }
+  }
+
+  protected void onDragDetected(MouseEvent mouseEvent) {
+    controller.beginDragStreetSegment(this.initialPos);
+    startFullDrag();
+  }
+
+  protected void onMouseDragged(MouseEvent mouseEvent) {
+    var currentPos = localToParent(mouseEvent.getX(), mouseEvent.getY());
+    var movement = new Movement(currentPos.getX() - startPoint.getX(),
+        currentPos.getY() - startPoint.getY());
+    if (this.canBeMoved(this, movement)) {
+      controller.dragStreetSegments(movement);
+      startPoint = currentPos;
+    }
+    if (this.draggedConnectorView != null) {
+      if (this.onConnectorViewDragged != null) {
+        this.onConnectorViewDragged.accept(draggedConnectorView);
+      }
+    }
+    mouseEvent.consume();
+  }
+
+  protected void onMouseDragReleased(MouseEvent mouseEvent) {
+    var releasePoint = localToParent(mouseEvent.getX(), mouseEvent.getY());
+    var releasePosition = new Position(releasePoint.getX(), releasePoint.getY());
+    if (this.draggedConnectorView != null) {
+      controller.endDragStreetSegment(releasePosition, draggedConnectorView.getConnector());
+      if (this.onConnectorViewDragEnd != null) {
+        onConnectorViewDragEnd.accept(draggedConnectorView);
+      }
+    } else {
+      controller.endDragStreetSegment(releasePosition);
+    }
+    this.draggedConnectorView = null;
+  }
+
   /**
    * Draws the segment on a given graphical context.
    *
    */
   protected abstract void redraw();
+
+  /**
+   * Sets up the dragging of this segment view.
+   * Left to child classes as dragging events might be
+   * instantiated differently.
+   */
+  protected abstract void setupDrag();
 
   /**
    * Provides the {@link ConnectorView}s of this segment view.

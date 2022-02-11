@@ -1,23 +1,15 @@
 package edu.kit.rose.view.commons;
 
-import com.google.inject.Inject;
 import edu.kit.rose.controller.roadsystem.RoadSystemController;
-import edu.kit.rose.infrastructure.Movement;
 import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.model.roadsystem.elements.Element;
-import edu.kit.rose.model.roadsystem.elements.Exit;
 import edu.kit.rose.model.roadsystem.elements.RampSegment;
-import edu.kit.rose.model.roadsystem.elements.Segment;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.List;
-import java.util.function.Supplier;
-import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
 
 /**
@@ -25,7 +17,7 @@ import javafx.scene.transform.Rotate;
  */
 public abstract class RampSegmentView<T extends RampSegment> extends SegmentView<T> {
 
-  private static final int MAIN_STREET_WIDTH = 15;
+  private static final int MAIN_STREET_RADIUS = 15;
   private static final int RAMP_WIDTH = 6;
 
   private Rotate rotation;
@@ -60,7 +52,6 @@ public abstract class RampSegmentView<T extends RampSegment> extends SegmentView
     setupRotation();
     setupConnectors();
     setupImage();
-    setupDragging();
     updatePosition();
     getChildren().addAll(imageView, exitConnectorView, entryConnectorView, rampConnectorView);
 
@@ -71,10 +62,10 @@ public abstract class RampSegmentView<T extends RampSegment> extends SegmentView
 
   private void setupConnectors() {
     entryConnectorView =
-        new ConnectorView(MAIN_STREET_WIDTH,
+        new ConnectorView(MAIN_STREET_RADIUS,
             this.getSegment().getEntry(), this::setDraggedConnectorView);
     exitConnectorView =
-        new ConnectorView(MAIN_STREET_WIDTH,
+        new ConnectorView(MAIN_STREET_RADIUS,
             this.getSegment().getExit(), this::setDraggedConnectorView);
     rampConnectorView =
         new ConnectorView(RAMP_WIDTH,
@@ -110,56 +101,6 @@ public abstract class RampSegmentView<T extends RampSegment> extends SegmentView
     getTransforms().add(rotation);
   }
 
-  private void setupDragging() {
-    this.setOnMousePressed(mouseEvent -> {
-      startPoint = localToParent(mouseEvent.getX(), mouseEvent.getY());
-      initialPos = new Position(startPoint.getX(), startPoint.getY());
-      if (getDrawAsSelected()) {
-        return;
-      }
-      if (mouseEvent.isControlDown()) {
-        controller.toggleSegmentSelection(this.getSegment());
-      } else {
-        controller.putSegmentSelection(this.getSegment());
-      }
-    });
-
-    this.setOnDragDetected(mouseEvent -> {
-      controller.beginDragStreetSegment(this.initialPos);
-      startFullDrag();
-    });
-
-    this.setOnMouseDragged(mouseEvent -> {
-      var currentPos = localToParent(mouseEvent.getX(), mouseEvent.getY());
-      var movement = new Movement(currentPos.getX() - startPoint.getX(),
-          currentPos.getY() - startPoint.getY());
-      if (this.canBeMoved(this, movement)) {
-        controller.dragStreetSegments(movement);
-        startPoint = currentPos;
-      }
-      if (this.draggedConnectorView != null) {
-        if (this.onConnectorViewDragged != null) {
-          this.onConnectorViewDragged.accept(draggedConnectorView);
-        }
-      }
-      mouseEvent.consume();
-    });
-
-    this.setOnMouseDragReleased(mouseEvent -> {
-      var releasePoint = localToParent(mouseEvent.getX(), mouseEvent.getY());
-      var releasePosition = new Position(releasePoint.getX(), releasePoint.getY());
-      if (this.draggedConnectorView != null) {
-        controller.endDragStreetSegment(releasePosition, draggedConnectorView.getConnector());
-        if (this.onConnectorViewDragEnd != null) {
-          onConnectorViewDragEnd.accept(draggedConnectorView);
-        }
-      } else {
-        controller.endDragStreetSegment(releasePosition);
-      }
-      this.draggedConnectorView = null;
-    });
-  }
-
   @Override
   public void redraw() {
     updatePosition();
@@ -189,6 +130,12 @@ public abstract class RampSegmentView<T extends RampSegment> extends SegmentView
   @Override
   public List<ConnectorView> getConnectorViews() {
     return new LinkedList<>(this.connectorViews);
+  }
+
+  @Override
+  protected void setupDrag() {
+    setOnDragDetected(this::onDragDetected);
+    setOnMouseDragged(this::onMouseDragged);
   }
 
   protected abstract double getImagePosOffsetX();

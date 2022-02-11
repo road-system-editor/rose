@@ -6,8 +6,8 @@
 }
 
 .segment-blueprint {
-    -fx-background-color: #bfbfbf;
-    -fx-background-radius: 20;
+    -fx-border-color: #bfbfbf;
+    -fx-border-radius: 15;
 }
 
 .list-view {

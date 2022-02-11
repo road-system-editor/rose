@@ -1,14 +1,10 @@
 package edu.kit.rose.view.panel.segment;
 
 import edu.kit.rose.controller.attribute.AttributeController;
-import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.view.commons.FxmlContainer;
 import java.util.Collection;
 import java.util.Objects;
-import java.util.function.Function;
-import javafx.beans.property.SimpleListProperty;
-import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
@@ -50,6 +46,7 @@ abstract class SelectableAttribute<T> extends EditableAttribute<T> {
       }
     });
 
+    inputField.setPrefWidth(150);
     inputField.getSelectionModel().selectedItemProperty().addListener(
         (options, old, newVal) -> getController().setAttribute(getAttribute(), newVal));
 

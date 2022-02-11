@@ -13,6 +13,7 @@ import javafx.scene.control.TextField;
  * {@link edu.kit.rose.model.roadsystem.DataType}s whose values needs to be typed in by the user.
  */
 public abstract class TextFieldAttribute<T> extends EditableAttribute<T> {
+  private static final String TEXT_FIELD_STYLE = "edu/kit/rose/view/panel/segment/TextField.css";
   /**
    * This attribute is {@code true} when this component is currently trying to insert an
    * "inhomogeneous" value into the input field and the input should not be validated.
@@ -50,6 +51,7 @@ public abstract class TextFieldAttribute<T> extends EditableAttribute<T> {
   @Override
   protected Node createInputField() {
     inputField = new TextField();
+
     updateInputField();
 
     inputField.textProperty().addListener(this::onInputFieldUpdate);

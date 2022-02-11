@@ -10,7 +10,8 @@ import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.MovableConnector;
 import java.util.List;
 import javafx.geometry.Point2D;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.effect.BlurType;
+import javafx.scene.effect.Shadow;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.QuadCurve;
 
@@ -21,6 +22,9 @@ import javafx.scene.shape.QuadCurve;
 public class BaseSegmentView extends SegmentView<Base> {
 
   private static final double STREET_RADIUS = 15;
+  private static final Color SELECTION_EFFECT_COLOR = Color.rgb(0, 150, 130);
+  private static final double SELECTION_EFFECT_RADIUS = 5;
+  private static final double EFFECT_CURVE_RADIUS = 6;
 
   private final ConnectorObserver<Base> entryConnectorObserver;
   private final ConnectorObserver<Base> exitConnectorObserver;
@@ -28,14 +32,11 @@ public class BaseSegmentView extends SegmentView<Base> {
   private final ConnectorView entryConnectorView;
   private final ConnectorView exitConnectorView;
 
-  private double startDragX;
-  private double startDragY;
-
   private final RoadSystemController roadSystemController;
 
   private QuadCurve curve;
+  private QuadCurve effectCurve;
 
-  private Position initialPos;
   private Point2D startPoint;
 
   /**
@@ -66,7 +67,10 @@ public class BaseSegmentView extends SegmentView<Base> {
     exitConnectorObserver = new ConnectorObserver<>(segment, segment.getExit());
     exitConnectorObserver.setOnConnectorPositionChangedCallback(this::draw);
 
-    this.getChildren().addAll(this.curve, this.entryConnectorView, this.exitConnectorView);
+    setupEffectCurve();
+
+    this.getChildren().addAll(this.effectCurve, this.curve,
+        this.entryConnectorView, this.exitConnectorView);
 
     setupConnectorViewDragging(entryConnectorView, this.getSegment().getEntry());
     setupConnectorViewDragging(exitConnectorView, this.getSegment().getExit());
@@ -77,6 +81,16 @@ public class BaseSegmentView extends SegmentView<Base> {
     curve.setFill(Color.TRANSPARENT);
     curve.setStroke(Color.BLACK);
     curve.setStrokeWidth(STREET_RADIUS * 2);
+  }
+
+  private void setupEffectCurve() {
+    this.effectCurve = new QuadCurve();
+    effectCurve.setFill(Color.TRANSPARENT);
+    effectCurve.setStroke(Color.BLACK);
+    effectCurve.setStrokeWidth(STREET_RADIUS * 2 + EFFECT_CURVE_RADIUS);
+    var selectionEffect = new Shadow(BlurType.GAUSSIAN, SELECTION_EFFECT_COLOR,
+        SELECTION_EFFECT_RADIUS);
+    this.effectCurve.setEffect(selectionEffect);
   }
 
   private void setupConnectorViewDragging(ConnectorView targetView, Connector targetConnector) {
@@ -188,6 +202,16 @@ public class BaseSegmentView extends SegmentView<Base> {
   }
 
   private void redrawCurve() {
+    if (getDrawAsSelected()) {
+      effectCurve.setVisible(true);
+      redrawCurve(effectCurve);
+    } else {
+      effectCurve.setVisible(false);
+    }
+    redrawCurve(curve);
+  }
+
+  private void redrawCurve(QuadCurve curve) {
     Position relativeEntryPosition = getSegment().getEntry().getPosition();
     Point2D relativeEntryPointNormal = new Point2D(relativeEntryPosition.getX(),
         relativeEntryPosition.getY()).normalize();

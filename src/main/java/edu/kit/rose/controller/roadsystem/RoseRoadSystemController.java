@@ -124,7 +124,7 @@ public class RoseRoadSystemController extends Controller
 
   @Override
   public void dragStreetSegments(Movement interimMovement) {
-    this.selectionBuffer.getSelectedSegments().forEach(segment -> segment.move(interimMovement));
+    this.roadSystem.moveSegments(selectionBuffer.getSelectedSegments(), interimMovement);
   }
 
   @Override

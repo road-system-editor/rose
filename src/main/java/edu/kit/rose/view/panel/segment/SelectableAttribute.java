@@ -34,7 +34,10 @@ abstract class SelectableAttribute<T> extends EditableAttribute<T> {
   @Override
   protected Node createInputField() {
     this.inputField = new ComboBox<>();
-    inputField.setStyle("-fx-border-radius: 15; -fx-background-radius: 15");
+    inputField.setStyle("-fx-border-radius: 15; -fx-background-radius: 15; -fx-background-color: "
+        + "white; -fx-border-style: solid; -fx-border-color: #8d8d8d;"
+        + "-fx-border-width: 0.5");
+    inputField.setMaxHeight(10);
     inputField.setCellFactory(listView -> new ListCell<>() {
       @Override
       protected void updateItem(T item, boolean empty) {

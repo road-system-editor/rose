@@ -5,5 +5,5 @@
             fx:id="parentContainer">
     <VBox fx:id="attributeList"
           prefWidth="${parentContainer.width}"
-          spacing="5"/>
+          style="-fx-padding: 5 5 5 0; -fx-spacing: 5"/>
 </fx:root>

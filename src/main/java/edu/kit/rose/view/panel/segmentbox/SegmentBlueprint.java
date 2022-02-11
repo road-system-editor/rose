@@ -7,9 +7,8 @@ import edu.kit.rose.model.roadsystem.elements.Entrance;
 import edu.kit.rose.model.roadsystem.elements.Exit;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
-import edu.kit.rose.view.commons.SegmentView;
-import edu.kit.rose.view.commons.SegmentViewFactory;
 import java.net.URL;
+import java.util.Objects;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
@@ -28,6 +27,12 @@ class SegmentBlueprint extends StackPane {
   private static final int WIDTH = 200;
   private static final int TRANSLATE_X = 10;
   private static final int DOUBLE_CLICK = 2;
+  private static final String BASE_IMAGE = "base_segment_raw.png";
+  private static final String EXIT_IMAGE = "exit_segment_raw.png";
+  private static final String ENTRANCE_IMAGE =  "entrance_segment_raw.png";
+  private static final String BLUEPRINT_STYLESHEET = "/edu/kit/rose/view/panel/segmentbox"
+      + "/SegmentBoxListView.css";
+  private static final String BLUEPRINT_STYLECLASS = "segment-blueprint";
 
   /**
    * These segments provide the data for the segment renderer.
@@ -61,15 +66,16 @@ class SegmentBlueprint extends StackPane {
     this.type = type;
     setOnMouseClicked(this::handleDoubleClick);
     setOnDragDetected(this::handleOnDragDetected);
-    getStylesheets().add("edu/kit/rose/view/panel/segmentbox/SegmentBoxListView.css");
-    getStyleClass().add("segment-blueprint");
+    String stylesheetResource =
+        Objects.requireNonNull(getClass().getResource(BLUEPRINT_STYLESHEET)).toExternalForm();
+    getStylesheets().add(stylesheetResource);
+    getStyleClass().add(BLUEPRINT_STYLECLASS);
     setMaxHeight(HEIGHT);
     setMaxWidth(WIDTH);
     setTranslateX(TRANSLATE_X);
-    URL baseUrl = this.getClass().getResource("base_segment_raw.png");
-    //TODO: update pngs to be centered.
-    URL exitUrl = this.getClass().getResource("exit_segment_raw.png");
-    URL entranceUrl = this.getClass().getResource("entrance_segment_raw.png");
+    URL baseUrl = Objects.requireNonNull(this.getClass().getResource(BASE_IMAGE));
+    URL exitUrl = Objects.requireNonNull(this.getClass().getResource(EXIT_IMAGE));
+    URL entranceUrl = Objects.requireNonNull(this.getClass().getResource(ENTRANCE_IMAGE));
     Image image;
     switch (type) {
       case BASE -> {

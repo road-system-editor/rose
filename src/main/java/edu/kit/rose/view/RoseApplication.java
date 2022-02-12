@@ -26,6 +26,7 @@ import edu.kit.rose.view.window.CriteriaWindow;
 import edu.kit.rose.view.window.MainWindow;
 import edu.kit.rose.view.window.MeasurementsWindow;
 import edu.kit.rose.view.window.RoseWindow;
+import edu.kit.rose.view.window.ShortCutHelpWindow;
 import edu.kit.rose.view.window.WindowState;
 import java.io.File;
 import java.nio.file.Path;
@@ -63,6 +64,11 @@ public class RoseApplication extends Application implements Navigator {
    * Contains the measurements window instance, if it is currently shown.
    */
   private MeasurementsWindow measurementsWindow;
+  /**
+   * Contains information on available shortcuts.
+   */
+  private ShortCutHelpWindow shortCutHelpWindow;
+
   /**
    * Factory to be used for creating a consistent set of MVC controllers.
    */
@@ -122,6 +128,13 @@ public class RoseApplication extends Application implements Navigator {
         }
         measurementsWindow.show();
       }
+      case HELP -> {
+        if (!canBeShown(shortCutHelpWindow)) {
+          shortCutHelpWindow = new ShortCutHelpWindow(this.injector);
+        }
+        shortCutHelpWindow.show();
+      }
+
       default -> throw new RuntimeException("RoseApplication can't show window type " + windowType);
     }
   }

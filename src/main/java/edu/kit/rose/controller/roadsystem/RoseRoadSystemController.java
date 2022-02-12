@@ -14,7 +14,6 @@ import edu.kit.rose.model.roadsystem.elements.Connector;
 import edu.kit.rose.model.roadsystem.elements.MovableConnector;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -22,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javafx.collections.transformation.SortedList;
 import javafx.geometry.Point2D;
 
 /**
@@ -345,7 +343,7 @@ public class RoseRoadSystemController extends Controller
   }
 
   private Point2D getConnectorPosPoint(Connector connector, Segment segment) {
-    var connectorPos = segment.getRotatedConnectorPosition(connector);
+    var connectorPos = segment.getAbsoluteConnectorPosition(connector);
     return new Point2D(connectorPos.getX(), connectorPos.getY());
   }
 

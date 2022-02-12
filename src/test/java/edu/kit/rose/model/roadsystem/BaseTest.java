@@ -217,9 +217,9 @@ public class BaseTest {
         connectors.get(0).getPosition().getY());
     testBase.rotate(90);
     Assertions.assertEquals(oldPositionEntry.getX(),
-        testBase.getRotatedConnectorPosition(connectors.get(0)).getY());
+        testBase.getAbsoluteConnectorPosition(connectors.get(0)).getY());
     Assertions.assertEquals(oldPositionEntry.getY(),
-        testBase.getRotatedConnectorPosition(connectors.get(0)).getX());
+        testBase.getAbsoluteConnectorPosition(connectors.get(0)).getX());
   }
 
   @Test
@@ -230,9 +230,9 @@ public class BaseTest {
         connectors.get(1).getPosition().getY());
     testBase.rotate(90);
     Assertions.assertEquals(oldPositionExit.getX(),
-        testBase.getRotatedConnectorPosition(connectors.get(1)).getY());
+        testBase.getAbsoluteConnectorPosition(connectors.get(1)).getY());
     Assertions.assertEquals(oldPositionExit.getY(),
-        testBase.getRotatedConnectorPosition(connectors.get(1)).getX());
+        testBase.getAbsoluteConnectorPosition(connectors.get(1)).getX());
   }
 
   @Test
@@ -247,9 +247,9 @@ public class BaseTest {
         connectors.get(1).getPosition().getY() - moveY);
     testBase.rotate(90);
     Assertions.assertEquals(moveY - oldPositionExitOrigin.getX(),
-        testBase.getRotatedConnectorPosition(connectors.get(1)).getY());
+        testBase.getAbsoluteConnectorPosition(connectors.get(1)).getY());
     Assertions.assertEquals(moveX + oldPositionExitOrigin.getY(),
-        testBase.getRotatedConnectorPosition(connectors.get(1)).getX());
+        testBase.getAbsoluteConnectorPosition(connectors.get(1)).getX());
   }
 
   @Test

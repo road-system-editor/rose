@@ -7,21 +7,15 @@ import edu.kit.rose.controller.attribute.AttributeController;
 import edu.kit.rose.controller.measurement.MeasurementController;
 import edu.kit.rose.controller.roadsystem.RoadSystemController;
 import edu.kit.rose.infrastructure.DualSetObserver;
-import edu.kit.rose.infrastructure.Movement;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.roadsystem.RoadSystem;
-import edu.kit.rose.model.roadsystem.elements.Base;
 import edu.kit.rose.model.roadsystem.elements.Connection;
 import edu.kit.rose.model.roadsystem.elements.Connector;
 import edu.kit.rose.model.roadsystem.elements.Element;
-import edu.kit.rose.model.roadsystem.elements.Entrance;
-import edu.kit.rose.model.roadsystem.elements.Exit;
-import edu.kit.rose.view.commons.BaseSegmentView;
 import edu.kit.rose.model.roadsystem.elements.Segment;
+import edu.kit.rose.view.commons.ConnectionView;
 import edu.kit.rose.view.commons.ConnectorView;
-import edu.kit.rose.view.commons.EntranceSegmentView;
-import edu.kit.rose.view.commons.ExitSegmentView;
 import edu.kit.rose.view.commons.FxmlContainer;
 import edu.kit.rose.view.commons.SegmentView;
 import edu.kit.rose.view.commons.SegmentViewFactory;
@@ -29,10 +23,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
 
@@ -138,7 +130,7 @@ public class RoadSystemPanel extends FxmlContainer
     var connectorView2 = getConnectorViewFromSegmentViews(connector2, segmentViews);
     var connector1Pos = getConnectorViewPosOnGrid(connectorView1);
     var connector2Pos = getConnectorViewPosOnGrid(connectorView2);
-    var connectionView = new ConnectionView(connector1Pos, connector2Pos);
+    var connectionView = new ConnectionView(connector1Pos, connector2Pos, unit);
     connectionViewMap.put(unit, connectionView);
     roadSystemGrid.getChildren().add(connectionView);
   }

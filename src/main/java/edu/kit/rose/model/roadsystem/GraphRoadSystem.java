@@ -2,6 +2,7 @@ package edu.kit.rose.model.roadsystem;
 
 import edu.kit.rose.infrastructure.Box;
 import edu.kit.rose.infrastructure.Movement;
+import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.infrastructure.RoseBox;
 import edu.kit.rose.infrastructure.RoseDualSetObservable;
 import edu.kit.rose.model.plausibility.criteria.CriteriaManager;
@@ -147,7 +148,8 @@ public class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, 
     }
     disconnectConnection(connectorConnectionMap.get(segment1Connector));
     disconnectConnection(connectorConnectionMap.get(segment2Connector));
-    var connection = new Connection(segment1Connector, segment2Connector);
+    var connection = new Connection(segment1Connector, segment2Connector,
+        getConnectionCenter(segment1Connector, segment2Connector));
     var segment1 = connectorSegmentMap.get(segment1Connector);
     var segment2 = connectorSegmentMap.get(segment2Connector);
     segmentConnectionGraph.addEdge(segment1, segment2, connection);
@@ -157,6 +159,17 @@ public class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, 
     segment1.notifySubscribers();
     segment2.notifySubscribers();
     return connection;
+  }
+
+  private Position getConnectionCenter(Connector connector1, Connector connector2) {
+    var connector1Pos = connectorSegmentMap.get(connector1)
+        .getAbsoluteConnectorPosition(connector1);
+    var connector2Pos = connectorSegmentMap.get(connector2)
+        .getAbsoluteConnectorPosition(connector2);
+    return new Position(
+        (connector1Pos.getX() + connector2Pos.getX()) / 2,
+        (connector1Pos.getY() + connector2Pos.getY()) / 2
+    );
   }
 
   @Override
@@ -240,7 +253,9 @@ public class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, 
       throw new IllegalArgumentException("can not move unknown segments");
     }
     var outSideConnections = getOutSideConnections(segments);
+    var inSideConnections = getInsideConnections(segments);
     inNoBreakMode(() -> segments.forEach(s -> s.move(movement)));
+    inSideConnections.forEach(connection -> connection.move(movement));
     outSideConnections.forEach(this::disconnectConnection);
   }
 
@@ -271,19 +286,28 @@ public class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, 
 
   //returns all connections that connect the given segments to segments outside the collection
   private List<Connection> getOutSideConnections(Collection<Segment> segments) {
-    var connectorBoxes = segments.stream()
-        .map(Segment::getConnectors)
-        .toList();
-    Set<Connector> connectors = new HashSet<>();
-    connectorBoxes.forEach(cb -> cb.forEach(connectors::add));
+    var connectors = getConnectors(segments);
 
     return segments.stream()
         .flatMap(s -> Graphs.neighborListOf(segmentConnectionGraph, s).stream())
         .filter(s -> !segments.contains(s))
         .flatMap(s -> getConnectionsSet(s).stream()
-            .filter(c -> StreamSupport.stream(c.getConnectors().spliterator(), false)
-                .anyMatch(connectors::contains)))
+            .filter(c -> c.getConnectors().stream().anyMatch(connectors::contains)))
         .toList();
+  }
+
+  //returns all connections that connect the given segments
+  private List<Connection> getInsideConnections(Collection<Segment> segments) {
+    var connectors = getConnectors(segments);
+
+    return segmentConnectionGraph.edgeSet().stream()
+        .filter(connection -> connectors.containsAll(connection.getConnectors().stream().toList()))
+        .toList();
+  }
+
+  private List<Connector> getConnectors(Collection<Segment> segments) {
+    return segments.stream()
+        .flatMap(segment -> segment.getConnectors().stream()).toList();
   }
 
   @Override

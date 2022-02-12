@@ -1,5 +1,9 @@
-package edu.kit.rose.view.panel.roadsystem;
+package edu.kit.rose.view.commons;
 
+import edu.kit.rose.infrastructure.Movement;
+import edu.kit.rose.infrastructure.Position;
+import edu.kit.rose.infrastructure.UnitObserver;
+import edu.kit.rose.model.roadsystem.elements.Connection;
 import javafx.geometry.Point2D;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -11,13 +15,16 @@ import javafx.scene.transform.Rotate;
 /**
  * Represents a connection between two {@link edu.kit.rose.view.commons.ConnectorView}s.
  */
-public class ConnectionView extends Pane {
+public class ConnectionView extends Pane implements UnitObserver<Connection> {
 
   private static final Paint COLOR = Paint.valueOf("#009682"); //KIT green
   private static final double RADIUS = 3.0;
   private static final Point2D PIVOT_POINT = new Point2D(0, RADIUS);
 
+  private final Connection connection;
   private final double connectorDistance;
+
+  private Position center;
 
   /**
    * Constructs a new ConnectorView. Will connect two provided connector positions.
@@ -25,11 +32,14 @@ public class ConnectionView extends Pane {
    * @param connectorPos1 the first connector position.
    * @param connectorPos2 the second connector position.
    */
-  public ConnectionView(Point2D connectorPos1, Point2D connectorPos2) {
+  public ConnectionView(Point2D connectorPos1, Point2D connectorPos2, Connection connection) {
+    this.connection = connection;
     this.connectorDistance = connectorPos1.distance(connectorPos2);
+    this.center = connection.getCenter();
     setupShapes();
     setupPosition(connectorPos1);
     setupRotation(calculateAngle(connectorPos1, connectorPos2));
+    this.connection.addSubscriber(this);
   }
 
   private void setupShapes() {
@@ -64,5 +74,20 @@ public class ConnectionView extends Pane {
   private void setupRotation(double angle) {
     var rotation = new Rotate(angle, PIVOT_POINT.getX(), PIVOT_POINT.getY());
     getTransforms().add(rotation);
+  }
+
+  @Override
+  public void notifyChange(Connection unit) {
+    if (unit != this.connection) {
+      throw new IllegalArgumentException(
+          "Connection views might only observe one connection at a time.");
+    }
+    var newCenter = unit.getCenter();
+    var movement = new Movement(
+        newCenter.getX() - this.center.getX(),
+        newCenter.getY() - this.center.getY()
+    );
+    relocate(getLayoutX() + movement.getX(), getLayoutY() + movement.getY());
+    this.center = newCenter;
   }
 }

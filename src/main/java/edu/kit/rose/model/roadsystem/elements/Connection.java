@@ -1,15 +1,11 @@
 package edu.kit.rose.model.roadsystem.elements;
 
 
-import edu.kit.rose.infrastructure.Box;
-import edu.kit.rose.infrastructure.RoseBox;
+import edu.kit.rose.infrastructure.Movement;
+import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.infrastructure.RoseSortedBox;
 import edu.kit.rose.infrastructure.RoseUnitObservable;
 import edu.kit.rose.infrastructure.SortedBox;
-import edu.kit.rose.infrastructure.UnitObservable;
-import edu.kit.rose.infrastructure.UnitObserver;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * A connection between two {@link Connector}s.
@@ -18,10 +14,19 @@ public class Connection extends RoseUnitObservable<Connection> {
 
   private final Connector connector1;
   private final Connector connector2;
+  private Position center;
 
-  public Connection(Connector connector1, Connector connector2) {
+  /**
+   * Constructor.
+   *
+   * @param connector1 the first connector of this connection.
+   * @param connector2 the second connector of this connection.
+   * @param center the absolute position of the center of this connection.
+   */
+  public Connection(Connector connector1, Connector connector2, Position center) {
     this.connector1 = connector1;
     this.connector2 = connector2;
+    this.center = new Position(center.getX(), center.getY());
   }
 
   @Override
@@ -39,7 +44,7 @@ public class Connection extends RoseUnitObservable<Connection> {
   }
 
   /**
-   * Privides the other {@link Connector} held within respectively.
+   * Provides the other {@link Connector} held within respectively.
    *
    * @param knownConnector the connector that is known.
    * @return the other connector.
@@ -50,5 +55,24 @@ public class Connection extends RoseUnitObservable<Connection> {
     } else {
       throw new IllegalArgumentException("unknown connector.");
     }
+  }
+
+  /**
+   * Moves the center of this connection by a given movement.
+   *
+   * @param movement the movement by which to move the center.
+   */
+  public void move(Movement movement) {
+    this.center = this.center.add(movement);
+    notifySubscribers();
+  }
+
+  /**
+   * Provides a position indicating the center of this connection.
+   *
+   * @return the center position.
+   */
+  public Position getCenter() {
+    return new Position(center.getX(), center.getY());
   }
 }

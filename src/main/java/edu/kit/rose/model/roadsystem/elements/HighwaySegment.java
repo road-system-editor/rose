@@ -192,7 +192,7 @@ public abstract class HighwaySegment
   }
 
   @Override
-  public Position getRotatedConnectorPosition(Connector connector) {
+  public Position getAbsoluteConnectorPosition(Connector connector) {
     if (!this.connectors.contains(connector)) {
       throw new IllegalArgumentException("connector is not part of this segment");
     }

@@ -7,7 +7,9 @@ import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import edu.kit.rose.view.commons.FxmlContainer;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.control.ListView;
 
 
@@ -16,7 +18,9 @@ import javafx.scene.control.ListView;
  * be created, as specified in PF11.1.7.
  */
 public class SegmentBoxPanel extends FxmlContainer {
-
+  private static final String LISTVIEW_STYLESHEET = "/edu/kit/rose/view/panel/segmentbox"
+      + "/SegmentBoxListView.css";
+  private static final String LISTVIEW_STYLECLASS = "list-cell";
   @FXML
   private ListView<SegmentType> blueprintListView;
 
@@ -40,6 +44,12 @@ public class SegmentBoxPanel extends FxmlContainer {
     blueprintListView.setCellFactory(
             listView -> new SegmentBoxListCell(this.controller, getTranslator()));
     blueprintListView.getItems().addAll(SegmentType.values());
+    String stylesheetResource =
+        Objects.requireNonNull(getClass().getResource(LISTVIEW_STYLESHEET)).toExternalForm();
+    blueprintListView.getStylesheets().add(stylesheetResource);
+    blueprintListView.getStyleClass().add(LISTVIEW_STYLECLASS);
+    blueprintListView.getSelectionModel().clearSelection();
+    blueprintListView.setSelectionModel(new DisabledSelectionModel<>());
   }
 
   @Override

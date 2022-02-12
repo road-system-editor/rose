@@ -8,6 +8,7 @@ import edu.kit.rose.controller.application.ApplicationController;
 import edu.kit.rose.controller.attribute.AttributeController;
 import edu.kit.rose.controller.hierarchy.HierarchyController;
 import edu.kit.rose.controller.measurement.MeasurementController;
+import edu.kit.rose.controller.navigation.ErrorType;
 import edu.kit.rose.controller.navigation.FileDialogType;
 import edu.kit.rose.controller.navigation.FileFormat;
 import edu.kit.rose.controller.navigation.Navigator;
@@ -32,6 +33,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.application.Application;
+import javafx.scene.control.Alert;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -154,6 +156,25 @@ public class RoseApplication extends Application implements Navigator {
       default -> throw new IllegalStateException(format.toString());
     }
     return file == null ? null : file.toPath();
+  }
+
+  @Override
+  public void showErrorDialog(ErrorType errorType) {
+    Alert alertDialog = new Alert(Alert.AlertType.ERROR);
+
+    switch (errorType) {
+      case SAVE_ERROR -> alertDialog.setContentText(
+          translator.getLocalizedText("view.roseapplication.error.save"));
+      case LOAD_ERROR -> alertDialog.setContentText(
+          translator.getLocalizedText("view.roseapplication.error.load"));
+      case IMPORT_ERROR -> alertDialog.setContentText(
+          translator.getLocalizedText("view.roseapplication.error.import"));
+      case EXPORT_ERROR -> alertDialog.setContentText(
+          translator.getLocalizedText("view.roseapplication.error.export"));
+      default -> throw new IllegalStateException(errorType.toString());
+    };
+
+    alertDialog.show();
   }
 
   private FileChooser.ExtensionFilter getExtensionFilter(FileFormat format) {

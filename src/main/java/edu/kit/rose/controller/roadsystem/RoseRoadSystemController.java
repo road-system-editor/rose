@@ -92,7 +92,7 @@ public class RoseRoadSystemController extends Controller
   @Override
   public void deleteStreetSegment(Segment segment) {
     DeleteStreetSegmentCommand deleteStreetSegmentCommand
-        = new DeleteStreetSegmentCommand(this.project, segment);
+        = new DeleteStreetSegmentCommand(this.replacementLog, this.project, segment);
 
     changeCommandBuffer.addAndExecuteCommand(deleteStreetSegmentCommand);
     selectionBuffer.removeSegmentSelection(segment);

@@ -1,10 +1,10 @@
 package edu.kit.rose.controller;
 
+import static edu.kit.rose.util.AccessorUtility.assertEqualAccessors;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
 import edu.kit.rose.controller.commons.HierarchyCopier;
@@ -20,7 +20,6 @@ import edu.kit.rose.model.roadsystem.elements.Entrance;
 import edu.kit.rose.model.roadsystem.elements.Group;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
-import edu.kit.rose.util.AccessorUtility;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -161,13 +160,5 @@ public class HierarchyCopierTest {
   void assertEqualPositioning(Segment expected, Segment actual) {
     assertEquals(expected.getCenter(), actual.getCenter());
     assertEquals(expected.getRotation(), actual.getRotation());
-  }
-
-  void assertEqualAccessors(Element expected, Element actual) {
-    for (var accessor1 : expected.getAttributeAccessors()) {
-      var accessor2 = AccessorUtility.findAccessorOfType(actual, accessor1.getAttributeType());
-      assertNotNull(accessor2);
-      assertEquals(accessor1.getValue(), accessor2.getValue());
-    }
   }
 }

@@ -1,6 +1,7 @@
 package edu.kit.rose.controller.roadsystem;
 
 import edu.kit.rose.controller.command.ChangeCommand;
+import edu.kit.rose.controller.commons.ReplacementLog;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Group;
@@ -14,6 +15,7 @@ import edu.kit.rose.model.roadsystem.elements.Segment;
  */
 public class DeleteStreetSegmentCommand implements ChangeCommand {
 
+  private final ReplacementLog replacementLog;
   private final Project project;
   private Segment segment;
   private Group segmentParentGroup;
@@ -24,7 +26,9 @@ public class DeleteStreetSegmentCommand implements ChangeCommand {
    * @param project the model facade to execute {@link DeleteStreetSegmentCommand} on
    * @param segment the segment to delete
    */
-  public DeleteStreetSegmentCommand(Project project, Segment segment) {
+  public DeleteStreetSegmentCommand(ReplacementLog replacementLog, Project project,
+                                    Segment segment) {
+    this.replacementLog = replacementLog;
     this.project = project;
     this.segment = segment;
   }
@@ -33,15 +37,17 @@ public class DeleteStreetSegmentCommand implements ChangeCommand {
   public void execute() {
     storeParentGroups();
 
-    this.project.getRoadSystem().removeElement(segment);
+    this.project.getRoadSystem().removeElement(getCurrentSegment());
   }
 
   private void storeParentGroups() {
+    var currentSegment = getCurrentSegment();
+
     for (Element element : this.project.getRoadSystem().getElements()) {
       if (element.isContainer()) {
         Group g = (Group) element;
-        if (g.contains(this.segment)) {
-          g.removeElement(this.segment);
+        if (g.contains(currentSegment)) {
+          g.removeElement(currentSegment);
           segmentParentGroup = g;
           break;
         }
@@ -51,11 +57,26 @@ public class DeleteStreetSegmentCommand implements ChangeCommand {
 
   @Override
   public void unexecute() {
-    SegmentFactory segmentFactory = new SegmentFactory(this.project, this.segment);
+    SegmentFactory segmentFactory = new SegmentFactory(this.project, getCurrentSegment());
+
+    var oldSegment = this.segment;
     this.segment = segmentFactory.createSegment();
-    if (this.segmentParentGroup != null) {
-      this.segmentParentGroup.addElement(this.segment);
+    this.replacementLog.replaceElement(oldSegment, this.segment);
+
+    var currentParent = getCurrentParent();
+    if (currentParent != null) {
+      currentParent.addElement(this.segment);
       this.segmentParentGroup = null;
     }
+  }
+
+  private Segment getCurrentSegment() {
+    this.segment = this.replacementLog.getCurrentVersion(this.segment);
+    return this.segment;
+  }
+
+  private Group getCurrentParent() {
+    this.segmentParentGroup = this.replacementLog.getCurrentVersion(this.segmentParentGroup);
+    return this.segmentParentGroup;
   }
 }

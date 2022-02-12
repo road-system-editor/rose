@@ -1,5 +1,8 @@
 package edu.kit.rose.util;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.elements.Element;
@@ -23,5 +26,19 @@ public final class AccessorUtility {
       }
     }
     return null;
+  }
+
+  /**
+   * Asserts that two {@link Element}s have the same types of {@link AttributeAccessor}s and that
+   * all of them have an equal value in their pendant.
+   */
+  public static void assertEqualAccessors(Element expected, Element actual) {
+    assertEquals(expected.getAttributeAccessors().getSize(),
+        actual.getAttributeAccessors().getSize());
+    for (var accessor1 : expected.getAttributeAccessors()) {
+      var accessor2 = findAccessorOfType(actual, accessor1.getAttributeType());
+      assertNotNull(accessor2);
+      assertEquals(accessor1.getValue(), accessor2.getValue());
+    }
   }
 }

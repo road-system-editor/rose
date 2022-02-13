@@ -3,7 +3,9 @@ package edu.kit.rose.controller.commons;
 import edu.kit.rose.infrastructure.Box;
 import edu.kit.rose.infrastructure.RoseBox;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
+import edu.kit.rose.model.roadsystem.elements.Connector;
 import edu.kit.rose.model.roadsystem.elements.Element;
+import edu.kit.rose.model.roadsystem.elements.Segment;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -82,6 +84,47 @@ public class ReplacementLog {
         .filter(element -> element.getAttributeAccessors().contains(accessor))
         .findAny()
         .orElse(null);
+  }
+
+  /**
+   * Finds the current version of the given connector, considering all known replacement.
+   */
+  public <T extends Connector> T getCurrentConnectorVersion(T connector) {
+    Segment oldContainer = findSegmentWithConnector(connector);
+    if (oldContainer == null) {
+      return connector;
+    } else {
+      Segment newContainer = getCurrentVersion(oldContainer);
+      return findMatchingConnector(newContainer, connector);
+    }
+  }
+
+  private Segment findSegmentWithConnector(Connector connector) {
+    return this.replacements.keySet().stream()
+        .filter(element -> !element.isContainer())
+        .map(element -> (Segment) element)
+        .filter(segment -> segment.getConnectors().contains(connector))
+        .findAny()
+        .orElse(null);
+  }
+
+  /**
+   * Finds the connector in the given {@code newSegment} that is the equivalent of the given
+   * {@code connector} in some other segment.
+   *
+   * @param newSegment the segment to find a connector in.
+   * @param connector the connector whose equivalent we are looking for.
+   * @param <T> the Java type of the current connector.
+   * @return the matching connector.
+   * @throws java.util.NoSuchElementException if there is no matching connector in the {@code
+   * newSegment}.
+   */
+  @SuppressWarnings("unchecked")
+  private <T extends Connector> T findMatchingConnector(Segment newSegment, T connector) {
+    return (T) newSegment.getConnectors().stream()
+        .filter(newConnector -> newConnector.getType() == connector.getType())
+        .findAny()
+        .orElseThrow();
   }
 
   /**

@@ -197,8 +197,8 @@ public class RoseRoadSystemController extends Controller
         connectorEndPosition.getX() - initialSegmentDragPosition.getX(),
         connectorEndPosition.getY() - initialSegmentDragPosition.getY());
 
-    DragSegmentEndCommand dragSegmentEndCommand
-        = new DragSegmentEndCommand((MovableConnector) dragConnector, draggingTransition);
+    DragSegmentEndCommand dragSegmentEndCommand = new DragSegmentEndCommand(this.replacementLog,
+        (MovableConnector) dragConnector, draggingTransition);
 
     changeCommandBuffer.addAndExecuteCommand(dragSegmentEndCommand);
 

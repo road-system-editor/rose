@@ -95,8 +95,11 @@ class CompatibilityCriterionPanel
   private void onNameChange(ObservableValue<? extends String> observable, String oldValue,
                             String newValue) {
     if (!Objects.equals(oldValue, newValue)) {
-      Platform.runLater(() ->
-          getController().setCompatibilityCriterionName(getCriterion(), newValue));
+      Platform.runLater(() -> {
+        var caretPosition = this.nameField.getCaretPosition();
+        getController().setCompatibilityCriterionName(getCriterion(), newValue);
+        this.nameField.positionCaret(caretPosition);
+      });
     }
   }
 

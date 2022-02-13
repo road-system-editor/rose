@@ -37,13 +37,6 @@ public class CriteriaWindow extends RoseWindow {
   private CriteriaOverviewPanel overview;
   @FXML
   private ScrollPane criterionContainer;
-  /**
-   * The criterion editor panel is contained in the criteria window.
-   * The criterion shown in this panel must match the criterion selected in the {@link #overview}
-   * panel.
-   */
-  @FXML
-  private CriterionPanel<? extends PlausibilityCriterion> criterion;
 
   /**
    * Creates a new criterion window instance.
@@ -76,8 +69,11 @@ public class CriteriaWindow extends RoseWindow {
   }
 
   private void onSelect(PlausibilityCriterion plausibilityCriterion) {
-    // implementation detail
-    criterion = CriterionPanel.forCriterion(injector, plausibilityCriterion);
-    criterionContainer.setContent(criterion);
+    if (plausibilityCriterion == null) {
+      this.criterionContainer.setContent(null);
+    } else {
+      this.criterionContainer.setContent(
+          CriterionPanel.forCriterion(this.injector, plausibilityCriterion));
+    }
   }
 }

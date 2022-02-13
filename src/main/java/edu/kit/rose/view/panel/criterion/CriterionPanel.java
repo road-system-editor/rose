@@ -38,7 +38,7 @@ public abstract class CriterionPanel<T extends PlausibilityCriterion> extends Fx
    * Constructs a criterion panel for a given criterion, if it is configurable.
    * For non-configurable criteria, {@code null} is returned.
    *
-   * @param criterion the criterion this criterion panel is for.
+   * @param criterion the criterion this criterion panel is for, may not be {@code null}.
    * @return the newly constructed criterion panel or null if there is no {@link CriterionPanel}
    *     implementation for the given plausibility criterion type.
    */

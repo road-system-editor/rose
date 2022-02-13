@@ -151,8 +151,14 @@ public class RoseApplication extends Application implements Navigator {
 
     File file = null;
     switch (option) {
-      case LOAD_FILE -> file = fileChooser.showOpenDialog(null);
-      case SAVE_FILE -> file = fileChooser.showSaveDialog(null);
+      case LOAD_FILE -> {
+        fileChooser.setTitle(translator.getLocalizedText("fileChooser.loadTitle"));
+        file = fileChooser.showOpenDialog(null);
+      }
+      case SAVE_FILE -> {
+        fileChooser.setTitle(translator.getLocalizedText("fileChooser.saveTitle"));
+        file = fileChooser.showSaveDialog(null);
+      }
       default -> throw new IllegalStateException(format.toString());
     }
     return file == null ? null : file.toPath();

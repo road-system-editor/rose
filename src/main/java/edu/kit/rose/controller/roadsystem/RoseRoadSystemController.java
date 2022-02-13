@@ -115,8 +115,8 @@ public class RoseRoadSystemController extends Controller
         segmentPosition.getX() - initialSegmentDragPosition.getX(),
         segmentPosition.getY() - initialSegmentDragPosition.getY());
 
-    DragStreetSegmentsCommand dragStreetSegmentsCommand
-        = new DragStreetSegmentsCommand(
+    DragStreetSegmentsCommand dragStreetSegmentsCommand = new DragStreetSegmentsCommand(
+        this.replacementLog,
         this.project,
         this.selectionBuffer.getSelectedSegments(),
         draggingTransition);

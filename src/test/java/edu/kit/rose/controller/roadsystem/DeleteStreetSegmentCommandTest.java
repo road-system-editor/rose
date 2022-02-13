@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
@@ -30,6 +31,7 @@ import org.junit.jupiter.api.Test;
 public class DeleteStreetSegmentCommandTest {
   private static final Path CONFIG_PATH = Path.of("build/tmp/no-config.json");
 
+  private Project project;
   private RoadSystem roadSystem;
   private ReplacementLog replacementLog;
 
@@ -43,13 +45,25 @@ public class DeleteStreetSegmentCommandTest {
   @BeforeEach
   public void setUp() {
     var modelFactory = new ModelFactory(CONFIG_PATH);
-    Project project = modelFactory.createProject();
-    this.roadSystem = project.getRoadSystem();
+    this.project = modelFactory.createProject();
+    this.roadSystem = this.project.getRoadSystem();
     this.replacementLog = new ReplacementLog();
     this.segmentToDelete = (Base) this.roadSystem.createSegment(SegmentType.BASE);
 
-    this.command = new DeleteStreetSegmentCommand(this.replacementLog, project,
+    this.command = new DeleteStreetSegmentCommand(this.replacementLog, this.project,
         this.segmentToDelete);
+  }
+
+  @Test
+  public void testConstructor() {
+    assertThrows(NullPointerException.class, () -> new DeleteStreetSegmentCommand(
+        null, this.project, this.segmentToDelete));
+    assertThrows(NullPointerException.class, () -> new DeleteStreetSegmentCommand(
+        this.replacementLog, null, this.segmentToDelete));
+    assertThrows(NullPointerException.class, () -> new DeleteStreetSegmentCommand(
+        this.replacementLog, this.project, null));
+    assertThrows(NullPointerException.class, () -> new DeleteStreetSegmentCommand(
+        null, null, null));
   }
 
   @Test

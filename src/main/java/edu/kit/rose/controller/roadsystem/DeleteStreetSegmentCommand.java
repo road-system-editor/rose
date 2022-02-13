@@ -1,11 +1,13 @@
 package edu.kit.rose.controller.roadsystem;
 
 import edu.kit.rose.controller.command.ChangeCommand;
+import edu.kit.rose.controller.commons.HierarchyCopier;
 import edu.kit.rose.controller.commons.ReplacementLog;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Group;
 import edu.kit.rose.model.roadsystem.elements.Segment;
+import java.util.Objects;
 
 /**
  * Encapsulates the functionality of deleting a street segment
@@ -23,14 +25,17 @@ public class DeleteStreetSegmentCommand implements ChangeCommand {
   /**
    * Creates a {@link DeleteStreetSegmentCommand} that deletes a street segment.
    *
-   * @param project the model facade to execute {@link DeleteStreetSegmentCommand} on
-   * @param segment the segment to delete
+   * @param replacementLog the replacement log to use for finding and registering current segment
+   *     versions, may not be {@code null}.
+   * @param project the model facade to execute {@link DeleteStreetSegmentCommand} on, may not be
+   *     {@code null}.
+   * @param segment the segment to delete, may not be {@code null}.
    */
   public DeleteStreetSegmentCommand(ReplacementLog replacementLog, Project project,
                                     Segment segment) {
-    this.replacementLog = replacementLog;
-    this.project = project;
-    this.segment = segment;
+    this.replacementLog = Objects.requireNonNull(replacementLog);
+    this.project = Objects.requireNonNull(project);
+    this.segment = Objects.requireNonNull(segment);
   }
 
   @Override
@@ -57,10 +62,10 @@ public class DeleteStreetSegmentCommand implements ChangeCommand {
 
   @Override
   public void unexecute() {
-    SegmentFactory segmentFactory = new SegmentFactory(this.project, getCurrentSegment());
+    HierarchyCopier copier = new HierarchyCopier(this.replacementLog, this.project.getRoadSystem());
 
     var oldSegment = this.segment;
-    this.segment = segmentFactory.createSegment();
+    this.segment = copier.copySegment(getCurrentSegment());
     this.replacementLog.replaceElement(oldSegment, this.segment);
 
     var currentParent = getCurrentParent();

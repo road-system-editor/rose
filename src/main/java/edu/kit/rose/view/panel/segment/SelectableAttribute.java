@@ -8,6 +8,7 @@ import java.util.Objects;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 
 
 /**
@@ -43,25 +44,34 @@ abstract class SelectableAttribute<T> extends EditableAttribute<T> {
   @Override
   protected Node createInputField() {
     this.inputField = new ComboBox<>();
+
+    this.inputField.setPromptText(INHOMOGENEOUS_VALUE_PLACEHOLDER);
     inputField.getStyleClass().add("comboBox");
     inputField.setMaxHeight(10);
-    inputField.setCellFactory(listView -> new ListCell<>() {
+    inputField.setPrefWidth(150);
+
+    inputField.setButtonCell(this.createListCell(null));
+    inputField.setCellFactory(this::createListCell);
+
+    inputField.getSelectionModel().selectedItemProperty().addListener(
+        (options, old, newVal) -> getController().setAttribute(getAttribute(), newVal));
+
+    return inputField;
+  }
+
+  private ListCell<T> createListCell(ListView<T> listView) {
+    return new ListCell<>() {
       @Override
       protected void updateItem(T item, boolean empty) {
         super.updateItem(item, empty);
+
         if (item == null) {
           setText(INHOMOGENEOUS_VALUE_PLACEHOLDER);
         } else {
           setText(localizeOption(item));
         }
       }
-    });
-
-    inputField.setPrefWidth(150);
-    inputField.getSelectionModel().selectedItemProperty().addListener(
-        (options, old, newVal) -> getController().setAttribute(getAttribute(), newVal));
-
-    return inputField;
+    };
   }
 
   @Override

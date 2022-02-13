@@ -102,6 +102,7 @@ public class CriteriaOverviewPanel extends FxmlContainer
   @Override
   public void notifyRemoval(PlausibilityCriterion unit) {
     if (this.criteriaList.getSelectionModel().getSelectedItem() == unit) {
+      this.criteriaList.getSelectionModel().clearSelection();
       this.selectionListener.accept(null);
     }
     criteriaList.getItems().removeIf(item -> item == unit);

@@ -69,6 +69,7 @@ public class CriteriaWindow extends RoseWindow {
   }
 
   private void onSelect(PlausibilityCriterion plausibilityCriterion) {
+    System.out.println(plausibilityCriterion);
     if (plausibilityCriterion == null) {
       this.criterionContainer.setContent(null);
     } else {

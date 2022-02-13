@@ -80,7 +80,6 @@ public class CriteriaOverviewPanel extends FxmlContainer
   }
 
   private void onSelectionChange(Change<? extends PlausibilityCriterion> change) {
-    System.out.println(this.criteriaList.getSelectionModel().getSelectedItem());
     this.selectionListener.accept(this.criteriaList.getSelectionModel().getSelectedItem());
   }
 

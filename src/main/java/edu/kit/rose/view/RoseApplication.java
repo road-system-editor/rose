@@ -194,9 +194,7 @@ public class RoseApplication extends Application implements Navigator {
   }
 
   private <T> List<T> convertBoxToList(Box<T> box) {
-    List<T> list = new ArrayList<>();
-    box.forEach(list::add);
-    return list;
+    return box.stream().toList();
   }
 
   /**

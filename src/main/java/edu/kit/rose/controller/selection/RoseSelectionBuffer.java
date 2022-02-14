@@ -37,8 +37,8 @@ public class RoseSelectionBuffer implements SelectionBuffer {
 
   @Override
   public void removeAllSelections() {
-    for (Segment segment : this.segmentList) {
-      this.segmentList.remove(segment);
+    while (segmentList.size() > 0) {
+      Segment segment = this.segmentList.remove(0);
       observers.forEach(e -> e.notifyRemoval(segment));
       notifySubscribers();
     }

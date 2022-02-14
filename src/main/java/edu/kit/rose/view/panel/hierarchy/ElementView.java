@@ -15,8 +15,10 @@ import edu.kit.rose.view.commons.FxmlContainer;
 abstract class ElementView<T extends Element> extends FxmlContainer
     implements SetObserver<Element, Element> {
 
-  protected static final String ELEMENT_VIEW_STYLE_CSS_FILE
-          = "edu/kit/rose/view/panel/hierarchy/ElementViewStyle.css";
+  protected static final String DELETE_BUTTON_IMAGE_URL =
+          "/edu/kit/rose/view/panel/hierarchy/DeleteIcon.png";
+  protected static final String ELEMENT_VIEW_STYLE_CSS_FILE =
+          "/edu/kit/rose/view/panel/hierarchy/ElementViewStyle.css";
   protected static final String SELECTED_STYLE_CLASS = "elementViewSelected";
   protected static final String UNSELECTED_STYLE_CLASS = "elementViewUnselected";
 
@@ -56,5 +58,12 @@ abstract class ElementView<T extends Element> extends FxmlContainer
    */
   public T getElement() {
     return element;
+  }
+
+  /**
+   * This method needs to be called when the {@link ElementView} is unmounted.
+   */
+  public void onUnmount() {
+    element.removeSubscriber(this);
   }
 }

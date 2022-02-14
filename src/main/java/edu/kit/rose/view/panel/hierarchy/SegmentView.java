@@ -7,9 +7,13 @@ import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.view.commons.FxmlContainer;
 import java.util.Collection;
+import java.util.Objects;
+import java.util.function.BiConsumer;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 
@@ -24,6 +28,11 @@ class SegmentView extends ElementView<Segment> {
   private Button deleteSegmentButton;
   @FXML
   private GridPane segmentViewSurface;
+  @FXML
+  private ImageView deleteGroupButtonImageView;
+
+  private final BiConsumer<Segment, Boolean> segmentSubscription
+          = this::onSegmentSelectionChanged;
 
   /**
    * Creates a new segment view for a given {@code segment}.
@@ -35,8 +44,25 @@ class SegmentView extends ElementView<Segment> {
   SegmentView(LocalizedTextProvider translator, Segment segment, HierarchyController controller) {
     super(translator, "SegmentView.fxml", segment, controller);
 
+    setupView();
+    setupListeners();
+  }
+
+  private void setupView() {
+    segmentNameLabel.setText(getElement().getName());
+    String styleSheetUrl = Objects.requireNonNull(
+            getClass().getResource(ELEMENT_VIEW_STYLE_CSS_FILE)).toExternalForm();
+    segmentViewSurface.getStylesheets().add(styleSheetUrl);
+    segmentViewSurface.getStyleClass().add(UNSELECTED_STYLE_CLASS);
+    String deleteButtonImageUrl = Objects.requireNonNull(
+            getClass().getResource(DELETE_BUTTON_IMAGE_URL)).toExternalForm();
+    deleteGroupButtonImageView.setImage(new Image(deleteButtonImageUrl));
+  }
+
+  private void setupListeners() {
     deleteSegmentButton.setOnMouseClicked(this::onDeleteSegmentButtonClicked);
     segmentViewSurface.setOnMouseClicked(this::onSegmentViewSurfaceMouseClicked);
+    getController().addSubscription(this.segmentSubscription);
   }
 
   private void onSegmentViewSurfaceMouseClicked(MouseEvent mouseEvent) {
@@ -57,30 +83,35 @@ class SegmentView extends ElementView<Segment> {
     return null;
   }
 
+  private void onSegmentSelectionChanged(Segment segment, boolean isSelected) {
+    if (segment == getElement()) {
+      if (isSelected) {
+        segmentViewSurface.getStyleClass().remove(UNSELECTED_STYLE_CLASS);
+        segmentViewSurface.getStyleClass().add(SELECTED_STYLE_CLASS);
+      } else {
+        segmentViewSurface.getStyleClass().remove(SELECTED_STYLE_CLASS);
+        segmentViewSurface.getStyleClass().add(UNSELECTED_STYLE_CLASS);
+      }
+    }
+  }
 
   @Override
   public void notifyChange(Element unit) {
     segmentNameLabel.setText(getElement().getName());
   }
 
-  private void toggleSelection() {
-    getController().toggleSegmentSelection(getElement());
-  }
-
   @Override
   public void notifyAddition(Element unit) {
-    if (unit == getElement()) {
-      segmentViewSurface.getStyleClass().remove(UNSELECTED_STYLE_CLASS);
-      segmentViewSurface.getStyleClass().add(SELECTED_STYLE_CLASS);
-    }
   }
 
   @Override
   public void notifyRemoval(Element unit) {
-    if (unit == getElement()) {
-      segmentViewSurface.getStyleClass().remove(SELECTED_STYLE_CLASS);
-      segmentViewSurface.getStyleClass().add(UNSELECTED_STYLE_CLASS);
-    }
+  }
+
+  @Override
+  public void onUnmount() {
+    super.onUnmount();
+    getController().removeSubscription(this.segmentSubscription);
   }
 }
 

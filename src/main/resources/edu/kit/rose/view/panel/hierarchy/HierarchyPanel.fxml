@@ -10,7 +10,11 @@
          fx:id="parentContainer"
          prefWidth="250">
 
-    <BorderPane fx:id="hierarchyLayout" prefWidth="${parentContainer.width}" prefHeight="${parentContainer.height}">
+    <BorderPane
+            fx:id="hierarchyLayout"
+            prefWidth="${parentContainer.width}"
+            prefHeight="${parentContainer.height}"
+            style="-fx-background-color: white;">
         <top>
             <SearchBar fx:id="searchBar">
                 <BorderPane.margin>

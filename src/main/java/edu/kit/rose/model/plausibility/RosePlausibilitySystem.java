@@ -1,12 +1,8 @@
 package edu.kit.rose.model.plausibility;
 
-import edu.kit.rose.model.plausibility.criteria.CompatibilityCriterion;
 import edu.kit.rose.model.plausibility.criteria.CriteriaManager;
-import edu.kit.rose.model.plausibility.violation.Violation;
 import edu.kit.rose.model.plausibility.violation.ViolationManager;
 import edu.kit.rose.model.roadsystem.RoadSystem;
-import edu.kit.rose.model.roadsystem.elements.Base;
-import java.util.List;
 import java.util.Objects;
 
 /**

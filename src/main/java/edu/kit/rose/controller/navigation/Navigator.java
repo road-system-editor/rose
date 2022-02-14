@@ -24,4 +24,12 @@ public interface Navigator {
    * @return the path that the user chose
    */
   Path showFileDialog(FileDialogType option, FileFormat fileFormat);
+
+  /**
+   * Shows a Dialog, that informs the user about an error of the
+   * specified {@link ErrorType}.
+   *
+   * @param errorType the type of the error that occured
+   */
+  void showErrorDialog(ErrorType errorType);
 }

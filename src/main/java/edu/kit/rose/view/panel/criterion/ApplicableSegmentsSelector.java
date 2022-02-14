@@ -5,20 +5,14 @@ import com.google.inject.Injector;
 import edu.kit.rose.controller.plausibility.PlausibilityController;
 import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.infrastructure.language.Language;
-import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.model.plausibility.criteria.CompatibilityCriterion;
 import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterion;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import edu.kit.rose.view.commons.EnumLocalizationUtility;
 import edu.kit.rose.view.commons.FxmlContainer;
 import java.util.Collection;
-import javafx.beans.Observable;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
@@ -95,10 +89,6 @@ public class ApplicableSegmentsSelector extends FxmlContainer
 
   @Override
   protected void updateTranslatableStrings(Language lang) {
-    /*
-    this.selectAllCheckBox.setText(getTranslator().getLocalizedText(
-        "view.panel.criterion.criterionPanel.selectAllSegmentTypes"));
-    */
   }
 
   @Override

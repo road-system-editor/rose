@@ -1,6 +1,7 @@
 package edu.kit.rose.controller.roadsystem;
 
 import edu.kit.rose.controller.command.ChangeCommand;
+import edu.kit.rose.infrastructure.Movement;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.roadsystem.elements.Group;
 import edu.kit.rose.model.roadsystem.elements.Segment;
@@ -30,6 +31,8 @@ public class CreateStreetSegmentCommand implements ChangeCommand {
   @Override
   public void execute() {
     this.segment = project.getRoadSystem().createSegment(this.segmentType);
+    this.segment.move(new Movement(this.project.getZoomSetting().getCenterOfView().getX(),
+            this.project.getZoomSetting().getCenterOfView().getY()));
   }
 
   @Override

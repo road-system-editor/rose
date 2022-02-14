@@ -15,7 +15,6 @@
         <RowConstraints percentHeight="100"/>
     </rowConstraints>
 
-    <!--<ScrollPane fx:id="criterionContainer" HBox.hgrow="ALWAYS"/>-->
     <AnchorPane GridPane.columnIndex="0"
                 GridPane.rowIndex="0">
         <CriteriaOverviewPanel

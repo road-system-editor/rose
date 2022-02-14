@@ -10,6 +10,9 @@ import edu.kit.rose.infrastructure.UnitObserver;
  */
 public class TimeSliceSetting implements UnitObservable<TimeSliceSetting> {
 
+  private final int defaultNumberOfTimeSlices;
+  private final int defaultTimeSliceLength;
+
   private int numberOfTimeSlices;
   private int timeSlicesLength;
 
@@ -18,8 +21,7 @@ public class TimeSliceSetting implements UnitObservable<TimeSliceSetting> {
    * Initializes the numberOfTimeSlices and the timeSliceLength to 0.
    */
   public TimeSliceSetting() {
-    this.numberOfTimeSlices = 0;
-    this.timeSlicesLength = 0;
+    this(0, 0);
   }
 
   /**
@@ -30,7 +32,9 @@ public class TimeSliceSetting implements UnitObservable<TimeSliceSetting> {
    */
   public TimeSliceSetting(int numberOfTimeSlices, int timeSlicesLength) {
     this.numberOfTimeSlices = numberOfTimeSlices;
+    this.defaultNumberOfTimeSlices = numberOfTimeSlices;
     this.timeSlicesLength = timeSlicesLength;
+    this.defaultTimeSliceLength = timeSlicesLength;
   }
 
   /**
@@ -38,7 +42,7 @@ public class TimeSliceSetting implements UnitObservable<TimeSliceSetting> {
    *
    * @return the number of TimeSlices.
    */
-  int getNumberOfTimeSlices() {
+  public int getNumberOfTimeSlices() {
     return this.numberOfTimeSlices;
   }
 
@@ -47,7 +51,7 @@ public class TimeSliceSetting implements UnitObservable<TimeSliceSetting> {
    *
    * @param numberOfTimeSlices the new number of TimeSlices.
    */
-  void setNumberOfTimeSlices(int numberOfTimeSlices) {
+  public void setNumberOfTimeSlices(int numberOfTimeSlices) {
     this.numberOfTimeSlices = numberOfTimeSlices;
   }
 
@@ -56,7 +60,7 @@ public class TimeSliceSetting implements UnitObservable<TimeSliceSetting> {
    *
    * @return the length of the TimeSlices.
    */
-  int getTimeSliceLength() {
+  public int getTimeSliceLength() {
     return this.timeSlicesLength;
   }
 
@@ -65,10 +69,14 @@ public class TimeSliceSetting implements UnitObservable<TimeSliceSetting> {
    *
    * @param timeSlicesLength the new length of the TimeSlices.
    */
-  void setTimeSliceLength(int timeSlicesLength) {
+  public void setTimeSliceLength(int timeSlicesLength) {
     this.timeSlicesLength = timeSlicesLength;
   }
 
+  void reset() {
+    this.numberOfTimeSlices = defaultNumberOfTimeSlices;
+    this.timeSlicesLength = defaultTimeSliceLength;
+  }
 
   @Override
   public void notifySubscribers() {

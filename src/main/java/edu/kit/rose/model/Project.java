@@ -35,8 +35,9 @@ public interface Project {
    *
    * @param projectFormat The {@link ProjectFormat} to save in.
    * @param filePath     The {@link Path} of where to store the export.
+   * @return {@code true} if the export was successful and {@code false} otherwise.
    */
-  void exportToFile(ProjectFormat projectFormat, Path filePath);
+  boolean exportToFile(ProjectFormat projectFormat, Path filePath);
 
   /**
    * Saves the Project as a ROSE file. This saves everything the Project needs to be reopened in
@@ -44,16 +45,18 @@ public interface Project {
    * Including {@link PlausibilityCriterion} and the {@link Position}s
    *
    * @param filePath The {@link Path} of where to store the file.
+   * @return {@code true} if saving the project succeeded and {@code false} otherwise.
    */
-  void save(Path filePath);
+  boolean save(Path filePath);
 
   /**
    * Loads a ROSE File. This rewrites the Project to hold the information specified in the
    * provided file.
    *
    * @param filePath The {@link Path} of the File.
+   * @return {@code true} if loading the project succeeded and {@code false} otherwise.
    */
-  void load(Path filePath);
+  boolean load(Path filePath);
 
   /**
    * Provides the {@link ZoomSetting} of a view that displays the RoadSystem.

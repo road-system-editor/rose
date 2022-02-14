@@ -12,6 +12,7 @@ import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterionType;
 import edu.kit.rose.view.commons.FxmlContainer;
 import java.util.Collection;
 import java.util.function.Consumer;
+import javafx.collections.ListChangeListener.Change;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
@@ -26,7 +27,6 @@ public class CriteriaOverviewPanel extends FxmlContainer
   private PlausibilityController controller;
   @Inject
   private ApplicationDataSystem applicationDataSystem;
-  private CriterionHandle selected;
   private Consumer<PlausibilityCriterion> selectionListener;
 
   @FXML
@@ -66,7 +66,7 @@ public class CriteriaOverviewPanel extends FxmlContainer
 
   private void initCriteriaList() {
     criteriaList
-        .setCellFactory(criterion -> new CriterionListCell(this.controller, selectionListener));
+        .setCellFactory(criterion -> new CriterionListCell(this.controller));
 
     for (PlausibilityCriterion criterion :
         applicationDataSystem.getCriteriaManager()
@@ -74,7 +74,13 @@ public class CriteriaOverviewPanel extends FxmlContainer
       criteriaList.getItems().add(criterion);
     }
 
+    criteriaList.getSelectionModel().getSelectedItems().addListener(this::onSelectionChange);
+
     applicationDataSystem.getCriteriaManager().addSubscriber(this);
+  }
+
+  private void onSelectionChange(Change<? extends PlausibilityCriterion> change) {
+    this.selectionListener.accept(this.criteriaList.getSelectionModel().getSelectedItem());
   }
 
   /**
@@ -95,6 +101,10 @@ public class CriteriaOverviewPanel extends FxmlContainer
 
   @Override
   public void notifyRemoval(PlausibilityCriterion unit) {
+    if (this.criteriaList.getSelectionModel().getSelectedItem() == unit) {
+      this.criteriaList.getSelectionModel().clearSelection();
+      this.selectionListener.accept(null);
+    }
     criteriaList.getItems().removeIf(item -> item == unit);
   }
 

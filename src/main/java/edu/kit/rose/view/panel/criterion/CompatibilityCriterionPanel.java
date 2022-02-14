@@ -9,9 +9,13 @@ import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import edu.kit.rose.view.commons.EnumLocalizationUtility;
 import edu.kit.rose.view.commons.FxmlContainer;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
+import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -26,6 +30,12 @@ import javafx.scene.layout.VBox;
  */
 class CompatibilityCriterionPanel
     extends CriterionPanel<CompatibilityCriterion> { // also uses VBox and ScrollPane
+  private static final String VALUE_REGEX = "[0-9]{1,13}(\\.[0-9]+)?";
+  private static final String VALID_VALUE_STYLE = "-fx-text-fill: black;";
+  private static final String INVALID_VALUE_STYLE = "-fx-text-fill: red;";
+
+  private final DecimalFormat valueFormat;
+
   @FXML
   private Label nameLabel;
   @FXML
@@ -52,6 +62,9 @@ class CompatibilityCriterionPanel
    */
   public CompatibilityCriterionPanel(CompatibilityCriterion criterion) {
     super("CompatibilityCriterionPanel.fxml", criterion);
+
+    this.valueFormat = new DecimalFormat("0", DecimalFormatSymbols.getInstance(Locale.ENGLISH));
+    this.valueFormat.setMaximumFractionDigits(9);
   }
 
   @Override
@@ -82,31 +95,39 @@ class CompatibilityCriterionPanel
   private void onNameChange(ObservableValue<? extends String> observable, String oldValue,
                             String newValue) {
     if (!Objects.equals(oldValue, newValue)) {
-      getController().setCompatibilityCriterionName(getCriterion(), newValue);
+      Platform.runLater(() -> {
+        var caretPosition = this.nameField.getCaretPosition();
+        getController().setCompatibilityCriterionName(getCriterion(), newValue);
+        this.nameField.positionCaret(caretPosition);
+      });
     }
   }
 
   private void onAttributeChange(ObservableValue<? extends AttributeType> observable,
                                  AttributeType oldValue, AttributeType newValue) {
     if (oldValue != newValue) {
-      getController().setCompatibilityCriterionAttributeType(getCriterion(), newValue);
+      Platform.runLater(() -> {
+        getController().setCompatibilityCriterionAttributeType(getCriterion(), newValue);
 
-      this.validationSelector.getSelectionModel().clearSelection();
-      this.validationSelector.getItems().clear();
-      for (var validationType : getCriterion().getCompatibleOperatorTypes()) {
-        this.validationSelector.getItems().add(validationType);
-      }
+        this.validationSelector.getSelectionModel().clearSelection();
+        this.validationSelector.getItems().clear();
+        for (var validationType : getCriterion().getCompatibleOperatorTypes()) {
+          this.validationSelector.getItems().add(validationType);
+        }
+      });
     }
   }
 
   private void onValidationChange(ObservableValue<? extends ValidationType> observable,
                                  ValidationType oldValue, ValidationType newValue) {
     if (oldValue != newValue) {
-      getController().setCompatibilityCriterionValidationType(getCriterion(), newValue);
+      Platform.runLater(() -> {
+        getController().setCompatibilityCriterionValidationType(getCriterion(), newValue);
 
-      if (newValue != null) {
-        setDiscrepancyFieldEnabled(newValue.hasDiscrepancy());
-      }
+        if (newValue != null) {
+          setDiscrepancyFieldEnabled(newValue.hasDiscrepancy());
+        }
+      });
     }
   }
 
@@ -120,36 +141,53 @@ class CompatibilityCriterionPanel
 
   private void onValueChange(ObservableValue<? extends String> observable, String oldValue,
                              String newValue) {
-    if (!Objects.equals(oldValue, newValue)) {
-      double value;
-      try {
-        value = Double.parseDouble(newValue);
-      } catch (NumberFormatException e) {
-        this.valueField.setText(oldValue);
-        return;
-      }
+    if (!newValue.matches(VALUE_REGEX)) {
+      this.valueField.setStyle(INVALID_VALUE_STYLE);
+      return;
+    }
 
-      getController().setCompatibilityCriterionLegalDiscrepancy(getCriterion(), value);
+    double value;
+    try {
+      value = Double.parseDouble(newValue);
+    } catch (NumberFormatException e) {
+      this.valueField.setStyle(INVALID_VALUE_STYLE);
+      return;
+    }
+
+    if (Double.isInfinite(value) || Double.isNaN(value)) {
+      this.valueField.setStyle(INVALID_VALUE_STYLE);
+      return;
+    }
+
+    this.valueField.setStyle(VALID_VALUE_STYLE);
+
+    // only trigger an update if the new value is not EXACTLY the old value
+    if (this.getCriterion().getLegalDiscrepancy() != value) {
+      Platform.runLater(() -> {
+        var caretPosition = this.valueField.getCaretPosition();
+        getController().setCompatibilityCriterionLegalDiscrepancy(getCriterion(), value);
+        this.valueField.positionCaret(caretPosition);
+      });
     }
   }
 
   @Override
   public void notifyAddition(SegmentType unit) {
-
+    // ApplicableSegmentSelector takes care of this
   }
 
   @Override
   public void notifyRemoval(SegmentType unit) {
-
+    // ApplicableSegmentSelector takes care of this
   }
-
 
   @Override
   public void notifyChange(PlausibilityCriterion unit) {
     this.nameField.setText(getCriterion().getName());
     this.attributeSelector.getSelectionModel().select(getCriterion().getAttributeType());
     this.validationSelector.getSelectionModel().select(getCriterion().getOperatorType());
-    this.valueField.setText(String.valueOf(getCriterion().getLegalDiscrepancy()));
+    this.valueField.setText(valueFormat.format(getCriterion().getLegalDiscrepancy()));
+    this.valueField.setStyle(VALID_VALUE_STYLE);
   }
 
   @Override

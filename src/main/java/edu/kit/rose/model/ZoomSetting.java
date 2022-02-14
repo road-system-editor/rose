@@ -12,9 +12,16 @@ import java.util.List;
  * for the center of the current view.
  */
 public class ZoomSetting implements UnitObservable<ZoomSetting> {
-  private Position centerOfView;
-  private int zoomLevel;
+  private static final int DEFAULT_ZOOM_LEVEL = 1;
+
+  private Position centerOfView = new Position();
+  private int zoomLevel = 1;
   private final List<UnitObserver<ZoomSetting>> observers = new ArrayList<>();
+
+  public ZoomSetting(Position centerOfView) {
+    this.centerOfView = centerOfView;
+    this.zoomLevel = DEFAULT_ZOOM_LEVEL;
+  }
 
   /**
    * Provides the Position of the center of the View.

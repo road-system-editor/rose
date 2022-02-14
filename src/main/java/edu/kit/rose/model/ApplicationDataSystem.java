@@ -47,8 +47,18 @@ public interface ApplicationDataSystem extends SetObservable<AttributeType, Appl
    * This adds the included Criteria to the currently active Criteria.
    *
    * @param path the path to the File that contains the Criteria.
+   * @return {@code true} if the import was successful and {@code false} otherwise.
    */
-  void importCriteriaFromFile(Path path);
+  boolean importCriteriaFromFile(Path path);
+
+  /**
+   * Exports all {@link edu.kit.rose.model.plausibility.criteria.PlausibilityCriterion}
+   * into a File at the given Path.
+   *
+   * @param path the path giving the location of where to save the new File.
+   * @return {@code true} if the import was successful and {@code false} otherwise.
+   */
+  boolean exportCriteriaToFile(Path path);
 
   /**
    * Returns the {@link AttributeType}s that are currently chosen to be rendered
@@ -71,12 +81,4 @@ public interface ApplicationDataSystem extends SetObservable<AttributeType, Appl
    * @param attributeType the AttributeType that is to be removed.
    */
   void removeShownAttributeType(AttributeType attributeType);
-
-  /**
-   * Exports all {@link edu.kit.rose.model.plausibility.criteria.PlausibilityCriterion}
-   * into a File at the given Path.
-   *
-   * @param path the path giving the location of where to save the new File.
-   */
-  void exportCriteriaToFile(Path path);
 }

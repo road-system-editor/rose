@@ -18,7 +18,11 @@ public class ModelFactory {
   public ModelFactory(Path configFile) {
     applicationDataSystem = new RoseApplicationDataSystem(configFile);
     project = new RoseProject(applicationDataSystem.getCriteriaManager());
-    applicationDataSystem.getCriteriaManager().setRoadSystem(project.getRoadSystem());
+    var criteriaManager = applicationDataSystem.getCriteriaManager();
+    var violationManager = project.getPlausibilitySystem().getViolationManager();
+    var roadSystem = project.getRoadSystem();
+    criteriaManager.setViolationManager(violationManager);
+    criteriaManager.setRoadSystem(roadSystem);
   }
 
   /**

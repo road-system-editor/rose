@@ -9,7 +9,6 @@ import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterionType;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import edu.kit.rose.view.commons.FxmlContainer;
 import java.util.Collection;
-import java.util.function.Consumer;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -21,9 +20,6 @@ import javafx.scene.input.MouseEvent;
  */
 class CriterionHandle extends FxmlContainer
     implements SetObserver<SegmentType, PlausibilityCriterion> {
-  private final PlausibilityController controller;
-  private final PlausibilityCriterion criterion;
-  private boolean selected = false;
 
   @FXML
   private Label label;
@@ -35,16 +31,11 @@ class CriterionHandle extends FxmlContainer
    *
    * @param controller     the controller that links to model
    * @param criterion      the criteria to be handled
-   * @param selectListener will be called when this handle is clicked
    */
-  public CriterionHandle(PlausibilityController controller, PlausibilityCriterion criterion,
-                         Consumer<PlausibilityCriterion> selectListener) {
+  public CriterionHandle(PlausibilityController controller, PlausibilityCriterion criterion) {
     super("CriterionHandle.fxml");
-    this.controller = controller;
-    this.criterion = criterion;
 
     this.label.setText(criterion.getName());
-    this.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> selectListener.accept(criterion));
 
     //CompatibilityCriteria are the only ones that can be deleted.
     if (criterion.getType() == PlausibilityCriterionType.COMPATIBILITY) {
@@ -52,25 +43,7 @@ class CriterionHandle extends FxmlContainer
           event -> controller.deleteCompatibilityCriterion((CompatibilityCriterion) criterion));
     }
 
-    this.criterion.addSubscriber(this);
-  }
-
-  /**
-   * selected must be true if the criteria is selected and false otherwise.
-   *
-   * @return true if the criteria is selected and false otherwise.
-   */
-  public boolean isSelected() {
-    return this.selected;
-  }
-
-  /**
-   * returns true if the criteria is selected and false otherwise.
-   *
-   * @param selected true if the criteria is selected and false otherwise.
-   */
-  public void setSelected(boolean selected) {
-    this.selected = selected;
+    criterion.addSubscriber(this);
   }
 
   @Override

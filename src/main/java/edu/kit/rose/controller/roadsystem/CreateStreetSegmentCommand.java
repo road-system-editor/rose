@@ -46,6 +46,7 @@ public class CreateStreetSegmentCommand implements ChangeCommand {
 
   @Override
   public void unexecute() {
-    this.project.getRoadSystem().removeElement(this.segment);
+    this.project.getRoadSystem()
+            .removeElement(this.replacementLog.getCurrentVersion(this.segment));
   }
 }

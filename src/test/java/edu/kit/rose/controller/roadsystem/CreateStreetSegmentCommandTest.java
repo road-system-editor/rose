@@ -45,6 +45,7 @@ public class CreateStreetSegmentCommandTest {
     ZoomSetting zoomSetting = Mockito.mock(ZoomSetting.class);
     this.replacementLog = Mockito.mock(ReplacementLog.class);
 
+    when(replacementLog.getCurrentVersion(any())).thenReturn(Mockito.mock(Segment.class));
     when(zoomSetting.getCenterOfView()).thenReturn(new Position(0, 0));
     when(project.getRoadSystem()).thenReturn(roadSystem);
     when(roadSystem.getElements()).thenReturn(new RoseBox<>());

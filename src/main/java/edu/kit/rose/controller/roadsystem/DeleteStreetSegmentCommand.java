@@ -64,8 +64,8 @@ public class DeleteStreetSegmentCommand implements ChangeCommand {
   public void unexecute() {
     HierarchyCopier copier = new HierarchyCopier(this.replacementLog, this.project.getRoadSystem());
 
-    var oldSegment = this.segment;
-    this.segment = copier.copySegment(getCurrentSegment());
+    var oldSegment = getCurrentSegment();
+    this.segment = copier.copySegment(oldSegment);
     this.replacementLog.replaceElement(oldSegment, this.segment);
 
     var currentParent = getCurrentParent();

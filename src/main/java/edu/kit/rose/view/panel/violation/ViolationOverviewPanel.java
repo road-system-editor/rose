@@ -6,22 +6,15 @@ import edu.kit.rose.controller.plausibility.PlausibilityController;
 import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.model.Project;
-import edu.kit.rose.model.plausibility.criteria.CompatibilityCriterion;
 import edu.kit.rose.model.plausibility.violation.Violation;
 import edu.kit.rose.model.plausibility.violation.ViolationManager;
-import edu.kit.rose.model.roadsystem.elements.Base;
-import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.view.commons.FxmlContainer;
 import edu.kit.rose.view.panel.problem.MessageFactory;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.Objects;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.layout.VBox;
 
 /**
  * The problem overview panel provides an overview over
@@ -30,6 +23,8 @@ import javafx.scene.layout.VBox;
  */
 public class ViolationOverviewPanel extends FxmlContainer
     implements SetObserver<Violation, ViolationManager> {
+  private static final String VIOLATION_CSS_FILE = "/edu/kit/rose/view/panel/violation/Violation"
+      + ".css";
 
   @Inject
   private PlausibilityController controller;
@@ -61,7 +56,14 @@ public class ViolationOverviewPanel extends FxmlContainer
   public void init(Injector injector) {
     super.init(injector);
     this.messageFactory = new MessageFactory(getTranslator());
+    setupView();
     initViolationBox();
+  }
+
+  private void setupView() {
+    String violationStyleSheetUrl =
+        Objects.requireNonNull(getClass().getResource(VIOLATION_CSS_FILE)).toExternalForm();
+    this.getStylesheets().add(violationStyleSheetUrl);
   }
 
   private void initViolationBox() {

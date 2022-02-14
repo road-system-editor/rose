@@ -6,6 +6,7 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.control.ListView?>
 
+<?import javafx.geometry.Insets?>
 <fx:root xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml" type="Pane"
          fx:id="parentContainer">
@@ -13,8 +14,10 @@
             prefWidth="${parentContainer.width}"
             prefHeight="${parentContainer.height}"
             hgap="5"
-            vgap="5"
-            style="-fx-padding: 5">
+            vgap="5">
+        <padding>
+            <Insets topRightBottomLeft="5"/>
+        </padding>
         <rowConstraints>
             <RowConstraints vgrow="ALWAYS"/>
             <RowConstraints vgrow="SOMETIMES" fillHeight="false" />

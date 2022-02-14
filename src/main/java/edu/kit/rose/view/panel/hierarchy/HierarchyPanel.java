@@ -55,23 +55,6 @@ public class HierarchyPanel extends FxmlContainer
     DisabledSelectionModel dsm = new DisabledSelectionModel();
     this.elementsTreeView.setSelectionModel(dsm);
     rootItem = new ElementTreeItem(null);
-    Group g = new Group();
-    g.setName("Group");
-
-    Group g2 = new Group();
-    g2.setName("Group 2");
-    g.addElement(g2);
-
-    Base b = new Base();
-    b.setName("Base");
-    g2.addElement(b);
-
-    ElementTreeItem e = new ElementTreeItem(g);
-    ElementTreeItem eg2 = new ElementTreeItem(g2);
-    ElementTreeItem e2 = new ElementTreeItem(b);
-    e.getInternalChildren().add(eg2);
-    eg2.getInternalChildren().add(e2);
-    rootItem.getInternalChildren().add(e);
 
     setUp();
   }

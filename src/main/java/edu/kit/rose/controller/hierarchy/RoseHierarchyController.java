@@ -84,6 +84,20 @@ public class RoseHierarchyController extends Controller
     this.selectionBuffer.toggleSegmentSelection(segment);
   }
 
+  @Override
+  public void addSegmentSelection(Segment segment) {
+    this.selectionBuffer.addSegmentSelection(segment);
+  }
+
+  @Override
+  public void removeSegmentSelection(Segment segment) {
+    this.selectionBuffer.removeSegmentSelection(segment);
+  }
+
+  @Override
+  public void clearSegmentSelection() {
+    this.selectionBuffer.removeAllSelections();
+  }
 
   @Override
   public void addSubscription(BiConsumer<Segment, Boolean> consumer) {

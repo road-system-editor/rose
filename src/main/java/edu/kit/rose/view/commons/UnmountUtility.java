@@ -1,6 +1,8 @@
 package edu.kit.rose.view.commons;
 
 import edu.kit.rose.infrastructure.Observable;
+import edu.kit.rose.infrastructure.SetObservable;
+import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.infrastructure.UnitObserver;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -16,6 +18,13 @@ public final class UnmountUtility {
     observable.addSubscriber(observer);
     runOnUnmount(node, () -> observable.removeSubscriber(observer));
   }
+
+  public static <T, S> void subscribeUntilUnmount(Node node, SetObserver<T, S> observer,
+                                               SetObservable<T, S> observable) {
+    observable.addSubscriber(observer);
+    runOnUnmount(node, () -> observable.removeSubscriber(observer));
+  }
+
 
   public static void runOnUnmount(Node node, Runnable listener) {
     new ListenerAdapter(node, listener).register();
@@ -33,9 +42,11 @@ public final class UnmountUtility {
 
     @Override
     public void onChanged(Change<? extends Node> c) {
-      if (c.getRemoved().contains(this.node)) {
-        this.listener.run();
-        this.unregister();
+      while (c.next()) {
+        if (c.getRemoved().contains(this.node)) {
+          this.listener.run();
+          this.unregister();
+        }
       }
     }
 

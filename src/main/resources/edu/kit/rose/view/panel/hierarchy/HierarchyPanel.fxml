@@ -10,7 +10,11 @@
          fx:id="parentContainer"
          prefWidth="250">
 
-    <BorderPane fx:id="hierarchyLayout" prefWidth="${parentContainer.width}" prefHeight="${parentContainer.height}">
+    <BorderPane
+            fx:id="hierarchyLayout"
+            prefWidth="${parentContainer.width}"
+            prefHeight="${parentContainer.height}"
+            style="-fx-background-color: white;">
         <top>
             <SearchBar fx:id="searchBar">
                 <BorderPane.margin>
@@ -20,7 +24,7 @@
         </top>
         <center>
             <TreeView
-                    fx:id="elementsListView"
+                    fx:id="elementsTreeView"
                     style="-fx-background-insets: 2; -fx-background-color: #ffffffff;">
                 <BorderPane.margin>
                     <Insets bottom="5" right="5"/>

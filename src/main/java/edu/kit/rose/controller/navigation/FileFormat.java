@@ -2,17 +2,16 @@ package edu.kit.rose.controller.navigation;
 
 import edu.kit.rose.infrastructure.Box;
 import edu.kit.rose.infrastructure.RoseBox;
-import edu.kit.rose.model.ProjectFormat;
 
 /**
  * Contains file formats that can be used to
  * configure {@link Navigator#showFileDialog(FileDialogType, FileFormat)}.
  */
 public enum FileFormat {
-  ROSE("yaml", "yml"),
-  SUMO("sumo"),
-  YAML("rose"),
-  CRITERIA("criteria");
+  ROSE("*.rose.json"),
+  SUMO("*.net.xml"),
+  YAML("*.yaml", "*.yml"),
+  CRITERIA("*.criteria.json");
 
   /**
    * Creates a new value in {@link FileFormat} enum.
@@ -20,7 +19,7 @@ public enum FileFormat {
    * @param fileExtensions all valid file extensions for an export format
    */
   FileFormat(String ... fileExtensions) {
-    this.fileExtensions = new RoseBox<String>(fileExtensions);
+    this.fileExtensions = new RoseBox<>(fileExtensions);
   }
 
   private final Box<String> fileExtensions;

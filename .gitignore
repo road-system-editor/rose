@@ -78,3 +78,6 @@ gradle-app.setting
 
 # === VS Code (Language Support for Java) ===
 bin/
+
+# === ROSE ===
+rose-config.json

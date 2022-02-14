@@ -16,6 +16,7 @@ import edu.kit.rose.model.plausibility.violation.Violation;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -111,8 +112,10 @@ public class RosePlausibilityController extends Controller implements Plausibili
     if (!getStorageLock().isStorageLockAcquired()) {
       getStorageLock().acquireStorageLock();
       this.onBeginSubscribers.forEach((Runnable::run));
-      this.applicationDataSystem.importCriteriaFromFile(
-              this.navigator.showFileDialog(FileDialogType.LOAD_FILE, FileFormat.CRITERIA));
+      var importPath = this.navigator.showFileDialog(FileDialogType.LOAD_FILE, FileFormat.CRITERIA);
+      if (importPath != null) {
+        this.applicationDataSystem.importCriteriaFromFile(importPath);
+      }
       this.onDoneSubscribers.forEach(Runnable::run);
       getStorageLock().releaseStorageLock();
     }
@@ -123,8 +126,10 @@ public class RosePlausibilityController extends Controller implements Plausibili
     if (!getStorageLock().isStorageLockAcquired()) {
       getStorageLock().acquireStorageLock();
       this.onBeginSubscribers.forEach((Runnable::run));
-      this.applicationDataSystem.exportCriteriaToFile(
-              this.navigator.showFileDialog(FileDialogType.SAVE_FILE, FileFormat.CRITERIA));
+      var exportPath = this.navigator.showFileDialog(FileDialogType.SAVE_FILE, FileFormat.CRITERIA);
+      if (exportPath != null) {
+        this.applicationDataSystem.exportCriteriaToFile(exportPath);
+      }
       this.onDoneSubscribers.forEach(Runnable::run);
       getStorageLock().releaseStorageLock();
     }

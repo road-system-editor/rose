@@ -73,12 +73,6 @@ public class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, 
   }
 
   @Override
-  public Box<Element> getElementsByName(String name) {
-    return new RoseBox<>(
-        elements.stream().filter(e -> e.getName().startsWith(name)).collect(Collectors.toList()));
-  }
-
-  @Override
   public Segment createSegment(SegmentType segmentType) {
     var segment = SegmentFactory.createSegment(segmentType);
     elements.add(segment);

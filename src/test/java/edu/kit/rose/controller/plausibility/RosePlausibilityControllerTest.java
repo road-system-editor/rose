@@ -3,10 +3,14 @@ package edu.kit.rose.controller.plausibility;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import edu.kit.rose.controller.commons.RoseStorageLock;
 import edu.kit.rose.controller.commons.StorageLock;
+import edu.kit.rose.controller.navigation.FileDialogType;
+import edu.kit.rose.controller.navigation.FileFormat;
 import edu.kit.rose.controller.navigation.Navigator;
 import edu.kit.rose.controller.selection.SelectionBuffer;
 import edu.kit.rose.infrastructure.Movement;
@@ -18,6 +22,7 @@ import edu.kit.rose.model.plausibility.criteria.CriteriaManager;
 import edu.kit.rose.model.plausibility.violation.Violation;
 import edu.kit.rose.model.roadsystem.elements.Base;
 import edu.kit.rose.model.roadsystem.elements.Segment;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -30,11 +35,13 @@ import org.mockito.Mockito;
 
 
 class RosePlausibilityControllerTest {
+  private static final Path NONEXISTENT_CRITERIA_PATH = Path.of("build/tmp/none.criteria.json");
   private CriteriaManager criteriaManager;
   private Project project;
   private ApplicationDataSystem applicationDataSystem;
   private SelectionBuffer selectionBuffer;
   private PlausibilityController controller;
+  private Navigator navigator;
 
   @BeforeEach
   public void setUp() {
@@ -44,7 +51,7 @@ class RosePlausibilityControllerTest {
     this.selectionBuffer = mock(SelectionBuffer.class);
 
     StorageLock storageLock = new RoseStorageLock();
-    Navigator navigator = mock(Navigator.class);
+    this.navigator = mock(Navigator.class);
 
     when(applicationDataSystem.getCriteriaManager()).thenAnswer(e -> this.criteriaManager);
     this.controller = new RosePlausibilityController(storageLock,
@@ -56,60 +63,32 @@ class RosePlausibilityControllerTest {
   void importCompatibilityCriteriaTest() {
     Runnable onBegin = mock(Runnable.class);
     Runnable onEnd = mock(Runnable.class);
-    AtomicReference<Boolean> imported = new AtomicReference<>();
-    AtomicReference<Boolean> onBeginRun = new AtomicReference<>();
-    AtomicReference<Boolean> onEndRun = new AtomicReference<>();
-    doAnswer(e -> {
-      onBeginRun.set(true);
-      return null; })
-            .when(onBegin).run();
-    doAnswer(e -> {
-      onEndRun.set(true);
-      return null; })
-            .when(onEnd).run();
-    doAnswer(e -> {
-      imported.set(true);
-      return null; })
-            .when(applicationDataSystem).importCriteriaFromFile(any());
-    onBeginRun.set(false);
-    onEndRun.set(false);
-    imported.set(false);
+
+    when(this.navigator.showFileDialog(FileDialogType.LOAD_FILE, FileFormat.CRITERIA))
+        .thenReturn(NONEXISTENT_CRITERIA_PATH);
+
     this.controller.subscribeToPlausibilityIoAction(onBegin, onEnd);
     this.controller.importCompatibilityCriteria();
 
-    Assertions.assertTrue(imported.get());
-    Mockito.verify(onBegin, Mockito.times(1)).run();
-    Mockito.verify(onEnd, Mockito.times(1)).run();
+    verify(applicationDataSystem, times(1)).importCriteriaFromFile(any());
+    Mockito.verify(onBegin, times(1)).run();
+    Mockito.verify(onEnd, times(1)).run();
   }
 
   @Test
   void exportCompatibilityCriteriaTest() {
     Runnable onBegin = mock(Runnable.class);
     Runnable onEnd = mock(Runnable.class);
-    AtomicReference<Boolean> exported = new AtomicReference<>();
-    AtomicReference<Boolean> onBeginRun = new AtomicReference<>();
-    AtomicReference<Boolean> onEndRun = new AtomicReference<>();
-    doAnswer(e -> {
-      onBeginRun.set(true);
-      return null; })
-            .when(onBegin).run();
-    doAnswer(e -> {
-      onEndRun.set(true);
-      return null; })
-            .when(onEnd).run();
-    doAnswer(e -> {
-      exported.set(true);
-      return null; })
-            .when(applicationDataSystem).exportCriteriaToFile(any());
-    onBeginRun.set(false);
-    onEndRun.set(false);
-    exported.set(false);
+
+    when(this.navigator.showFileDialog(FileDialogType.SAVE_FILE, FileFormat.CRITERIA))
+        .thenReturn(NONEXISTENT_CRITERIA_PATH);
+
     this.controller.subscribeToPlausibilityIoAction(onBegin, onEnd);
     this.controller.exportCompatibilityCriteria();
 
-    Assertions.assertTrue(exported.get());
-    Assertions.assertTrue(onBeginRun.get());
-    Assertions.assertTrue(onEndRun.get());
+    verify(applicationDataSystem, times(1)).exportCriteriaToFile(NONEXISTENT_CRITERIA_PATH);
+    verify(onBegin, times(1)).run();
+    verify(onEnd, times(1)).run();
   }
 
   @Test

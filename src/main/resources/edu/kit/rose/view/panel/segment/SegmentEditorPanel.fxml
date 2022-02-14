@@ -5,12 +5,17 @@
 <?import edu.kit.rose.view.panel.segment.MeasurementPanel?>
 <fx:root xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml" type="Pane"
-         style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0); -fx-background-color: white;">
-    <TabPane>
-        <Tab fx:id="attributeTab">
+         styleClass="segmentEditorPanel">
+    <TabPane styleClass="tabPane">
+        <Tab fx:id="attributeTab"
+            styleClass="tab"
+            closable="false">
             <AttributePanel fx:id="attributePanel"/>
         </Tab>
-        <Tab fx:id="measurementTab">
+        <Tab fx:id="measurementTab"
+             disable="true"
+             closable="false"
+             styleClass="tab">
             <MeasurementPanel fx:id="measurementPanel"/>
         </Tab>
     </TabPane>

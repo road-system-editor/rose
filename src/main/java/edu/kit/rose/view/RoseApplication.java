@@ -8,6 +8,7 @@ import edu.kit.rose.controller.application.ApplicationController;
 import edu.kit.rose.controller.attribute.AttributeController;
 import edu.kit.rose.controller.hierarchy.HierarchyController;
 import edu.kit.rose.controller.measurement.MeasurementController;
+import edu.kit.rose.controller.navigation.ErrorType;
 import edu.kit.rose.controller.navigation.FileDialogType;
 import edu.kit.rose.controller.navigation.FileFormat;
 import edu.kit.rose.controller.navigation.Navigator;
@@ -25,12 +26,15 @@ import edu.kit.rose.view.window.CriteriaWindow;
 import edu.kit.rose.view.window.MainWindow;
 import edu.kit.rose.view.window.MeasurementsWindow;
 import edu.kit.rose.view.window.RoseWindow;
+import edu.kit.rose.view.window.ShortCutHelpWindow;
 import edu.kit.rose.view.window.WindowState;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import javafx.application.Application;
+import javafx.scene.control.Alert;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -42,7 +46,7 @@ import javafx.stage.Stage;
  * {@link edu.kit.rose.model} packages.
  */
 public class RoseApplication extends Application implements Navigator {
-  private static final Path CONFIG_PATH = Path.of(""); //TODO
+  private static final Path CONFIG_PATH = Path.of("./rose-config.json");
 
   private static final String ROSE_EXTENSION_FILTER_NAME = "ROSE";
   private static final String SUMO_EXTENSION_FILTER_NAME = "SUMO";
@@ -62,9 +66,10 @@ public class RoseApplication extends Application implements Navigator {
    */
   private MeasurementsWindow measurementsWindow;
   /**
-   * Factory to be used for creating a consistent set of MVC controllers.
+   * Contains information on available shortcuts.
    */
-  private ControllerFactory controllers;
+  private ShortCutHelpWindow shortCutHelpWindow;
+
   /**
    * The project that is currently opened in the application or an empty project.
    */
@@ -75,9 +80,8 @@ public class RoseApplication extends Application implements Navigator {
   private ApplicationDataSystem applicationData;
   /**
    * Used to fetch text contents in the configured language.
-   * Uses {@link edu.kit.rose.infrastructure.language.RoseLocalizedTextProvider}
    */
-  private LocalizedTextProvider translator;
+  private RoseLocalizedTextProvider translator;
 
   /**
    * The guice dependency injector.
@@ -98,7 +102,8 @@ public class RoseApplication extends Application implements Navigator {
    */
   @Override
   public void start(Stage primaryStage) {
-    this.injector = Guice.createInjector(new RoseModule(this));
+    this.translator = new RoseLocalizedTextProvider();
+    this.injector = Guice.createInjector(new RoseModule(this, this.translator));
 
     this.mainWindow = new MainWindow(primaryStage, injector);
     this.mainWindow.show();
@@ -108,25 +113,32 @@ public class RoseApplication extends Application implements Navigator {
   public void showWindow(WindowType windowType) {
     switch (windowType) {
       case CRITERION -> {
-        if (!canBeShown(this.criteriaWindow)) {
+        if (canNotBeShown(this.criteriaWindow)) {
           this.criteriaWindow = new CriteriaWindow(this.injector);
         }
         this.criteriaWindow.show();
       }
       case ROADSYSTEM, ATTRIBUTE, MEASUREMENT_EDITOR -> this.mainWindow.show();
       case MEASUREMENT_OVERVIEW -> {
-        if (!canBeShown(measurementsWindow)) {
+        if (canNotBeShown(measurementsWindow)) {
           measurementsWindow = new MeasurementsWindow(this.injector);
         }
         measurementsWindow.show();
       }
+      case HELP -> {
+        if (canNotBeShown(shortCutHelpWindow)) {
+          shortCutHelpWindow = new ShortCutHelpWindow(this.injector);
+        }
+        shortCutHelpWindow.show();
+      }
+
       default -> throw new RuntimeException("RoseApplication can't show window type " + windowType);
     }
   }
 
-  private static boolean canBeShown(RoseWindow window) {
-    return window != null && (window.getState() == WindowState.INITIALIZED
-        || window.getState() == WindowState.VISIBLE);
+  private static boolean canNotBeShown(RoseWindow window) {
+    return window == null || (window.getState() != WindowState.INITIALIZED
+        && window.getState() != WindowState.VISIBLE);
   }
 
   @Override
@@ -134,13 +146,38 @@ public class RoseApplication extends Application implements Navigator {
     FileChooser fileChooser = new FileChooser();
     fileChooser.getExtensionFilters().add(getExtensionFilter(format));
 
-    File file = null;
+    File file;
     switch (option) {
-      case LOAD_FILE -> file = fileChooser.showOpenDialog(null);
-      case SAVE_FILE -> file = fileChooser.showSaveDialog(null);
+      case LOAD_FILE -> {
+        fileChooser.setTitle(translator.getLocalizedText("fileChooser.loadTitle"));
+        file = fileChooser.showOpenDialog(null);
+      }
+      case SAVE_FILE -> {
+        fileChooser.setTitle(translator.getLocalizedText("fileChooser.saveTitle"));
+        file = fileChooser.showSaveDialog(null);
+      }
       default -> throw new IllegalStateException(format.toString());
     }
     return file == null ? null : file.toPath();
+  }
+
+  @Override
+  public void showErrorDialog(ErrorType errorType) {
+    Alert alertDialog = new Alert(Alert.AlertType.ERROR);
+
+    switch (errorType) {
+      case SAVE_ERROR -> alertDialog.setContentText(
+          translator.getLocalizedText("view.roseapplication.error.save"));
+      case LOAD_ERROR -> alertDialog.setContentText(
+          translator.getLocalizedText("view.roseapplication.error.load"));
+      case IMPORT_ERROR -> alertDialog.setContentText(
+          translator.getLocalizedText("view.roseapplication.error.import"));
+      case EXPORT_ERROR -> alertDialog.setContentText(
+          translator.getLocalizedText("view.roseapplication.error.export"));
+      default -> throw new IllegalStateException(errorType.toString());
+    }
+
+    alertDialog.show();
   }
 
   private FileChooser.ExtensionFilter getExtensionFilter(FileFormat format) {
@@ -157,9 +194,7 @@ public class RoseApplication extends Application implements Navigator {
   }
 
   private <T> List<T> convertBoxToList(Box<T> box) {
-    List<T> list = new ArrayList<>();
-    box.forEach(list::add);
-    return list;
+    return box.stream().toList();
   }
 
   /**
@@ -178,9 +213,9 @@ public class RoseApplication extends Application implements Navigator {
     private final Navigator navigator;
     private final RoseLocalizedTextProvider provider;
 
-    private RoseModule(Navigator navigator) {
-      this.navigator = navigator;
-      this.provider = new RoseLocalizedTextProvider();
+    private RoseModule(Navigator navigator, RoseLocalizedTextProvider provider) {
+      this.navigator = Objects.requireNonNull(navigator);
+      this.provider = Objects.requireNonNull(provider);
     }
 
     @Override

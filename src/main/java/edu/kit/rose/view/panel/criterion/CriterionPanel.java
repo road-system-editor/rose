@@ -1,10 +1,12 @@
 package edu.kit.rose.view.panel.criterion;
 
+import com.google.inject.Inject;
+import com.google.inject.Injector;
 import edu.kit.rose.controller.plausibility.PlausibilityController;
 import edu.kit.rose.infrastructure.SetObserver;
-import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.model.plausibility.criteria.CompatibilityCriterion;
 import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterion;
+import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterionType;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import edu.kit.rose.view.commons.FxmlContainer;
 import edu.kit.rose.view.commons.UnmountUtility;
@@ -16,44 +18,42 @@ import edu.kit.rose.view.commons.UnmountUtility;
  */
 public abstract class CriterionPanel<T extends PlausibilityCriterion> extends FxmlContainer
     implements SetObserver<SegmentType, PlausibilityCriterion> {
+  @Inject
   private PlausibilityController controller;
-  private T criterion;
+
+  private final T criterion;
 
   /**
    * Creates a new CriterionPanel.
    *
-   * @param translator       data that will be used for {@link FxmlContainer} constructor
    * @param fxmlResourceName the name of fxml file that models this panel
    * @param criterion        the criteria to be set up
    */
-  protected CriterionPanel(LocalizedTextProvider translator, String fxmlResourceName,
-                           PlausibilityController controller, T criterion) {
+  protected CriterionPanel(String fxmlResourceName, T criterion) {
     super(fxmlResourceName);
-    this.controller = controller;
     this.criterion = criterion;
-    this.criterion.addSubscriber(this);
+  }
 
-    UnmountUtility.runOnUnmount(this, () -> this.criterion.removeSubscriber(this));
+  @Override
+  public void init(Injector injector) {
+    super.init(injector);
+    UnmountUtility.subscribeUntilUnmount(this, this, criterion);
   }
 
   /**
    * Constructs a criterion panel for a given criterion, if it is configurable.
    * For non-configurable criteria, {@code null} is returned.
    *
-   * @param translator the translator that is to be used.
-   * @param criterion the criterion this criterion panel is for.
-   * @return the newly constructed criterion panel.
+   * @param criterion the criterion this criterion panel is for, may not be {@code null}.
+   * @return the newly constructed criterion panel or null if there is no {@link CriterionPanel}
+   *     implementation for the given plausibility criterion type.
    */
-  public static CriterionPanel<? extends PlausibilityCriterion> forCriterion(
-      LocalizedTextProvider translator, PlausibilityController controller,
+  public static CriterionPanel<? extends PlausibilityCriterion> forCriterion(Injector injector,
       PlausibilityCriterion criterion) {
-    switch (criterion.getType()) {
-      case COMPATIBILITY:
-        return new CompatibilityCriterionPanel(translator, controller,
-            (CompatibilityCriterion) criterion);
-      default:
-        return null; //TODO?
+    if (criterion.getType() == PlausibilityCriterionType.COMPATIBILITY) {
+      return new CompatibilityCriterionPanel((CompatibilityCriterion) criterion);
     }
+    return null;
   }
 
   /**
@@ -63,5 +63,12 @@ public abstract class CriterionPanel<T extends PlausibilityCriterion> extends Fx
    */
   public T getCriterion() {
     return this.criterion;
+  }
+
+  /**
+   * Returns the controller that handles criterion changes.
+   */
+  public PlausibilityController getController() {
+    return this.controller;
   }
 }

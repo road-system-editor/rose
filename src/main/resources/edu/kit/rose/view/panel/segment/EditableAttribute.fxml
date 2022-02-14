@@ -1,11 +1,11 @@
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
-<fx:root xmlns="http://javafx.com/javafx"
+<fx:root fx:id="parentContainer"
+         xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml" type="Pane">
-    <HBox fx:id="layout">
-        <CheckBox fx:id="visibilitySwitch"/>
-        <Label fx:id="label" style="-fx-pref-width: 120px; -fx-padding: 5px;"/>
+    <HBox fx:id="layout" prefWidth="${parentContainer.width}">
+        <Label fx:id="label"
+               styleClass="attributeLabel"/>
     </HBox>
 </fx:root>

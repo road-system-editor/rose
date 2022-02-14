@@ -1,0 +1,21 @@
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ComboBox?>
+<?import edu.kit.rose.view.panel.criterion.ApplicableSegmentsSelector?>
+<fx:root xmlns="http://javafx.com/javafx"
+         xmlns:fx="http://javafx.com/fxml" type="Pane">
+    <VBox>
+        <Label fx:id="nameLabel"/>
+        <TextField fx:id="nameField"/>
+        <Label fx:id="applicableSegmentsLabel"/>
+        <ApplicableSegmentsSelector fx:id="applicableSegmentsSelector"/>
+        <Label fx:id="criterionLabel"/>
+        <VBox fx:id="criterionLayout">
+            <ComboBox fx:id="attributeSelector"/>
+            <ComboBox fx:id="validationSelector"/>
+            <TextField fx:id="valueField"/>
+        </VBox>
+    </VBox>
+</fx:root>

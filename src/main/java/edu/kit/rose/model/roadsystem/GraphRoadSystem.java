@@ -290,6 +290,7 @@ public class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, 
 
     return segments.stream()
         .flatMap(s -> Graphs.neighborListOf(segmentConnectionGraph, s).stream())
+        .distinct()
         .filter(s -> !segments.contains(s))
         .flatMap(s -> getConnectionsSet(s).stream()
             .filter(c -> c.getConnectors().stream().anyMatch(connectors::contains)))

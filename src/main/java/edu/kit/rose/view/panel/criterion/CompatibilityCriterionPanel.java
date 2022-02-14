@@ -31,6 +31,8 @@ import javafx.scene.layout.VBox;
  */
 class CompatibilityCriterionPanel
     extends CriterionPanel<CompatibilityCriterion> { // also uses VBox and ScrollPane
+  private static final String CRITERION_PANEL_STYLE_SHEET = "/edu/kit/rose/view/panel/criterion"
+      + "/CriterionPanel.css";
   private static final String VALUE_REGEX = "[0-9]{1,13}(\\.[0-9]+)?";
   private static final String VALID_VALUE_STYLE = "-fx-text-fill: black;";
   private static final String INVALID_VALUE_STYLE = "-fx-text-fill: red;";
@@ -66,7 +68,17 @@ class CompatibilityCriterionPanel
 
     this.valueFormat = new DecimalFormat("0", DecimalFormatSymbols.getInstance(Locale.ENGLISH));
     this.valueFormat.setMaximumFractionDigits(9);
+
+    setupView();
   }
+
+  private void setupView() {
+    String criterionStyleSheetUrl =
+        Objects.requireNonNull(getClass().getResource(CRITERION_PANEL_STYLE_SHEET))
+            .toExternalForm();
+    this.getStylesheets().add(criterionStyleSheetUrl);
+  }
+
 
   @Override
   public void init(Injector injector) {

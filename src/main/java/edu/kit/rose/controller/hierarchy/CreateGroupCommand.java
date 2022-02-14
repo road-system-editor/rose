@@ -28,8 +28,9 @@ public class CreateGroupCommand implements ChangeCommand {
   /**
    * Creates a {@link CreateGroupCommand} that creates a group out of a list of segments.
    *
-   * @param project  the model facade to execute the {@link CreateGroupCommand} on
-   * @param elements the elements that will be in the group
+   * @param replacementLog  the log that stores the replacements of elements
+   * @param project         the model facade to execute the {@link CreateGroupCommand} on
+   * @param elements        the elements that will be in the group
    */
   public CreateGroupCommand(ReplacementLog replacementLog,
                             Project project,

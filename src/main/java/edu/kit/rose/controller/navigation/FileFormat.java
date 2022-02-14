@@ -9,9 +9,9 @@ import edu.kit.rose.model.ProjectFormat;
  * configure {@link Navigator#showFileDialog(FileDialogType, FileFormat)}.
  */
 public enum FileFormat {
-  ROSE("yaml", "yml"),
+  ROSE("rose.json"),
   SUMO("sumo"),
-  YAML("rose"),
+  YAML("yaml", "yml"),
   CRITERIA("criteria");
 
   /**

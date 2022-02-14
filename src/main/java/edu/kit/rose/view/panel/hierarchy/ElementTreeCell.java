@@ -141,9 +141,11 @@ public class ElementTreeCell extends TreeCell<Element>
 
     TreeItem<Element> itemToPlaceOn = getTreeItem();
 
-    this.hierarchyController.addElementToGroup(
-        dragItem.getValue(),
-        (Group) itemToPlaceOn.getValue());
+    if (itemToPlaceOn.getValue() != null && itemToPlaceOn.getValue().isContainer()) {
+      this.hierarchyController.addElementToGroup(
+          dragItem.getValue(),
+          (Group) itemToPlaceOn.getValue());
+    }
 
     dragItem = null;
 

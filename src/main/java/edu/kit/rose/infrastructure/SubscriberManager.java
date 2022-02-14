@@ -31,7 +31,6 @@ abstract class SubscriberManager<T extends UnitObserver<S>, S> implements Observ
     subscribers.remove(observer);
   }
 
-  //TODO: remove method if not used at the end of implementation phase
   @Override
   public void notifySubscribers() {
     subscribers.forEach(sub -> sub.notifyChange(getThis()));

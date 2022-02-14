@@ -28,7 +28,6 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 
 
-//TODO: add more unit tests.
 /**
  * Test the {@link RoseRoadSystemController} class.
  */

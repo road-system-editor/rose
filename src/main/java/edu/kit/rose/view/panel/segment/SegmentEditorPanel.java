@@ -9,6 +9,7 @@ import edu.kit.rose.view.commons.FxmlContainer;
 import edu.kit.rose.view.commons.UnmountUtility;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import javafx.fxml.FXML;
 import javafx.scene.control.Tab;
 
@@ -17,6 +18,8 @@ import javafx.scene.control.Tab;
  * of a given segment, as specified in PF11.1.5.
  */
 public class SegmentEditorPanel extends FxmlContainer implements SetObserver<Element, Element> {
+  private static final String ATTRIBUTE_PANEL_STYLE =
+      "/edu/kit/rose/view/panel/segment/AttributePanel.css";
   private Segment segment;
 
   @FXML
@@ -38,8 +41,14 @@ public class SegmentEditorPanel extends FxmlContainer implements SetObserver<Ele
   @Override
   public void init(Injector injector) {
     super.init(injector);
-
+    setupView();
     UnmountUtility.runOnUnmount(this, this::unregisterListeners);
+  }
+
+  private void setupView() {
+    String attributeStyleSheetUrl =
+        Objects.requireNonNull(getClass().getResource(ATTRIBUTE_PANEL_STYLE)).toExternalForm();
+    this.getStylesheets().add(attributeStyleSheetUrl);
   }
 
   @Override

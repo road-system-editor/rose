@@ -4,6 +4,7 @@ import edu.kit.rose.controller.attribute.AttributeController;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.view.commons.FxmlContainer;
 import java.util.Collection;
+import java.util.Objects;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
@@ -13,7 +14,8 @@ import javafx.scene.control.TextField;
  * {@link edu.kit.rose.model.roadsystem.DataType}s whose values needs to be typed in by the user.
  */
 public abstract class TextFieldAttribute<T> extends EditableAttribute<T> {
-  private static final String TEXT_FIELD_STYLE = "edu/kit/rose/view/panel/segment/TextField.css";
+  private static final String ATTRIBUTE_PANEL_STYLE =
+      "/edu/kit/rose/view/panel/segment/AttributePanel.css";
   /**
    * This attribute is {@code true} when this component is currently trying to insert an
    * "inhomogeneous" value into the input field and the input should not be validated.
@@ -28,6 +30,13 @@ public abstract class TextFieldAttribute<T> extends EditableAttribute<T> {
   protected TextFieldAttribute(AttributeAccessor<T> attribute,
                                AttributeController controller) {
     super(attribute, controller);
+    setupView();
+  }
+
+  private void setupView() {
+    String attributeStyleSheetUrl =
+        Objects.requireNonNull(getClass().getResource(ATTRIBUTE_PANEL_STYLE)).toExternalForm();
+    this.getStylesheets().add(attributeStyleSheetUrl);
   }
 
   /**
@@ -51,9 +60,7 @@ public abstract class TextFieldAttribute<T> extends EditableAttribute<T> {
   @Override
   protected Node createInputField() {
     inputField = new TextField();
-    inputField.setStyle("-fx-pref-height: 27;-fx-border-radius: 15; -fx-background-radius: 15; "
-        + "-fx-font-family: "
-        + "Arial; -fx-font-size: 12");
+    inputField.getStyleClass().add("textField");
     updateInputField();
 
     inputField.textProperty().addListener(this::onInputFieldUpdate);

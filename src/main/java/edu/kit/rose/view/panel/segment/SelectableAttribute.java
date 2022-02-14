@@ -18,6 +18,8 @@ import javafx.scene.control.ListCell;
  * @param <T> the java type of the attribute value.
  */
 abstract class SelectableAttribute<T> extends EditableAttribute<T> {
+  private static final String ATTRIBUTE_PANEL_STYLE =
+      "/edu/kit/rose/view/panel/segment/AttributePanel.css";
 
   private ComboBox<T> inputField;
 
@@ -28,15 +30,20 @@ abstract class SelectableAttribute<T> extends EditableAttribute<T> {
   SelectableAttribute(AttributeAccessor<T> attribute, AttributeController controller,
                       Collection<T> options) {
     super(attribute, controller);
+    setupView();
     this.inputField.getItems().addAll(Objects.requireNonNull(options));
+  }
+
+  private void setupView() {
+    String attributeStyleSheetUrl =
+        Objects.requireNonNull(getClass().getResource(ATTRIBUTE_PANEL_STYLE)).toExternalForm();
+    this.getStylesheets().add(attributeStyleSheetUrl);
   }
 
   @Override
   protected Node createInputField() {
     this.inputField = new ComboBox<>();
-    inputField.setStyle("-fx-border-radius: 15; -fx-background-radius: 15; -fx-background-color: "
-        + "white; -fx-border-style: solid; -fx-border-color: #8d8d8d;"
-        + "-fx-border-width: 0.5");
+    inputField.getStyleClass().add("comboBox");
     inputField.setMaxHeight(10);
     inputField.setCellFactory(listView -> new ListCell<>() {
       @Override

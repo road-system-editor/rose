@@ -28,7 +28,7 @@
             <rowConstraints>
                 <RowConstraints/>
             </rowConstraints>
-            <Label GridPane.columnIndex="0" GridPane.rowIndex="0" fx:id="groupNameLabel" text="Hallo" textFill="white">
+            <Label GridPane.columnIndex="0" GridPane.rowIndex="0" fx:id="groupNameLabel" textFill="white">
             </Label>
             <Button GridPane.columnIndex="1" GridPane.rowIndex="0" fx:id="deleteGroupButton"
                     style="-fx-background-radius: 5.0; -fx-background-color: A0A0A0;">

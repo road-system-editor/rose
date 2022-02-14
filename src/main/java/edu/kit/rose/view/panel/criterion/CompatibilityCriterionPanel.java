@@ -106,28 +106,30 @@ class CompatibilityCriterionPanel
   private void onAttributeChange(ObservableValue<? extends AttributeType> observable,
                                  AttributeType oldValue, AttributeType newValue) {
     if (oldValue != newValue) {
-      Platform.runLater(() -> {
-        getController().setCompatibilityCriterionAttributeType(getCriterion(), newValue);
+      getController().setCompatibilityCriterionAttributeType(getCriterion(), newValue);
 
-        this.validationSelector.getSelectionModel().clearSelection();
-        this.validationSelector.getItems().clear();
-        for (var validationType : getCriterion().getCompatibleOperatorTypes()) {
-          this.validationSelector.getItems().add(validationType);
-        }
-      });
+      this.validationSelector.getSelectionModel().clearSelection();
+      /*
+      TODO: Because the old subscribers (all CompatibilityCriterionPanels that existed) dont get
+       removed. This is called in all of them, some of them will have old Values that differ from
+        the current state. This means they will clear the validationSelector which removes the
+        choice. (I think there is a similar Problem with the Name Attribute and maybe some other.
+       */
+      this.validationSelector.getItems().clear();
+      for (var validationType : getCriterion().getCompatibleOperatorTypes()) {
+        this.validationSelector.getItems().add(validationType);
+      }
     }
   }
 
   private void onValidationChange(ObservableValue<? extends ValidationType> observable,
                                  ValidationType oldValue, ValidationType newValue) {
     if (oldValue != newValue) {
-      Platform.runLater(() -> {
-        getController().setCompatibilityCriterionValidationType(getCriterion(), newValue);
+      getController().setCompatibilityCriterionValidationType(getCriterion(), newValue);
 
-        if (newValue != null) {
-          setDiscrepancyFieldEnabled(newValue.hasDiscrepancy());
-        }
-      });
+      if (newValue != null) {
+        setDiscrepancyFieldEnabled(newValue.hasDiscrepancy());
+      }
     }
   }
 

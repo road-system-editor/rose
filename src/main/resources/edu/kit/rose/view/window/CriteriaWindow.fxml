@@ -1,4 +1,3 @@
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.control.ScrollPane?>
 <?import edu.kit.rose.view.panel.criterion.CriteriaOverviewPanel?>
 <?import javafx.scene.layout.GridPane?>
@@ -16,18 +15,22 @@
         <RowConstraints percentHeight="100"/>
     </rowConstraints>
 
-    <children>
-        <AnchorPane GridPane.columnIndex="0"
-                    GridPane.rowIndex="0">
-            <CriteriaOverviewPanel
-                    AnchorPane.topAnchor="0.0"
-                    AnchorPane.bottomAnchor="0.0"
-                    AnchorPane.leftAnchor="0.0"
-                    AnchorPane.rightAnchor="0.0"
-                    fx:id="overview"/>
-        </AnchorPane>
-
-    </children>
-
-    <!--<ScrollPane fx:id="criterionContainer" HBox.hgrow="ALWAYS"/>-->
+    <AnchorPane GridPane.columnIndex="0"
+                GridPane.rowIndex="0">
+        <CriteriaOverviewPanel
+                AnchorPane.topAnchor="0.0"
+                AnchorPane.bottomAnchor="0.0"
+                AnchorPane.leftAnchor="0.0"
+                AnchorPane.rightAnchor="0.0"
+                fx:id="overview"/>
+    </AnchorPane>
+    <AnchorPane GridPane.columnIndex="1"
+                GridPane.rowIndex="0">
+        <ScrollPane
+                AnchorPane.topAnchor="0.0"
+                AnchorPane.bottomAnchor="0.0"
+                AnchorPane.leftAnchor="0.0"
+                AnchorPane.rightAnchor="0.0"
+                fx:id="criterionContainer"/>
+    </AnchorPane>
 </GridPane>

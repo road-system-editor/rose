@@ -2,7 +2,9 @@ package edu.kit.rose.view.commons;
 
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterionType;
+import edu.kit.rose.model.plausibility.criteria.validation.ValidationType;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
+import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import edu.kit.rose.model.roadsystem.measurements.MeasurementType;
 
 /**
@@ -48,4 +50,19 @@ public final class EnumLocalizationUtility {
   }
 
 
+  /**
+   * Returns the localized title of a validation type.
+   */
+  public static String localizeValidationTypeTitle(LocalizedTextProvider translator,
+                                                   ValidationType type) {
+    return translator.getLocalizedText(String.format("validationType.%s.title", type.toString()));
+  }
+
+  /**
+   * Returns the localized title of a segment type.
+   */
+  public static String localizeSegmentTypeTitle(LocalizedTextProvider translator,
+                                                SegmentType type) {
+    return translator.getLocalizedText(String.format("segmentType.%s.title", type.toString()));
+  }
 }

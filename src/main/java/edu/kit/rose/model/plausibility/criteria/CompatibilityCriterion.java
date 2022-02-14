@@ -105,8 +105,10 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
    * @param operatorType the Type of Operator this Criterion is supposed to use.
    */
   public void setOperatorType(ValidationType operatorType) {
-    this.operatorType = operatorType;
-    notifySubscribers();
+    if (this.operatorType != operatorType) {
+      this.operatorType = operatorType;
+      notifySubscribers();
+    }
   }
 
   /**

@@ -10,20 +10,15 @@ import javafx.scene.control.ListCell;
  * a {@link javafx.scene.control.ListView} item layout.
  */
 public class CriterionListCell extends ListCell<PlausibilityCriterion> {
-
   private final PlausibilityController controller;
-  private final Consumer<PlausibilityCriterion> selectListener;
 
   /**
    * Creates a new instance of the {@link CriterionListCell}.
    *
    * @param controller     the plausibility controller
-   * @param selectListener the selection listener
    */
-  public CriterionListCell(PlausibilityController controller,
-                           Consumer<PlausibilityCriterion> selectListener) {
+  public CriterionListCell(PlausibilityController controller) {
     this.controller = controller;
-    this.selectListener = selectListener;
   }
 
   @Override
@@ -34,8 +29,7 @@ public class CriterionListCell extends ListCell<PlausibilityCriterion> {
       setText(null);
       setGraphic(null);
     } else {
-      CriterionHandle handle =
-          new CriterionHandle(this.controller, criterion, this.selectListener);
+      CriterionHandle handle = new CriterionHandle(this.controller, criterion);
       setGraphic(handle);
     }
   }

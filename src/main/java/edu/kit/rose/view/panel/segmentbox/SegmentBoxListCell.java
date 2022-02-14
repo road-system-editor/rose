@@ -3,6 +3,7 @@ package edu.kit.rose.view.panel.segmentbox;
 import edu.kit.rose.controller.roadsystem.RoadSystemController;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
+import edu.kit.rose.view.commons.EnumLocalizationUtility;
 import javafx.geometry.Insets;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.Tooltip;
@@ -39,7 +40,8 @@ public class SegmentBoxListCell extends ListCell<SegmentType> {
       SegmentBlueprint segmentBlueprint
               = new SegmentBlueprint(this.translator, this.roadSystemController, item);
       setGraphic(segmentBlueprint);
-      setTooltip(new Tooltip(translator.getLocalizedText("segmentType." + item)));
+      String title = EnumLocalizationUtility.localizeSegmentTypeTitle(this.translator, item);
+      setTooltip(new Tooltip(title));
     }
   }
 }

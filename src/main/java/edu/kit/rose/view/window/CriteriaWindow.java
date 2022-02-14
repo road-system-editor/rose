@@ -20,10 +20,15 @@ import javafx.stage.Stage;
  * selection of a criterion in the overview panel and the editor panel.
  */
 public class CriteriaWindow extends RoseWindow {
+  private static final int DEFAULT_WIDTH = 640;
+  private static final int DEFAULT_HEIGHT = 360;
+
   @Inject
   private PlausibilityController plausibilityController;
   @Inject
   private ApplicationDataSystem applicationData;
+  @Inject
+  private Injector injector;
 
   /**
    * The criterion overview panel is contained in the criteria window.
@@ -32,13 +37,6 @@ public class CriteriaWindow extends RoseWindow {
   private CriteriaOverviewPanel overview;
   @FXML
   private ScrollPane criterionContainer;
-  /**
-   * The criterion editor panel is contained in the criteria window.
-   * The criterion shown in this panel must match the criterion selected in the {@link #overview}
-   * panel.
-   */
-  @FXML
-  private CriterionPanel<? extends PlausibilityCriterion> criterion;
 
   /**
    * Creates a new criterion window instance.
@@ -56,8 +54,8 @@ public class CriteriaWindow extends RoseWindow {
     var scene = new Scene(tree);
 
     stage.setScene(scene);
-    stage.setWidth(640); // TODO magic numbers
-    stage.setHeight(360);
+    stage.setWidth(DEFAULT_WIDTH);
+    stage.setHeight(DEFAULT_HEIGHT);
 
     getTranslator().subscribeToOnLanguageChanged(lang -> updateTranslatableStrings(stage));
     updateTranslatableStrings(stage);
@@ -71,9 +69,10 @@ public class CriteriaWindow extends RoseWindow {
   }
 
   private void onSelect(PlausibilityCriterion plausibilityCriterion) {
-    // implementation detail
-    criterion = CriterionPanel.forCriterion(getTranslator(), this.plausibilityController,
-        plausibilityCriterion);
-    criterionContainer.setContent(criterion);
+    var panel = CriterionPanel.forCriterion(this.injector, plausibilityCriterion);
+    this.criterionContainer.setContent(panel);
+    if (panel != null) {
+      panel.init(injector);
+    }
   }
 }

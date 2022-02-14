@@ -96,7 +96,8 @@ public class RoseRoadSystemController extends Controller
   @Override
   public void duplicateStreetSegment(Segment segment) {
     DuplicateStreetSegmentCommand duplicateStreetSegmentCommand
-            = new DuplicateStreetSegmentCommand(this.replacementLog, this.project, segment);
+            = new DuplicateStreetSegmentCommand(this.replacementLog, this.project, segment,
+                new HierarchyCopier(null, this.project.getRoadSystem()));
     changeCommandBuffer.addAndExecuteCommand(duplicateStreetSegmentCommand);
   }
 

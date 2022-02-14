@@ -27,11 +27,12 @@ public class DuplicateStreetSegmentCommand implements ChangeCommand {
    * @param segmentToDuplicate  the segment
    */
   public DuplicateStreetSegmentCommand(ReplacementLog replacementLog, Project project,
-                                       Segment segmentToDuplicate) {
+                                       Segment segmentToDuplicate,
+                                        HierarchyCopier copier) {
     this.replacementLog = replacementLog;
     this.project = project;
     this.segmentToDuplicate = segmentToDuplicate;
-    this.copier = new HierarchyCopier(null, project.getRoadSystem());
+    this.copier = copier;
   }
 
   @Override

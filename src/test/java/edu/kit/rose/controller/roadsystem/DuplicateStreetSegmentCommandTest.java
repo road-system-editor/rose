@@ -1,21 +1,19 @@
 package edu.kit.rose.controller.roadsystem;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import edu.kit.rose.controller.commons.HierarchyCopier;
 import edu.kit.rose.controller.commons.ReplacementLog;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.elements.Base;
-import edu.kit.rose.model.roadsystem.elements.Group;
 import edu.kit.rose.model.roadsystem.elements.Segment;
-import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
 
 class DuplicateStreetSegmentCommandTest {
   private RoadSystem roadSystem;
@@ -48,7 +46,7 @@ class DuplicateStreetSegmentCommandTest {
     command.execute();
     command.unexecute();
 
-    Mockito.verify(roadSystem, Mockito.times(1))
+    verify(roadSystem, times(1))
             .removeElement(any(Segment.class));
   }
 

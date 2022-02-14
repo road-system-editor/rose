@@ -2,6 +2,7 @@ package edu.kit.rose.model;
 
 import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.infrastructure.RoseUnitObservable;
+import java.util.Objects;
 
 /**
  * A ZoomSetting describes the Position and "level of Zoom" a possible View of the RoadSystem has.
@@ -11,11 +12,18 @@ import edu.kit.rose.infrastructure.RoseUnitObservable;
 public class ZoomSetting extends RoseUnitObservable<ZoomSetting> {
   private static final double DEFAULT_ZOOM_LEVEL = 1.0;
 
+  private final Position defaultCenterOfView;
   private Position centerOfView;
   private double zoomLevel;
 
-  public ZoomSetting(Position centerOfView) {
-    this.centerOfView = centerOfView;
+  /**
+   * Initializes a new zoom setting with the default zoom level and the given center position.
+   */
+  public ZoomSetting(Position defaultCenterOfView) {
+    Objects.requireNonNull(defaultCenterOfView);
+    this.defaultCenterOfView = new Position(defaultCenterOfView.getX(), defaultCenterOfView.getY());
+
+    this.centerOfView = this.defaultCenterOfView;
     this.zoomLevel = DEFAULT_ZOOM_LEVEL;
   }
 
@@ -55,6 +63,14 @@ public class ZoomSetting extends RoseUnitObservable<ZoomSetting> {
   public void setZoomLevel(double zoomLevel) {
     this.zoomLevel = zoomLevel;
     notifySubscribers();
+  }
+
+  /**
+   * Resets the zoom settings to the default values given in the constructor.
+   */
+  public void reset() {
+    this.zoomLevel = DEFAULT_ZOOM_LEVEL;
+    this.centerOfView = this.defaultCenterOfView;
   }
 
   @Override

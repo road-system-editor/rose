@@ -66,12 +66,18 @@ class RoseProject implements Project {
 
   @Override
   public boolean load(Path filePath) {
-    // TODO clear project first
+    this.reset();
     return RoseExportStrategy.importToProject(this, filePath.toFile());
   }
 
   @Override
   public ZoomSetting getZoomSetting() {
     return this.zoomSetting;
+  }
+
+  @Override
+  public void reset() {
+    this.roadSystem.clear();
+    this.zoomSetting.reset();
   }
 }

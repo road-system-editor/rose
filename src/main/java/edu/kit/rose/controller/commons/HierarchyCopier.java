@@ -22,8 +22,15 @@ public class HierarchyCopier {
   private final ReplacementLog replacementLog;
   private final RoadSystem target;
 
+  /**
+   *  Constructor.
+   *
+   * @param replacementLog the log that stores the replacement. Can be null if the copy methods
+   *                       should not make a replacement.
+   * @param target the roadSystem where the copies will be created.
+   */
   public HierarchyCopier(ReplacementLog replacementLog, RoadSystem target) {
-    this.replacementLog = Objects.requireNonNull(replacementLog);
+    this.replacementLog = replacementLog;
     this.target = Objects.requireNonNull(target);
   }
 

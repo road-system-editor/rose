@@ -4,6 +4,9 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import edu.kit.rose.controller.roadsystem.RoadSystemController;
 import edu.kit.rose.infrastructure.Position;
+import edu.kit.rose.infrastructure.UnitObserver;
+import edu.kit.rose.model.ZoomSetting;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
@@ -15,13 +18,14 @@ import javafx.scene.layout.VBox;
  * The zoomable ScrollPane is a ScrollPane that adds pan and zoom gesture support to its content.
  * Inspired by https://stackoverflow.com/a/44314455
  */
-public class ZoomableScrollPane extends ScrollPane {
+public class ZoomableScrollPane extends ScrollPane implements UnitObserver<ZoomSetting> {
 
   private static final double ZOOM_SPEED = .02;
   private static final double BASE_MOVE_SPEED = 0.1;
   private static final int MAX_ZOOM_IN = 3;
   private static final int MAX_ZOOM_OUT = -100; //TODO: set back to 1
   private static final int BUTTON_ZOOM_STRENGTH = 1;
+  private static final double POS_APPROXIMATION = 25;
 
   private Grid grid;
   private Group gridGroup;
@@ -58,12 +62,12 @@ public class ZoomableScrollPane extends ScrollPane {
     setFitToHeight(true);
     setFitToWidth(true);
     setupKeyboardControl();
-    setHvalue(0.5);
-    setVvalue(0.5);
     hvalueProperty().addListener((observable, oldValue, newValue) ->
-        roadSystemController.setEditorPosition(getCenterOfViewPos()));
+        Platform.runLater(() ->
+          roadSystemController.setEditorPosition(getCenterOfViewPos())));
     vvalueProperty().addListener((observable, oldValue, newValue) ->
-            roadSystemController.setEditorPosition(getCenterOfViewPos()));
+        Platform.runLater(() ->
+            roadSystemController.setEditorPosition(getCenterOfViewPos())));
   }
 
   private void initGrid() {
@@ -185,17 +189,6 @@ public class ZoomableScrollPane extends ScrollPane {
     moveH(getCurrentMoveSpeed());
   }
 
-
-  /**
-   * Centers the currently visible space on the coordinates provided.
-   *
-   * @param x the x coordinate.
-   * @param y the y coordinate.
-   */
-  public void setCenterOfViewPos(int x, int y) {
-    setCenterOfViewPos(new Position(x, y));
-  }
-
   /**
    * Centers the currently visible space on the position provided.
    *
@@ -209,7 +202,6 @@ public class ZoomableScrollPane extends ScrollPane {
     var v = position.getY() / grid.getHeight();
     setHvalue(h);
     setVvalue(v);
-    roadSystemController.setEditorPosition(position);
   }
 
   private void moveH(double amount) {
@@ -236,8 +228,7 @@ public class ZoomableScrollPane extends ScrollPane {
 
   private Position getCenterOfViewPos() {
     var centerOfViewPoint = getCenterOfViewPoint();
-    return new Position((int) Math.round(centerOfViewPoint.getX()),
-        (int) Math.round(centerOfViewPoint.getY()));
+    return new Position(centerOfViewPoint.getX(), centerOfViewPoint.getY());
   }
 
   private void setupKeyboardControl() {
@@ -254,4 +245,14 @@ public class ZoomableScrollPane extends ScrollPane {
     });
   }
 
+  @Override
+  public void notifyChange(ZoomSetting unit) {
+    var currentCenter = getCenterOfViewPos();
+    var newCenter = unit.getCenterOfView();
+    var horizontalDistance = Math.abs(currentCenter.getX() - newCenter.getX());
+    var verticalDistance = Math.abs(currentCenter.getY() - newCenter.getY());
+    if (horizontalDistance > POS_APPROXIMATION || verticalDistance > POS_APPROXIMATION) {
+      setCenterOfViewPos(newCenter);
+    }
+  }
 }

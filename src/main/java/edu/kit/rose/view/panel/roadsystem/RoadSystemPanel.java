@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.input.KeyEvent;
@@ -96,6 +97,11 @@ public class RoadSystemPanel extends FxmlContainer
   public void init(Injector injector) {
     super.init(injector);
     this.zoomContainer.init(injector);
+    Platform.runLater(() -> {
+      project.getZoomSetting().addSubscriber(zoomContainer);
+      project.getZoomSetting().notifySubscribers();
+    });
+
 
     this.segmentViewFactory = new SegmentViewFactory(getTranslator(), this.roadSystemController);
 

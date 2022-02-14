@@ -1,22 +1,18 @@
 package edu.kit.rose.model;
 
 import edu.kit.rose.infrastructure.Position;
-import edu.kit.rose.infrastructure.UnitObservable;
-import edu.kit.rose.infrastructure.UnitObserver;
-import java.util.ArrayList;
-import java.util.List;
+import edu.kit.rose.infrastructure.RoseUnitObservable;
 
 /**
  * A ZoomSetting describes the Position and "level of Zoom" a possible View of the RoadSystem has.
  * It uses a Number to describe the amount of Zoom a view has and a {@link Position}
  * for the center of the current view.
  */
-public class ZoomSetting implements UnitObservable<ZoomSetting> {
+public class ZoomSetting extends RoseUnitObservable<ZoomSetting> {
   private static final double DEFAULT_ZOOM_LEVEL = 1.0;
 
   private Position centerOfView;
   private double zoomLevel;
-  private final List<UnitObserver<ZoomSetting>> observers = new ArrayList<>();
 
   public ZoomSetting(Position centerOfView) {
     this.centerOfView = centerOfView;
@@ -62,24 +58,7 @@ public class ZoomSetting implements UnitObservable<ZoomSetting> {
   }
 
   @Override
-  public void notifySubscribers() {
-    observers.forEach(e -> e.notifyChange(this));
-  }
-
-  @Override
   public ZoomSetting getThis() {
     return this;
-  }
-
-  @Override
-  public void addSubscriber(UnitObserver<ZoomSetting> observer) {
-    if (!this.observers.contains(observer)) {
-      this.observers.add(observer);
-    }
-  }
-
-  @Override
-  public void removeSubscriber(UnitObserver<ZoomSetting> observer) {
-    this.observers.remove(observer);
   }
 }

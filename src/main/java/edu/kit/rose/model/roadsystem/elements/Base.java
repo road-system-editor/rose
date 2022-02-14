@@ -36,14 +36,10 @@ public class Base extends HighwaySegment implements UnitObserver<Connector> {
   protected void initConnectors(List<AttributeAccessor<?>> entryAttributesList,
                                 List<AttributeAccessor<?>> exitAttributesList) {
     this.entryConnector = new MovableConnector(ConnectorType.ENTRY,
-        new Position(getCenter().getX(),
-            getCenter().getY() + INITIAL_ENTRY_DISTANCE_TO_CENTER),
-        entryAttributesList);
+        new Position(0, INITIAL_ENTRY_DISTANCE_TO_CENTER), entryAttributesList);
     this.entryConnector.addSubscriber(this);
     this.exitConnector = new MovableConnector(ConnectorType.EXIT,
-        new Position(getCenter().getX(),
-            getCenter().getY() - INITIAL_EXIT_DISTANCE_TO_CENTER),
-        exitAttributesList);
+        new Position(0, -INITIAL_EXIT_DISTANCE_TO_CENTER), exitAttributesList);
     this.exitConnector.addSubscriber(this);
     connectors.add(entryConnector);
     connectors.add(exitConnector);
@@ -74,8 +70,8 @@ public class Base extends HighwaySegment implements UnitObserver<Connector> {
         absolutEntryConnectorPosition.getX() - newCenter.getX(),
         absolutEntryConnectorPosition.getY() - newCenter.getY());
 
-    ((MovableConnector) exitConnector).setPosition(newRelativeExitConnectorPosition);
-    ((MovableConnector) entryConnector).setPosition(newRelativeEntryConnectorPosition);
+    getExit().setPosition(newRelativeExitConnectorPosition);
+    getEntry().setPosition(newRelativeEntryConnectorPosition);
   }
 
   private Position getCenterBetweenPositions(Position position1, Position position2) {
@@ -85,6 +81,16 @@ public class Base extends HighwaySegment implements UnitObserver<Connector> {
     return new Position(
         position2.getX() + diffX / 2,
         position2.getY() + diffY / 2);
+  }
+
+  @Override
+  public MovableConnector getEntry() {
+    return (MovableConnector) entryConnector;
+  }
+
+  @Override
+  public MovableConnector getExit() {
+    return (MovableConnector) exitConnector;
   }
 
 

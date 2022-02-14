@@ -79,6 +79,18 @@ public class Position {
         this.getY() + translation.getY());
   }
 
+  /**
+   * Provides the distance between this position and a provided position.
+   *
+   * @param position the other position
+   * @return the distance
+   */
+  public double distanceTo(Position position) {
+    var horizontalDistance = xcoordinate - position.getX();
+    var verticalDistance = ycoordinate - position.getY();
+    return Math.sqrt(Math.pow(horizontalDistance, 2) + Math.pow(verticalDistance, 2));
+  }
+
   @Override
   public boolean equals(Object obj) {
     if (getClass() != obj.getClass()) {
@@ -96,6 +108,6 @@ public class Position {
 
   @Override
   public String toString() {
-    return String.format("Position [x=%d, y=%d]", getX(), getY());
+    return String.format("Position [x=%f, y=%f]", getX(), getY());
   }
 }

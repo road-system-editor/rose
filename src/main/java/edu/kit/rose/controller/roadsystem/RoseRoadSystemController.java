@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javafx.geometry.Point2D;
 
 /**
  * Provides the functionality for managing roadsystems
@@ -107,7 +106,7 @@ public class RoseRoadSystemController extends Controller
   }
 
   @Override
-  public void deleteStreetSegment() { //TODO: can only delete on segment at a time
+  public void deleteStreetSegments() { //TODO: can only delete on segment at a time
     var selectedSegments = selectionBuffer.getSelectedSegments();
     if (selectedSegments.size() == 1) {
       var segment = selectedSegments.get(0);
@@ -296,37 +295,39 @@ public class RoseRoadSystemController extends Controller
 
   private void buildConnection(Connector draggedConnector) {
     var connectorSegmentMap = getConnectorSegmentMap();
-    var draggedConnectorPosPoint =
-        getConnectorPosPoint(draggedConnector, connectorSegmentMap.get(draggedConnector));
+    var draggedConnectorPos = connectorSegmentMap.get(draggedConnector)
+        .getAbsoluteConnectorPosition(draggedConnector);
     var intersectingConnectors =
-        getIntersectingConnectors(draggedConnectorPosPoint, connectorSegmentMap);
+        getIntersectingConnectors(draggedConnectorPos, connectorSegmentMap);
     intersectingConnectors.remove(draggedConnector);
     if (!intersectingConnectors.isEmpty()) {
       var closestConnector =
-          getClosestConnectorToPoint(intersectingConnectors, draggedConnectorPosPoint,
+          getClosestConnectorToPoint(intersectingConnectors, draggedConnectorPos,
               connectorSegmentMap);
       this.roadSystem.connectConnectors(draggedConnector, closestConnector);
     }
   }
 
-  private Connector getClosestConnectorToPoint(List<Connector> connectors, Point2D point,
+  private Connector getClosestConnectorToPoint(List<Connector> connectors, Position position,
                                      Map<Connector, Segment> connectorSegmentMap) {
     var connectorList = new LinkedList<>(connectors);
     connectorList.sort((connector1, connector2) -> {
-      Double distance1 = getDistanceFromConnectorToPoint(connector1, point, connectorSegmentMap);
-      Double distance2 = getDistanceFromConnectorToPoint(connector2, point, connectorSegmentMap);
+      Double distance1 = getDistanceFromConnectorToPosition(connector1,
+          position, connectorSegmentMap);
+      Double distance2 = getDistanceFromConnectorToPosition(connector2,
+          position, connectorSegmentMap);
       return distance1.compareTo(distance2);
     });
     return connectorList.get(0);
   }
 
-  private List<Connector> getIntersectingConnectors(Point2D draggedConnectorPosPoint,
+  private List<Connector> getIntersectingConnectors(Position draggedConnectorPos,
                             Map<Connector, Segment> connectorSegmentMap) {
     return connectorSegmentMap.keySet().stream()
         .filter(connector -> {
-          var connectorPosPoint =
-              getConnectorPosPoint(connector, connectorSegmentMap.get(connector));
-          return draggedConnectorPosPoint.distance(connectorPosPoint) <= INTERSECT_DISTANCE;
+          var connectorPos = connectorSegmentMap.get(connector)
+              .getAbsoluteConnectorPosition(connector);
+          return draggedConnectorPos.distanceTo(connectorPos) <= INTERSECT_DISTANCE;
         }).collect(Collectors.toList());
   }
 
@@ -342,14 +343,9 @@ public class RoseRoadSystemController extends Controller
     return connectorSegmentMap;
   }
 
-  private Point2D getConnectorPosPoint(Connector connector, Segment segment) {
-    var connectorPos = segment.getAbsoluteConnectorPosition(connector);
-    return new Point2D(connectorPos.getX(), connectorPos.getY());
-  }
-
-  private double getDistanceFromConnectorToPoint(Connector connector, Point2D point,
+  private double getDistanceFromConnectorToPosition(Connector connector, Position position,
                                                  Map<Connector, Segment> connectorSegmentMap) {
-    return getConnectorPosPoint(connector, connectorSegmentMap.get(connector))
-        .distance(point);
+    return connectorSegmentMap.get(connector).getAbsoluteConnectorPosition(connector)
+        .distanceTo(position);
   }
 }

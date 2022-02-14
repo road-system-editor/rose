@@ -48,7 +48,7 @@ public interface RoadSystemController extends SetObservable<Segment, RoadSystemC
   /**
    * Deletes the currently marked {@link Segment}.
    */
-  void deleteStreetSegment();
+  void deleteStreetSegments();
 
   /**
    * Stores the starting {@link Position} of the {@link Segment} which will be dragged.

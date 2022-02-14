@@ -33,4 +33,11 @@ public class PositionTest {
     Assertions.assertEquals(SecondTestInt, position.getX());
     Assertions.assertEquals(FirstTestInt, position.getY());
   }
+
+  @Test
+  public void testDistanceTo() {
+    Position position1 = new Position(FirstTestInt, FirstTestInt);
+    Position position2 = new Position(FirstTestInt, SecondTestInt);
+    Assertions.assertEquals(2, position1.distanceTo(position2));
+  }
 }

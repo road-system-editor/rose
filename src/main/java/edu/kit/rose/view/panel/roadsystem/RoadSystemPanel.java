@@ -71,7 +71,7 @@ public class RoadSystemPanel extends FxmlContainer
 
   private SegmentViewFactory segmentViewFactory;
 
-  private final  Map<Segment, SegmentView<?>> segmentViewMap = new HashMap<>();
+  private final Map<Segment, SegmentView<?>> segmentViewMap = new HashMap<>();
   private final Map<Connection, ConnectionView> connectionViewMap = new HashMap<>();
 
 
@@ -200,7 +200,7 @@ public class RoadSystemPanel extends FxmlContainer
     var keyCode = keyEvent.getCode();
     return switch (keyCode) {
       case R -> roadSystemController::rotateSegment;
-      case DELETE -> roadSystemController::deleteStreetSegment;
+      case DELETE -> roadSystemController::deleteStreetSegments;
       case Z -> keyEvent.isControlDown() ? applicationController::undo : () -> {};
       case Y -> keyEvent.isControlDown() ? applicationController::redo : () -> {};
       default -> () -> {};

@@ -163,21 +163,6 @@ public class Grid extends Pane implements SetObserver<Segment, RoadSystemControl
     mouseEvent.consume();
   }
 
-  //TODO: replace with reading from controller, as this only works for bottom right
-  private void drawSegmentViewsAsSelected() {
-    segmentViews.forEach(segmentView -> {
-      var centerX = segmentView.getSegment().getCenter().getX();
-      var centerY = segmentView.getSegment().getCenter().getY();
-      segmentView.setDrawAsSelected(
-          centerX >= selectionBox.getStartingPoint().getX()
-              && centerX <= selectionBox.getLastMousePosition().getX()
-              && centerY >= selectionBox.getStartingPoint().getY()
-              && centerY <= selectionBox.getLastMousePosition().getY()
-      );
-      segmentView.draw();
-    });
-  }
-
   private void onConnectorViewDragged(ConnectorView connectorView) {
     connectorView.setDragMode(true);
     var intersectingConnectorViews =

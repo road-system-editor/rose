@@ -9,6 +9,7 @@ import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterion;
 import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterionType;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import edu.kit.rose.view.commons.FxmlContainer;
+import edu.kit.rose.view.commons.UnmountUtility;
 
 /**
  * The criteria panel allows the user to set up the criteria.
@@ -31,7 +32,12 @@ public abstract class CriterionPanel<T extends PlausibilityCriterion> extends Fx
   protected CriterionPanel(String fxmlResourceName, T criterion) {
     super(fxmlResourceName);
     this.criterion = criterion;
-    this.criterion.addSubscriber(this);
+  }
+
+  @Override
+  public void init(Injector injector) {
+    super.init(injector);
+    UnmountUtility.subscribeUntilUnmount(this, this, criterion);
   }
 
   /**
@@ -45,9 +51,7 @@ public abstract class CriterionPanel<T extends PlausibilityCriterion> extends Fx
   public static CriterionPanel<? extends PlausibilityCriterion> forCriterion(Injector injector,
       PlausibilityCriterion criterion) {
     if (criterion.getType() == PlausibilityCriterionType.COMPATIBILITY) {
-      var panel = new CompatibilityCriterionPanel((CompatibilityCriterion) criterion);
-      panel.init(injector);
-      return panel;
+      return new CompatibilityCriterionPanel((CompatibilityCriterion) criterion);
     }
     return null;
   }

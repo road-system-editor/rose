@@ -1,6 +1,7 @@
 package edu.kit.rose.view.panel.criterion;
 
 import com.google.inject.Injector;
+import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.model.plausibility.criteria.CompatibilityCriterion;
 import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterion;
@@ -106,30 +107,42 @@ class CompatibilityCriterionPanel
   private void onAttributeChange(ObservableValue<? extends AttributeType> observable,
                                  AttributeType oldValue, AttributeType newValue) {
     if (oldValue != newValue) {
-      getController().setCompatibilityCriterionAttributeType(getCriterion(), newValue);
+      Platform.runLater(() -> {
+        getController().setCompatibilityCriterionAttributeType(getCriterion(), newValue);
 
+        clearValidationSelector();
+
+        this.validationSelector.getItems().removeIf(type ->
+            !getCriterion().getCompatibleOperatorTypes().contains(type));
+        for (var validationType : getCriterion().getCompatibleOperatorTypes()) {
+          if (!validationSelector.getItems().contains(validationType)) {
+            this.validationSelector.getItems().add(validationType);
+          }
+        }
+      });
+    }
+  }
+
+  private void clearValidationSelector() {
+    SortedBox<ValidationType> compatibleTypes = getCriterion().getCompatibleOperatorTypes();
+    ValidationType selectedType = validationSelector.getSelectionModel().getSelectedItem();
+
+    if (!compatibleTypes.contains(selectedType)) {
       this.validationSelector.getSelectionModel().clearSelection();
-      /*
-      TODO: Because the old subscribers (all CompatibilityCriterionPanels that existed) dont get
-       removed. This is called in all of them, some of them will have old Values that differ from
-        the current state. This means they will clear the validationSelector which removes the
-        choice. (I think there is a similar Problem with the Name Attribute and maybe some other.
-       */
-      this.validationSelector.getItems().clear();
-      for (var validationType : getCriterion().getCompatibleOperatorTypes()) {
-        this.validationSelector.getItems().add(validationType);
-      }
+      setDiscrepancyFieldEnabled(false);
     }
   }
 
   private void onValidationChange(ObservableValue<? extends ValidationType> observable,
                                  ValidationType oldValue, ValidationType newValue) {
     if (oldValue != newValue) {
-      getController().setCompatibilityCriterionValidationType(getCriterion(), newValue);
+      Platform.runLater(() -> {
+        getController().setCompatibilityCriterionValidationType(getCriterion(), newValue);
 
-      if (newValue != null) {
-        setDiscrepancyFieldEnabled(newValue.hasDiscrepancy());
-      }
+        if (newValue != null) {
+          setDiscrepancyFieldEnabled(newValue.hasDiscrepancy());
+        }
+      });
     }
   }
 

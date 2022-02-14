@@ -69,11 +69,10 @@ public class CriteriaWindow extends RoseWindow {
   }
 
   private void onSelect(PlausibilityCriterion plausibilityCriterion) {
-    if (plausibilityCriterion == null) {
-      this.criterionContainer.setContent(null);
-    } else {
-      this.criterionContainer.setContent(
-          CriterionPanel.forCriterion(this.injector, plausibilityCriterion));
+    var panel = CriterionPanel.forCriterion(this.injector, plausibilityCriterion);
+    this.criterionContainer.setContent(panel);
+    if (panel != null) {
+      panel.init(injector);
     }
   }
 }

@@ -10,6 +10,7 @@ import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterion;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import edu.kit.rose.view.commons.EnumLocalizationUtility;
 import edu.kit.rose.view.commons.FxmlContainer;
+import edu.kit.rose.view.commons.UnmountUtility;
 import java.util.Collection;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
@@ -67,6 +68,7 @@ public class ApplicableSegmentsSelector extends FxmlContainer
 
     if (this.criterion != null) {
       this.criterion.addSubscriber(this);
+      UnmountUtility.subscribeUntilUnmount(this, this, criterion);
 
       this.typeSelector.getSelectionModel().clearSelection();
       for (var selected : this.criterion.getSegmentTypes()) {

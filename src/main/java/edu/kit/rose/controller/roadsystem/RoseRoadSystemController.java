@@ -2,6 +2,7 @@ package edu.kit.rose.controller.roadsystem;
 
 import edu.kit.rose.controller.command.ChangeCommandBuffer;
 import edu.kit.rose.controller.commons.Controller;
+import edu.kit.rose.controller.commons.HierarchyCopier;
 import edu.kit.rose.controller.commons.ReplacementLog;
 import edu.kit.rose.controller.commons.StorageLock;
 import edu.kit.rose.controller.navigation.Navigator;
@@ -47,6 +48,7 @@ public class RoseRoadSystemController extends Controller
   private Connector dragConnector;
   private Position initialConnectorDragPosition;
 
+
   private final Set<SetObserver<Segment, RoadSystemController>> observers;
 
   /**
@@ -57,6 +59,7 @@ public class RoseRoadSystemController extends Controller
    * @param navigator           the navigator for the controller
    * @param selectionBuffer     the container that stores selected segments
    * @param project             the model facade for project data
+   * @param replacementLog      the log that stores all the replacements of elements
    */
   public RoseRoadSystemController(ChangeCommandBuffer changeCommandBuffer, StorageLock storageLock,
                                   Navigator navigator, SelectionBuffer selectionBuffer,
@@ -67,6 +70,7 @@ public class RoseRoadSystemController extends Controller
     this.selectionBuffer = selectionBuffer;
     this.project = project;
     this.replacementLog = replacementLog;
+
 
     observers = new HashSet<>();
   }
@@ -87,6 +91,13 @@ public class RoseRoadSystemController extends Controller
         = new CreateStreetSegmentCommand(this.replacementLog, this.project, segmentType);
 
     changeCommandBuffer.addAndExecuteCommand(createStreetSegmentCommand);
+  }
+
+  @Override
+  public void duplicateStreetSegment(Segment segment) {
+    DuplicateStreetSegmentCommand duplicateStreetSegmentCommand
+            = new DuplicateStreetSegmentCommand(this.replacementLog, this.project, segment);
+    changeCommandBuffer.addAndExecuteCommand(duplicateStreetSegmentCommand);
   }
 
   @Override

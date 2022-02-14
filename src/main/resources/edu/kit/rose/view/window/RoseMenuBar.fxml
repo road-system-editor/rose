@@ -7,7 +7,8 @@
          type="Pane"
          fx:id="parentContainer">
 
-    <MenuBar fx:id="menuBar" prefWidth="${parentContainer.width}">
+    <MenuBar fx:id="menuBar" prefWidth="${parentContainer.width}"
+             style="-fx-font-family: Arial;">
         <Menu fx:id="project">
             <MenuItem fx:id="newProject"/>
             <MenuItem fx:id="loadProject"/>
@@ -22,7 +23,7 @@
         <Menu fx:id="validation">
             <MenuItem fx:id="criteria"/>
         </Menu>
-        <Menu fx:id="measurements">
+        <Menu fx:id="measurements" disable="true">
             <MenuItem fx:id="measurementsOverview"/>
         </Menu>
         <Menu fx:id="language">

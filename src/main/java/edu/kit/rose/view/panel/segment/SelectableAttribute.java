@@ -1,14 +1,10 @@
 package edu.kit.rose.view.panel.segment;
 
 import edu.kit.rose.controller.attribute.AttributeController;
-import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.view.commons.FxmlContainer;
 import java.util.Collection;
 import java.util.Objects;
-import java.util.function.Function;
-import javafx.beans.property.SimpleListProperty;
-import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
@@ -22,6 +18,8 @@ import javafx.scene.control.ListCell;
  * @param <T> the java type of the attribute value.
  */
 abstract class SelectableAttribute<T> extends EditableAttribute<T> {
+  private static final String ATTRIBUTE_PANEL_STYLE =
+      "/edu/kit/rose/view/panel/segment/AttributePanel.css";
 
   private ComboBox<T> inputField;
 
@@ -32,12 +30,21 @@ abstract class SelectableAttribute<T> extends EditableAttribute<T> {
   SelectableAttribute(AttributeAccessor<T> attribute, AttributeController controller,
                       Collection<T> options) {
     super(attribute, controller);
+    setupView();
     this.inputField.getItems().addAll(Objects.requireNonNull(options));
+  }
+
+  private void setupView() {
+    String attributeStyleSheetUrl =
+        Objects.requireNonNull(getClass().getResource(ATTRIBUTE_PANEL_STYLE)).toExternalForm();
+    this.getStylesheets().add(attributeStyleSheetUrl);
   }
 
   @Override
   protected Node createInputField() {
     this.inputField = new ComboBox<>();
+    inputField.getStyleClass().add("comboBox");
+    inputField.setMaxHeight(10);
     inputField.setCellFactory(listView -> new ListCell<>() {
       @Override
       protected void updateItem(T item, boolean empty) {
@@ -50,6 +57,7 @@ abstract class SelectableAttribute<T> extends EditableAttribute<T> {
       }
     });
 
+    inputField.setPrefWidth(150);
     inputField.getSelectionModel().selectedItemProperty().addListener(
         (options, old, newVal) -> getController().setAttribute(getAttribute(), newVal));
 

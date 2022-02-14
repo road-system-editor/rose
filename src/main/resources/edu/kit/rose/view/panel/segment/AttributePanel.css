@@ -1,0 +1,46 @@
+.textField {
+    -fx-pref-height: 27;
+    -fx-border-radius: 15;
+    -fx-background-radius: 15;
+    -fx-font-family: Arial;
+    -fx-font-size: 12
+}
+.comboBox {
+    -fx-border-radius: 15;
+    -fx-background-radius: 15;
+    -fx-background-color: white;
+    -fx-font-family: Arial;
+    -fx-border-style: solid;
+    -fx-border-color: #8d8d8d;
+    -fx-border-width: 0.5
+}
+
+.segmentEditorPanel {
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10
+}
+
+.tabPane {
+    -fx-background-radius: 10;
+    -fx-background-color: transparent
+}
+
+.tab {
+    -fx-font-family: Arial;
+    -fx-font-size: 13;
+    -fx-background-radius: 5 5 0 0;
+}
+
+.attributeLabel {
+    -fx-font-family: Arial;
+    -fx-font-size: 12;
+    -fx-pref-width: 120px;
+    -fx-padding: 5px;
+}
+
+.attributeList {
+    -fx-padding: 5 5 5 0;
+    -fx-spacing: 5
+}

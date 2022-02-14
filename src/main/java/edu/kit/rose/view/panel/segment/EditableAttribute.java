@@ -11,6 +11,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 
 /**
@@ -21,9 +22,12 @@ import javafx.scene.layout.HBox;
  */
 abstract class EditableAttribute<T> extends FxmlContainer
     implements UnitObserver<AttributeAccessor<T>> {
+  private static final String ATTRIBUTE_PANEL_STYLE =
+      "/edu/kit/rose/view/panel/segment/AttributePanel.css";
   protected static final String INHOMOGENEOUS_VALUE_PLACEHOLDER = "—";
   private final AttributeAccessor<T> attribute;
   private final AttributeController controller;
+  private final Tooltip tooltip;
 
   @FXML
   private HBox layout;
@@ -41,7 +45,16 @@ abstract class EditableAttribute<T> extends FxmlContainer
     this.controller = Objects.requireNonNull(controller);
     //UnmountUtility.subscribeUntilUnmount(this, this, attribute); TODO run later bc this is not
     // mounted yet
+    setupView();
     layout.getChildren().add(createInputField());
+    tooltip = new Tooltip();
+    label.setTooltip(tooltip);
+  }
+
+  private void setupView() {
+    String attributeStyleSheetUrl =
+        Objects.requireNonNull(getClass().getResource(ATTRIBUTE_PANEL_STYLE)).toExternalForm();
+    this.getStylesheets().add(attributeStyleSheetUrl);
   }
 
   /**
@@ -67,6 +80,8 @@ abstract class EditableAttribute<T> extends FxmlContainer
     label.setText(EnumLocalizationUtility
         .localizeAttributeTypeTitle(getTranslator(), attribute.getAttributeType()));
     System.out.println(attribute.getAttributeType() + " -- " + label.getText());
+    tooltip.setText(EnumLocalizationUtility
+        .localizeAttributeTypeTitle(getTranslator(), attribute.getAttributeType()));
   }
 
   /**

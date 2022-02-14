@@ -89,7 +89,8 @@ public class RoadSystemPanel extends FxmlContainer
   public void init(Injector injector) {
     super.init(injector);
 
-    // remove this when implementing the road system panel, this is for testing the attribute editor
+    // TODO: remove this when implementing the road system panel, this is for testing the attribute
+    // editor
     Segment segment = new Base("hello");
     SegmentEditorPanel segmentEditorPanel = new SegmentEditorPanel();
     stackPane.getChildren().add(segmentEditorPanel);

@@ -114,7 +114,7 @@ class SegmentBlueprint extends StackPane {
   }
 
   private void handleOnDragDetected(MouseEvent event) {
-    Dragboard db = startDragAndDrop(TransferMode.ANY);
+    Dragboard db = startDragAndDrop(TransferMode.COPY);
     ClipboardContent content = new ClipboardContent();
     content.putString(type.toString());
     db.setContent(content);

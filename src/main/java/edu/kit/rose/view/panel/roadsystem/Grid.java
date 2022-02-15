@@ -4,6 +4,7 @@ import edu.kit.rose.controller.roadsystem.RoadSystemController;
 import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.model.roadsystem.elements.Segment;
+import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import edu.kit.rose.view.commons.ConnectorView;
 import edu.kit.rose.view.commons.SegmentView;
 import java.util.Collection;
@@ -15,7 +16,9 @@ import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
+import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
@@ -105,6 +108,27 @@ public class Grid extends Pane implements SetObserver<Segment, RoadSystemControl
   private void setEventListeners() {
     this.setOnMouseDragged(this::onMouseDragged);
     this.setOnMouseReleased(this::onMouseDragReleased);
+
+    this.setOnDragOver(dragEvent -> {
+      if (dragEvent.getGestureSource() != this && dragEvent.getDragboard().hasString()) {
+        dragEvent.acceptTransferModes(TransferMode.COPY);
+      }
+    });
+
+    this.setOnDragDropped(dragEvent -> {
+      Dragboard db = dragEvent.getDragboard();
+      if (db.hasString()) {
+        SegmentType segmentType = null;
+        try {
+          segmentType = SegmentType.valueOf(db.getString());
+        } catch (IllegalArgumentException iaex) {
+          return;
+        }
+
+        this.controller.createStreetSegment(segmentType);
+      }
+    });
+
     this.setOnMouseClicked(mouseEvent -> {
       if (!dragInProgress) {
         controller.clearSegmentSelection();

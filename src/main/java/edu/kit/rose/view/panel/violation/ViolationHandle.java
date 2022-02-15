@@ -2,7 +2,6 @@ package edu.kit.rose.view.panel.violation;
 
 import edu.kit.rose.controller.plausibility.PlausibilityController;
 import edu.kit.rose.infrastructure.SetObserver;
-import edu.kit.rose.infrastructure.UnitObserver;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterion;
 import edu.kit.rose.model.plausibility.violation.Violation;
@@ -14,7 +13,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
-import org.apache.commons.collections4.functors.ComparatorPredicate;
 
 
 /**
@@ -97,11 +95,6 @@ public class ViolationHandle extends FxmlContainer implements SetObserver<Segmen
   @Override
   protected Collection<FxmlContainer> getSubFxmlContainer() {
     return null;
-  }
-
-
-  Violation getViolation() {
-    return this.violation;
   }
 
   @Override

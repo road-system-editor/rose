@@ -19,6 +19,7 @@
     -fx-border-style: solid;
     -fx-border-color: #8d8d8d;
     -fx-border-width: 0.5;
+    -fx-effect: innershadow(three-pass-box, #adadad, 2, 0, 0, 1);
 }
 
 .comboBox:showing {

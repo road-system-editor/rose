@@ -7,6 +7,7 @@ import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Group;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.view.commons.UnmountUtility;
+import javafx.application.Platform;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.input.ClipboardContent;
@@ -159,20 +160,24 @@ public class ElementTreeCell extends TreeCell<Element>
 
   @Override
   public void notifyAddition(Element unit) {
-    TreeItem<Element> itemToPlaceOn = getTreeItem();
-    if (itemToPlaceOn != null) {
-      itemToPlaceOn.getChildren().add(new TreeItem<>(unit));
-    }
+    Platform.runLater(() -> {
+      TreeItem<Element> itemToPlaceOn = getTreeItem();
+      if (itemToPlaceOn != null) {
+        itemToPlaceOn.getChildren().add(new TreeItem<>(unit));
+      }
+    });
   }
 
 
   @Override
   public void notifyRemoval(Element unit) {
-    TreeItem<Element> treeItem = getTreeItem().getParent();
-    if (treeItem != null) {
-      treeItem.getChildren().removeIf(child -> child.getValue() == unit);
-      unit.removeSubscriber(this);
-    }
+    Platform.runLater(() -> {
+      TreeItem<Element> treeItem = getTreeItem().getParent();
+      if (treeItem != null) {
+        treeItem.getChildren().removeIf(child -> child.getValue() == unit);
+        unit.removeSubscriber(this);
+      }
+    });
   }
 
   @Override

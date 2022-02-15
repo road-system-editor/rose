@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import edu.kit.rose.controller.hierarchy.HierarchyController;
 import edu.kit.rose.infrastructure.DualSetObserver;
+import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.roadsystem.RoadSystem;
@@ -15,11 +16,13 @@ import edu.kit.rose.view.commons.FxmlContainer;
 import edu.kit.rose.view.commons.SearchBar;
 import java.util.Collection;
 import java.util.List;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.DragEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 
@@ -71,6 +74,11 @@ public class HierarchyPanel extends FxmlContainer
 
     elementsTreeView.setOnDragOver(this::onDragOver);
     elementsTreeView.setOnDragDropped(this::onDragDropped);
+    createGroupButton.setOnMouseClicked(this::onCreateGroupButtonClicked);
+  }
+
+  private void onCreateGroupButtonClicked(MouseEvent mouseEvent) {
+    this.controller.createGroup();
   }
 
   private void onDragOver(DragEvent dragEvent) {
@@ -100,8 +108,6 @@ public class HierarchyPanel extends FxmlContainer
     dragEvent.consume();
   }
 
-
-
   @Override
   protected void updateTranslatableStrings(Language lang) {
     createGroupButton.setText(
@@ -117,6 +123,7 @@ public class HierarchyPanel extends FxmlContainer
   @Override
   public void init(Injector injector) {
     super.init(injector);
+    this.project.getRoadSystem().addSubscriber(this);
   }
 
   @Override
@@ -129,13 +136,38 @@ public class HierarchyPanel extends FxmlContainer
 
   @Override
   public void notifyAddition(Element unit) {
-    ElementTreeItem treeItem = new ElementTreeItem(unit);
-    rootItem.getChildren().add(treeItem);
+    Platform.runLater(() -> {
+      if (unit.isContainer()) {
+        SortedBox<Element> elements = ((Group) unit).getElements();
+
+        deleteTreeItemsForElementsRecursive(rootItem, elements);
+
+        ElementTreeItem groupRootItem = new ElementTreeItem(unit);
+        elements.forEach(element -> groupRootItem.getChildren().add(new ElementTreeItem(element)));
+
+        rootItem.getChildren().add(groupRootItem);
+      } else {
+        ElementTreeItem treeItem = new ElementTreeItem(unit);
+        rootItem.getChildren().add(treeItem);
+      }
+    });
+  }
+
+  private void deleteTreeItemsForElementsRecursive(
+      TreeItem<Element> currentTreeItem,
+      SortedBox<Element> elements) {
+    currentTreeItem.getChildren().removeIf(child -> elements.contains(child.getValue()));
+
+    for (TreeItem<Element> treeItem : currentTreeItem.getChildren()) {
+      deleteTreeItemsForElementsRecursive(treeItem, elements);
+    }
   }
 
   @Override
   public void notifyRemoval(Element unit) {
-    rootItem.getChildren().removeIf(child -> child.getValue() == unit);
+    Platform.runLater(() -> {
+      rootItem.getChildren().removeIf(child -> child.getValue() == unit);
+    });
   }
 
   @Override

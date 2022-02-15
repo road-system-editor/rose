@@ -16,6 +16,7 @@ import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
+import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
@@ -108,26 +109,8 @@ public class Grid extends Pane implements SetObserver<Segment, RoadSystemControl
   private void setEventListeners() {
     this.setOnMouseDragged(this::onMouseDragged);
     this.setOnMouseReleased(this::onMouseDragReleased);
-
-    this.setOnDragOver(dragEvent -> {
-      if (dragEvent.getGestureSource() != this && dragEvent.getDragboard().hasString()) {
-        dragEvent.acceptTransferModes(TransferMode.COPY);
-      }
-    });
-
-    this.setOnDragDropped(dragEvent -> {
-      Dragboard db = dragEvent.getDragboard();
-      if (db.hasString()) {
-        SegmentType segmentType = null;
-        try {
-          segmentType = SegmentType.valueOf(db.getString());
-        } catch (IllegalArgumentException iaex) {
-          return;
-        }
-
-        this.controller.createStreetSegment(segmentType);
-      }
-    });
+    this.setOnDragOver(this::onDragOver);
+    this.setOnDragDropped(this::onDragDropped);
 
     this.setOnMouseClicked(mouseEvent -> {
       if (!dragInProgress) {
@@ -135,6 +118,26 @@ public class Grid extends Pane implements SetObserver<Segment, RoadSystemControl
       }
       dragInProgress = false;
     });
+  }
+
+  private void onDragOver(DragEvent dragEvent) {
+    if (dragEvent.getGestureSource() != this && dragEvent.getDragboard().hasString()) {
+      dragEvent.acceptTransferModes(TransferMode.COPY);
+    }
+  }
+
+  private void onDragDropped(DragEvent dragEvent) {
+    Dragboard db = dragEvent.getDragboard();
+    if (db.hasString()) {
+      SegmentType segmentType = null;
+      try {
+        segmentType = SegmentType.valueOf(db.getString());
+      } catch (IllegalArgumentException iaex) {
+        return;
+      }
+
+      this.controller.createStreetSegment(segmentType);
+    }
   }
 
   private void onMouseDragged(MouseEvent mouseDragEvent) {

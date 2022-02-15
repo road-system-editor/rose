@@ -40,9 +40,9 @@ public class HierarchyCopier {
    * @param original the group to copy.
    * @return the copy of the original in the target road system.
    */
-  public Group copyGroup(Group original) {
+  public Group copyGroup(Group original, boolean makeReplacement) {
     Set<Element> elementsCopy = original.getElements().stream()
-        .map(this::copyElement)
+        .map(e -> copyElement(e, makeReplacement))
         .collect(Collectors.toCollection(LinkedHashSet::new));
 
     Group copy = this.target.createGroup(elementsCopy);
@@ -58,12 +58,14 @@ public class HierarchyCopier {
    * @param original the segment to copy.
    * @return the copy of the original in the target road system.
    */
-  public Segment copySegment(Segment original) {
+  public Segment copySegment(Segment original, boolean makeReplacement) {
     Segment copy = this.target.createSegment(original.getSegmentType());
 
     this.copyPositionData(original, copy);
     this.copyAccessors(original, copy);
-    this.replacementLog.replaceElement(original, copy);
+    if (makeReplacement) {
+      this.replacementLog.replaceElement(original, copy);
+    }
 
     return copy;
   }
@@ -74,10 +76,10 @@ public class HierarchyCopier {
    * @param original the element to copy.
    * @return the copy of the original in the target road system.
    */
-  public Element copyElement(Element original) {
+  public Element copyElement(Element original, boolean makeReplacement) {
     return original.isContainer()
-        ? this.copyGroup((Group) original)
-        : this.copySegment((Segment) original);
+        ? this.copyGroup((Group) original, makeReplacement)
+        : this.copySegment((Segment) original, makeReplacement);
   }
 
   private void copyPositionData(Segment source, Segment target) {

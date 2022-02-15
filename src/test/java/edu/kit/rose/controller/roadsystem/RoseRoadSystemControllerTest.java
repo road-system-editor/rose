@@ -132,7 +132,7 @@ public class RoseRoadSystemControllerTest {
             selectionBuffer,
             project,
             replacementLog);
-    controller.duplicateStreetSegment(new Base());
+    controller.duplicateStreetSegment();
     verify(changeCommandBuffer, times(1))
             .addAndExecuteCommand(any(DuplicateStreetSegmentCommand.class));
   }

@@ -15,6 +15,7 @@ import edu.kit.rose.model.roadsystem.elements.Connector;
 import edu.kit.rose.model.roadsystem.elements.MovableConnector;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -94,10 +95,11 @@ public class RoseRoadSystemController extends Controller
   }
 
   @Override
-  public void duplicateStreetSegment(Segment segment) {
-    DuplicateStreetSegmentCommand duplicateStreetSegmentCommand
-            = new DuplicateStreetSegmentCommand(this.replacementLog, this.project, segment,
-                new HierarchyCopier(null, this.project.getRoadSystem()));
+  public void duplicateStreetSegment() {
+    ArrayList<Segment> toDuplicateSegments
+            = new ArrayList<>(this.selectionBuffer.getSelectedSegments());
+    DuplicateStreetSegmentCommand duplicateStreetSegmentCommand = new DuplicateStreetSegmentCommand(
+            this.replacementLog, this.project, toDuplicateSegments);
     changeCommandBuffer.addAndExecuteCommand(duplicateStreetSegmentCommand);
   }
 

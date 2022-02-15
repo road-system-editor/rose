@@ -45,9 +45,9 @@ public class BaseTest {
   @Test
   public void testGetConnectorPosition() {
     Assertions.assertEquals(0, testBase.getEntry().getPosition().getX());
-    Assertions.assertEquals(30, testBase.getEntry().getPosition().getY());
+    Assertions.assertEquals(27, testBase.getEntry().getPosition().getY());
     Assertions.assertEquals(0, testBase.getExit().getPosition().getX());
-    Assertions.assertEquals(-30, testBase.getExit().getPosition().getY());
+    Assertions.assertEquals(-33, testBase.getExit().getPosition().getY());
   }
 
   @Test
@@ -147,13 +147,16 @@ public class BaseTest {
 
   @Test
   public void testMoveSingleConnector() {
-    (testBase.getEntry()).move(new Movement(0, -10));
-    Assertions.assertEquals(testBase.getEntry().getPosition().getX(), 0);
-    Assertions.assertEquals(testBase.getEntry().getPosition().getY(), 25);
-    Assertions.assertEquals(testBase.getCenter().getX(), 0);
-    Assertions.assertEquals(testBase.getCenter().getY(), -5);
-    Assertions.assertEquals(testBase.getExit().getPosition().getX(), 0);
-    Assertions.assertEquals(testBase.getExit().getPosition().getY(), -25);
+    testBase.getEntry().move(new Movement(0, -10));
+    var entryPos = testBase.getAbsoluteConnectorPosition(testBase.getEntry());
+    Assertions.assertEquals(0, entryPos.getX());
+    Assertions.assertEquals(17, entryPos.getY());
+    var centerPos = testBase.getCenter();
+    Assertions.assertEquals(0, centerPos.getX());
+    Assertions.assertEquals(-8, centerPos.getY());
+    var exitPos = testBase.getAbsoluteConnectorPosition(testBase.getExit());
+    Assertions.assertEquals(0, exitPos.getX());
+    Assertions.assertEquals(-33, exitPos.getY());
   }
 
   /**
@@ -221,32 +224,27 @@ public class BaseTest {
 
   @Test
   void rotationTest3() {
-    var connectors = new LinkedList<Connector>();
-    testBase.getConnectors().forEach(connectors::add);
-    var oldPositionExit = new Position(connectors.get(1).getPosition().getX(),
-        connectors.get(1).getPosition().getY());
+    var oldExitPos = testBase.getAbsoluteConnectorPosition(testBase.getExit());
     testBase.rotate(90);
-    Assertions.assertEquals(oldPositionExit.getX(),
-        testBase.getAbsoluteConnectorPosition(connectors.get(1)).getY());
-    Assertions.assertEquals(oldPositionExit.getY(),
-        testBase.getAbsoluteConnectorPosition(connectors.get(1)).getX());
+    Assertions.assertEquals(oldExitPos.getX(),
+        testBase.getAbsoluteConnectorPosition(testBase.getExit()).getY());
+    Assertions.assertEquals(-oldExitPos.getY(),
+        testBase.getAbsoluteConnectorPosition(testBase.getExit()).getX());
   }
 
   @Test
   void rotationTest4() {
-    var connectors = new LinkedList<Connector>();
-    testBase.getConnectors().forEach(connectors::add);
     var moveX = 69;
     var moveY = 420;
     testBase.move(new Movement(moveX, moveY));
-    var oldPositionExitOrigin = new Position(
-        connectors.get(1).getPosition().getX() - moveX,
-        connectors.get(1).getPosition().getY() - moveY);
+    var exitPos = testBase.getAbsoluteConnectorPosition(testBase.getExit());
+    var oldPositionExitOrigin = new Position(exitPos.getX() - moveX,
+        exitPos.getY() - moveY);
     testBase.rotate(90);
-    Assertions.assertEquals(moveY - oldPositionExitOrigin.getX(),
-        testBase.getAbsoluteConnectorPosition(connectors.get(1)).getY());
-    Assertions.assertEquals(moveX + oldPositionExitOrigin.getY(),
-        testBase.getAbsoluteConnectorPosition(connectors.get(1)).getX());
+    Assertions.assertEquals(moveY + oldPositionExitOrigin.getX(),
+        testBase.getAbsoluteConnectorPosition(testBase.getExit()).getY());
+    Assertions.assertEquals(moveX - oldPositionExitOrigin.getY(),
+        testBase.getAbsoluteConnectorPosition(testBase.getExit()).getX());
   }
 
   @Test

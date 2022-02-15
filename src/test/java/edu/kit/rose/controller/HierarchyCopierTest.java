@@ -14,6 +14,7 @@ import edu.kit.rose.model.plausibility.criteria.CriteriaManager;
 import edu.kit.rose.model.roadsystem.GraphRoadSystem;
 import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.TimeSliceSetting;
+import edu.kit.rose.model.roadsystem.attributes.SpeedLimit;
 import edu.kit.rose.model.roadsystem.elements.Base;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Entrance;
@@ -49,7 +50,7 @@ public class HierarchyCopierTest {
     original.setConurbation(true);
     original.setLaneCount(3);
     original.setLength(260);
-    original.setMaxSpeed(60);
+    original.setMaxSpeed(SpeedLimit.SBA);
     original.setSlope(10);
     original.move(new Movement(12, 34));
     original.rotate(74);
@@ -70,7 +71,7 @@ public class HierarchyCopierTest {
     original.setConurbation(false);
     original.setLaneCount(2);
     original.setLength(842);
-    original.setMaxSpeed(100);
+    original.setMaxSpeed(SpeedLimit.T80);
     original.setSlope(11);
     original.move(new Movement(31, 44));
     original.rotate(19);
@@ -91,7 +92,7 @@ public class HierarchyCopierTest {
     original.setConurbation(true);
     original.setLaneCount(1);
     original.setLength(1);
-    original.setMaxSpeed(10);
+    original.setMaxSpeed(SpeedLimit.TUNNEL);
     original.setSlope(1234);
     original.move(new Movement(2, -1));
     original.rotate(10);

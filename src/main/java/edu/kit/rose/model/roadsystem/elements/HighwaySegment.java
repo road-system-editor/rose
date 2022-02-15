@@ -9,6 +9,7 @@ import edu.kit.rose.infrastructure.RoseSortedBox;
 import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
+import edu.kit.rose.model.roadsystem.attributes.SpeedLimit;
 import edu.kit.rose.model.roadsystem.measurements.Measurement;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -48,8 +49,8 @@ public abstract class HighwaySegment
   private final AttributeAccessor<Integer> laneCountAccessor;
   private boolean conurbation = false;
   private final AttributeAccessor<Boolean> conurbationAccessor;
-  private int speedLimit = 100;
-  private final AttributeAccessor<Integer> speedLimitAccessor;
+  private SpeedLimit speedLimit = SpeedLimit.NONE;
+  private final AttributeAccessor<SpeedLimit> speedLimitAccessor;
 
   private int rotation = 0;
 
@@ -304,14 +305,14 @@ public abstract class HighwaySegment
   /**
    * Returns the {@link AttributeType#MAX_SPEED} of this highway segment.
    */
-  public int getMaxSpeed() {
+  public SpeedLimit getMaxSpeed() {
     return speedLimit;
   }
 
   /**
    * Sets the {@link AttributeType#MAX_SPEED} of this highway segment to the given value.
    */
-  public void setMaxSpeed(int maxSpeed) {
+  public void setMaxSpeed(SpeedLimit maxSpeed) {
     this.speedLimit = maxSpeed;
 
     this.speedLimitAccessor.notifySubscribers();

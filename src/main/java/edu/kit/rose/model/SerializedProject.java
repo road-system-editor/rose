@@ -10,6 +10,7 @@ import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.TimeSliceSetting;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
+import edu.kit.rose.model.roadsystem.attributes.SpeedLimit;
 import edu.kit.rose.model.roadsystem.elements.Base;
 import edu.kit.rose.model.roadsystem.elements.Connector;
 import edu.kit.rose.model.roadsystem.elements.Element;
@@ -389,7 +390,7 @@ class SerializedProject {
     @JsonProperty("conurbation")
     private Boolean conurbation;
     @JsonProperty("maxSpeed")
-    private Integer maxSpeed;
+    private SpeedLimit maxSpeed;
 
     @JsonProperty("centerPosition")
     private SerializedVector centerPosition;
@@ -529,7 +530,7 @@ class SerializedProject {
     @JsonProperty("laneCountRamp")
     private Integer laneCountRamp;
     @JsonProperty("maxSpeedRamp")
-    private Integer maxSpeedRamp;
+    private SpeedLimit maxSpeedRamp;
     @JsonProperty("entranceConnectedSegmentId")
     private Integer entranceConnectedSegmentId;
     @JsonProperty("exitConnectedSegmentId")
@@ -636,7 +637,7 @@ class SerializedProject {
     @JsonProperty("laneCountRamp")
     private Integer laneCountRamp;
     @JsonProperty("maxSpeedRamp")
-    private Integer maxSpeedRamp;
+    private SpeedLimit maxSpeedRamp;
     @JsonProperty("entranceConnectedSegmentId")
     private Integer entranceConnectedSegmentId;
     @JsonProperty("exitConnectedSegmentId")

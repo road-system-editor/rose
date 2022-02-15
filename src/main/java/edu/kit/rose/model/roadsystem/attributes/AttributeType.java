@@ -13,54 +13,51 @@ public enum AttributeType {
   /**
    * Every {@link Element} has a name as an attribute.
    */
-  NAME("name", DataType.STRING, false),
+  NAME(DataType.STRING, false),
   /**
    * The physical length of a road segment.
    */
-  LENGTH("length", DataType.INTEGER, true),
+  LENGTH(DataType.INTEGER, true),
   /**
    * The amount of lanes of a road segment.
    */
-  LANE_COUNT("lane count", DataType.INTEGER, true),
+  LANE_COUNT(DataType.INTEGER, true),
   /**
    * The amount of lanes on the ramp of a highway entrance or exit segment.
    */
-  LANE_COUNT_RAMP("lane count ramp", DataType.INTEGER, true),
+  LANE_COUNT_RAMP(DataType.INTEGER, true),
   /**
    * The longitudinal slope of a road, as a percentage.
    */
-  SLOPE("longitudinal slope", DataType.FRACTIONAL, true),
+  SLOPE(DataType.FRACTIONAL, true),
   /**
    * Describes whether a road segment is in an urban area.
    */
-  CONURBATION("conurbation", DataType.BOOLEAN, true),
+  CONURBATION(DataType.BOOLEAN, true),
   /**
    * The speed limit on a road segment, in kilometers per hour.
    */
-  MAX_SPEED("max speed", DataType.INTEGER, true),
+  MAX_SPEED(DataType.SPEED_LIMIT, true),
   /**
    * The speed limit on the ramp of a highway entrance or exit segment, in kilometers per hour.
    */
-  MAX_SPEED_RAMP("max speed ramp", DataType.INTEGER, true),
+  MAX_SPEED_RAMP(DataType.INTEGER, true),
   /**
    * A note for an element by the user.
    */
-  COMMENT("comment", DataType.STRING, false);
+  COMMENT(DataType.STRING, false);
 
-  private final String name;
   private final DataType dataType;
   private final boolean isBulkable;
 
   /**
    * Constructor.
    *
-   * @param name       The name of the AttributeType.
    * @param dataType   The {@link DataType} of the Attribute Type.
    * @param isBulkable A boolean describing if the AttributeType can
    *                   be accessed for multiple {@link Element}s at once.
    */
-  AttributeType(String name, DataType dataType, boolean isBulkable) {
-    this.name = name;
+  AttributeType(DataType dataType, boolean isBulkable) {
     this.dataType = dataType;
     this.isBulkable = isBulkable;
   }
@@ -72,15 +69,6 @@ public enum AttributeType {
    */
   public DataType getDataType() {
     return this.dataType;
-  }
-
-  /**
-   * Provides a String holding the name of the AttributeType.
-   *
-   * @return a String holding the name of the AttributeType.
-   */
-  public String getName() {
-    return this.name;
   }
 
   /**

@@ -172,10 +172,7 @@ public class RoseMenuBar extends FxmlContainer {
    */
   private void registerMenuListeners() {
     // Project
-    newProject.setOnAction(evt -> {
-      /* TODO how do we create projects? */
-      System.out.println("x");
-    });
+    newProject.setOnAction(evt -> this.projectController.createNewProject());
     loadProject.setOnAction(evt -> {/* TODO how do we load projects? */});
     // TODO allow format configuration
     exportProject.setOnAction(evt -> projectController.export(ProjectFormat.ROSE));

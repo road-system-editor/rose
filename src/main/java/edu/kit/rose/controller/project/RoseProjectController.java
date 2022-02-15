@@ -200,4 +200,10 @@ public class RoseProjectController extends Controller implements ProjectControll
   public void shutDown() {
     this.backupTimer.cancel();
   }
+
+  @Override
+  public void createNewProject() {
+    this.currentProjectPath = null;
+    this.project.reset();
+  }
 }

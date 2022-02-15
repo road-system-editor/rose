@@ -58,5 +58,11 @@ public interface ProjectController {
    * Shuts down the {@link ProjectController} and stops its automatic backups.
    */
   void shutDown();
+
+  /**
+   * Creates a new project in this editor.
+   * This will clear all project data.
+   */
+  void createNewProject();
 }
 

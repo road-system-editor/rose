@@ -51,7 +51,6 @@ class CompatibilityCriterionTest {
     criterion.setAttributeType(AttributeType.NAME);
     SortedBox<ValidationType> box = criterion.getCompatibleOperatorTypes();
 
-    Assertions.assertTrue(box.contains(ValidationType.DEFAULT));
     Assertions.assertTrue(box.contains(ValidationType.EQUALS));
     Assertions.assertTrue(box.contains(ValidationType.NOT_EQUALS));
     Assertions.assertFalse(box.contains(ValidationType.OR));

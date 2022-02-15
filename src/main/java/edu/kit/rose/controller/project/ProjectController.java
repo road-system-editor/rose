@@ -2,6 +2,7 @@ package edu.kit.rose.controller.project;
 
 
 import edu.kit.rose.controller.navigation.FileFormat;
+import edu.kit.rose.infrastructure.Box;
 import edu.kit.rose.model.ProjectFormat;
 import java.nio.file.Path;
 
@@ -69,5 +70,10 @@ public interface ProjectController {
    * Lets the user pick a file to load.
    */
   void loadProject();
+
+  /**
+   * Returns the paths of all backed up files.
+   */
+  Box<Path> getBackupPaths();
 }
 

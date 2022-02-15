@@ -123,17 +123,12 @@ public class RoseMenuBar extends FxmlContainer {
   }
 
   private void populateBackupMenu() {
-    // TODO get backups from a proper place
-    var backups = List.of(
-        Path.of("C:", "project1.rose"),
-        Path.of("D:", "bigroadsystem.rose"),
-        Path.of("G:", "ehre.rose")
-    );
+    var backups = this.projectController.getBackupPaths();
 
     loadProjectBackup.getItems().clear();
     for (var backup : backups) {
       var item = new MenuItem(backup.getFileName().toString());
-      item.setOnAction(evt -> {/* TODO load backup */});
+      item.setOnAction(evt -> this.projectController.loadBackup(backup));
       loadProjectBackup.getItems().add(item);
     }
   }

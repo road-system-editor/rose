@@ -1,19 +1,28 @@
 package edu.kit.rose.controller.project;
 
+import com.google.common.io.CharStreams;
 import edu.kit.rose.controller.commons.Controller;
 import edu.kit.rose.controller.commons.StorageLock;
 import edu.kit.rose.controller.navigation.ErrorType;
 import edu.kit.rose.controller.navigation.FileDialogType;
 import edu.kit.rose.controller.navigation.FileFormat;
 import edu.kit.rose.controller.navigation.Navigator;
+import edu.kit.rose.infrastructure.Box;
+import edu.kit.rose.infrastructure.RoseBox;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.ProjectFormat;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.stream.Collectors;
 
 /**
  * Provides functionality to save, load and
@@ -226,5 +235,28 @@ public class RoseProjectController extends Controller implements ProjectControll
       this.onProjectIoActionEndCallbacks.forEach(Runnable::run);
       getStorageLock().releaseStorageLock();
     }
+  }
+
+  @Override
+  public Box<Path> getBackupPaths() {
+    if (ensureBackupDirectoryExists()) {
+      List<Path> backupPaths = new LinkedList<>();
+      try {
+        Files.newDirectoryStream(Paths.get(BACKUP_FOLDER_PATH)).forEach(backupPaths::add);
+      } catch (IOException e) {
+        e.printStackTrace();
+        return new RoseBox<>();
+      }
+
+      Set<String> allowedExtensions = FileFormat.ROSE.getFileExtensions().stream()
+          .map(ext -> ext.substring(ext.lastIndexOf("*") + 1))
+          .collect(Collectors.toSet());
+
+      backupPaths.removeIf(
+          path -> allowedExtensions.stream().noneMatch(path.getFileName().toString()::endsWith));
+
+      return new RoseBox<>(backupPaths);
+    }
+    return new RoseBox<>();
   }
 }

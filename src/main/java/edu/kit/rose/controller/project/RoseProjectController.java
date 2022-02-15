@@ -24,7 +24,7 @@ public class RoseProjectController extends Controller implements ProjectControll
   private static final String BACKUP_FOLDER_PATH = "./backups";
   private static final String BACKUP_FILENAME_TEMPLATE = "Backup%d.rose.json";
   private static final int MAX_BACKUP_COUNT = 4;
-  private static final long BACKUP_DELAY_MILLIE_SECONDS = 300000;
+  private static final long BACKUP_DELAY_MILLISECONDS = 300000;
 
   private final Project project;
 
@@ -57,7 +57,7 @@ public class RoseProjectController extends Controller implements ProjectControll
       public void run() {
         saveBackup();
       }
-    }, BACKUP_DELAY_MILLIE_SECONDS, BACKUP_DELAY_MILLIE_SECONDS);
+    }, BACKUP_DELAY_MILLISECONDS, BACKUP_DELAY_MILLISECONDS);
   }
 
   @Override
@@ -65,11 +65,9 @@ public class RoseProjectController extends Controller implements ProjectControll
     if (!getStorageLock().isStorageLockAcquired()) {
       getStorageLock().acquireStorageLock();
       this.onProjectIoActionBeginCallbacks.forEach(Runnable::run);
-      FileFormat targetFileFormat = switch (targetFormat) {
-        case ROSE -> FileFormat.ROSE;
-        case YAML -> FileFormat.YAML;
-        case SUMO -> FileFormat.SUMO;
-      };
+
+      FileFormat targetFileFormat = toFileFormat(targetFormat);
+      ;
       Path targetFilePath
           = getNavigator().showFileDialog(FileDialogType.SAVE_FILE, targetFileFormat);
 
@@ -82,6 +80,14 @@ public class RoseProjectController extends Controller implements ProjectControll
       this.onProjectIoActionEndCallbacks.forEach(Runnable::run);
       getStorageLock().releaseStorageLock();
     }
+  }
+
+  private FileFormat toFileFormat(ProjectFormat projectFormat) {
+    return switch (projectFormat) {
+      case ROSE -> FileFormat.ROSE;
+      case YAML -> FileFormat.YAML;
+      case SUMO -> FileFormat.SUMO;
+    };
   }
 
   @Override

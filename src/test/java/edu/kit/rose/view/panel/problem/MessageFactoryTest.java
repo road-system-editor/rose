@@ -8,6 +8,7 @@ import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterion;
 import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterionType;
 import edu.kit.rose.model.plausibility.violation.Violation;
 import edu.kit.rose.model.roadsystem.elements.Segment;
+import edu.kit.rose.view.panel.violation.MessageFactory;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

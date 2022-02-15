@@ -2,8 +2,6 @@ package edu.kit.rose.view.panel.violation;
 
 import edu.kit.rose.controller.plausibility.PlausibilityController;
 import edu.kit.rose.model.plausibility.violation.Violation;
-import edu.kit.rose.view.panel.criterion.CriterionListCell;
-import edu.kit.rose.view.panel.problem.MessageFactory;
 import javafx.scene.control.ListCell;
 
 /**

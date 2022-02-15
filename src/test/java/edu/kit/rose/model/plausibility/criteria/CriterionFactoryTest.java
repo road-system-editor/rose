@@ -6,7 +6,9 @@ import static org.mockito.Mockito.when;
 import edu.kit.rose.infrastructure.RoseSortedBox;
 import edu.kit.rose.model.plausibility.violation.ViolationManager;
 import edu.kit.rose.model.roadsystem.RoadSystem;
+import edu.kit.rose.model.roadsystem.elements.Base;
 import edu.kit.rose.model.roadsystem.elements.Element;
+import edu.kit.rose.model.roadsystem.elements.Segment;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,8 +23,7 @@ class CriterionFactoryTest {
   @BeforeEach
   public void setUp() {
     RoadSystem roadSystem = mock(RoadSystem.class);
-    Element element = mock(Element.class);
-    when(element.isContainer()).thenReturn(false);
+    Element element = new Base();
     when(roadSystem.getElements()).thenReturn(new RoseSortedBox<>(List.of(element)));
     this.factory = new CriterionFactory();
     this.factory.setRoadSystem(roadSystem);

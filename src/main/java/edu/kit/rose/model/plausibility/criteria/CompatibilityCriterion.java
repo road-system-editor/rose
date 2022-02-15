@@ -335,7 +335,7 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
   }
 
   private void checkAll() {
-    if (this.roadSystem != null) {
+    if (this.roadSystem != null && this.attributeType != null && this.operatorType != null) {
       roadSystem.getElements().forEach(this::notifyChange);
     }
   }

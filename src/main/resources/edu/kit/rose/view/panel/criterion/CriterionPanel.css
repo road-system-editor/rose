@@ -56,7 +56,7 @@
 }
 
 .list-view .list-cell:selected {
-    -fx-text-fill: black;
+    -fx-text-fill: white;
     -fx-background-color: #009682;
 }
 

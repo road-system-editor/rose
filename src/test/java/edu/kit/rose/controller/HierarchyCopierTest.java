@@ -55,7 +55,7 @@ public class HierarchyCopierTest {
     original.rotate(74);
     // TODO move entrance and exit connector once movable connectors are merged
 
-    var copy = copier.copySegment(original);
+    var copy = copier.copySegment(original, true);
     assertNotNull(copy);
     assertSame(SegmentType.BASE, copy.getSegmentType());
     assertEqualAccessors(original, copy);
@@ -75,7 +75,7 @@ public class HierarchyCopierTest {
     original.move(new Movement(31, 44));
     original.rotate(19);
 
-    var copy = copier.copySegment(original);
+    var copy = copier.copySegment(original, true);
     assertNotNull(copy);
     assertSame(SegmentType.ENTRANCE, copy.getSegmentType());
     assertEqualAccessors(original, copy);
@@ -96,7 +96,7 @@ public class HierarchyCopierTest {
     original.move(new Movement(2, -1));
     original.rotate(10);
 
-    var copy = copier.copySegment(original);
+    var copy = copier.copySegment(original, true);
     assertNotNull(copy);
     assertSame(SegmentType.ENTRANCE, copy.getSegmentType());
     assertEqualAccessors(original, copy);
@@ -110,7 +110,7 @@ public class HierarchyCopierTest {
     original.setName("creative group name");
     original.setComment("some comment");
 
-    var copy = copier.copyGroup(original);
+    var copy = copier.copyGroup(original, true);
     assertNotNull(copy);
     assertEqualAccessors(original, copy);
     assertCorrectReplacement(original, copy);
@@ -133,7 +133,7 @@ public class HierarchyCopierTest {
     grandChild2.setSlope(2);
     child.addElement(grandChild2);
 
-    var parentCopy = copier.copyGroup(parent);
+    var parentCopy = copier.copyGroup(parent, true);
     assertEqualElement(parent, parentCopy);
 
     var childCopy = parentCopy.getElements().get(0);

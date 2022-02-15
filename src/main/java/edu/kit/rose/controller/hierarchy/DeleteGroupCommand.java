@@ -56,7 +56,7 @@ public class DeleteGroupCommand implements ChangeCommand {
     // copy group
     var copier = new HierarchyCopier(this.replacementLog, this.project.getRoadSystem());
     var groupToCopy = this.replacementLog.getCurrentVersion(this.group);
-    this.group = copier.copyGroup(groupToCopy);
+    this.group = copier.copyGroup(groupToCopy, true);
 
     // assign parent
     var currentParent = this.replacementLog.getCurrentVersion(this.parent);

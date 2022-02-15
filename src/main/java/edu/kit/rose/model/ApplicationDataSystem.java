@@ -1,7 +1,7 @@
 package edu.kit.rose.model;
 
 import edu.kit.rose.infrastructure.Box;
-import edu.kit.rose.infrastructure.SetObservable;
+import edu.kit.rose.infrastructure.DualSetObservable;
 import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.model.plausibility.criteria.CriteriaManager;
@@ -17,8 +17,8 @@ import java.nio.file.Path;
  * Observes the {@link CriteriaManager} in order to be informed of changes to the criteria held
  * within, as the ApplicationDataSystem needs to write these changes to the config file.
  */
-public interface ApplicationDataSystem extends SetObservable<AttributeType, ApplicationDataSystem>,
-        SetObserver<PlausibilityCriterion, CriteriaManager> {
+public interface ApplicationDataSystem extends DualSetObservable<AttributeType, Path,
+    ApplicationDataSystem>, SetObserver<PlausibilityCriterion, CriteriaManager> {
 
   /**
    * Returns the currently selected {@link Language}.
@@ -81,4 +81,14 @@ public interface ApplicationDataSystem extends SetObservable<AttributeType, Appl
    * @param attributeType the AttributeType that is to be removed.
    */
   void removeShownAttributeType(AttributeType attributeType);
+
+  /**
+   * Returns paths of recently opened {@link Project}s.
+   */
+  Box<Path> getRecentProjectPaths();
+
+  /**
+   * Adds a path to the list of recently opened projects.
+   */
+  void addRecentProjectPath(Path recentProjectPath);
 }

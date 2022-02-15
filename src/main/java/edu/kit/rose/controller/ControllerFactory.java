@@ -118,7 +118,8 @@ public class ControllerFactory {
    * @return project controller instance
    */
   public ProjectController getProjectController() {
-    return new RoseProjectController(this.storageLock, this.navigator, this.project);
+    return new RoseProjectController(this.storageLock, this.navigator, this.project,
+        this.applicationDataSystem);
   }
 
   /**

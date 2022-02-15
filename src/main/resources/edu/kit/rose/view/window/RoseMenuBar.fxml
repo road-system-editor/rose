@@ -12,7 +12,7 @@
         <Menu fx:id="project">
             <MenuItem fx:id="newProject"/>
             <MenuItem fx:id="loadProject"/>
-            <MenuItem fx:id="exportProject"/>
+            <Menu fx:id="exportProject"/>
             <MenuItem fx:id="saveProject"/>
             <MenuItem fx:id="saveProjectAs"/>
             <Menu fx:id="loadProjectBackup">

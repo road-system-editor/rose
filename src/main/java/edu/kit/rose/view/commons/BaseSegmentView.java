@@ -9,6 +9,7 @@ import edu.kit.rose.model.roadsystem.elements.Connector;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.MovableConnector;
 import java.util.List;
+import javafx.event.Event;
 import javafx.geometry.Point2D;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.Shadow;
@@ -223,9 +224,16 @@ public class BaseSegmentView extends SegmentView<Base> {
 
   @Override
   protected void setupDrag() {
-    setupCurve();
     this.curve.setOnDragDetected(this::onDragDetected);
     this.curve.setOnMouseDragged(this::onMouseDragged);
+    this.curve.setOnMouseDragReleased(this::onMouseDragReleased);
+  }
+
+  @Override
+  protected void setupSelection() {
+    setupCurve();
+    this.curve.setOnMouseClicked(Event::consume);
+    this.curve.setOnMousePressed(this::onMousePressed);
   }
 
   @Override

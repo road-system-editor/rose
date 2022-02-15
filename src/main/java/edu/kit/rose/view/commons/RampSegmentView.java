@@ -7,6 +7,7 @@ import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.RampSegment;
 import java.util.LinkedList;
 import java.util.List;
+import javafx.event.Event;
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -136,6 +137,13 @@ public abstract class RampSegmentView<T extends RampSegment> extends SegmentView
   protected void setupDrag() {
     setOnDragDetected(this::onDragDetected);
     setOnMouseDragged(this::onMouseDragged);
+    setOnMouseDragReleased(this::onMouseDragReleased);
+  }
+
+  @Override
+  protected void setupSelection() {
+    setOnMouseClicked(Event::consume);
+    setOnMousePressed(this::onMousePressed);
   }
 
   protected abstract double getImagePosOffsetX();

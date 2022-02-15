@@ -1,6 +1,5 @@
 package edu.kit.rose.controller.project;
 
-import com.google.common.io.CharStreams;
 import edu.kit.rose.controller.commons.Controller;
 import edu.kit.rose.controller.commons.StorageLock;
 import edu.kit.rose.controller.navigation.ErrorType;
@@ -9,6 +8,7 @@ import edu.kit.rose.controller.navigation.FileFormat;
 import edu.kit.rose.controller.navigation.Navigator;
 import edu.kit.rose.infrastructure.Box;
 import edu.kit.rose.infrastructure.RoseBox;
+import edu.kit.rose.model.ApplicationDataSystem;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.ProjectFormat;
 import java.io.File;
@@ -36,6 +36,7 @@ public class RoseProjectController extends Controller implements ProjectControll
   private static final long BACKUP_DELAY_MILLISECONDS = 300000;
 
   private final Project project;
+  private final ApplicationDataSystem applicationDataSystem;
 
   private final Set<Runnable> onProjectIoActionBeginCallbacks;
   private final Set<Runnable> onProjectIoActionEndCallbacks;
@@ -49,14 +50,18 @@ public class RoseProjectController extends Controller implements ProjectControll
   /**
    * Creates a new {@link RoseProjectController}.
    *
-   * @param storageLock the coordinator for controller actions
-   * @param navigator   the navigator for the controller
-   * @param project     the model facade for project data
+   * @param storageLock           the coordinator for controller actions
+   * @param navigator             the navigator for the controller
+   * @param project               the model facade for project data
+   * @param applicationDataSystem the application data system to store recently opened project
+   *                              paths in.
    */
-  public RoseProjectController(StorageLock storageLock, Navigator navigator, Project project) {
+  public RoseProjectController(StorageLock storageLock, Navigator navigator, Project project,
+                               ApplicationDataSystem applicationDataSystem) {
     super(storageLock, navigator);
 
     this.project = project;
+    this.applicationDataSystem = applicationDataSystem;
     this.onProjectIoActionBeginCallbacks = new HashSet<>();
     this.onProjectIoActionEndCallbacks = new HashSet<>();
 
@@ -165,7 +170,7 @@ public class RoseProjectController extends Controller implements ProjectControll
       if (targetFilePath != null) {
         boolean savingSucceeded = project.save(targetFilePath);
         if (savingSucceeded) {
-          currentProjectPath = targetFilePath;
+          setCurrentProjectPath(targetFilePath);
         } else {
           getNavigator().showErrorDialog(ErrorType.SAVE_ERROR);
         }
@@ -183,7 +188,7 @@ public class RoseProjectController extends Controller implements ProjectControll
 
       boolean loadingSucceeded = project.load(backUpPath);
       if (loadingSucceeded) {
-        currentProjectPath = null;
+        setCurrentProjectPath(null);
       } else {
         getNavigator().showErrorDialog(ErrorType.LOAD_ERROR);
       }
@@ -212,7 +217,7 @@ public class RoseProjectController extends Controller implements ProjectControll
 
   @Override
   public void createNewProject() {
-    this.currentProjectPath = null;
+    setCurrentProjectPath(null);
     this.project.reset();
   }
 
@@ -227,7 +232,7 @@ public class RoseProjectController extends Controller implements ProjectControll
       if (sourceFilePath != null) {
         boolean loadingSucceeded = project.load(sourceFilePath);
         if (loadingSucceeded) {
-          currentProjectPath = sourceFilePath;
+          setCurrentProjectPath(sourceFilePath);
         } else {
           getNavigator().showErrorDialog(ErrorType.LOAD_ERROR);
         }
@@ -258,5 +263,30 @@ public class RoseProjectController extends Controller implements ProjectControll
       return new RoseBox<>(backupPaths);
     }
     return new RoseBox<>();
+  }
+
+  @Override
+  public void loadRecentProject(Path recentProjectPath) {
+    if (!getStorageLock().isStorageLockAcquired()) {
+      getStorageLock().acquireStorageLock();
+      this.onProjectIoActionBeginCallbacks.forEach(Runnable::run);
+
+      boolean loadingSucceeded = project.load(recentProjectPath);
+      if (loadingSucceeded) {
+        setCurrentProjectPath(recentProjectPath);
+      } else {
+        getNavigator().showErrorDialog(ErrorType.LOAD_ERROR);
+      }
+
+      this.onProjectIoActionEndCallbacks.forEach(Runnable::run);
+      getStorageLock().releaseStorageLock();
+    }
+  }
+
+  private void setCurrentProjectPath(Path projectPath) {
+    this.currentProjectPath = projectPath;
+    if (projectPath != null) {
+      this.applicationDataSystem.addRecentProjectPath(projectPath);
+    }
   }
 }

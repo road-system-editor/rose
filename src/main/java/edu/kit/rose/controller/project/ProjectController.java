@@ -75,5 +75,10 @@ public interface ProjectController {
    * Returns the paths of all backed up files.
    */
   Box<Path> getBackupPaths();
+
+  /**
+   * Load recent project from the given path.
+   */
+  void loadRecentProject(Path recentProjectPath);
 }
 

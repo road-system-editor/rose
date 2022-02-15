@@ -1,11 +1,8 @@
 package edu.kit.rose.controller.hierarchy;
 
-import edu.kit.rose.infrastructure.SetObservable;
-import edu.kit.rose.infrastructure.UnitObservable;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Group;
 import edu.kit.rose.model.roadsystem.elements.Segment;
-import java.util.List;
 import java.util.function.BiConsumer;
 
 /**

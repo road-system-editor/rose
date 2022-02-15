@@ -39,6 +39,11 @@ public interface RoadSystemController extends SetObservable<Segment, RoadSystemC
   void createStreetSegment(SegmentType segmentType);
 
   /**
+   * Creates a copies of selected segments.
+   */
+  void duplicateStreetSegment();
+
+  /**
    * Deletes an existing street {@link Segment}.
    *
    * @param segment the street segment to delete

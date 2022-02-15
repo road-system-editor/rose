@@ -15,6 +15,7 @@ import edu.kit.rose.model.roadsystem.elements.Connector;
 import edu.kit.rose.model.roadsystem.elements.MovableConnector;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -56,6 +57,7 @@ public class RoseRoadSystemController extends Controller
   private Connector dragConnector;
   private Position initialConnectorDragPosition;
 
+
   private final Set<SetObserver<Segment, RoadSystemController>> observers;
 
   /**
@@ -66,6 +68,7 @@ public class RoseRoadSystemController extends Controller
    * @param navigator           the navigator for the controller
    * @param selectionBuffer     the container that stores selected segments
    * @param project             the model facade for project data
+   * @param replacementLog      the log that stores all the replacements of elements
    */
   public RoseRoadSystemController(ChangeCommandBuffer changeCommandBuffer, StorageLock storageLock,
                                   Navigator navigator, SelectionBuffer selectionBuffer,
@@ -78,6 +81,7 @@ public class RoseRoadSystemController extends Controller
     this.project = project;
     this.roadSystem = project.getRoadSystem();
     this.replacementLog = replacementLog;
+
 
     observers = new HashSet<>();
   }
@@ -98,6 +102,15 @@ public class RoseRoadSystemController extends Controller
         = new CreateStreetSegmentCommand(this.replacementLog, this.project, segmentType);
 
     changeCommandBuffer.addAndExecuteCommand(createStreetSegmentCommand);
+  }
+
+  @Override
+  public void duplicateStreetSegment() {
+    ArrayList<Segment> toDuplicateSegments
+            = new ArrayList<>(this.selectionBuffer.getSelectedSegments());
+    DuplicateStreetSegmentCommand duplicateStreetSegmentCommand = new DuplicateStreetSegmentCommand(
+            this.replacementLog, this.project, toDuplicateSegments);
+    changeCommandBuffer.addAndExecuteCommand(duplicateStreetSegmentCommand);
   }
 
   @Override

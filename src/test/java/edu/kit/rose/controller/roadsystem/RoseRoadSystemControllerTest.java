@@ -18,7 +18,6 @@ import edu.kit.rose.model.ZoomSetting;
 import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.elements.Base;
 import edu.kit.rose.model.roadsystem.elements.Connector;
-import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Entrance;
 import edu.kit.rose.model.roadsystem.elements.Exit;
 import edu.kit.rose.model.roadsystem.elements.Segment;
@@ -118,6 +117,24 @@ public class RoseRoadSystemControllerTest {
     roadSystemController.createStreetSegment(SegmentType.BASE);
     verify(roadSystem, times(1))
         .createSegment(SegmentType.BASE);
+  }
+
+  @Test
+  public void testDuplicateStreetSegment() {
+    ChangeCommandBuffer changeCommandBuffer = Mockito.mock(ChangeCommandBuffer.class);
+    StorageLock storageLock = Mockito.mock(StorageLock.class);
+    Navigator navigator = Mockito.mock(Navigator.class);
+    ReplacementLog replacementLog = new ReplacementLog();
+    RoadSystemController controller = new RoseRoadSystemController(
+            changeCommandBuffer,
+            storageLock,
+            navigator,
+            selectionBuffer,
+            project,
+            replacementLog);
+    controller.duplicateStreetSegment();
+    verify(changeCommandBuffer, times(1))
+            .addAndExecuteCommand(any(DuplicateStreetSegmentCommand.class));
   }
 
   @Test

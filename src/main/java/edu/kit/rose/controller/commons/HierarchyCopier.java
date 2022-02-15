@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 public class HierarchyCopier {
   private final ReplacementLog replacementLog;
   private final RoadSystem target;
+  private final boolean makeReplacement;
 
   /**
    *  Constructor.
@@ -31,6 +32,7 @@ public class HierarchyCopier {
    */
   public HierarchyCopier(ReplacementLog replacementLog, RoadSystem target) {
     this.replacementLog = replacementLog;
+    makeReplacement = replacementLog != null;
     this.target = Objects.requireNonNull(target);
   }
 
@@ -47,7 +49,9 @@ public class HierarchyCopier {
 
     Group copy = this.target.createGroup(elementsCopy);
     this.copyAccessors(original, copy);
-    this.replacementLog.replaceElement(original, copy);
+    if (makeReplacement) {
+      this.replacementLog.replaceElement(original, copy);
+    }
 
     return copy;
   }
@@ -63,7 +67,9 @@ public class HierarchyCopier {
 
     this.copyPositionData(original, copy);
     this.copyAccessors(original, copy);
-    this.replacementLog.replaceElement(original, copy);
+    if (makeReplacement) {
+      this.replacementLog.replaceElement(original, copy);
+    }
 
     return copy;
   }

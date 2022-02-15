@@ -3,6 +3,7 @@ package edu.kit.rose.model.roadsystem.elements;
 import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
+import edu.kit.rose.model.roadsystem.attributes.SpeedLimit;
 import java.util.Arrays;
 import java.util.List;
 
@@ -14,8 +15,8 @@ abstract class RampSegment extends HighwaySegment {
   private static final int INITIAL_RAMP_DISTANCE_TO_CENTER = 50;
   private int nrOfRampLanes = 1;
   private final AttributeAccessor<Integer> nrOfRampLanesAccessor;
-  private int rampSpeedLimit = 100;
-  private final AttributeAccessor<Integer> maxSpeedRampAccessor;
+  private SpeedLimit rampSpeedLimit = SpeedLimit.NONE;
+  private final AttributeAccessor<SpeedLimit> maxSpeedRampAccessor;
 
   protected Connector rampConnector;
 
@@ -82,14 +83,14 @@ abstract class RampSegment extends HighwaySegment {
   /**
    * Returns the {@link AttributeType#MAX_SPEED} of the ramp.
    */
-  public int getMaxSpeedRamp() {
+  public SpeedLimit getMaxSpeedRamp() {
     return this.rampSpeedLimit;
   }
 
   /**
    * Sets the {@link AttributeType#MAX_SPEED} of the ramp to the given value.
    */
-  public void setMaxSpeedRamp(int maxSpeedRamp) {
+  public void setMaxSpeedRamp(SpeedLimit maxSpeedRamp) {
     this.rampSpeedLimit = maxSpeedRamp;
 
     this.maxSpeedRampAccessor.notifySubscribers();

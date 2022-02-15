@@ -40,15 +40,6 @@ public class AttributeAccessor<T> extends RoseUnitObservable<AttributeAccessor<T
   }
 
   /**
-   * Provides the name of the underlying attribute.
-   *
-   * @return the name of the underlying attribute.
-   */
-  public String getName() {
-    return getAttributeType().getName();
-  }
-
-  /**
    * Provides the value of the Attribute.
    *
    * @return T the value of the Attribute.

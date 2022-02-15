@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.TimeSliceSetting;
+import edu.kit.rose.model.roadsystem.attributes.SpeedLimit;
 import edu.kit.rose.model.roadsystem.elements.Base;
 import edu.kit.rose.model.roadsystem.elements.Connector;
 import edu.kit.rose.model.roadsystem.elements.Entrance;
@@ -211,8 +212,12 @@ class YamlProject {
       return attributeValue ? "innerhalb" : "außerhalb";
     }
 
-    static String convertSpeedLimit(Integer limit) {
-      return limit == null ? "ohne" : limit.toString();
+    static String convertSpeedLimit(SpeedLimit limit) {
+      return switch (limit) {
+        case NONE -> "ohne";
+        case TUNNEL -> "Tunnel";
+        default -> limit.toString();
+      };
     }
   }
 

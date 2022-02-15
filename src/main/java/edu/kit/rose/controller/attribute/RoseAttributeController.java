@@ -12,6 +12,7 @@ import edu.kit.rose.model.ApplicationDataSystem;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
+import edu.kit.rose.model.roadsystem.attributes.SpeedLimit;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import java.util.ArrayList;
@@ -107,6 +108,7 @@ public class RoseAttributeController extends Controller implements AttributeCont
             case INTEGER -> bulkAccessor(elements, type, Integer.class);
             case FRACTIONAL -> bulkAccessor(elements, type, Double.class);
             case BOOLEAN -> bulkAccessor(elements, type, Boolean.class);
+            case SPEED_LIMIT -> bulkAccessor(elements, type, SpeedLimit.class);
           }).collect(Collectors.toList());
 
       return new RoseSortedBox<>(bulkAccessors);

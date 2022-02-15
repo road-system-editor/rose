@@ -11,6 +11,7 @@ import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.TimeSliceSetting;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
+import edu.kit.rose.model.roadsystem.attributes.SpeedLimit;
 import edu.kit.rose.model.roadsystem.elements.Base;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Entrance;
@@ -47,29 +48,29 @@ public class YamlExportStrategyTest {
     );
 
     Base base = (Base) rs.createSegment(SegmentType.BASE);
-    setAttributeValue(base, AttributeType.NAME, "GWBFRStuttgart");
-    setAttributeValue(base, AttributeType.LENGTH, 3000);
-    setAttributeValue(base, AttributeType.LANE_COUNT, 2);
-    setAttributeValue(base, AttributeType.CONURBATION, true);
-    setAttributeValue(base, AttributeType.MAX_SPEED, -1);
+    base.setName("GWBFRStuttgart");
+    base.setLength(3000);
+    base.setLaneCount(2);
+    base.setConurbation(true);
+    base.setMaxSpeed(SpeedLimit.NONE);
 
     Exit exit = (Exit) rs.createSegment(SegmentType.EXIT);
-    setAttributeValue(exit, AttributeType.NAME, "AusfahrtKarlsbadFRStuttgart");
-    setAttributeValue(exit, AttributeType.LENGTH, 250);
-    setAttributeValue(exit, AttributeType.LANE_COUNT, 2);
-    setAttributeValue(exit, AttributeType.SLOPE, 2);
-    setAttributeValue(exit, AttributeType.CONURBATION, true);
-    setAttributeValue(exit, AttributeType.MAX_SPEED, -1);
-    setAttributeValue(exit, AttributeType.MAX_SPEED_RAMP, 60);
+    exit.setName("AusfahrtKarlsbadFRStuttgart");
+    exit.setLength(250);
+    exit.setLaneCount(2);
+    exit.setSlope(2);
+    exit.setConurbation(true);
+    exit.setMaxSpeed(SpeedLimit.NONE);
+    exit.setMaxSpeedRamp(SpeedLimit.SBA);
 
     Entrance entrance = (Entrance) rs.createSegment(SegmentType.ENTRANCE);
-    setAttributeValue(entrance, AttributeType.NAME, "EinfahrtKarlsbadFRStuttgart");
-    setAttributeValue(entrance, AttributeType.LENGTH, 250);
-    setAttributeValue(entrance, AttributeType.LANE_COUNT, 2);
-    setAttributeValue(entrance, AttributeType.SLOPE, 2);
-    setAttributeValue(entrance, AttributeType.CONURBATION, false);
-    setAttributeValue(entrance, AttributeType.MAX_SPEED, -1);
-    setAttributeValue(entrance, AttributeType.MAX_SPEED_RAMP, 60);
+    entrance.setName("EinfahrtKarlsbadFRStuttgart");
+    entrance.setLength(250);
+    entrance.setLaneCount(2);
+    entrance.setSlope(2);
+    entrance.setConurbation(false);
+    entrance.setMaxSpeed(SpeedLimit.NONE);
+    entrance.setMaxSpeedRamp(SpeedLimit.SBA);
 
     Group g = rs.createGroup(Set.of(entrance, exit));
     setAttributeValue(g, AttributeType.NAME, "Autobahnkreuz");

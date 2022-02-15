@@ -17,6 +17,7 @@ import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.TimeSliceSetting;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
+import edu.kit.rose.model.roadsystem.attributes.SpeedLimit;
 import edu.kit.rose.model.roadsystem.elements.Base;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Entrance;
@@ -61,33 +62,33 @@ public class RoseExportStrategyTest {
     Base base = (Base) rs.createSegment(SegmentType.BASE);
     base.move(toMovement(BASE_CENTER));
     base.rotate(BASE_ROTATION);
-    setAttributeValue(base, AttributeType.NAME, "GWBFRStuttgart");
-    setAttributeValue(base, AttributeType.LENGTH, 3000);
-    setAttributeValue(base, AttributeType.LANE_COUNT, 2);
-    setAttributeValue(base, AttributeType.CONURBATION, true);
-    setAttributeValue(base, AttributeType.MAX_SPEED, -1); // TODO support no speed limit
+    base.setName("GWBFRStuttgart");
+    base.setLength(3000);
+    base.setLaneCount(2);
+    base.setConurbation(true);
+    base.setMaxSpeed(SpeedLimit.NONE);
 
     Exit exit = (Exit) rs.createSegment(SegmentType.EXIT);
     exit.move(toMovement(EXIT_CENTER));
     exit.rotate(EXIT_ROTATION);
-    setAttributeValue(exit, AttributeType.NAME, "AusfahrtKarlsbadFRStuttgart");
-    setAttributeValue(exit, AttributeType.LENGTH, 250);
-    setAttributeValue(exit, AttributeType.LANE_COUNT, 2);
-    setAttributeValue(exit, AttributeType.SLOPE, 2);
-    setAttributeValue(exit, AttributeType.CONURBATION, true);
-    setAttributeValue(exit, AttributeType.MAX_SPEED, -1);
-    setAttributeValue(exit, AttributeType.MAX_SPEED_RAMP, 60);
+    exit.setName("AusfahrtKarlsbadFRStuttgart");
+    exit.setLength(250);
+    exit.setLaneCount(2);
+    exit.setSlope(2);
+    exit.setConurbation(true);
+    exit.setMaxSpeed(SpeedLimit.NONE);
+    exit.setMaxSpeedRamp(SpeedLimit.SBA);
 
     Entrance entrance = (Entrance) rs.createSegment(SegmentType.ENTRANCE);
     entrance.move(toMovement(ENTRANCE_CENTER));
     entrance.rotate(ENTRANCE_ROTATION);
-    setAttributeValue(entrance, AttributeType.NAME, "EinfahrtKarlsbadFRStuttgart");
-    setAttributeValue(entrance, AttributeType.LENGTH, 250);
-    setAttributeValue(entrance, AttributeType.LANE_COUNT, 2);
-    setAttributeValue(entrance, AttributeType.SLOPE, 2);
-    setAttributeValue(entrance, AttributeType.CONURBATION, false);
-    setAttributeValue(entrance, AttributeType.MAX_SPEED, -1);
-    setAttributeValue(entrance, AttributeType.MAX_SPEED_RAMP, 60);
+    entrance.setName("EinfahrtKarlsbadFRStuttgart");
+    entrance.setLength(250);
+    entrance.setLaneCount(2);
+    entrance.setSlope(2);
+    entrance.setConurbation(true);
+    entrance.setMaxSpeed(SpeedLimit.NONE);
+    entrance.setMaxSpeedRamp(SpeedLimit.SBA);
 
     Group g = rs.createGroup(Set.of(entrance, exit));
     setAttributeValue(g, AttributeType.NAME, "Autobahnkreuz");
@@ -159,8 +160,8 @@ public class RoseExportStrategyTest {
         .<Integer>getAttributeValue(exitSegment, AttributeType.LENGTH));
     assertEquals(2, RoseExportStrategyTest
         .<Integer>getAttributeValue(exitSegment, AttributeType.SLOPE));
-    assertEquals(60, RoseExportStrategyTest
-        .<Integer>getAttributeValue(exitSegment, AttributeType.MAX_SPEED_RAMP));
+    assertEquals(SpeedLimit.SBA, RoseExportStrategyTest
+        .<SpeedLimit>getAttributeValue(exitSegment, AttributeType.MAX_SPEED_RAMP));
     assertEquals(EXIT_CENTER, exitSegment.getCenter());
     assertEquals(EXIT_ROTATION, exitSegment.getRotation());
 
@@ -171,8 +172,8 @@ public class RoseExportStrategyTest {
         .<Integer>getAttributeValue(entranceSegment, AttributeType.LENGTH));
     assertEquals(2, RoseExportStrategyTest
         .<Integer>getAttributeValue(entranceSegment, AttributeType.SLOPE));
-    assertEquals(60, RoseExportStrategyTest
-        .<Integer>getAttributeValue(entranceSegment, AttributeType.MAX_SPEED_RAMP));
+    assertEquals(SpeedLimit.SBA, RoseExportStrategyTest
+        .<SpeedLimit>getAttributeValue(entranceSegment, AttributeType.MAX_SPEED_RAMP));
     assertEquals(ENTRANCE_CENTER, entranceSegment.getCenter());
     assertEquals(ENTRANCE_ROTATION, entranceSegment.getRotation());
 

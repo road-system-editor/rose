@@ -46,7 +46,6 @@ public class AttributeAccessorTest {
   @Test
   public void testAttributeType() {
     Assertions.assertEquals(TYPE, accessor.getAttributeType());
-    Assertions.assertEquals(TYPE.getName(), accessor.getName());
   }
 
   /**

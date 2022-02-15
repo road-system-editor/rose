@@ -4,6 +4,7 @@ import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterionType;
 import edu.kit.rose.model.plausibility.criteria.validation.ValidationType;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
+import edu.kit.rose.model.roadsystem.attributes.SpeedLimit;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import edu.kit.rose.model.roadsystem.measurements.MeasurementType;
 
@@ -64,5 +65,21 @@ public final class EnumLocalizationUtility {
   public static String localizeSegmentTypeTitle(LocalizedTextProvider translator,
                                                 SegmentType type) {
     return translator.getLocalizedText(String.format("segmentType.%s.title", type.toString()));
+  }
+
+  /**
+   * Returns the localized title of a boolean.
+   */
+  public static String localizeBooleanTitle(LocalizedTextProvider translator,
+                                                Boolean type) {
+    return translator.getLocalizedText(String.format("boolean.%s.title", type.toString()));
+  }
+
+  /**
+   * Returns the localized title of a speed limit.
+   */
+  public static String localizeSpeedLimitTypeTitle(LocalizedTextProvider translator,
+                                                SpeedLimit type) {
+    return translator.getLocalizedText(String.format("speedLimit.%s.title", type.toString()));
   }
 }

@@ -1,13 +1,9 @@
 package edu.kit.rose.view.commons;
 
 import edu.kit.rose.infrastructure.Position;
-import edu.kit.rose.infrastructure.UnitObserver;
 import edu.kit.rose.model.roadsystem.elements.Connector;
-import edu.kit.rose.model.roadsystem.elements.Segment;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.LinearGradient;
 import javafx.scene.shape.Circle;
 
 /**

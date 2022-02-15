@@ -17,7 +17,6 @@ import javafx.scene.transform.Rotate;
  */
 public abstract class RampSegmentView<T extends RampSegment> extends SegmentView<T> {
 
-  private static final int MAIN_STREET_RADIUS = 15;
   private static final int RAMP_WIDTH = 6;
 
   private Rotate rotation;
@@ -28,10 +27,6 @@ public abstract class RampSegmentView<T extends RampSegment> extends SegmentView
   private List<ConnectorView> connectorViews;
   private Image defaultImage;
   private Image selectedImage;
-
-  private Position initialPos;
-  private Point2D startPoint;
-
 
   /**
    * Creates a new segment view that acts as visual representation of a given segment.
@@ -81,8 +76,13 @@ public abstract class RampSegmentView<T extends RampSegment> extends SegmentView
   private void setupImage() {
     var defaultUrl = getClass().getResource(getDefaultImageResource());
     var selectedUrl = getClass().getResource(getSelectedImageResource());
-    defaultImage = new Image(defaultUrl.toString());
-    selectedImage = new Image(selectedUrl.toString());
+    if (defaultUrl != null && selectedUrl != null) {
+      defaultImage = new Image(defaultUrl.toString());
+      selectedImage = new Image(selectedUrl.toString());
+    } else {
+      throw new IllegalStateException("image not found.");
+    }
+
     imageView = new ImageView(defaultImage);
     imageView.setPreserveRatio(true);
     imageView.setFitWidth(getImageWidth());

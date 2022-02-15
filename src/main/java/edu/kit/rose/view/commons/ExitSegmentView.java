@@ -1,13 +1,8 @@
 package edu.kit.rose.view.commons;
 
-import com.google.inject.Inject;
 import edu.kit.rose.controller.roadsystem.RoadSystemController;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
-import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Exit;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.transform.Rotate;
 
 /**
  * An exit segment view is the visual representation of an exit street segment.
@@ -28,8 +23,7 @@ public class ExitSegmentView extends RampSegmentView<Exit> {
    * @param controller the road system controller.
    * @param translator the translator.
    */
-  public ExitSegmentView(Exit segment,
-                         RoadSystemController controller,
+  public ExitSegmentView(Exit segment, RoadSystemController controller,
                          LocalizedTextProvider translator) {
     super(segment, controller, translator);
   }

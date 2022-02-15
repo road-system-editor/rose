@@ -6,7 +6,6 @@ import edu.kit.rose.infrastructure.UnitObserver;
 import edu.kit.rose.model.roadsystem.elements.Connection;
 import javafx.geometry.Point2D;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
@@ -56,6 +55,31 @@ public class ConnectionView extends Pane implements UnitObserver<Connection> {
     relocate(layoutPos.getX(), layoutPos.getY());
   }
 
+  /**
+   * calculates the angle needed for the rotation of the connection view.
+   *              A--------------C
+   *                \ @           |
+   *                  \           |
+   *                    \         |
+   *                      \       |
+   *                        \     |
+   *                          \   |
+   *                            \ |
+   *                              B
+   * the angle is transformed afterwards as the angle is needed for rotation.
+   * javafx rotates counter clock wise thus the angle needs to undergo the following transformation
+   * before being used   (dependent on the position of point B):
+   *                    |
+   *            180 - @ |  no transformation
+   *                    |
+   *            --------A--------
+   *              -180  |   *(-1)
+   *                    |
+   *
+   * @param connectorPos1 the point A
+   * @param connectorPos2 the point B
+   * @return the angle @ (after transformation)
+   */
   private double calculateAngle(Point2D connectorPos1, Point2D connectorPos2) {
     var thirdPoint = new Point2D(connectorPos2.getX(), connectorPos1.getY());
     var angle = connectorPos1.angle(thirdPoint, connectorPos2);

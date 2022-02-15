@@ -1,14 +1,10 @@
 package edu.kit.rose.view.panel.roadsystem;
 
 import edu.kit.rose.controller.roadsystem.RoadSystemController;
-import edu.kit.rose.controller.roadsystem.RoseRoadSystemController;
 import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.infrastructure.SetObserver;
-import edu.kit.rose.model.roadsystem.elements.Connector;
-import edu.kit.rose.model.roadsystem.elements.Exit;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.view.commons.ConnectorView;
-import edu.kit.rose.view.commons.ExitSegmentView;
 import edu.kit.rose.view.commons.SegmentView;
 import java.util.Collection;
 import java.util.HashMap;
@@ -16,23 +12,16 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
-import javafx.beans.property.ReadOnlyListProperty;
-import javafx.collections.ObservableList;
-import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
-import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
-import javafx.util.Pair;
 
 /**
  * Represents a background surface that shows a grid, on which segment views can be drawn.
@@ -51,7 +40,6 @@ public class Grid extends Pane implements SetObserver<Segment, RoadSystemControl
   private final List<SegmentView<?>> segmentViews = new LinkedList<>();
   private final Map<Segment, SegmentView<?>> segmentViewMap = new HashMap<>();
   private final List<ConnectorView> connectorViews = new LinkedList<>();
-  private final List<Node> lines = new LinkedList<>();
   private SelectionBox selectionBox;
   private BiConsumer<Position, Position> onAreaSelectedEventHandler;
   private boolean dragInProgress = false;
@@ -112,7 +100,6 @@ public class Grid extends Pane implements SetObserver<Segment, RoadSystemControl
         CornerRadii.EMPTY,
         Insets.EMPTY)));
     getChildren().addAll(getLines());
-    lines.addAll(getChildren());
   }
 
   private void setEventListeners() {
@@ -152,13 +139,8 @@ public class Grid extends Pane implements SetObserver<Segment, RoadSystemControl
             selectionBox.getLastMousePosition().getY());
 
         controller.selectSegmentsInRectangle(startingPosition, lastMousePosition);
-
-        // Set it to before to the call of onAreaSelectedEventHandler, to ensure selectionBox
-        // is null if the event handler throws an exception.
-        selectionBox = null;
-      } else {
-        selectionBox = null;
       }
+      selectionBox = null;
     }
     mouseEvent.consume();
   }
@@ -249,7 +231,6 @@ public class Grid extends Pane implements SetObserver<Segment, RoadSystemControl
 
   @Override
   public void notifyChange(RoadSystemController unit) {
-
   }
 
   private enum Orientation {

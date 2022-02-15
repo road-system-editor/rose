@@ -29,6 +29,8 @@ import javafx.scene.layout.Pane;
 public abstract class SegmentView<T extends Segment> extends Pane
     implements SetObserver<Element, Element> {
 
+  protected static final int MAIN_STREET_RADIUS = 15;
+
   /**
    * The segment which this segment view represents.
    */

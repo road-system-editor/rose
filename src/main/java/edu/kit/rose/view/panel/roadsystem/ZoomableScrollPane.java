@@ -17,13 +17,14 @@ import javafx.scene.layout.VBox;
 /**
  * The zoomable ScrollPane is a ScrollPane that adds pan and zoom gesture support to its content.
  * Inspired by https://stackoverflow.com/a/44314455
+ * Forgive me for I have sinned.
  */
 public class ZoomableScrollPane extends ScrollPane implements UnitObserver<ZoomSetting> {
 
-  private static final double ZOOM_SPEED = .02;
-  private static final double BASE_MOVE_SPEED = 0.1;
   private static final int MAX_ZOOM_IN = 3;
   private static final int MAX_ZOOM_OUT = 1;
+  private static final double ZOOM_SPEED = .02;
+  private static final double BASE_MOVE_SPEED = 0.1;
   private static final int BUTTON_ZOOM_STRENGTH = 1;
   private static final double POS_APPROXIMATION = 25;
 
@@ -51,31 +52,30 @@ public class ZoomableScrollPane extends ScrollPane implements UnitObserver<ZoomS
    */
   public void init(Injector injector) {
     injector.injectMembers(this);
-    initGrid();
-    setupGridGroup();
-    setupGridBox();
-    setContent(gridBox);
+
+    setupGrid();
+
+    setupScrollPane();
+
+    setupKeyboardControl();
+
+    setupScrollBarListeners();
+  }
+
+  private void setupScrollPane() {
     setPannable(true);
     setPadding(Insets.EMPTY);
     setHbarPolicy(ScrollBarPolicy.NEVER);
     setVbarPolicy(ScrollBarPolicy.NEVER);
     setFitToHeight(true);
     setFitToWidth(true);
-    setupKeyboardControl();
-    hvalueProperty().addListener((observable, oldValue, newValue) ->
-        Platform.runLater(() ->
-          roadSystemController.setEditorPosition(getCenterOfViewPos())));
-    vvalueProperty().addListener((observable, oldValue, newValue) ->
-        Platform.runLater(() ->
-            roadSystemController.setEditorPosition(getCenterOfViewPos())));
   }
 
-  private void initGrid() {
+  private void setupGrid() {
     this.grid = new Grid(roadSystemController);
-  }
-
-  private void setupGridGroup() {
     this.gridGroup = new Group(this.grid);
+    setupGridBox();
+    setContent(gridBox);
   }
 
   private void setupGridBox() {
@@ -96,6 +96,29 @@ public class ZoomableScrollPane extends ScrollPane implements UnitObserver<ZoomS
     var box = new VBox(group);
     box.setAlignment(Pos.CENTER);
     return box;
+  }
+
+  private void setupKeyboardControl() {
+    setOnKeyPressed(event -> {
+      switch (event.getCode()) {
+        case UP -> moveUp();
+        case DOWN -> moveDown();
+        case LEFT -> moveLeft();
+        case RIGHT -> moveRight();
+        case PLUS -> zoomIn();
+        case MINUS -> zoomOut();
+        default -> { }
+      }
+    });
+  }
+
+  private void setupScrollBarListeners() {
+    hvalueProperty().addListener((observable, oldValue, newValue) ->
+        Platform.runLater(() ->
+            roadSystemController.setEditorPosition(getCenterOfViewPos())));
+    vvalueProperty().addListener((observable, oldValue, newValue) ->
+        Platform.runLater(() ->
+            roadSystemController.setEditorPosition(getCenterOfViewPos())));
   }
 
   private void zoom(double strength, Point2D mousePos) {
@@ -189,6 +212,20 @@ public class ZoomableScrollPane extends ScrollPane implements UnitObserver<ZoomS
     moveH(getCurrentMoveSpeed());
   }
 
+  private double getCurrentMoveSpeed() {
+    return BASE_MOVE_SPEED / zoomLevel;
+  }
+
+  private void moveH(double amount) {
+    setHvalue(getHvalue() + amount);
+    roadSystemController.setEditorPosition(getCenterOfViewPos());
+  }
+
+  private void moveV(double amount) {
+    setVvalue(getVvalue() + amount);
+    roadSystemController.setEditorPosition(getCenterOfViewPos());
+  }
+
   /**
    * Centers the currently visible space on the position provided.
    *
@@ -204,20 +241,6 @@ public class ZoomableScrollPane extends ScrollPane implements UnitObserver<ZoomS
     setVvalue(v);
   }
 
-  private void moveH(double amount) {
-    setHvalue(getHvalue() + amount);
-    roadSystemController.setEditorPosition(getCenterOfViewPos());
-  }
-
-  private void moveV(double amount) {
-    setVvalue(getVvalue() + amount);
-    roadSystemController.setEditorPosition(getCenterOfViewPos());
-  }
-
-  private double getCurrentMoveSpeed() {
-    return BASE_MOVE_SPEED / zoomLevel;
-  }
-
   private Point2D getCenterOfViewPoint() {
     return grid.parentToLocal(
         gridGroup.parentToLocal(
@@ -229,20 +252,6 @@ public class ZoomableScrollPane extends ScrollPane implements UnitObserver<ZoomS
   private Position getCenterOfViewPos() {
     var centerOfViewPoint = getCenterOfViewPoint();
     return new Position(centerOfViewPoint.getX(), centerOfViewPoint.getY());
-  }
-
-  private void setupKeyboardControl() {
-    setOnKeyPressed(event -> {
-      switch (event.getCode()) {
-        case UP -> moveUp();
-        case DOWN -> moveDown();
-        case LEFT -> moveLeft();
-        case RIGHT -> moveRight();
-        case PLUS -> zoomIn();
-        case MINUS -> zoomOut();
-        default -> { }
-      }
-    });
   }
 
   @Override

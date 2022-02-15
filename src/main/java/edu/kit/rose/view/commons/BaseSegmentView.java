@@ -21,18 +21,12 @@ import javafx.scene.shape.QuadCurve;
  */
 public class BaseSegmentView extends SegmentView<Base> {
 
-  private static final double STREET_RADIUS = 15;
   private static final Color SELECTION_EFFECT_COLOR = Color.rgb(0, 150, 130);
   private static final double SELECTION_EFFECT_RADIUS = 5;
   private static final double EFFECT_CURVE_RADIUS = 6;
 
-  private final ConnectorObserver<Base> entryConnectorObserver;
-  private final ConnectorObserver<Base> exitConnectorObserver;
-
   private final ConnectorView entryConnectorView;
   private final ConnectorView exitConnectorView;
-
-  private final RoadSystemController roadSystemController;
 
   private QuadCurve curve;
   private QuadCurve effectCurve;
@@ -52,19 +46,17 @@ public class BaseSegmentView extends SegmentView<Base> {
 
     getSegment().addSubscriber(this);
 
-    this.roadSystemController = controller;
-
     this.entryConnectorView =
-        new ConnectorView(STREET_RADIUS, getSegment().getEntry(),
+        new ConnectorView(MAIN_STREET_RADIUS, getSegment().getEntry(),
             this::setDraggedConnectorView);
     this.exitConnectorView =
-        new ConnectorView(STREET_RADIUS, getSegment().getExit(),
+        new ConnectorView(MAIN_STREET_RADIUS, getSegment().getExit(),
             this::setDraggedConnectorView);
 
-    entryConnectorObserver = new ConnectorObserver<>(segment, segment.getEntry());
+    var entryConnectorObserver = new ConnectorObserver<>(segment, segment.getEntry());
     entryConnectorObserver.setOnConnectorPositionChangedCallback(this::draw);
 
-    exitConnectorObserver = new ConnectorObserver<>(segment, segment.getExit());
+    var exitConnectorObserver = new ConnectorObserver<>(segment, segment.getExit());
     exitConnectorObserver.setOnConnectorPositionChangedCallback(this::draw);
 
     setupEffectCurve();
@@ -80,14 +72,14 @@ public class BaseSegmentView extends SegmentView<Base> {
     this.curve = new QuadCurve();
     curve.setFill(Color.TRANSPARENT);
     curve.setStroke(Color.BLACK);
-    curve.setStrokeWidth(STREET_RADIUS * 2);
+    curve.setStrokeWidth(MAIN_STREET_RADIUS * 2);
   }
 
   private void setupEffectCurve() {
     this.effectCurve = new QuadCurve();
     effectCurve.setFill(Color.TRANSPARENT);
     effectCurve.setStroke(Color.BLACK);
-    effectCurve.setStrokeWidth(STREET_RADIUS * 2 + EFFECT_CURVE_RADIUS);
+    effectCurve.setStrokeWidth(MAIN_STREET_RADIUS * 2 + EFFECT_CURVE_RADIUS);
     var selectionEffect = new Shadow(BlurType.GAUSSIAN, SELECTION_EFFECT_COLOR,
         SELECTION_EFFECT_RADIUS);
     this.effectCurve.setEffect(selectionEffect);
@@ -141,26 +133,6 @@ public class BaseSegmentView extends SegmentView<Base> {
     });
   }
 
-
-  @Override
-  protected void redraw() {
-    updateBaseSegmentViewBounds();
-    updateConnectorViewPositions();
-    redrawCurve();
-  }
-
-  @Override
-  protected void setupDrag() {
-    setupCurve();
-    this.curve.setOnDragDetected(this::onDragDetected);
-    this.curve.setOnMouseDragged(this::onMouseDragged);
-  }
-
-  @Override
-  public List<ConnectorView> getConnectorViews() {
-    return List.of(entryConnectorView, exitConnectorView);
-  }
-
   private void updateConnectorViewPositions() {
     Position innerCenter = getInnerCenter();
     this.entryConnectorView.setPosition(new Position(
@@ -186,19 +158,23 @@ public class BaseSegmentView extends SegmentView<Base> {
 
     Position segmentCenter = getSegment().getCenter();
     if (leftConnector.getPosition().getY() <= rightConnector.getPosition().getY()) {
-      this.setLayoutX(segmentCenter.getX() + leftConnector.getPosition().getX() - STREET_RADIUS);
-      this.setLayoutY(segmentCenter.getY() + leftConnector.getPosition().getY() - STREET_RADIUS);
+      this.setLayoutX(segmentCenter.getX()
+          + leftConnector.getPosition().getX() - MAIN_STREET_RADIUS);
+      this.setLayoutY(segmentCenter.getY()
+          + leftConnector.getPosition().getY() - MAIN_STREET_RADIUS);
     } else {
-      this.setLayoutX(segmentCenter.getX() + leftConnector.getPosition().getX() - STREET_RADIUS);
-      this.setLayoutY(segmentCenter.getY() + rightConnector.getPosition().getY() - STREET_RADIUS);
+      this.setLayoutX(segmentCenter.getX()
+          + leftConnector.getPosition().getX() - MAIN_STREET_RADIUS);
+      this.setLayoutY(segmentCenter.getY()
+          + rightConnector.getPosition().getY() - MAIN_STREET_RADIUS);
     }
 
     this.setPrefWidth(
         Math.abs(rightConnector.getPosition().getX() - leftConnector.getPosition().getX())
-            + 2 * STREET_RADIUS);
+            + 2 * MAIN_STREET_RADIUS);
     this.setPrefHeight(
         Math.abs(rightConnector.getPosition().getY() - leftConnector.getPosition().getY())
-            + 2 * STREET_RADIUS);
+            + 2 * MAIN_STREET_RADIUS);
   }
 
   private void redrawCurve() {
@@ -221,20 +197,15 @@ public class BaseSegmentView extends SegmentView<Base> {
     Position innerCenter = getInnerCenter();
 
     curve.setStartX(innerCenter.getX() + relativeEntryPosition.getX()
-        - relativeEntryPointNormal.getX() * STREET_RADIUS);
+        - relativeEntryPointNormal.getX() * MAIN_STREET_RADIUS);
     curve.setStartY(innerCenter.getY() + relativeEntryPosition.getY()
-        - relativeEntryPointNormal.getY() * STREET_RADIUS);
+        - relativeEntryPointNormal.getY() * MAIN_STREET_RADIUS);
     curve.setControlX(innerCenter.getX());
     curve.setControlY(innerCenter.getY());
     curve.setEndX(innerCenter.getX() + relativeExitPosition.getX()
-        - relativeExitPointNormal.getX() * STREET_RADIUS);
+        - relativeExitPointNormal.getX() * MAIN_STREET_RADIUS);
     curve.setEndY(innerCenter.getY() + relativeExitPosition.getY()
-        - relativeExitPointNormal.getY() * STREET_RADIUS);
-  }
-
-  @Override
-  public void notifyChange(Element unit) {
-    draw();
+        - relativeExitPointNormal.getY() * MAIN_STREET_RADIUS);
   }
 
   private Position getInnerCenter() {
@@ -244,12 +215,34 @@ public class BaseSegmentView extends SegmentView<Base> {
   }
 
   @Override
-  public void notifyAddition(Element unit) {
+  protected void redraw() {
+    updateBaseSegmentViewBounds();
+    updateConnectorViewPositions();
+    redrawCurve();
+  }
 
+  @Override
+  protected void setupDrag() {
+    setupCurve();
+    this.curve.setOnDragDetected(this::onDragDetected);
+    this.curve.setOnMouseDragged(this::onMouseDragged);
+  }
+
+  @Override
+  public List<ConnectorView> getConnectorViews() {
+    return List.of(entryConnectorView, exitConnectorView);
+  }
+
+  @Override
+  public void notifyChange(Element unit) {
+    draw();
+  }
+
+  @Override
+  public void notifyAddition(Element unit) {
   }
 
   @Override
   public void notifyRemoval(Element unit) {
-
   }
 }

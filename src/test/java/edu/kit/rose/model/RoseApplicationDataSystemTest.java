@@ -13,6 +13,7 @@ import static org.mockito.Mockito.verify;
 
 import edu.kit.rose.infrastructure.DualSetObserver;
 import edu.kit.rose.infrastructure.language.Language;
+import edu.kit.rose.model.plausibility.violation.ViolationManager;
 import edu.kit.rose.model.roadsystem.GraphRoadSystem;
 import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.TimeSliceSetting;
@@ -73,6 +74,7 @@ public class RoseApplicationDataSystemTest {
 
     applicationDataSystem = new RoseApplicationDataSystem(CONFIG_FILE);
     var criteriaManager = applicationDataSystem.getCriteriaManager();
+    criteriaManager.setViolationManager(new ViolationManager());
     var timeSliceSetting = mock(TimeSliceSetting.class);
     this.roadSystem = new GraphRoadSystem(criteriaManager, timeSliceSetting);
     criteriaManager.setRoadSystem(this.roadSystem);

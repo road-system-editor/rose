@@ -1,6 +1,7 @@
 package edu.kit.rose.model.plausibility.criteria;
 
 import edu.kit.rose.infrastructure.SetObserver;
+import edu.kit.rose.model.plausibility.violation.ViolationManager;
 import edu.kit.rose.model.roadsystem.GraphRoadSystem;
 import edu.kit.rose.model.roadsystem.TimeSliceSetting;
 import org.junit.jupiter.api.Assertions;
@@ -14,6 +15,7 @@ class CriteriaManagerTest {
   @BeforeEach
   public void setUp() {
     this.criteriaManager = new CriteriaManager();
+    this.criteriaManager.setViolationManager(new ViolationManager());
     this.criteriaManager.setRoadSystem(
             new GraphRoadSystem(criteriaManager, Mockito.mock(TimeSliceSetting.class)));
   }

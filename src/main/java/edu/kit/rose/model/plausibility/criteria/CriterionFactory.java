@@ -41,7 +41,9 @@ class CriterionFactory {
    * @return the new CompletenessCriterion
    */
   public CompletenessCriterion createCompletenessCriterion() {
-    return new CompletenessCriterion(this.violationManager);
+    var criterion = new CompletenessCriterion((this.violationManager));
+    subscribeAndCheckSegmentsIfPossible(criterion);
+    return criterion;
   }
 
   /**
@@ -52,29 +54,27 @@ class CriterionFactory {
   public List<ValueCriterion> createValueCriteria() {
     ArrayList<ValueCriterion> valueCriteria = new ArrayList<>();
 
-    ValueCriterion criterion = new ValueCriterion(this.violationManager, AttributeType.LANE_COUNT,
-            ValueCriterion.LANE_COUNT_RANGE);
-    valueCriteria.add(criterion);
+    valueCriteria.add(new ValueCriterion(this.violationManager, AttributeType.LANE_COUNT,
+        ValueCriterion.LANE_COUNT_RANGE));
 
-    criterion = new ValueCriterion(this.violationManager, AttributeType.LANE_COUNT_RAMP,
-            ValueCriterion.LANE_COUNT_RAMP_RANGE);
-    valueCriteria.add(criterion);
+    valueCriteria.add(new ValueCriterion(this.violationManager, AttributeType.LANE_COUNT_RAMP,
+        ValueCriterion.LANE_COUNT_RAMP_RANGE));
 
-    criterion = new ValueCriterion(this.violationManager, AttributeType.LENGTH,
-            ValueCriterion.LENGTH_RANGE);
-    valueCriteria.add(criterion);
+    valueCriteria.add(new ValueCriterion(this.violationManager, AttributeType.LENGTH,
+        ValueCriterion.LENGTH_RANGE));
 
-    criterion = new ValueCriterion(this.violationManager, AttributeType.MAX_SPEED,
-            ValueCriterion.MAX_SPEED_RANGE);
-    valueCriteria.add(criterion);
+    valueCriteria.add(new ValueCriterion(this.violationManager, AttributeType.MAX_SPEED,
+        ValueCriterion.MAX_SPEED_RANGE));
 
-    criterion = new ValueCriterion(this.violationManager, AttributeType.MAX_SPEED_RAMP,
-            ValueCriterion.MAX_SPEED_RAMP_RANGE);
-    valueCriteria.add(criterion);
+    valueCriteria.add(new ValueCriterion(this.violationManager, AttributeType.MAX_SPEED_RAMP,
+        ValueCriterion.MAX_SPEED_RAMP_RANGE));
 
-    criterion = new ValueCriterion(this.violationManager, AttributeType.SLOPE,
-            ValueCriterion.SLOPE_RANGE);
-    valueCriteria.add(criterion);
+    valueCriteria.add(new ValueCriterion(this.violationManager, AttributeType.SLOPE,
+        ValueCriterion.SLOPE_RANGE));
+
+    for (var criterion : valueCriteria) {
+      subscribeAndCheckSegmentsIfPossible(criterion);
+    }
 
     return valueCriteria;
   }
@@ -85,6 +85,19 @@ class CriterionFactory {
    * @return the new CompatibilityCriterion
    */
   public CompatibilityCriterion createCompatibilityCriterion() {
-    return new CompatibilityCriterion(this.roadSystem, this.violationManager);
+    var criterion = new CompatibilityCriterion(this.roadSystem, this.violationManager);
+    subscribeAndCheckSegmentsIfPossible(criterion);
+    return criterion;
+  }
+
+  private void subscribeAndCheckSegmentsIfPossible(PlausibilityCriterion criterion) {
+    if (this.roadSystem != null) {
+      for (Element element : this.roadSystem.getElements()) {
+        if (!element.isContainer()) {
+          element.addSubscriber(criterion);
+          criterion.notifyChange(element);
+        }
+      }
+    }
   }
 }

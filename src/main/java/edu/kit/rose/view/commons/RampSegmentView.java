@@ -136,6 +136,12 @@ public abstract class RampSegmentView<T extends RampSegment> extends SegmentView
   protected void setupDrag() {
     setOnDragDetected(this::onDragDetected);
     setOnMouseDragged(this::onMouseDragged);
+    setOnMouseDragReleased(this::onMouseDragReleased);
+  }
+
+  @Override
+  protected void setupSelection() {
+    setOnMousePressed(this::onMousePressed);
   }
 
   protected abstract double getImagePosOffsetX();

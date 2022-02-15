@@ -75,9 +75,8 @@ public abstract class SegmentView<T extends Segment> extends Pane
     this.heightProperty().addListener(e -> draw());
 
     setOnMouseClicked(Event::consume);
-    setOnMousePressed(this::onMousePressed);
+    setupSelection();
     setupDrag();
-    setOnMouseDragReleased(this::onMouseDragReleased);
   }
 
   protected boolean canBeMoved(Node target, Movement movement) {
@@ -200,6 +199,11 @@ public abstract class SegmentView<T extends Segment> extends Pane
    * instantiated differently.
    */
   protected abstract void setupDrag();
+
+  /**
+   * Sets up how to trigger the selection of a segment view.
+   */
+  protected abstract void setupSelection();
 
   /**
    * Provides the {@link ConnectorView}s of this segment view.

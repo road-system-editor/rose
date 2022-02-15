@@ -223,9 +223,15 @@ public class BaseSegmentView extends SegmentView<Base> {
 
   @Override
   protected void setupDrag() {
-    setupCurve();
     this.curve.setOnDragDetected(this::onDragDetected);
     this.curve.setOnMouseDragged(this::onMouseDragged);
+    this.curve.setOnMouseDragReleased(this::onMouseDragReleased);
+  }
+
+  @Override
+  protected void setupSelection() {
+    setupCurve();
+    this.curve.setOnMousePressed(this::onMousePressed);
   }
 
   @Override

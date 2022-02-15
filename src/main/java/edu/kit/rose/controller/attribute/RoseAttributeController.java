@@ -2,6 +2,7 @@ package edu.kit.rose.controller.attribute;
 
 import edu.kit.rose.controller.command.ChangeCommandBuffer;
 import edu.kit.rose.controller.commons.Controller;
+import edu.kit.rose.controller.commons.ReplacementLog;
 import edu.kit.rose.controller.commons.StorageLock;
 import edu.kit.rose.controller.navigation.Navigator;
 import edu.kit.rose.controller.selection.SelectionBuffer;
@@ -14,7 +15,6 @@ import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -30,6 +30,7 @@ public class RoseAttributeController extends Controller implements AttributeCont
   private final SelectionBuffer selectionBuffer;
   private final ApplicationDataSystem applicationDataSystem;
   private final Project project;
+  private final ReplacementLog replacementLog;
 
   /**
    * Creates a new {@link RoseAttributeController}.
@@ -39,16 +40,19 @@ public class RoseAttributeController extends Controller implements AttributeCont
    * @param storageLock         the coordinator for controller actions
    * @param navigator           the navigator for the controller
    * @param applicationDataSystem             the model facade for project data
+   * @param replacementLog      the replacement log.
    */
   public RoseAttributeController(ChangeCommandBuffer changeCommandBuffer,
                                  SelectionBuffer selectionBuffer, StorageLock storageLock,
                                  Navigator navigator, Project project,
-                                 ApplicationDataSystem applicationDataSystem) {
+                                 ApplicationDataSystem applicationDataSystem,
+                                 ReplacementLog replacementLog) {
     super(storageLock, navigator);
     this.changeCommandBuffer = changeCommandBuffer;
     this.selectionBuffer = selectionBuffer;
     this.project = project;
     this.applicationDataSystem = applicationDataSystem;
+    this.replacementLog = replacementLog;
   }
 
   @Override
@@ -57,7 +61,7 @@ public class RoseAttributeController extends Controller implements AttributeCont
       return;
     }
 
-    var command  = new SetAttributeAccessorCommand<>(project, accessor,
+    var command  = new SetAttributeAccessorCommand<>(replacementLog, accessor,
         accessor.getValue(), value);
     changeCommandBuffer.addAndExecuteCommand(command);
   }

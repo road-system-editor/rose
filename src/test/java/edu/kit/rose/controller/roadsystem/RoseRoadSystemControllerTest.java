@@ -1,6 +1,12 @@
 package edu.kit.rose.controller.roadsystem;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 import edu.kit.rose.controller.command.ChangeCommandBuffer;
+import edu.kit.rose.controller.command.RoseChangeCommandBuffer;
+import edu.kit.rose.controller.commons.ReplacementLog;
 import edu.kit.rose.controller.commons.StorageLock;
 import edu.kit.rose.controller.navigation.Navigator;
 import edu.kit.rose.controller.selection.SelectionBuffer;
@@ -38,7 +44,6 @@ public class RoseRoadSystemControllerTest {
   private RoadSystem roadSystem;
 
   private RoadSystemController roadSystemController;
-  private ZoomSetting zoomSetting;
 
   /**
    * Sets up mock objects.
@@ -48,21 +53,23 @@ public class RoseRoadSystemControllerTest {
     selectionBuffer = Mockito.mock(SelectionBuffer.class);
     project = Mockito.mock(Project.class);
     roadSystem = Mockito.mock(RoadSystem.class);
-    zoomSetting = Mockito.mock(ZoomSetting.class);
+    var zoomSetting = Mockito.mock(ZoomSetting.class);
 
     Mockito.when(zoomSetting.getCenterOfView()).thenReturn(new Position(0, 0));
     Mockito.when(project.getZoomSetting()).thenReturn(zoomSetting);
     Mockito.when(project.getRoadSystem()).thenReturn(roadSystem);
 
-    ChangeCommandBuffer changeCommandBuffer = Mockito.mock(ChangeCommandBuffer.class);
+    ChangeCommandBuffer changeCommandBuffer = new RoseChangeCommandBuffer();
     StorageLock storageLock = Mockito.mock(StorageLock.class);
     Navigator navigator = Mockito.mock(Navigator.class);
+    ReplacementLog replacementLog = new ReplacementLog();
     roadSystemController = new RoseRoadSystemController(
         changeCommandBuffer,
         storageLock,
         navigator,
         selectionBuffer,
-        project);
+        project,
+        replacementLog);
   }
 
   @Test
@@ -95,7 +102,7 @@ public class RoseRoadSystemControllerTest {
       Assertions.assertSame(targetPosition, invocation.getArgument(0));
       called.set(true);
       return null;
-    }).when(zoomSetting).setCenterOfView(Mockito.any(Position.class));
+    }).when(zoomSetting).setCenterOfView(any(Position.class));
 
     roadSystemController.setEditorPosition(targetPosition);
     Assertions.assertTrue(called.get());
@@ -103,40 +110,22 @@ public class RoseRoadSystemControllerTest {
 
   @Test
   public void testCreateStreetSegment() {
-
-    AtomicReference<Boolean> called = new AtomicReference<>(false);
-
     RoadSystem roadSystem = Mockito.mock(RoadSystem.class);
     Mockito.when(project.getRoadSystem()).thenReturn(roadSystem);
-    Mockito.doAnswer(invocation -> {
-      Assertions.assertEquals(SegmentType.BASE, invocation.getArgument(0));
-      called.set(true);
-      return new Base();
-    }).when(roadSystem).createSegment(Mockito.any(SegmentType.class));
+    Mockito.when(roadSystem.createSegment(SegmentType.BASE)).thenReturn(new Base());
 
     roadSystemController.createStreetSegment(SegmentType.BASE);
-    Assertions.assertTrue(called.get());
+    verify(roadSystem, times(1))
+        .createSegment(SegmentType.BASE);
   }
 
   @Test
   public void testDeleteStreetSegment() {
-    AtomicReference<Boolean> called = new AtomicReference<>(false);
-
     Segment segment = Mockito.mock(Segment.class);
-
-    RoadSystem roadSystem = Mockito.mock(RoadSystem.class);
-    Mockito.when(project.getRoadSystem()).thenReturn(roadSystem);
-
-    Mockito.doAnswer(invocation -> {
-      Assertions.assertSame(segment, invocation.getArgument(0));
-      called.set(true);
-      return null;
-    }).when(roadSystem).removeElement(Mockito.any(Element.class));
-
     Mockito.when(roadSystem.getElements()).thenReturn(new RoseBox<>(List.of()));
 
     roadSystemController.deleteStreetSegment(segment);
-    Assertions.assertTrue(called.get());
+    verify(roadSystem, times(1)).removeElement(segment);
   }
 
 
@@ -155,7 +144,7 @@ public class RoseRoadSystemControllerTest {
       centerPositionX.set(centerPositionX.get() + movement.getX());
       centerPositionY.set(centerPositionY.get() + movement.getY());
       return null;
-    }).when(segment).move(Mockito.any(Movement.class));
+    }).when(segment).move(any(Movement.class));
 
     Mockito.when(segment.getCenter()).thenReturn(new Position(
         centerPositionX.get(),
@@ -167,7 +156,7 @@ public class RoseRoadSystemControllerTest {
       return null;
     })
         .when(roadSystem)
-        .moveSegments(ArgumentMatchers.anyCollection(), ArgumentMatchers.any(Movement.class));
+        .moveSegments(ArgumentMatchers.anyCollection(), any(Movement.class));
 
     roadSystemController.beginDragStreetSegment(initialPosition);
 
@@ -186,11 +175,11 @@ public class RoseRoadSystemControllerTest {
         segments.add(invocation.getArgument(0, Segment.class));
       }
       return null;
-    }).when(this.selectionBuffer).addSegmentSelection(ArgumentMatchers.any(Segment.class));
+    }).when(this.selectionBuffer).addSegmentSelection(any(Segment.class));
     Mockito.doAnswer(invocation -> {
       segments.remove(invocation.getArgument(0, Segment.class));
       return null;
-    }).when(this.selectionBuffer).removeSegmentSelection(ArgumentMatchers.any(Segment.class));
+    }).when(this.selectionBuffer).removeSegmentSelection(any(Segment.class));
 
     Segment segment = new Exit();
     Segment segment1 = new Entrance();
@@ -229,7 +218,7 @@ public class RoseRoadSystemControllerTest {
         selectedFlag.set(!selectedFlag.get());
       }
       return null;
-    }).when(selectionBuffer).toggleSegmentSelection(Mockito.any(Segment.class));
+    }).when(selectionBuffer).toggleSegmentSelection(any(Segment.class));
 
     roadSystemController.toggleSegmentSelection(segment);
     Assertions.assertTrue(selectedFlag.get());
@@ -279,7 +268,7 @@ public class RoseRoadSystemControllerTest {
       Assertions.assertEquals(segmentInRange, invocation.getArgument(0));
       called.set(true);
       return null;
-    }).when(selectionBuffer).addSegmentSelection(Mockito.any(Segment.class));
+    }).when(selectionBuffer).addSegmentSelection(any(Segment.class));
 
     //Configure getElements of Roadsystem
     Mockito.when(roadSystem.getElements())

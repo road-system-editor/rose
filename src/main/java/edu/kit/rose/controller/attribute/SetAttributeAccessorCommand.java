@@ -1,8 +1,9 @@
 package edu.kit.rose.controller.attribute;
 
 import edu.kit.rose.controller.command.ChangeCommand;
-import edu.kit.rose.model.Project;
+import edu.kit.rose.controller.commons.ReplacementLog;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
+import java.util.Objects;
 
 /**
  * Encapsulates the functionality of setting an attribute accessors value
@@ -16,33 +17,33 @@ public class SetAttributeAccessorCommand<T> implements ChangeCommand {
   private final AttributeAccessor<T> accessor;
   private final T oldValue;
   private final T newValue;
+  private final ReplacementLog replacementLog;
 
   /**
    * Creates a {@link SetAttributeAccessorCommand} that sets an accessor's value to a new value.
    *
-   * @param project  the model facade to execute the {@link SetAttributeAccessorCommand} on
    * @param accessor the accessor with the value to be set
    * @param oldValue the previous value of the accessor
    * @param newValue the value to set on the accessor
    */
-  public SetAttributeAccessorCommand(Project project, AttributeAccessor<T> accessor, T oldValue,
+  public SetAttributeAccessorCommand(ReplacementLog replacementLog,
+                                     AttributeAccessor<T> accessor,
+                                     T oldValue,
                                      T newValue) {
-    if (accessor == null) {
-      throw new IllegalArgumentException("field 'accessor' can't be null.");
-    }
-    this.accessor = accessor;
+    this.replacementLog = Objects.requireNonNull(replacementLog);
+    this.accessor = Objects.requireNonNull(accessor);
     this.oldValue = oldValue;
     this.newValue = newValue;
   }
 
   @Override
   public void execute() {
-    accessor.setValue(newValue);
+    this.replacementLog.getCurrentAccessorVersion(accessor).setValue(newValue);
   }
 
   @Override
   public void unexecute() {
-    accessor.setValue(oldValue);
+    this.replacementLog.getCurrentAccessorVersion(accessor).setValue(oldValue);
     //TODO: bulk edit has to be supported. New Type of AttributeAccessor?
   }
 }

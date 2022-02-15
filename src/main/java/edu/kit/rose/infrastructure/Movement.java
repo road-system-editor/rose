@@ -1,5 +1,7 @@
 package edu.kit.rose.infrastructure;
 
+import java.util.Objects;
+
 /**
  * A movement in form of a 2D Vector.
  */
@@ -62,5 +64,18 @@ public class Movement {
    */
   public void setY(double y) {
     this.yvalue = y;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    return obj != null
+        && obj.getClass() == this.getClass()
+        && ((Movement) obj).getX() == getX()
+        && ((Movement) obj).getY() == getY();
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(getX(), getY());
   }
 }

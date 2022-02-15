@@ -1,89 +1,91 @@
 package edu.kit.rose.controller.roadsystem;
 
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import edu.kit.rose.controller.commons.ReplacementLog;
 import edu.kit.rose.infrastructure.Movement;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.roadsystem.RoadSystem;
+import edu.kit.rose.model.roadsystem.elements.Base;
+import edu.kit.rose.model.roadsystem.elements.Exit;
 import edu.kit.rose.model.roadsystem.elements.Segment;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatchers;
-import org.mockito.Mockito;
 
 /**
  * Tests the {@link DragStreetSegmentsCommand} class.
  */
 public class DragStreetSegmentsCommandTest {
-
-  private Project project;
+  private static final Movement MOVEMENT = new Movement(10, 20);
+  private static final Movement REVERSE_MOVEMENT = new Movement(-10, -20);
   private RoadSystem roadSystem;
-  private Movement movement;
+  private ReplacementLog replacementLog;
+  private List<Segment> segments;
+  /**
+   * The first segment to move.
+   */
+  private Base base;
+  /**
+   * The second segment to move.
+   */
+  private Exit exit;
+
+  private DragStreetSegmentsCommand command;
 
   /**
    * Sets up the mocking objects.
    */
   @BeforeEach
   public void setUp() {
-    this.project = Mockito.mock(Project.class);
-    this.roadSystem = Mockito.mock(RoadSystem.class);
+    var project = mock(Project.class);
+    this.roadSystem = mock(RoadSystem.class);
+    when(project.getRoadSystem()).thenReturn(this.roadSystem);
 
-    movement = new Movement(10, 20);
+    this.segments = new LinkedList<>();
+    this.base = new Base();
+    this.segments.add(this.base);
+
+    this.exit = new Exit();
+    this.segments.add(this.exit);
+
+    this.replacementLog = new ReplacementLog();
+    this.command = new DragStreetSegmentsCommand(this.replacementLog, project, this.segments,
+        MOVEMENT);
   }
 
   @Test
-  public void testExecute() {
-    AtomicReference<Boolean> called = new AtomicReference<>(false);
-
-    List<Segment> segments = new ArrayList<>();
-    Segment segment = Mockito.mock(Segment.class);
-    segments.add(segment);
-
-    Mockito.when(project.getRoadSystem()).thenReturn(roadSystem);
-    Mockito.doAnswer(invocation -> {
-      List<Segment> s = invocation.getArgument(0);
-      Movement m = invocation.getArgument(1);
-
-      Assertions.assertTrue(s.contains(segment));
-      Assertions.assertEquals(10, m.getX());
-      Assertions.assertEquals(20, m.getY());
-      called.set(true);
-      return null;
-    }).when(roadSystem).moveSegments(ArgumentMatchers.anyCollection(), ArgumentMatchers.any());
-
-    DragStreetSegmentsCommand command
-        = new DragStreetSegmentsCommand(this.project, segments, this.movement);
+  public void testCallsMoveSegments() {
     command.execute();
+    verify(roadSystem, times(1))
+        .moveSegments(eq(this.segments), eq(MOVEMENT));
 
-    Assertions.assertTrue(called.get());
+    command.unexecute();
+    verify(roadSystem, times(1))
+        .moveSegments(eq(this.segments), eq(REVERSE_MOVEMENT));
   }
 
   @Test
-  public void testUnexecute() {
-    AtomicReference<Boolean> called = new AtomicReference<>(false);
+  public void testConsidersReplacements() {
+    // replace exit before execution
+    Exit exitReplacement = new Exit();
+    this.replacementLog.replaceElement(exit, exitReplacement);
 
-    List<Segment> segments = new ArrayList<>();
-    Segment segment = Mockito.mock(Segment.class);
-    segments.add(segment);
+    command.execute();
+    verify(roadSystem, times(1))
+        .moveSegments(eq(List.of(base, exitReplacement)), eq(MOVEMENT));
 
-    Mockito.when(project.getRoadSystem()).thenReturn(roadSystem);
-    Mockito.doAnswer(invocation -> {
-      List<Segment> s = invocation.getArgument(0);
-      Movement m = invocation.getArgument(1);
+    // replace base before un-execution
+    Base baseReplacement = new Base();
+    this.replacementLog.replaceElement(base, baseReplacement);
 
-      Assertions.assertTrue(s.contains(segment));
-      Assertions.assertEquals(10, (-m.getX()));
-      Assertions.assertEquals(20, (-m.getY()));
-      called.set(true);
-      return null;
-    }).when(roadSystem).moveSegments(ArgumentMatchers.anyCollection(), ArgumentMatchers.any());
-
-    DragStreetSegmentsCommand command
-        = new DragStreetSegmentsCommand(this.project, segments, this.movement);
     command.unexecute();
-
-    Assertions.assertTrue(called.get());
+    verify(roadSystem, times(1))
+        .moveSegments(eq(List.of(baseReplacement, exitReplacement)), eq(REVERSE_MOVEMENT));
   }
 }

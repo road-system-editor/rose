@@ -1,6 +1,7 @@
 package edu.kit.rose.controller.hierarchy;
 
 import edu.kit.rose.controller.command.ChangeCommand;
+import edu.kit.rose.controller.commons.ReplacementLog;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.elements.Group;
@@ -10,6 +11,7 @@ import edu.kit.rose.model.roadsystem.elements.Group;
  * it changeable.
  */
 public class SetGroupNameCommand implements ChangeCommand {
+  private final ReplacementLog replacementLog;
   private final Group group;
   private final String newName;
   private String lastName;
@@ -20,29 +22,22 @@ public class SetGroupNameCommand implements ChangeCommand {
    * @param group   the group with a name to change
    * @param newName the new name of the group
    */
-  public SetGroupNameCommand(Group group, String newName) {
+  public SetGroupNameCommand(ReplacementLog replacementLog, Group group, String newName) {
+    this.replacementLog = replacementLog;
     this.group = group;
     this.newName = newName;
   }
 
   @Override
   public void execute() {
-    this.lastName = this.group.getName();
-    setNameToGroup(this.newName);
+    Group currentGroup = this.replacementLog.getCurrentVersion(this.group);
+    this.lastName = currentGroup.getName();
+    currentGroup.setName(this.newName);
   }
 
   @Override
   public void unexecute() {
-    setNameToGroup(this.lastName);
-  }
-
-  private void setNameToGroup(String name) {
-    for (AttributeAccessor<?> attribute : this.group.getAttributeAccessors()) {
-      if (attribute.getAttributeType().equals(AttributeType.NAME)) {
-        AttributeAccessor<String> nameAttribute = (AttributeAccessor<String>) attribute;
-        nameAttribute.setValue(name);
-        return;
-      }
-    }
+    Group currentGroup = this.replacementLog.getCurrentVersion(this.group);
+    currentGroup.setName(this.lastName);
   }
 }

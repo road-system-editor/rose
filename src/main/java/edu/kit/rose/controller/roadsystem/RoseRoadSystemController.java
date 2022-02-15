@@ -2,6 +2,7 @@ package edu.kit.rose.controller.roadsystem;
 
 import edu.kit.rose.controller.command.ChangeCommandBuffer;
 import edu.kit.rose.controller.commons.Controller;
+import edu.kit.rose.controller.commons.ReplacementLog;
 import edu.kit.rose.controller.commons.StorageLock;
 import edu.kit.rose.controller.navigation.Navigator;
 import edu.kit.rose.controller.selection.SelectionBuffer;
@@ -31,7 +32,7 @@ public class RoseRoadSystemController extends Controller
     SetObserver<Segment, SelectionBuffer> {
 
   private static final int SEGMENTS_ROTATION_ALLOWED_AMOUNT = 1;
-  private static final double INTERSECT_DISTANCE = 30;
+  private static final double INTERSECTION_DISTANCE = 30;
 
   /**
    * The container for selected segments.
@@ -47,6 +48,7 @@ public class RoseRoadSystemController extends Controller
    * The model facade for project specific data.
    */
   private final Project project;
+  private final ReplacementLog replacementLog;
 
   private final RoadSystem roadSystem;
 
@@ -67,13 +69,15 @@ public class RoseRoadSystemController extends Controller
    */
   public RoseRoadSystemController(ChangeCommandBuffer changeCommandBuffer, StorageLock storageLock,
                                   Navigator navigator, SelectionBuffer selectionBuffer,
-                                  Project project) {
+                                  Project project,
+                                  ReplacementLog replacementLog) {
     super(storageLock, navigator);
     this.changeCommandBuffer = changeCommandBuffer;
     this.selectionBuffer = selectionBuffer;
     selectionBuffer.addSubscriber(this);
     this.project = project;
     this.roadSystem = project.getRoadSystem();
+    this.replacementLog = replacementLog;
 
     observers = new HashSet<>();
   }
@@ -91,7 +95,7 @@ public class RoseRoadSystemController extends Controller
   @Override
   public void createStreetSegment(SegmentType segmentType) {
     CreateStreetSegmentCommand createStreetSegmentCommand
-        = new CreateStreetSegmentCommand(this.project, segmentType);
+        = new CreateStreetSegmentCommand(this.replacementLog, this.project, segmentType);
 
     changeCommandBuffer.addAndExecuteCommand(createStreetSegmentCommand);
   }
@@ -99,7 +103,7 @@ public class RoseRoadSystemController extends Controller
   @Override
   public void deleteStreetSegment(Segment segment) {
     DeleteStreetSegmentCommand deleteStreetSegmentCommand
-        = new DeleteStreetSegmentCommand(this.project, segment);
+        = new DeleteStreetSegmentCommand(this.replacementLog, this.project, segment);
 
     selectionBuffer.removeSegmentSelection(segment);
     changeCommandBuffer.addAndExecuteCommand(deleteStreetSegmentCommand);
@@ -130,8 +134,8 @@ public class RoseRoadSystemController extends Controller
         segmentPosition.getX() - initialSegmentDragPosition.getX(),
         segmentPosition.getY() - initialSegmentDragPosition.getY());
 
-    DragStreetSegmentsCommand dragStreetSegmentsCommand
-        = new DragStreetSegmentsCommand(
+    DragStreetSegmentsCommand dragStreetSegmentsCommand = new DragStreetSegmentsCommand(
+        this.replacementLog,
         this.project,
         this.selectionBuffer.getSelectedSegments(),
         draggingTransition);
@@ -173,7 +177,6 @@ public class RoseRoadSystemController extends Controller
   public void clearSegmentSelection() {
     this.selectionBuffer.removeAllSelections();
   }
-
 
   @Override
   public void selectSegmentsInRectangle(Position firstSelectionCorner,
@@ -232,8 +235,8 @@ public class RoseRoadSystemController extends Controller
         connectorEndPosition.getX() - initialConnectorDragPosition.getX(),
         connectorEndPosition.getY() - initialConnectorDragPosition.getY());
 
-    DragSegmentEndCommand dragSegmentEndCommand
-        = new DragSegmentEndCommand((MovableConnector) dragConnector, draggingTransition);
+    DragSegmentEndCommand dragSegmentEndCommand = new DragSegmentEndCommand(this.replacementLog,
+        (MovableConnector) dragConnector, draggingTransition);
 
     dragSegmentEndCommand.unexecute();
     changeCommandBuffer.addAndExecuteCommand(dragSegmentEndCommand);
@@ -244,7 +247,6 @@ public class RoseRoadSystemController extends Controller
     initialConnectorDragPosition = null;
   }
 
-
   @Override
   public void rotateSegment() {
     if (selectionBuffer.getSelectedSegments().size() == SEGMENTS_ROTATION_ALLOWED_AMOUNT) {
@@ -254,7 +256,7 @@ public class RoseRoadSystemController extends Controller
 
   @Override
   public double getIntersectionDistance() {
-    return INTERSECT_DISTANCE;
+    return INTERSECTION_DISTANCE;
   }
 
 
@@ -327,7 +329,7 @@ public class RoseRoadSystemController extends Controller
         .filter(connector -> {
           var connectorPos = connectorSegmentMap.get(connector)
               .getAbsoluteConnectorPosition(connector);
-          return draggedConnectorPos.distanceTo(connectorPos) <= INTERSECT_DISTANCE;
+          return draggedConnectorPos.distanceTo(connectorPos) <= INTERSECTION_DISTANCE;
         }).collect(Collectors.toList());
   }
 

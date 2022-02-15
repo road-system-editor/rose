@@ -15,6 +15,7 @@ import edu.kit.rose.model.roadsystem.elements.Connector;
 import edu.kit.rose.model.roadsystem.elements.MovableConnector;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;

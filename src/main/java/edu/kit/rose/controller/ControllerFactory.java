@@ -6,6 +6,7 @@ import edu.kit.rose.controller.attribute.AttributeController;
 import edu.kit.rose.controller.attribute.RoseAttributeController;
 import edu.kit.rose.controller.command.ChangeCommandBuffer;
 import edu.kit.rose.controller.command.RoseChangeCommandBuffer;
+import edu.kit.rose.controller.commons.ReplacementLog;
 import edu.kit.rose.controller.commons.RoseStorageLock;
 import edu.kit.rose.controller.commons.StorageLock;
 import edu.kit.rose.controller.hierarchy.HierarchyController;
@@ -39,6 +40,7 @@ public class ControllerFactory {
   private final ChangeCommandBuffer changeCommandBuffer;
   private final SelectionBuffer selectionBuffer;
   private final StorageLock storageLock;
+  private final ReplacementLog replacementLog;
 
   /**
    * Creates a new instance of {@link ControllerFactory}.
@@ -57,6 +59,7 @@ public class ControllerFactory {
     this.changeCommandBuffer = new RoseChangeCommandBuffer();
     this.selectionBuffer = new RoseSelectionBuffer();
     this.storageLock = new RoseStorageLock();
+    this.replacementLog = new ReplacementLog();
   }
 
   /**
@@ -76,7 +79,8 @@ public class ControllerFactory {
    */
   public AttributeController getAttributeController() {
     return new RoseAttributeController(this.changeCommandBuffer, this.selectionBuffer,
-        this.storageLock, this.navigator, this.project, this.applicationDataSystem);
+        this.storageLock, this.navigator, this.project, this.applicationDataSystem,
+        this.replacementLog);
   }
 
   /**
@@ -85,8 +89,8 @@ public class ControllerFactory {
    * @return hierarchy controller instance
    */
   public HierarchyController getHierarchyController() {
-    return new RoseHierarchyController(this.storageLock,
-            this.changeCommandBuffer, this.selectionBuffer, this.project, this.navigator);
+    return new RoseHierarchyController(this.storageLock, this.changeCommandBuffer,
+        this.selectionBuffer, this.project, this.navigator, this.replacementLog);
   }
 
   /**
@@ -124,6 +128,6 @@ public class ControllerFactory {
    */
   public RoadSystemController getRoadSystemController() {
     return new RoseRoadSystemController(this.changeCommandBuffer, this.storageLock, this.navigator,
-        this.selectionBuffer, this.project);
+        this.selectionBuffer, this.project, this.replacementLog);
   }
 }

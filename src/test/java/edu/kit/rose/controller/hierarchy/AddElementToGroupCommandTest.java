@@ -1,12 +1,12 @@
 package edu.kit.rose.controller.hierarchy;
 
-import static org.mockito.Mockito.doAnswer;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import edu.kit.rose.controller.command.ChangeCommand;
+import edu.kit.rose.controller.commons.ReplacementLog;
 import edu.kit.rose.infrastructure.RoseBox;
-import edu.kit.rose.infrastructure.RoseSortedBox;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.elements.Base;
@@ -17,74 +17,101 @@ import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-
 
 /**
  * Unit Test for {@link AddElementToGroupCommand}.
  */
 class AddElementToGroupCommandTest {
-  @Mock
+  private List<Element> roadSystemElements;
   private Project mockProject;
-  @Mock
-  private RoadSystem mockRoadSystem;
-  @Mock
   private Group fromGroup;
-  @Mock
   private Group toGroup;
   private Element element;
-  private ArrayList<Element> parentGroupElements;
-  private ArrayList<Element> elements;
+
+  private ReplacementLog replacementLog;
+  private AddElementToGroupCommand command;
 
   @BeforeEach
   public void setUp() {
+    this.replacementLog = new ReplacementLog();
     this.element = new Base();
-    this.elements = new ArrayList<>();
-    this.parentGroupElements = new ArrayList<>();
-    this.toGroup = mock(Group.class);
-    this.fromGroup = mock(Group.class);
+    this.toGroup = new Group();
+    this.fromGroup = new Group();
     this.mockProject = mock(Project.class);
-    this.mockRoadSystem = mock(RoadSystem.class);
+    this.roadSystemElements = new ArrayList<>();
+    this.roadSystemElements.add(this.fromGroup);
+    this.roadSystemElements.add(this.element);
 
-    when(this.mockProject.getRoadSystem()).thenReturn(this.mockRoadSystem);
-    when(this.mockRoadSystem.getElements()).thenReturn(new RoseBox<>(List.of(this.fromGroup)));
-
-    when(this.toGroup.getElements())
-            .thenAnswer(e -> new RoseSortedBox<>(this.elements));
-    when(this.fromGroup.getElements())
-            .thenAnswer(e -> new RoseSortedBox<>(this.parentGroupElements));
-    when(this.fromGroup.isContainer()).thenReturn(true);
-
-    doAnswer(e -> this.elements.add(this.element))
-            .when(toGroup).addElement(this.element);
-    doAnswer(e -> this.parentGroupElements.add(this.element))
-            .when(fromGroup).addElement(this.element);
-    doAnswer(e -> this.elements.remove(this.element))
-            .when(toGroup).removeElement(this.element);
-    doAnswer(e -> this.parentGroupElements.remove(this.element))
-            .when(fromGroup).removeElement(this.element);
+    RoadSystem mockRoadSystem = mock(RoadSystem.class);
+    when(this.mockProject.getRoadSystem()).thenReturn(mockRoadSystem);
+    when(mockRoadSystem.getElements()).thenAnswer(stub -> new RoseBox<>(this.roadSystemElements));
 
     this.fromGroup.addElement(this.element);
+
+    this.command = new AddElementToGroupCommand(
+        this.replacementLog, this.mockProject, this.element, this.toGroup);
+  }
+
+  @Test
+  void testConstructor() {
+    assertThrows(NullPointerException.class, () -> new AddElementToGroupCommand(
+        null, this.mockProject, this.element, this.toGroup));
+    assertThrows(NullPointerException.class, () -> new AddElementToGroupCommand(
+        this.replacementLog, null, this.element, this.toGroup));
+    assertThrows(NullPointerException.class, () -> new AddElementToGroupCommand(
+        this.replacementLog, this.mockProject, null, this.toGroup));
+    assertThrows(NullPointerException.class, () -> new AddElementToGroupCommand(
+        this.replacementLog, this.mockProject, this.element, null));
   }
 
   @Test
   void testExecute() {
-    ChangeCommand addElementCommand =
-            new AddElementToGroupCommand(this.mockProject, this.element, this.toGroup);
-    addElementCommand.execute();
+    command.execute();
 
-    Assertions.assertTrue(this.toGroup.getElements().contains(this.element));
+    assertTrue(this.toGroup.getElements().contains(this.element));
     Assertions.assertFalse(this.fromGroup.getElements().contains(this.element));
   }
 
   @Test
-  void testUnexecute() {
-    ChangeCommand addElementCommand =
-            new AddElementToGroupCommand(this.mockProject, this.element, this.toGroup);
-    addElementCommand.execute();
-    addElementCommand.unexecute();
+  void testUnExecute() {
+    command.execute();
+    command.unexecute();
 
     Assertions.assertFalse(this.toGroup.getElements().contains(this.element));
-    Assertions.assertTrue(this.fromGroup.getElements().contains(this.element));
+    assertTrue(this.fromGroup.getElements().contains(this.element));
+  }
+
+  @Test
+  void testConsidersParentReplacement() {
+    Group newFromGroup = new Group();
+    newFromGroup.addElement(element);
+    simulateReplace(fromGroup, newFromGroup);
+
+    command.execute();
+    Assertions.assertFalse(newFromGroup.contains(element));
+
+    command.unexecute();
+    assertTrue(newFromGroup.contains(element));
+  }
+
+  @Test
+  void testConsidersElementReplacement() {
+    Element newElement = new Base();
+    fromGroup.removeElement(element);
+    fromGroup.addElement(newElement);
+    simulateReplace(element, newElement);
+
+    command.execute();
+    Assertions.assertFalse(fromGroup.contains(newElement));
+
+    command.unexecute();
+    assertTrue(fromGroup.contains(newElement));
+  }
+
+  private void simulateReplace(Element oldElement, Element newElement) {
+    this.replacementLog.replaceElement(oldElement, newElement);
+    if (this.roadSystemElements.remove(oldElement)) {
+      this.roadSystemElements.add(newElement);
+    }
   }
 }

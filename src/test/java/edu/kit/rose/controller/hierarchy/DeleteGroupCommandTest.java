@@ -1,151 +1,216 @@
 package edu.kit.rose.controller.hierarchy;
 
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.doAnswer;
+import static edu.kit.rose.util.RoadSystemUtility.findElementByName;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import edu.kit.rose.infrastructure.RoseSortedBox;
-import edu.kit.rose.infrastructure.SortedBox;
+import edu.kit.rose.controller.commons.ReplacementLog;
 import edu.kit.rose.model.Project;
+import edu.kit.rose.model.plausibility.criteria.CriteriaManager;
+import edu.kit.rose.model.roadsystem.GraphRoadSystem;
 import edu.kit.rose.model.roadsystem.RoadSystem;
-import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
-import edu.kit.rose.model.roadsystem.attributes.AttributeType;
+import edu.kit.rose.model.roadsystem.TimeSliceSetting;
 import edu.kit.rose.model.roadsystem.elements.Base;
 import edu.kit.rose.model.roadsystem.elements.Element;
+import edu.kit.rose.model.roadsystem.elements.Entrance;
 import edu.kit.rose.model.roadsystem.elements.Group;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import edu.kit.rose.model.roadsystem.elements.Segment;
+import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import java.util.Set;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatchers;
-import org.mockito.Mock;
-
 
 /**
  * Unit test for {@link DeleteGroupCommand}.
  */
 class DeleteGroupCommandTest {
-  private static final int EXPECTED_NUMBER_OF_ELEMENTS = 2;
-  @Mock
-  private RoadSystem roadSystem;
-  @Mock
-  private Project project;
-  private static final String UNSET = "unset";
-  private static final String SET = "set";
-  private List<Element> elements;
-  private Element element1;
-  private Element element2;
-  private Group mockGroup;
-  private Group group;
-  private AttributeAccessor<String> accessor;
-  private String name;
+  private static final String PARENT_NAME = "proud parent";
+  private static final String GROUP_NAME = "creative group name";
+  private static final String ELEMENT_1_NAME = "some base segment";
+  private static final String ELEMENT_2_NAME = "some entrance segment";
 
+  private RoadSystem roadSystem;
+
+  private ReplacementLog replacementLog;
+
+  private DeleteGroupCommand command;
 
   @BeforeEach
   public void setUp() {
-    this.name = UNSET;
-    this.elements = new ArrayList<>();
-    this.element1 = new Base();
-    this.element2 = new Base();
-    this.elements.add(element1);
-    this.elements.add(element2);
-    this.name = UNSET;
-    this.project = mock(Project.class);
-    this.roadSystem = mock(RoadSystem.class);
+    var criteriaManager = new CriteriaManager();
+    this.roadSystem = new GraphRoadSystem(criteriaManager, mock(TimeSliceSetting.class));
+    criteriaManager.setRoadSystem(this.roadSystem);
 
+    var element1 = roadSystem.createSegment(SegmentType.BASE);
+    element1.setName(ELEMENT_1_NAME);
+
+    var element2 = roadSystem.createSegment(SegmentType.ENTRANCE);
+    element2.setName(ELEMENT_2_NAME);
+
+    var group = roadSystem.createGroup(Set.of(element1, element2));
+    group.setName(GROUP_NAME);
+
+    var parent = roadSystem.createGroup(Set.of(group));
+    parent.setName(PARENT_NAME);
+
+    Project project = mock(Project.class);
     when(project.getRoadSystem()).thenReturn(this.roadSystem);
-    this.mockGroup = new Group() {
-      private final List<Element> auxElements = new ArrayList<>();
 
-      @Override
-      public SortedBox<AttributeAccessor<?>> getAttributeAccessors() {
-        List<AttributeAccessor<?>> list = new ArrayList<>();
-        list.add(accessor);
-        return new RoseSortedBox<>(list);
-      }
-
-      @Override
-      public SortedBox<Element> getElements() {
-        return new RoseSortedBox<>(this.auxElements);
-      }
-
-      @Override
-      public void addElement(Element element) {
-        this.auxElements.add(element);
-      }
-
-      @Override
-      public void removeElement(Element e) {
-        this.auxElements.remove(e);
-      }
-    };
-
-    this.group = this.mockGroup;
-    this.group.addElement(element1);
-    this.group.addElement(element2);
-
-    this.accessor = new AttributeAccessor<String>(AttributeType.NAME,
-            mock(Supplier.class), mock(Consumer.class)) {
-      @Override
-      public AttributeType getAttributeType() {
-        return AttributeType.NAME;
-      }
-
-      @Override
-      public void setValue(String str) {
-        name = SET;
-      }
-
-      @Override
-      public String getValue() {
-        return name;
-      }
-    };
-
-    doAnswer(e -> {
-      mockGroup.removeElement(element1);
-      mockGroup.removeElement(element2);
-      group = mockGroup;
-      HashSet<Element> set = e.getArgument(0);
-      set.forEach(group::addElement);
-      return group;
-    }).when(this.roadSystem).createGroup(ArgumentMatchers.any());
-
-    doAnswer(e -> this.group = null).when(this.roadSystem).removeElement(any());
+    this.replacementLog = new ReplacementLog();
+    this.command = new DeleteGroupCommand(this.replacementLog, project, group);
   }
 
+  /**
+   * Tests whether the command handles the deletion and creation of the group in the road system.
+   */
   @Test
-  void testExecute() {
-    DeleteGroupCommand command = new DeleteGroupCommand(this.project, this.group);
+  void testGroupContainedInRoadSystem() {
+    assertNotNull(group());
+
+    this.command.execute();
+    assertNull(group());
+
+    this.command.unexecute();
+    assertNotNull(group());
+  }
+
+  /**
+   * Tests whether {@link DeleteGroupCommand#unexecute()} restores the elements contained in the
+   * deleted group.
+   */
+  @Test
+  void testElementsContainedInGroup() {
+    assertTrue(group().contains(element1()));
+    assertTrue(group().contains(element2()));
+
+    this.command.execute();
+
+    assertNull(element1());
+    assertNull(element2());
+
+    this.command.unexecute();
+
+    assertNotNull(group());
+    assertNotNull(element1());
+    assertNotNull(element2());
+    assertTrue(group().contains(element1()));
+    assertTrue(group().contains(element1()));
+  }
+
+  /**
+   * Tests whether {@link DeleteGroupCommand#unexecute()} restores attribute values of the deleted
+   * group.
+   */
+  @Test
+  void testAttributes() {
+    var groupComment = "funny, creative and insightful comment for the group";
+    group().setComment(groupComment);
+    var elementComment1 = "boring comment";
+    element1().setComment(elementComment1);
+    var elementLaneCount2 = 4;
+    element2().setLaneCount(elementLaneCount2);
+
+    this.command.execute();
+    this.command.unexecute();
+
+    assumeTrue(group() != null);
+    assertEquals(GROUP_NAME, group().getName());
+    assertEquals(groupComment, group().getComment());
+
+    assumeTrue(element1() != null);
+    assertEquals(ELEMENT_1_NAME, element1().getName());
+    assertEquals(elementComment1, element1().getComment());
+
+    assumeTrue(element2() != null);
+    assertEquals(ELEMENT_2_NAME, element2().getName());
+    assertEquals(elementLaneCount2, element2().getLaneCount());
+  }
+
+  /**
+   * Tests whether the parent of the group is restored in {@link DeleteGroupCommand#unexecute()}.
+   */
+  @Test
+  void testParent() {
     command.execute();
-    Assertions.assertNull(this.group);
+    assertFalse(parent().getElements().contains(group()));
+    assertEquals(0, parent().getElements().getSize());
+
+
+    command.unexecute();
+    assertEquals(1, parent().getElements().getSize());
   }
 
   @Test
-  void testUnexecute() {
-    DeleteGroupCommand command = new DeleteGroupCommand(this.project, this.group);
+  void testLogsReplacement() {
+    var oldGroup = group();
+    assumeTrue(oldGroup != null);
+
     command.execute();
     command.unexecute();
+    var newGroup = group();
+    assertSame(newGroup, this.replacementLog.getCurrentVersion(oldGroup));
 
-    Assertions.assertEquals(this.mockGroup, this.group);
-    // checks if the unexecute method sets the same name as on removed group
-    Assertions.assertEquals(SET, this.name);
+    command.execute();
+    command.unexecute();
+    var newNewGroup = group();
+    assertSame(newNewGroup, this.replacementLog.getCurrentVersion(oldGroup));
+    assertSame(newNewGroup, this.replacementLog.getCurrentVersion(newGroup));
+  }
 
-    SortedBox<Element> groupElements = this.group.getElements();
-    var groupElementsList = new LinkedList<Element>();
-    groupElements.forEach(groupElementsList::add);
+  /**
+   * Tests whether {@link DeleteGroupCommand} uses replaced versions of affected segments.
+   */
+  @Test
+  void testConsidersReplacement() {
+    command.execute();
+    assertNull(group());
 
-    Assertions.assertEquals(EXPECTED_NUMBER_OF_ELEMENTS, groupElements.getSize());
-    Assertions.assertTrue(this.elements.containsAll(groupElementsList));
-    Assertions.assertTrue(groupElementsList.containsAll(elements));
+    command.unexecute();
+    var group2 = group();
+    assertNotNull(group2);
+
+    // simulate that group has been un-created and then re-crated
+    this.roadSystem.removeElement(group2);
+    var group3 = this.roadSystem.createGroup(Set.of());
+    this.replacementLog.replaceElement(group2, group3);
+    assertTrue(this.roadSystem.getElements().contains(group3));
+
+    command.execute();
+    assertFalse(this.roadSystem.getElements().contains(group3));
+  }
+
+  private Group parent() {
+    Element element = findElementByName(this.roadSystem, PARENT_NAME);
+    assertTrue(element == null || element.isContainer());
+    return (Group) element;
+  }
+
+  private Group group() {
+    Element element = findElementByName(this.roadSystem, GROUP_NAME);
+    assertTrue(element == null || element.isContainer());
+    return (Group) element;
+  }
+
+  private Base element1() {
+    Element element = findElementByName(this.roadSystem, ELEMENT_1_NAME);
+    assertTrue(element == null || !element.isContainer());
+    Segment segment = (Segment) element;
+    assertTrue(segment == null || segment.getSegmentType() == SegmentType.BASE);
+    return (Base) segment;
+  }
+
+  private Entrance element2() {
+    Element element = findElementByName(this.roadSystem, ELEMENT_2_NAME);
+    assertTrue(element == null || !element.isContainer());
+    Segment segment = (Segment) element;
+    assertTrue(segment == null || segment.getSegmentType() == SegmentType.ENTRANCE);
+    return (Entrance) segment;
   }
 }

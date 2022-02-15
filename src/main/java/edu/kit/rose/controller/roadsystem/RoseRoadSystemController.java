@@ -2,6 +2,7 @@ package edu.kit.rose.controller.roadsystem;
 
 import edu.kit.rose.controller.command.ChangeCommandBuffer;
 import edu.kit.rose.controller.commons.Controller;
+import edu.kit.rose.controller.commons.ReplacementLog;
 import edu.kit.rose.controller.commons.StorageLock;
 import edu.kit.rose.controller.navigation.Navigator;
 import edu.kit.rose.controller.selection.SelectionBuffer;
@@ -40,6 +41,7 @@ public class RoseRoadSystemController extends Controller
    * The model facade for project specific data.
    */
   private final Project project;
+  private final ReplacementLog replacementLog;
 
   private Position initialSegmentDragPosition;
   private Connector dragConnector;
@@ -58,11 +60,13 @@ public class RoseRoadSystemController extends Controller
    */
   public RoseRoadSystemController(ChangeCommandBuffer changeCommandBuffer, StorageLock storageLock,
                                   Navigator navigator, SelectionBuffer selectionBuffer,
-                                  Project project) {
+                                  Project project,
+                                  ReplacementLog replacementLog) {
     super(storageLock, navigator);
     this.changeCommandBuffer = changeCommandBuffer;
     this.selectionBuffer = selectionBuffer;
     this.project = project;
+    this.replacementLog = replacementLog;
 
     observers = new HashSet<>();
   }
@@ -80,19 +84,17 @@ public class RoseRoadSystemController extends Controller
   @Override
   public void createStreetSegment(SegmentType segmentType) {
     CreateStreetSegmentCommand createStreetSegmentCommand
-        = new CreateStreetSegmentCommand(this.project, segmentType);
+        = new CreateStreetSegmentCommand(this.replacementLog, this.project, segmentType);
 
     changeCommandBuffer.addAndExecuteCommand(createStreetSegmentCommand);
-    createStreetSegmentCommand.execute();
   }
 
   @Override
   public void deleteStreetSegment(Segment segment) {
     DeleteStreetSegmentCommand deleteStreetSegmentCommand
-        = new DeleteStreetSegmentCommand(this.project, segment);
+        = new DeleteStreetSegmentCommand(this.replacementLog, this.project, segment);
 
     changeCommandBuffer.addAndExecuteCommand(deleteStreetSegmentCommand);
-    deleteStreetSegmentCommand.execute();
     selectionBuffer.removeSegmentSelection(segment);
   }
 
@@ -113,14 +115,13 @@ public class RoseRoadSystemController extends Controller
         segmentPosition.getX() - initialSegmentDragPosition.getX(),
         segmentPosition.getY() - initialSegmentDragPosition.getY());
 
-    DragStreetSegmentsCommand dragStreetSegmentsCommand
-        = new DragStreetSegmentsCommand(
+    DragStreetSegmentsCommand dragStreetSegmentsCommand = new DragStreetSegmentsCommand(
+        this.replacementLog,
         this.project,
         this.selectionBuffer.getSelectedSegments(),
         draggingTransition);
 
     changeCommandBuffer.addAndExecuteCommand(dragStreetSegmentsCommand);
-    dragStreetSegmentsCommand.execute();
 
     initialSegmentDragPosition = null;
   }
@@ -196,8 +197,8 @@ public class RoseRoadSystemController extends Controller
         connectorEndPosition.getX() - initialSegmentDragPosition.getX(),
         connectorEndPosition.getY() - initialSegmentDragPosition.getY());
 
-    DragSegmentEndCommand dragSegmentEndCommand
-        = new DragSegmentEndCommand((MovableConnector) dragConnector, draggingTransition);
+    DragSegmentEndCommand dragSegmentEndCommand = new DragSegmentEndCommand(this.replacementLog,
+        (MovableConnector) dragConnector, draggingTransition);
 
     changeCommandBuffer.addAndExecuteCommand(dragSegmentEndCommand);
 

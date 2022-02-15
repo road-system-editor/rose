@@ -12,6 +12,7 @@ import edu.kit.rose.view.commons.EnumLocalizationUtility;
 import edu.kit.rose.view.commons.FxmlContainer;
 import edu.kit.rose.view.commons.UnmountUtility;
 import java.util.Collection;
+import java.util.Objects;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListCell;
@@ -24,6 +25,8 @@ import javafx.scene.control.SelectionMode;
  */
 public class ApplicableSegmentsSelector extends FxmlContainer
     implements SetObserver<SegmentType, PlausibilityCriterion> {
+  private static final String CRITERION_PANEL_STYLE_SHEET = "/edu/kit/rose/view/panel/criterion"
+      + "/CriterionPanel.css";
   @FXML
   private ListView<SegmentType> typeSelector;
   @Inject
@@ -37,10 +40,19 @@ public class ApplicableSegmentsSelector extends FxmlContainer
   public ApplicableSegmentsSelector() {
     super("ApplicableSegmentsSelector.fxml");
 
+    setupView();
     this.typeSelector.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     this.typeSelector.setCellFactory(this::createSegmentTypeSelectorCell);
     this.typeSelector.getItems().addAll(SegmentType.values());
     this.typeSelector.getSelectionModel().getSelectedItems().addListener(this::onSelectionChange);
+  }
+
+
+  private void setupView() {
+    String criterionStyleSheetUrl =
+        Objects.requireNonNull(getClass().getResource(CRITERION_PANEL_STYLE_SHEET))
+            .toExternalForm();
+    this.getStylesheets().add(criterionStyleSheetUrl);
   }
 
   private ListCell<SegmentType> createSegmentTypeSelectorCell(ListView<SegmentType> ignored) {

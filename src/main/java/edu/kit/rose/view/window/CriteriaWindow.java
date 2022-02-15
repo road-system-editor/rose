@@ -62,6 +62,8 @@ public class CriteriaWindow extends RoseWindow {
 
     overview.init(injector);
     overview.setSelectionListener(this::onSelect);
+    criterionContainer.setFitToHeight(true);
+    criterionContainer.setFitToWidth(true);
   }
 
   private void updateTranslatableStrings(Stage stage) {
@@ -70,6 +72,7 @@ public class CriteriaWindow extends RoseWindow {
 
   private void onSelect(PlausibilityCriterion plausibilityCriterion) {
     var panel = CriterionPanel.forCriterion(this.injector, plausibilityCriterion);
+
     this.criterionContainer.setContent(panel);
     if (panel != null) {
       panel.init(injector);

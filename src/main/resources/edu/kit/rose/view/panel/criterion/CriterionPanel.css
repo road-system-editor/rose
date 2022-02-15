@@ -1,3 +1,80 @@
 .label {
+    -fx-font-family: Arial;
+    -fx-font-size: 14;
+    -fx-font-weight: bold;
+}
 
+.textField {
+    -fx-font-family: Arial;
+    -fx-font-size: 12;
+    -fx-border-radius: 15;
+    -fx-background-radius: 15;
+}
+
+.comboBox {
+    -fx-border-radius: 15;
+    -fx-background-radius: 15;
+    -fx-background-color: white;
+    -fx-font-family: Arial;
+    -fx-border-style: solid;
+    -fx-border-color: #8d8d8d;
+    -fx-border-width: 0.5;
+}
+
+.comboBox:showing {
+    -fx-border-radius: 15 15 0 0;
+}
+
+.vbox {
+    -fx-spacing: 5;
+    -fx-padding: 5 5 5 5;
+}
+
+.listItem {
+    -fx-background-color: transparent;
+}
+
+.list-view {
+    -fx-font-family: Arial;
+    -fx-font-size: 12;
+    -fx-spacing: 10;
+    -fx-background-color: white;
+}
+
+.list-view .list-cell:hover  {
+    -fx-text-fill: #009682;
+
+}
+
+.list-view .list-cell {
+    -fx-background-color: #f3f3f3;
+    -fx-border-width: 2;
+    -fx-border-style: solid;
+    -fx-border-color: white;
+}
+
+.list-view .list-cell:selected {
+    -fx-text-fill: black;
+    -fx-background-color: #009682;
+}
+
+.list-view .list-cell:empty {
+    -fx-background-color: transparent
+}
+
+
+.rounded-list-view {
+    -fx-border-radius: 15;
+    -fx-background-radius: 15;
+}
+
+.rounded-list-view .list-cell {
+    -fx-background-radius: 15;
+    -fx-border-radius: 15;
+
+}
+
+.rounded-list-view .list-cell:selected {
+    -fx-background-radius: 15;
+    -fx-border-radius: 15;
 }

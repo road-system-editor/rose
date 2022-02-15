@@ -4,18 +4,33 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ComboBox?>
 <?import edu.kit.rose.view.panel.criterion.ApplicableSegmentsSelector?>
-<fx:root xmlns="http://javafx.com/javafx"
+<fx:root fx:id="parentContainer"
+         xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml" type="Pane">
-    <VBox>
-        <Label fx:id="nameLabel"/>
-        <TextField fx:id="nameField"/>
-        <Label fx:id="applicableSegmentsLabel"/>
+
+    <VBox fx:id="totalBox" styleClass="vbox"
+          prefWidth="${parentContainer.width}"
+          prefHeight="${parentContainer.height}">
+        <Label fx:id="nameLabel"
+               styleClass="label"/>
+        <TextField fx:id="nameField"
+                   styleClass="textField"/>
+        <Label fx:id="applicableSegmentsLabel"
+               styleClass="label"/>
         <ApplicableSegmentsSelector fx:id="applicableSegmentsSelector"/>
-        <Label fx:id="criterionLabel"/>
-        <VBox fx:id="criterionLayout">
-            <ComboBox fx:id="attributeSelector"/>
-            <ComboBox fx:id="validationSelector"/>
-            <TextField fx:id="valueField"/>
+        <Label fx:id="criterionLabel"
+               styleClass="label"/>
+        <VBox fx:id="criterionLayout"
+               styleClass="vbox">
+            <ComboBox fx:id="attributeSelector"
+                      styleClass="comboBox"
+                      prefWidth="${parentContainer.width}"/>
+            <ComboBox fx:id="validationSelector"
+                      styleClass="comboBox"
+                      prefWidth="${parentContainer.width}"/>
+            <TextField fx:id="valueField"
+                       styleClass="textField"
+                       prefWidth="${parentContainer.width}"/>
         </VBox>
     </VBox>
 </fx:root>

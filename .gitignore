@@ -81,3 +81,4 @@ bin/
 
 # === ROSE ===
 rose-config.json
+backups/*.rose.json

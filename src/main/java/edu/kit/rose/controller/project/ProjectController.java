@@ -64,5 +64,10 @@ public interface ProjectController {
    * This will clear all project data.
    */
   void createNewProject();
+
+  /**
+   * Lets the user pick a file to load.
+   */
+  void loadProject();
 }
 

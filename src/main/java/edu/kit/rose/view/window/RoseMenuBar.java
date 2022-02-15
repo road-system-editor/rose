@@ -3,7 +3,6 @@ package edu.kit.rose.view.window;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import edu.kit.rose.controller.application.ApplicationController;
-import edu.kit.rose.controller.navigation.FileFormat;
 import edu.kit.rose.controller.navigation.Navigator;
 import edu.kit.rose.controller.navigation.WindowType;
 import edu.kit.rose.controller.project.ProjectController;
@@ -173,7 +172,7 @@ public class RoseMenuBar extends FxmlContainer {
   private void registerMenuListeners() {
     // Project
     newProject.setOnAction(evt -> this.projectController.createNewProject());
-    loadProject.setOnAction(evt -> {/* TODO how do we load projects? */});
+    loadProject.setOnAction(evt -> this.projectController.loadProject());
     // TODO allow format configuration
     exportProject.setOnAction(evt -> projectController.export(ProjectFormat.ROSE));
     saveProject.setOnAction(evt -> projectController.save());

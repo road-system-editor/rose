@@ -206,4 +206,25 @@ public class RoseProjectController extends Controller implements ProjectControll
     this.currentProjectPath = null;
     this.project.reset();
   }
+
+  @Override
+  public void loadProject() {
+    if (!getStorageLock().isStorageLockAcquired()) {
+      getStorageLock().acquireStorageLock();
+      this.onProjectIoActionBeginCallbacks.forEach(Runnable::run);
+      Path sourceFilePath
+          = getNavigator().showFileDialog(FileDialogType.LOAD_FILE, FileFormat.ROSE);
+
+      if (sourceFilePath != null) {
+        boolean loadingSucceeded = project.load(sourceFilePath);
+        if (loadingSucceeded) {
+          currentProjectPath = sourceFilePath;
+        } else {
+          getNavigator().showErrorDialog(ErrorType.LOAD_ERROR);
+        }
+      }
+      this.onProjectIoActionEndCallbacks.forEach(Runnable::run);
+      getStorageLock().releaseStorageLock();
+    }
+  }
 }

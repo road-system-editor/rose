@@ -1,14 +1,15 @@
 package edu.kit.rose.model.plausibility.criteria;
 
 
-import com.google.common.collect.Range;
 import edu.kit.rose.infrastructure.Box;
+import edu.kit.rose.infrastructure.Range;
 import edu.kit.rose.infrastructure.RoseBox;
 import edu.kit.rose.infrastructure.RoseSetObservable;
 import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.model.plausibility.violation.Violation;
 import edu.kit.rose.model.plausibility.violation.ViolationManager;
+import edu.kit.rose.model.roadsystem.DataType;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.elements.Element;
@@ -27,12 +28,12 @@ import java.util.Set;
  */
 class ValueCriterion extends RoseSetObservable<SegmentType, PlausibilityCriterion>
         implements PlausibilityCriterion {
-  protected static final Range<Double> LENGTH_RANGE = Range.closed(1.0, 5000.0);
-  protected static final Range<Double> LANE_COUNT_RANGE = Range.closed(1.0, 10.0);
-  protected static final Range<Double> LANE_COUNT_RAMP_RANGE = Range.closed(1.0, 10.0);
-  protected static final Range<Double> MAX_SPEED_RANGE = Range.closed(30.0, 400.0);
-  protected static final Range<Double> MAX_SPEED_RAMP_RANGE = Range.closed(30.0, 200.0);
-  protected static final Range<Double> SLOPE_RANGE = Range.closed(-10.0, 10.0);
+  protected static final Range<Double> LENGTH_RANGE = new Range<>(1.0, 5000.0);
+  protected static final Range<Double> LANE_COUNT_RANGE = new Range<>(1.0, 10.0);
+  protected static final Range<Double> LANE_COUNT_RAMP_RANGE = new Range<>(1.0, 10.0);
+  protected static final Range<Double> MAX_SPEED_RANGE = new Range<>(30.0, 400.0);
+  protected static final Range<Double> MAX_SPEED_RAMP_RANGE = new Range<>(30.0, 200.0);
+  protected static final Range<Double> SLOPE_RANGE = new Range<>(-10.0, 10.0);
 
   private String name;
   private final AttributeType attributeType;
@@ -144,14 +145,14 @@ class ValueCriterion extends RoseSetObservable<SegmentType, PlausibilityCriterio
     this.elementViolationMap.remove(unit);
   }
 
-  private boolean checkValue(AttributeAccessor accessor) {
-    switch (accessor.getAttributeType().getDataType()) {
-      case INTEGER:
-        return this.range.contains(Double.valueOf((Integer) accessor.getValue()));
-      case FRACTIONAL:
-        return this.range.contains((Double) accessor.getValue());
-      default:
-        return true;
+  private boolean checkValue(AttributeAccessor<?> accessor) {
+    var dataType = accessor.getAttributeType().getDataType();
+    if (dataType == DataType.INTEGER) {
+      return this.range.contains(((Integer) accessor.getValue()).doubleValue());
+    } else if (dataType == DataType.FRACTIONAL) {
+      return this.range.contains((Double) accessor.getValue());
+    } else {
+      return false;
     }
   }
 }

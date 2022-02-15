@@ -7,16 +7,15 @@ import java.util.Objects;
  */
 public class Movement {
 
-  private double xvalue;
-  private double yvalue;
+  private final double xvalue;
+  private final double yvalue;
 
   /**
    * Standard Constructor.
    * Sets x and y values to 0.
    */
   public Movement() {
-    this.xvalue = 0;
-    this.yvalue = 0;
+    this(0, 0);
   }
 
   /**
@@ -39,14 +38,6 @@ public class Movement {
     return xvalue;
   }
 
-  /**
-   * Sets the x axis value of the Vector.
-   *
-   * @param x The x axis value of the Vector.
-   */
-  public void setX(double x) {
-    this.xvalue = x;
-  }
 
   /**
    * Gives the y axis value of the Vector.
@@ -55,15 +46,6 @@ public class Movement {
    */
   public double getY() {
     return yvalue;
-  }
-
-  /**
-   * Sets the y axis value of the Vector.
-   *
-   * @param y The x axis value of the Vector.
-   */
-  public void setY(double y) {
-    this.yvalue = y;
   }
 
   @Override

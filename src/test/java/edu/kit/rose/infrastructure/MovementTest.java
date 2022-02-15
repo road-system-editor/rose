@@ -23,13 +23,4 @@ public class MovementTest {
     Assertions.assertEquals(0, movement.getX());
     Assertions.assertEquals(0, movement.getY());
   }
-
-  @Test
-  public void testSetCoordinates() {
-    Movement movement = new Movement(FirstTestInt, SecondTestInt);
-    movement.setX(SecondTestInt);
-    movement.setY(FirstTestInt);
-    Assertions.assertEquals(SecondTestInt, movement.getX());
-    Assertions.assertEquals(FirstTestInt, movement.getY());
-  }
 }

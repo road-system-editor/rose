@@ -48,9 +48,7 @@ class ConnectorTest {
 
   @Test
   public void move() {
-    Movement move = new Movement();
-    move.setX(X);
-    move.setY(Y);
+    Movement move = new Movement(X, Y);
 
     Assertions.assertEquals(X, this.connector.getPosition().getX());
     Assertions.assertEquals(Y, this.connector.getPosition().getY());
@@ -63,9 +61,7 @@ class ConnectorTest {
 
   @Test
   public void moveMovableConnector() {
-    Movement move = new Movement();
-    move.setX(X);
-    move.setY(Y);
+    Movement move = new Movement(X, Y);
 
     Assertions.assertEquals(X, this.movableConnector.getPosition().getX());
     Assertions.assertEquals(Y, this.movableConnector.getPosition().getY());

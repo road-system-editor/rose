@@ -40,11 +40,11 @@ public class ExitTest {
   @Test
   public void testGetConnectorPosition() {
     Assertions.assertEquals(0, testExit.getEntry().getPosition().getX());
-    Assertions.assertEquals(30, testExit.getEntry().getPosition().getY());
+    Assertions.assertEquals(27, testExit.getEntry().getPosition().getY());
     Assertions.assertEquals(0, testExit.getExit().getPosition().getX());
-    Assertions.assertEquals(-30, testExit.getExit().getPosition().getY());
+    Assertions.assertEquals(-33, testExit.getExit().getPosition().getY());
     Assertions.assertEquals(32, testExit.getRamp().getPosition().getX());
-    Assertions.assertEquals(14, testExit.getRamp().getPosition().getY());
+    Assertions.assertEquals(-14, testExit.getRamp().getPosition().getY());
   }
 
   @Test
@@ -118,26 +118,28 @@ public class ExitTest {
   @Test
   public void testMoveConnectors() {
     final double startEntryX = 0;
-    final double startEntryY = 30;
+    final double startEntryY = 27;
     final double startExitX = 0;
-    final double startExitY = -30;
+    final double startExitY = -33;
     final int startRampX = 32;
-    final int startRampY = 14;
+    final int startRampY = -14;
     final int movementX = 50;
     final int movementY = 50;
+
     Movement testMovement = new Movement(movementX, movementY);
     testExit.move(testMovement);
-    Assertions.assertEquals(startEntryX + movementX,
+
+    Assertions.assertEquals(startEntryX,
         testExit.getEntry().getPosition().getX());
-    Assertions.assertEquals(startEntryY + movementY,
+    Assertions.assertEquals(startEntryY,
         testExit.getEntry().getPosition().getY());
-    Assertions.assertEquals(startExitX + movementX,
+    Assertions.assertEquals(startExitX,
         testExit.getExit().getPosition().getX());
-    Assertions.assertEquals(startExitY + movementY,
+    Assertions.assertEquals(startExitY,
         testExit.getExit().getPosition().getY());
-    Assertions.assertEquals(startRampX + movementX,
+    Assertions.assertEquals(startRampX,
         testExit.getRamp().getPosition().getX());
-    Assertions.assertEquals(startRampY + movementY,
+    Assertions.assertEquals(startRampY,
         testExit.getRamp().getPosition().getY());
   }
 

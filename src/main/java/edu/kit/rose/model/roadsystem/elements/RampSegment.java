@@ -23,6 +23,12 @@ public abstract class RampSegment extends HighwaySegment {
     this(segmentType, segmentType.name());
   }
 
+  /**
+   * Constructor.
+   *
+   * @param segmentType the type of ramp segment this is
+   * @param name the name this ramp segment is to have
+   */
   public RampSegment(SegmentType segmentType, String name) {
     super(segmentType, name);
 
@@ -38,16 +44,6 @@ public abstract class RampSegment extends HighwaySegment {
 
 
   private void initRamp() {
-    AttributeAccessor<Integer> nrOfRampLanesAccessor =
-        new AttributeAccessor<>(AttributeType.LANE_COUNT_RAMP, () -> nrOfRampLanes,
-            s -> nrOfRampLanes = s);
-    attributeAccessors.add(nrOfRampLanesAccessor);
-    AttributeAccessor<Integer> rampSpeedLimitAccessor =
-        new AttributeAccessor<>(AttributeType.MAX_SPEED_RAMP,
-            () -> rampSpeedLimit,
-              s -> rampSpeedLimit = s);
-    attributeAccessors.add(rampSpeedLimitAccessor);
-
     List<AttributeAccessor<?>> rampAttributesList =
         Arrays.asList(nrOfRampLanesAccessor, this.maxSpeedRampAccessor);
 

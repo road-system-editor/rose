@@ -53,7 +53,7 @@ public class ZoomableScrollPane extends ScrollPane implements UnitObserver<ZoomS
   public void init(Injector injector) {
     injector.injectMembers(this);
 
-    setupGrid();
+    setupGrid(injector);
 
     setupScrollPane();
 
@@ -71,8 +71,8 @@ public class ZoomableScrollPane extends ScrollPane implements UnitObserver<ZoomS
     setFitToWidth(true);
   }
 
-  private void setupGrid() {
-    this.grid = new Grid(roadSystemController);
+  private void setupGrid(Injector injector) {
+    this.grid = new Grid(roadSystemController, injector);
     this.gridGroup = new Group(this.grid);
     setupGridBox();
     setContent(gridBox);

@@ -1,11 +1,13 @@
 package edu.kit.rose.view.panel.roadsystem;
 
+import com.google.inject.Injector;
 import edu.kit.rose.controller.roadsystem.RoadSystemController;
 import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.view.commons.ConnectorView;
 import edu.kit.rose.view.commons.SegmentView;
+import edu.kit.rose.view.panel.segment.SegmentEditorPanel;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -13,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.scene.input.MouseEvent;
@@ -35,11 +38,14 @@ public class Grid extends Pane implements SetObserver<Segment, RoadSystemControl
   private static final Color BACKGROUND_COLOR = Color.gray(0.95);
   private static final Color LINE_COLOR = Color.gray(0.7);
   private static final float LINE_WIDTH = 0.5f;
+  private static final int DOUBLE_CLICK = 2;
 
+  private final Injector injector;
   private final RoadSystemController controller;
   private final List<SegmentView<?>> segmentViews = new LinkedList<>();
   private final Map<Segment, SegmentView<?>> segmentViewMap = new HashMap<>();
   private final List<ConnectorView> connectorViews = new LinkedList<>();
+  private final List<SegmentEditorPanel> editors = new LinkedList<>();
   private SelectionBox selectionBox;
   private BiConsumer<Position, Position> onAreaSelectedEventHandler;
   private boolean dragInProgress = false;
@@ -48,8 +54,9 @@ public class Grid extends Pane implements SetObserver<Segment, RoadSystemControl
   /**
    * creates new Grid.
    */
-  public Grid(RoadSystemController controller) {
+  public Grid(RoadSystemController controller, Injector injector) {
     init();
+    this.injector = injector;
     this.controller = controller;
     setEventListeners();
   }
@@ -76,7 +83,29 @@ public class Grid extends Pane implements SetObserver<Segment, RoadSystemControl
       this.connectorViews.addAll(segmentView.getConnectorViews());
       segmentView.setOnConnectorViewDragged(this::onConnectorViewDragged);
       segmentView.setOnConnectorViewDragEnd(this::onConnectorViewDragEnd);
+      segmentView.setOnMouseClicked(event -> {
+        event.consume();
+        if (event.getClickCount() == DOUBLE_CLICK) {
+          buildEditorOnSegment(segmentView.getSegment());
+        }
+      });
     }
+  }
+
+  private void buildEditorOnSegment(Segment segment) {
+    getChildren().removeAll(editors);
+    editors.clear();
+    SegmentEditorPanel editor = new SegmentEditorPanel();
+    getChildren().add(editor);
+    editor.init(injector);
+    editor.setSegment(segment);
+    Platform.runLater(() -> {
+      var center = segment.getCenter();
+      var width = editor.getWidth();
+      var height = editor.getHeight();
+      editor.relocate(center.getX() - width / 2, center.getY() - height);
+    });
+    editors.add(editor);
   }
 
   /**
@@ -110,6 +139,8 @@ public class Grid extends Pane implements SetObserver<Segment, RoadSystemControl
         controller.clearSegmentSelection();
       }
       dragInProgress = false;
+      getChildren().removeAll(editors);
+      editors.clear();
     });
   }
 

@@ -12,6 +12,7 @@ import edu.kit.rose.model.roadsystem.elements.MovableConnector;
 import java.util.concurrent.atomic.AtomicReference;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
@@ -44,6 +45,8 @@ public class DragSegmentEndCommandTest {
     this.command = new DragSegmentEndCommand(this.replacementLog, this.connector, MOVEMENT);
   }
 
+
+  @Disabled("disabled until movable connectors are merged")
   @Test
   public void testPositionChanges() {
     assumeTrue(ORIGINAL_POSITION.equals(connector.getPosition()));
@@ -53,6 +56,7 @@ public class DragSegmentEndCommandTest {
     assertEquals(ORIGINAL_POSITION, connector.getPosition());
   }
 
+  @Disabled("disabled until movable connectors are merged")
   @Test
   public void testConsidersReplacements() {
     // simulate first replacement before execution

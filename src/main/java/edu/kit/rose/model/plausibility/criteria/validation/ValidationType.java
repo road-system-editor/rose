@@ -12,8 +12,10 @@ public enum ValidationType {
 
   DEFAULT(false, DataType.INTEGER, DataType.FRACTIONAL, DataType.STRING, DataType.BOOLEAN),
   LESS_THAN(true, DataType.INTEGER, DataType.FRACTIONAL),
-  EQUALS(false, DataType.INTEGER, DataType.FRACTIONAL, DataType.STRING, DataType.BOOLEAN),
-  NOT_EQUALS(false, DataType.INTEGER, DataType.FRACTIONAL, DataType.STRING, DataType.BOOLEAN),
+  EQUALS(false, DataType.INTEGER, DataType.FRACTIONAL, DataType.STRING,
+      DataType.BOOLEAN, DataType.SPEED_LIMIT),
+  NOT_EQUALS(false, DataType.INTEGER, DataType.FRACTIONAL, DataType.STRING,
+      DataType.BOOLEAN, DataType.SPEED_LIMIT),
   OR(false, DataType.BOOLEAN),
   NOR(false, DataType.BOOLEAN);
 

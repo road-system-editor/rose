@@ -11,18 +11,23 @@ import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterion;
 import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterionType;
 import edu.kit.rose.view.commons.FxmlContainer;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.function.Consumer;
 import javafx.collections.ListChangeListener.Change;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 
 /**
  * The criteria overview panel allows the user to view the criteria.
  */
 public class CriteriaOverviewPanel extends FxmlContainer
     implements SetObserver<PlausibilityCriterion, CriteriaManager> {
+  private static final String BUTTON_CSS_FILE = "/edu/kit/rose/view/Button.css";
+
   @Inject
   private PlausibilityController controller;
   @Inject
@@ -52,6 +57,20 @@ public class CriteriaOverviewPanel extends FxmlContainer
     super.init(injector);
     applicationDataSystem.getCriteriaManager().addSubscriber(this);
 
+    applicationDataSystem.getCriteriaManager().addSubscriber(this);
+
+    setupView();
+    setupEventHandlers();
+    initCriteriaList();
+  }
+
+  private void setupView() {
+    String buttonStyleSheetUrl =
+        Objects.requireNonNull(getClass().getResource(BUTTON_CSS_FILE)).toExternalForm();
+    this.getStylesheets().add(buttonStyleSheetUrl);
+  }
+
+  private void setupEventHandlers() {
     newButton.addEventHandler(MouseEvent.MOUSE_CLICKED,
         event -> controller.addCompatibilityCriterion());
     importButton.addEventHandler(MouseEvent.MOUSE_CLICKED,
@@ -60,9 +79,6 @@ public class CriteriaOverviewPanel extends FxmlContainer
         event -> controller.exportCompatibilityCriteria());
     deleteAllButton.addEventHandler(MouseEvent.MOUSE_CLICKED,
         event -> controller.deleteAllCompatibilityCriteria());
-
-    initCriteriaList();
-
   }
 
   private void initCriteriaList() {

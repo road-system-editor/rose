@@ -9,9 +9,13 @@ import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterionType;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import edu.kit.rose.view.commons.FxmlContainer;
 import java.util.Collection;
+import java.util.Objects;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 
 /**
@@ -20,11 +24,18 @@ import javafx.scene.input.MouseEvent;
  */
 class CriterionHandle extends FxmlContainer
     implements SetObserver<SegmentType, PlausibilityCriterion> {
+  private static final String BUTTON_CSS_FILE = "/edu/kit/rose/view/Button.css";
+  private static final String DELETE_BUTTON_IMAGE_URL = "DeleteIcon.png";
+
+  private final PlausibilityController controller;
+  private final PlausibilityCriterion criterion;
 
   @FXML
   private Label label;
   @FXML
   private Button deleteButton;
+  @FXML
+  private ImageView deleteButtonImageView;
 
   /**
    * Creates a new criterion handler.
@@ -34,16 +45,34 @@ class CriterionHandle extends FxmlContainer
    */
   public CriterionHandle(PlausibilityController controller, PlausibilityCriterion criterion) {
     super("CriterionHandle.fxml");
+    this.controller = controller;
+    this.criterion = criterion;
 
+    this.setupView();
+    this.setupEventHandlers();
+
+    criterion.addSubscriber(this);
+  }
+
+  private void setupView() {
     this.label.setText(criterion.getName());
 
+    String buttonStyleSheetUrl =
+        Objects.requireNonNull(getClass().getResource(BUTTON_CSS_FILE)).toExternalForm();
+    this.getStylesheets().add(buttonStyleSheetUrl);
+
+    String deleteButtonImageUrl =
+        Objects.requireNonNull(getClass().getResource(DELETE_BUTTON_IMAGE_URL)).toExternalForm();
+    deleteButtonImageView.setImage(new Image(deleteButtonImageUrl));
+  }
+
+  private void setupEventHandlers() {
     //CompatibilityCriteria are the only ones that can be deleted.
     if (criterion.getType() == PlausibilityCriterionType.COMPATIBILITY) {
       this.deleteButton.addEventHandler(MouseEvent.MOUSE_CLICKED,
-          event -> controller.deleteCompatibilityCriterion((CompatibilityCriterion) criterion));
+          event -> Platform.runLater(() -> controller
+              .deleteCompatibilityCriterion((CompatibilityCriterion) criterion)));
     }
-
-    criterion.addSubscriber(this);
   }
 
   @Override

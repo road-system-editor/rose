@@ -1,0 +1,6 @@
+.violationLabel {
+    -fx-background-color: lightgrey;
+    -fx-font-size: 14;
+    -fx-font-weight: bold;
+    -fx-background-radius: 2
+}

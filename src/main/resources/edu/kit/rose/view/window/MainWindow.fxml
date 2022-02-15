@@ -18,8 +18,8 @@
                 <ColumnConstraints percentWidth="100"/>
             </columnConstraints>
             <rowConstraints>
-                <RowConstraints percentHeight="70" vgrow="ALWAYS" />
-                <RowConstraints percentHeight="30" vgrow="NEVER"
+                <RowConstraints percentHeight="60" vgrow="ALWAYS" />
+                <RowConstraints percentHeight="40" vgrow="NEVER"
                                 valignment="BOTTOM"/>
             </rowConstraints>
             <SegmentBoxPanel

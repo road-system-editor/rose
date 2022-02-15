@@ -1,0 +1,21 @@
+.redButton {
+    -fx-background-color: #a22223;
+    -fx-font-size: 16;
+    -fx-font-weight: bold;
+    -fx-font-family: Arial;
+    -fx-text-fill: white;
+}
+
+.greenButton {
+    -fx-background-color: #8cb63c;
+    -fx-font-size: 14;
+    -fx-font-family: Arial;
+    -fx-text-fill: white;
+}
+
+.regularButton {
+    -fx-background-color: lightgrey;
+    -fx-font-size: 14;
+    -fx-font-family: Arial;
+    -fx-text-fill: black;
+}

@@ -20,7 +20,6 @@ class DuplicateStreetSegmentCommandTest {
   private RoadSystem roadSystem;
   private ReplacementLog replacementLog;
   private DuplicateStreetSegmentCommand command;
-  private Segment segment;
 
   @BeforeEach
   void setUp() {
@@ -28,12 +27,12 @@ class DuplicateStreetSegmentCommandTest {
             Mockito.mock(TimeSliceSetting.class));
     Project project = Mockito.mock(Project.class);
     this.replacementLog = new ReplacementLog();
-    this.segment = new Base();
+    Segment segment = new Base();
 
     when(project.getRoadSystem()).thenReturn(this.roadSystem);
 
     this.command = new DuplicateStreetSegmentCommand(this.replacementLog, project,
-            List.of(this.segment));
+            List.of(segment));
   }
 
   @Test
@@ -56,8 +55,9 @@ class DuplicateStreetSegmentCommandTest {
   @Test
   public void testReplacement() {
     command.execute();
+    Segment segment = (Segment) this.roadSystem.getElements().iterator().next();
     command.unexecute();
     command.execute();
-    Assertions.assertNotEquals(this.segment, this.replacementLog.getCurrentVersion(this.segment));
+    Assertions.assertNotEquals(segment, this.replacementLog.getCurrentVersion(segment));
   }
 }

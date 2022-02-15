@@ -40,21 +40,18 @@ public class DuplicateStreetSegmentCommand implements ChangeCommand {
   @Override
   public void execute() {
     for (int i = 0; i < this.segmentsToDuplicate.size(); i++) {
-      var oldSegment = this.replacementLog.getCurrentVersion(this.segmentsToDuplicate.get(i));
       var copy = copier
               .copySegment(this.replacementLog.getCurrentVersion(
                       this.segmentsToDuplicate.get(i)), false);
       if (this.segments.size() <= i) {
         this.segments.add(copy);
       } else {
+        var oldSegment = this.replacementLog.getCurrentVersion(this.segments.get(i));
         this.segments.set(i, copy);
+        this.replacementLog.replaceElement(oldSegment, this.segments.get(i));
       }
       this.segments.get(i)
               .move(new Movement(DISTANCE_FROM_ORIGIN_SEGMENT, DISTANCE_FROM_ORIGIN_SEGMENT));
-
-      if (oldSegment != null) {
-        this.replacementLog.replaceElement(oldSegment, this.segments.get(i));
-      }
     }
   }
 

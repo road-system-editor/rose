@@ -126,9 +126,9 @@ public class BaseTest {
   @Test
   public void testMoveConnectors() {
     final double startEntryX = 0;
-    final double startEntryY = 30;
+    final double startEntryY = 27;
     final double startExitX = 0;
-    final double startExitY = -30;
+    final double startExitY = -33;
     final double movementX = 50;
     final double movementY = 50;
 
@@ -147,7 +147,7 @@ public class BaseTest {
 
   @Test
   public void testMoveSingleConnector() {
-    ((MovableConnector) testBase.getEntry()).move(new Movement(0, -10));
+    (testBase.getEntry()).move(new Movement(0, -10));
     Assertions.assertEquals(testBase.getEntry().getPosition().getX(), 0);
     Assertions.assertEquals(testBase.getEntry().getPosition().getY(), 25);
     Assertions.assertEquals(testBase.getCenter().getX(), 0);
@@ -211,15 +211,12 @@ public class BaseTest {
 
   @Test
   void rotationTest2() {
-    var connectors = new LinkedList<Connector>();
-    testBase.getConnectors().forEach(connectors::add);
-    var oldPositionEntry = new Position(connectors.get(0).getPosition().getX(),
-        connectors.get(0).getPosition().getY());
+    var oldEntryPos = testBase.getAbsoluteConnectorPosition(testBase.getEntry());
     testBase.rotate(90);
-    Assertions.assertEquals(oldPositionEntry.getX(),
-        testBase.getAbsoluteConnectorPosition(connectors.get(0)).getY());
-    Assertions.assertEquals(oldPositionEntry.getY(),
-        testBase.getAbsoluteConnectorPosition(connectors.get(0)).getX());
+    Assertions.assertEquals(oldEntryPos.getX(),
+        testBase.getAbsoluteConnectorPosition(testBase.getEntry()).getY());
+    Assertions.assertEquals(-oldEntryPos.getY(),
+        testBase.getAbsoluteConnectorPosition(testBase.getEntry()).getX());
   }
 
   @Test

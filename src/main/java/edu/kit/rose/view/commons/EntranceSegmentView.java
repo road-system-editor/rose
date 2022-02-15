@@ -5,7 +5,7 @@ import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.model.roadsystem.elements.Entrance;
 
 /**
- * An exit segment view is the visual representation of an exit street segment.
+ * An entrance segment view is the visual representation of an entrance street segment.
  */
 public class EntranceSegmentView extends RampSegmentView<Entrance> {
 

@@ -215,7 +215,7 @@ public class BaseSegmentView extends SegmentView<Base> {
   }
 
   @Override
-  protected void redraw() {
+  public void draw() {
     updateBaseSegmentViewBounds();
     updateConnectorViewPositions();
     redrawCurve();

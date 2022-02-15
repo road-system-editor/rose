@@ -42,11 +42,6 @@ public abstract class SegmentView<T extends Segment> extends Pane
   private boolean isSelected;
 
   /**
-   * Determines if the segment can drag itself.
-   */
-  private boolean isActive;
-
-  /**
    * The roadSystemController to notify about drag movements.
    */
   protected final RoadSystemController controller;
@@ -73,7 +68,6 @@ public abstract class SegmentView<T extends Segment> extends Pane
   protected SegmentView(T segment, RoadSystemController controller,
                         LocalizedTextProvider translator) {
     this.segment = segment;
-    this.isActive = true;
     this.controller = controller;
     this.translator = translator;
 
@@ -113,13 +107,6 @@ public abstract class SegmentView<T extends Segment> extends Pane
   }
 
   /**
-   * Draws the segment.
-   */
-  public void draw() {
-    redraw();
-  }
-
-  /**
    * Returns whether the segment view is drawn with a selection indicator.
    *
    * @return whether the segment view is drawn with a selection indicator.
@@ -135,24 +122,7 @@ public abstract class SegmentView<T extends Segment> extends Pane
    */
   public void setDrawAsSelected(boolean drawAsSelected) {
     this.isSelected = drawAsSelected;
-  }
-
-  /**
-   * Returns whether the segment view can be interacted with.
-   *
-   * @return whether the segment view can be interacted with.
-   */
-  public boolean isActive() {
-    return this.isActive;
-  }
-
-  /**
-   * Sets whether the segment view can be interacted with.
-   *
-   * @param isActive whether the segment view can be interacted with.
-   */
-  public void setIsActive(boolean isActive) {
-    this.isActive = isActive;
+    draw();
   }
 
   public void setOnConnectorViewDragged(Consumer<ConnectorView> onConnectorViewDragged) {
@@ -225,12 +195,6 @@ public abstract class SegmentView<T extends Segment> extends Pane
   }
 
   /**
-   * Draws the segment on a given graphical context.
-   *
-   */
-  protected abstract void redraw();
-
-  /**
    * Sets up the dragging of this segment view.
    * Left to child classes as dragging events might be
    * instantiated differently.
@@ -243,4 +207,9 @@ public abstract class SegmentView<T extends Segment> extends Pane
    * @return the connector views
    */
   public abstract List<ConnectorView> getConnectorViews();
+
+  /**
+   * Draws the segment.
+   */
+  public abstract void draw();
 }

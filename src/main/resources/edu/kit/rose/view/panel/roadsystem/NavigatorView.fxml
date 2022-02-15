@@ -5,6 +5,7 @@
 
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.image.ImageView?>
 <fx:root
         xmlns="http://javafx.com/javafx"
         xmlns:fx="http://javafx.com/fxml"
@@ -32,7 +33,11 @@
             maxWidth="20"
             minHeight="20"
             maxHeight="20"
-            style="-fx-background-color: transparent; -fx-graphic: url('edu/kit/rose/view/panel/roadsystem/RightNavigationIcon.png');"/>
+            style="-fx-background-color: transparent;">
+        <graphic>
+            <ImageView fx:id="navigateToRightIcon"/>
+        </graphic>
+    </Button>
     <Button
             fx:id="navigateToLeftButton"
             layoutX="3"
@@ -41,7 +46,11 @@
             maxWidth="20"
             minHeight="20"
             maxHeight="20"
-            style="-fx-background-color: transparent; -fx-graphic: url('edu/kit/rose/view/panel/roadsystem/LeftNavigationIcon.png');"/>
+            style="-fx-background-color: transparent;">
+       <graphic>
+           <ImageView fx:id="navigateToLeftIcon"/>
+       </graphic>
+    </Button>
     <Button
             fx:id="navigateToTopButton"
             layoutX="27.5"
@@ -50,7 +59,11 @@
             maxWidth="20"
             minHeight="20"
             maxHeight="20"
-            style="-fx-background-color: transparent; -fx-graphic: url('edu/kit/rose/view/panel/roadsystem/TopNavigationIcon.png');"/>
+            style="-fx-background-color: transparent;">
+        <graphic>
+            <ImageView fx:id="navigateToTopIcon"/>
+        </graphic>
+    </Button>
     <Button
             fx:id="navigateToBottomButton"
             layoutX="27.5"
@@ -59,7 +72,11 @@
             maxWidth="20"
             minHeight="20"
             maxHeight="20"
-            style="-fx-background-color: transparent; -fx-graphic: url('edu/kit/rose/view/panel/roadsystem/BottomNavigationIcon.png');"/>
+            style="-fx-background-color: transparent;">
+        <graphic>
+            <ImageView fx:id="navigateToBottomIcon"/>
+        </graphic>
+    </Button>
     <Button
             fx:id="zoomInButton"
             layoutX="27.5"
@@ -68,10 +85,13 @@
             maxWidth="20"
             minHeight="20"
             maxHeight="20"
-            style="-fx-background-color: #009682; -fx-graphic: url('edu/kit/rose/view/panel/roadsystem/ZoomInIcon.png');">
+            style="-fx-background-color: #009682;">
         <shape>
             <Circle radius="20"/>
         </shape>
+        <graphic>
+            <ImageView fx:id="zoomInIcon"/>
+        </graphic>
     </Button>
     <Button
             fx:id="zoomOutButton"
@@ -81,9 +101,12 @@
             maxWidth="20"
             minHeight="20"
             maxHeight="20"
-            style="-fx-background-color: #009682; -fx-graphic: url('edu/kit/rose/view/panel/roadsystem/ZoomOutIcon.png');">
+            style="-fx-background-color: #009682;">
     <shape>
         <Circle radius="20"/>
     </shape>
+        <graphic>
+            <ImageView fx:id="zoomOutIcon"/>
+        </graphic>
     </Button>
 </fx:root>

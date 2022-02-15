@@ -80,6 +80,9 @@ public class Connector extends RoseUnitObservable<Connector>
 
   /**
    * Moves Connector.
+   * As connector positions are relative to their respective segment center, this does not
+   * actually move anything. The method still needs to be called as subscribers will have to be
+   * notified regardless.
    *
    * @param movement the movement that is to be applied.
    */

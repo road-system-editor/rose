@@ -62,21 +62,15 @@ public class SelectionBox extends Pane {
 
     this.lastMousePosition = currentMousePosition;
 
-    if (startingPoint.getX() > currentMousePosition.getX()) {
-      this.setLayoutX(currentMousePosition.getX());
-      this.setPrefWidth(startingPoint.getX() - currentMousePosition.getX());
-    } else {
-      this.setLayoutX(startingPoint.getX());
-      this.setPrefWidth(currentMousePosition.getX() - startingPoint.getX());
-    }
+    var topLeftX = Math.min(startingPoint.getX(), currentMousePosition.getX());
+    setLayoutX(topLeftX);
+    var width = Math.abs(startingPoint.getX() - currentMousePosition.getX());
+    setPrefWidth(width);
 
-    if (startingPoint.getY() > currentMousePosition.getY()) {
-      this.setLayoutY(currentMousePosition.getY());
-      this.setPrefHeight(startingPoint.getY() - currentMousePosition.getY());
-    } else {
-      this.setLayoutY(startingPoint.getY());
-      this.setPrefHeight(currentMousePosition.getY() - startingPoint.getY());
-    }
+    var topLeftY = Math.min(startingPoint.getY(), currentMousePosition.getY());
+    setLayoutY(topLeftY);
+    var height = Math.abs(startingPoint.getY() - currentMousePosition.getY());
+    setPrefHeight(height);
   }
 
   /**

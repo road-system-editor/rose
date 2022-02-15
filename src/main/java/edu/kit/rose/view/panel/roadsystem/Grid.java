@@ -216,7 +216,6 @@ public class Grid extends Pane implements SetObserver<Segment, RoadSystemControl
     }
     var segmentView = segmentViewMap.get(unit);
     segmentView.setDrawAsSelected(true);
-    segmentView.draw();
   }
 
   @Override
@@ -226,7 +225,6 @@ public class Grid extends Pane implements SetObserver<Segment, RoadSystemControl
     }
     var segmentView = segmentViewMap.get(unit);
     segmentView.setDrawAsSelected(false);
-    segmentView.draw();
   }
 
   @Override

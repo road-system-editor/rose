@@ -149,11 +149,6 @@ public abstract class HighwaySegment
     return this.center;
   }
 
-  public void updateCenter(Position newCenter) {
-    this.center.setX(newCenter.getX());
-    this.center.setY(newCenter.getY());
-  }
-
   @Override
   public void move(Movement movement) {
     center.setX(center.getX() + movement.getX());

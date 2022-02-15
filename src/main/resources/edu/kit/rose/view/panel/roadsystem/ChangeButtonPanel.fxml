@@ -1,12 +1,19 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.image.ImageView?>
 <fx:root xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml" type="Pane">
     <HBox>
-        <Button fx:id="undoButton"
-                style="-fx-graphic: url('edu/kit/rose/view/panel/roadsystem/undo.png')"/>
-        <Button fx:id="redoButton"
-                style="-fx-graphic: url('edu/kit/rose/view/panel/roadsystem/redo.png')"/>
+        <Button fx:id="undoButton">
+            <graphic>
+                <ImageView fx:id="undoButtonIcon"/>
+            </graphic>
+        </Button>
+        <Button fx:id="redoButton">
+            <graphic>
+                <ImageView fx:id="redoButtonIcon"/>
+            </graphic>
+        </Button>
     </HBox>
 </fx:root>

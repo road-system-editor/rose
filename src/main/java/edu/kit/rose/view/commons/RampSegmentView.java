@@ -102,7 +102,7 @@ public abstract class RampSegmentView<T extends RampSegment> extends SegmentView
   }
 
   @Override
-  public void redraw() {
+  public void draw() {
     updatePosition();
     if (getDrawAsSelected()) {
       imageView.setImage(selectedImage);

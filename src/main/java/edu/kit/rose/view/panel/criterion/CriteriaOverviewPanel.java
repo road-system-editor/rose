@@ -50,6 +50,7 @@ public class CriteriaOverviewPanel extends FxmlContainer
   @Override
   public void init(Injector injector) {
     super.init(injector);
+    applicationDataSystem.getCriteriaManager().addSubscriber(this);
 
     newButton.addEventHandler(MouseEvent.MOUSE_CLICKED,
         event -> controller.addCompatibilityCriterion());

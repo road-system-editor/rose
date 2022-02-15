@@ -18,6 +18,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.Tooltip;
 
 /**
  * The applicable segments' selector allows the user to select which segment types a plausibility
@@ -27,6 +28,8 @@ public class ApplicableSegmentsSelector extends FxmlContainer
     implements SetObserver<SegmentType, PlausibilityCriterion> {
   private static final String CRITERION_PANEL_STYLE_SHEET = "/edu/kit/rose/view/panel/criterion"
       + "/CriterionPanel.css";
+  private static final int TOOLTIP_SIZE = 200;
+  private static final boolean TOOLTIP_WRAP_TEXT = true;
   @FXML
   private ListView<SegmentType> typeSelector;
   @Inject
@@ -34,19 +37,31 @@ public class ApplicableSegmentsSelector extends FxmlContainer
 
   private CompatibilityCriterion criterion;
 
+  private final Tooltip tooltip;
+
   /**
    * Creates a new ApplicableSegmentSelector. Make sure to call {@link #init(Injector)} afterwards!
    */
   public ApplicableSegmentsSelector() {
     super("ApplicableSegmentsSelector.fxml");
-
     setupView();
+
+    this.tooltip = new Tooltip();
+    tooltip.setPrefWidth(TOOLTIP_SIZE);
+    tooltip.setWrapText(TOOLTIP_WRAP_TEXT);
+
     this.typeSelector.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     this.typeSelector.setCellFactory(this::createSegmentTypeSelectorCell);
     this.typeSelector.getItems().addAll(SegmentType.values());
     this.typeSelector.getSelectionModel().getSelectedItems().addListener(this::onSelectionChange);
+    this.typeSelector.setTooltip(tooltip);
   }
 
+  @Override
+  public void init(Injector injector) {
+    super.init(injector);
+    updateTranslatableStrings(getTranslator().getSelectedLanguage());
+  }
 
   private void setupView() {
     String criterionStyleSheetUrl =
@@ -103,6 +118,8 @@ public class ApplicableSegmentsSelector extends FxmlContainer
 
   @Override
   protected void updateTranslatableStrings(Language lang) {
+    tooltip.setText(getTranslator().getLocalizedText("view.panel.criterion"
+        + ".compatibilityCriterionPanel.segmentsSelectorExplanation"));
   }
 
   @Override

@@ -24,6 +24,7 @@
 
 .comboBox:showing {
     -fx-border-radius: 15 15 0 0;
+    -fx-background-radius: 15 15 0 0;
 }
 
 .vbox {

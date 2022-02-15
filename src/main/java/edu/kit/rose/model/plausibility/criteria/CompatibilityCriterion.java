@@ -193,16 +193,16 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
       throw new IllegalStateException("can not check connections without set roadSystem.");
     }
     ArrayList<Segment> invalidSegments;
-    if (!this.operatorType.equals(ValidationType.DEFAULT) && !unit.isContainer()) {
-      ValidationStrategy strategy;
+    if (!unit.isContainer()) {
+      ValidationStrategy<?> strategy;
 
       switch (this.operatorType) {
         case EQUALS -> {
-          strategy = new EqualsValidationStrategy();
+          strategy = new EqualsValidationStrategy<>();
           invalidSegments = getInvalidSegments(strategy, (Segment) unit, NOT_USE_DISCREPANCY);
         }
         case LESS_THAN -> {
-          strategy = new LessThanValidationStrategy();
+          strategy = new LessThanValidationStrategy<>();
           invalidSegments = getInvalidSegments(strategy, (Segment) unit, USE_DISCREPANCY);
         }
         case NOR -> {
@@ -210,7 +210,7 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
           invalidSegments = getInvalidSegments(strategy, (Segment) unit, NOT_USE_DISCREPANCY);
         }
         case NOT_EQUALS -> {
-          strategy = new NotEqualsValidationStrategy();
+          strategy = new NotEqualsValidationStrategy<>();
           invalidSegments = getInvalidSegments(strategy, (Segment) unit, NOT_USE_DISCREPANCY);
         }
         case OR -> {
@@ -248,7 +248,7 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
     return this;
   }
 
-  private ArrayList<Segment> getInvalidSegments(ValidationStrategy strategy,
+  private ArrayList<Segment> getInvalidSegments(ValidationStrategy<?> strategy,
                                                 Segment segment, boolean useDiscrepancy) {
     ArrayList<Segment> invalidSegments = new ArrayList<>();
     Box<Segment> adjacentSegments = this.roadSystem.getAdjacentSegments(segment);
@@ -290,21 +290,20 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
    * @return true if the accessors are valid to each other according
    *      to validation strategy and false otherwise
    */
-  private boolean checkValid(ValidationStrategy strategy,
-                             AttributeAccessor accessor1, AttributeAccessor accessor2,
+  private boolean checkValid(ValidationStrategy<?> strategy,
+                             AttributeAccessor<?> accessor1, AttributeAccessor<?> accessor2,
                              boolean useDiscrepancy) {
-    switch (this.attributeType.getDataType()) {
-      case BOOLEAN:
-        return (this.<Boolean>validateWithType(strategy, accessor1, accessor2, useDiscrepancy));
-      case STRING:
-        return (this.<String>validateWithType(strategy, accessor1, accessor2, useDiscrepancy));
-      case INTEGER:
-        return (this.<Integer>validateWithType(strategy, accessor1, accessor2, useDiscrepancy));
-      case FRACTIONAL:
-        return (this.<Double>validateWithType(strategy, accessor1, accessor2, useDiscrepancy));
-      default:
-        throw new IllegalArgumentException("no such data type found");
-    }
+    return switch (this.attributeType.getDataType()) {
+      case BOOLEAN -> (this.<Boolean>validateWithType(strategy, accessor1, accessor2,
+          useDiscrepancy));
+      case STRING -> (this.<String>validateWithType(strategy, accessor1, accessor2,
+          useDiscrepancy));
+      case INTEGER -> (this.<Integer>validateWithType(strategy, accessor1, accessor2,
+          useDiscrepancy));
+      case FRACTIONAL -> (this.<Double>validateWithType(strategy, accessor1, accessor2,
+          useDiscrepancy));
+      default -> throw new IllegalArgumentException("no such data type found");
+    };
   }
 
   @Override
@@ -318,8 +317,9 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
     this.elementViolationMap.remove(unit);
   }
 
-  private <T> boolean validateWithType(ValidationStrategy strategy,
-                                       AttributeAccessor accessor1, AttributeAccessor accessor2,
+  private <T> boolean validateWithType(ValidationStrategy<?> strategy,
+                                       AttributeAccessor<?> accessor1,
+                                       AttributeAccessor<?> accessor2,
                                        boolean useDiscrepancy) {
     AttributeAccessor<T> auxAccessor1 = (AttributeAccessor<T>) accessor1;
     AttributeAccessor<T> auxAccessor2 = (AttributeAccessor<T>) accessor2;

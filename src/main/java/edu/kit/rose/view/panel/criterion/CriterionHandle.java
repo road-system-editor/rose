@@ -10,6 +10,7 @@ import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import edu.kit.rose.view.commons.FxmlContainer;
 import java.util.Collection;
 import java.util.Objects;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -69,7 +70,8 @@ class CriterionHandle extends FxmlContainer
     //CompatibilityCriteria are the only ones that can be deleted.
     if (criterion.getType() == PlausibilityCriterionType.COMPATIBILITY) {
       this.deleteButton.addEventHandler(MouseEvent.MOUSE_CLICKED,
-          event -> controller.deleteCompatibilityCriterion((CompatibilityCriterion) criterion));
+          event -> Platform.runLater(() -> controller
+              .deleteCompatibilityCriterion((CompatibilityCriterion) criterion)));
     }
   }
 

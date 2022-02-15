@@ -50,7 +50,7 @@ public abstract class CriterionPanel<T extends PlausibilityCriterion> extends Fx
    */
   public static CriterionPanel<? extends PlausibilityCriterion> forCriterion(Injector injector,
       PlausibilityCriterion criterion) {
-    if (criterion.getType() == PlausibilityCriterionType.COMPATIBILITY) {
+    if (criterion != null && criterion.getType() == PlausibilityCriterionType.COMPATIBILITY) {
       return new CompatibilityCriterionPanel((CompatibilityCriterion) criterion);
     }
     return null;

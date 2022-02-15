@@ -25,7 +25,7 @@ public class ConnectionTest {
 
   @BeforeEach
   void setup() {
-    testConnection = new Connection(CONNECTOR1, CONNECTOR2);
+    testConnection = new Connection(CONNECTOR1, CONNECTOR2, new Position());
   }
 
   @Test

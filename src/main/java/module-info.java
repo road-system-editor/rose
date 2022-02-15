@@ -3,7 +3,6 @@ module edu.kit.rose.entwurf {
   requires javafx.fxml;
   requires javafx.graphics;
   requires com.google.guice;
-  requires org.apache.commons.collections4;
   requires com.fasterxml.jackson.databind;
   requires com.fasterxml.jackson.dataformat.yaml;
   requires org.jgrapht.core;

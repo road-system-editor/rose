@@ -3,7 +3,6 @@ package edu.kit.rose.model.roadsystem.elements;
 import edu.kit.rose.infrastructure.Box;
 import edu.kit.rose.infrastructure.Movement;
 import edu.kit.rose.infrastructure.Position;
-import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.model.roadsystem.measurements.Measurement;
 
 /**
@@ -69,5 +68,5 @@ public interface Segment extends Element, Comparable<Segment> {
    * @param connector the connector, must be of this segment!
    * @return the Position the Connector has when factoring in the rotation.
    */
-  Position getRotatedConnectorPosition(Connector connector);
+  Position getAbsoluteConnectorPosition(Connector connector);
 }

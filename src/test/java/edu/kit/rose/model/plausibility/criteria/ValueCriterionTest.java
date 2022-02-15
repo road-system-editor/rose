@@ -62,26 +62,16 @@ class ValueCriterionTest {
 
   @Test
   void testNotifyChange() {
-    Segment segment = new Base();
+    Base segment = new Base();
     criterion.addSegmentType(SegmentType.BASE);
 
-    for (AttributeAccessor<?> accessor : segment.getAttributeAccessors()) {
-      if (accessor.getAttributeType().equals(AttributeType.LENGTH)) {
-        AttributeAccessor<Integer> auxAccessor = (AttributeAccessor<Integer>) accessor;
-        auxAccessor.setValue((int) Math.round(ValueCriterion.LENGTH_RANGE.upperEndpoint() + 1));
-      }
-    }
+    segment.setLength(5001);
 
     criterion.notifyChange(segment);
 
     Assertions.assertEquals(1, violationManager.getViolations().getSize());
 
-    for (AttributeAccessor<?> accessor : segment.getAttributeAccessors()) {
-      if (accessor.getAttributeType().equals(AttributeType.LENGTH)) {
-        AttributeAccessor<Integer> auxAccessor = (AttributeAccessor<Integer>) accessor;
-        auxAccessor.setValue((int) Math.round(ValueCriterion.LENGTH_RANGE.upperEndpoint() - 1));
-      }
-    }
+    segment.setLength(4999);
 
     criterion.notifyChange(segment);
 
@@ -90,26 +80,16 @@ class ValueCriterionTest {
 
   @Test
   void testNotifyAddition() {
-    Segment segment = new Base();
+    Base segment = new Base();
     criterion.addSegmentType(SegmentType.BASE);
 
-    for (AttributeAccessor<?> accessor : segment.getAttributeAccessors()) {
-      if (accessor.getAttributeType().equals(AttributeType.LENGTH)) {
-        AttributeAccessor<Integer> auxAccessor = (AttributeAccessor<Integer>) accessor;
-        auxAccessor.setValue((int) Math.round(ValueCriterion.LENGTH_RANGE.upperEndpoint() + 1));
-      }
-    }
+    segment.setLength(5001);
 
     criterion.notifyAddition(segment);
 
     Assertions.assertEquals(1, violationManager.getViolations().getSize());
 
-    for (AttributeAccessor<?> accessor : segment.getAttributeAccessors()) {
-      if (accessor.getAttributeType().equals(AttributeType.LENGTH)) {
-        AttributeAccessor<Integer> auxAccessor = (AttributeAccessor<Integer>) accessor;
-        auxAccessor.setValue((int) Math.round(ValueCriterion.LENGTH_RANGE.upperEndpoint() - 1));
-      }
-    }
+    segment.setLength(4999);
 
     criterion.notifyAddition(segment);
 
@@ -118,15 +98,10 @@ class ValueCriterionTest {
 
   @Test
   void testNotifyRemoval() {
-    Segment segment = new Base();
+    Base segment = new Base();
     criterion.addSegmentType(SegmentType.BASE);
 
-    for (AttributeAccessor<?> accessor : segment.getAttributeAccessors()) {
-      if (accessor.getAttributeType().equals(AttributeType.LENGTH)) {
-        AttributeAccessor<Integer> auxAccessor = (AttributeAccessor<Integer>) accessor;
-        auxAccessor.setValue((int) Math.round(ValueCriterion.LENGTH_RANGE.upperEndpoint() + 1));
-      }
-    }
+    segment.setLength(5001);
 
     criterion.notifyChange(segment);
 

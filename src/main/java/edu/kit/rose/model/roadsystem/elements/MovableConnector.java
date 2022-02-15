@@ -29,4 +29,17 @@ public class MovableConnector extends Connector {
     this.getPositionInstance().setY(this.getPosition().getY() + movement.getY());
     notifySubscribers();
   }
+
+  /**
+   * Sets the {@link MovableConnector}s position to a specified position,
+   * but does not notify the {@link MovableConnector}s position.
+   *
+   * @apiNote This method does not call observers.
+   *
+   * @param targetPosition the new position of the {@link MovableConnector}
+   */
+  void setPosition(Position targetPosition) {
+    this.getPositionInstance().setX(targetPosition.getX());
+    this.getPositionInstance().setY(targetPosition.getY());
+  }
 }

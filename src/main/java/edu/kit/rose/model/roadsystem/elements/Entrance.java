@@ -19,6 +19,8 @@ import java.util.Set;
  */
 public class Entrance extends RampSegment {
 
+  private static final int INITIAL_RAMP_DISTANCE_TO_CENTER_X = 30;
+
   /**
    * Standard Constructor.
    * Initializes all values to default ones.
@@ -38,8 +40,9 @@ public class Entrance extends RampSegment {
   }
 
   @Override
-  protected void initRampConnector(List<AttributeAccessor<?>> rampAttributesList,
-                              Position rampPosition) {
+  protected void initRampConnector(List<AttributeAccessor<?>> rampAttributesList) {
+    var rampPosition =
+        new Position(INITIAL_RAMP_DISTANCE_TO_CENTER_X, -INITIAL_RAMP_DISTANCE_TO_CENTER_Y);
     this.rampConnector = new Connector(ConnectorType.RAMP_ENTRY, rampPosition, rampAttributesList);
   }
 }

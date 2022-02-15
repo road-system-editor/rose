@@ -22,7 +22,8 @@ public abstract class HighwaySegment
     extends RoseSetObservable<Element, Element>
     implements Segment {
 
-  protected static final int INITIAL_CONNECTOR_DISTANCE_TO_CENTER = 50;
+  protected static final int INITIAL_EXIT_DISTANCE_TO_CENTER = 33;
+  protected static final int INITIAL_ENTRY_DISTANCE_TO_CENTER = 27;
 
   protected final List<AttributeAccessor<?>> attributeAccessors = new ArrayList<>();
   protected final Set<Connector> connectors = new HashSet<>();
@@ -39,7 +40,7 @@ public abstract class HighwaySegment
   private final AttributeAccessor<String> nameAccessor;
   private String comment;
   private final AttributeAccessor<String> commentAccessor;
-  private int length = 2 * INITIAL_CONNECTOR_DISTANCE_TO_CENTER;
+  private int length = INITIAL_EXIT_DISTANCE_TO_CENTER + INITIAL_ENTRY_DISTANCE_TO_CENTER;
   private final AttributeAccessor<Integer> lengthAccessor;
   private int pitch = 0;
   private final AttributeAccessor<Integer> slopeAccessor;
@@ -96,19 +97,9 @@ public abstract class HighwaySegment
     initConnectors(entryAttributesList, exitAttributesList);
   }
 
-  protected void initConnectors(List<AttributeAccessor<?>> entryAttributesList,
-                                List<AttributeAccessor<?>> exitAttributesList) {
-    this.entryConnector = new Connector(ConnectorType.ENTRY,
-        new Position(getCenter().getX() - INITIAL_CONNECTOR_DISTANCE_TO_CENTER,
-            getCenter().getY()),
-        entryAttributesList);
-    this.exitConnector = new Connector(ConnectorType.EXIT,
-        new Position(getCenter().getX() + INITIAL_CONNECTOR_DISTANCE_TO_CENTER,
-            getCenter().getY()),
-        exitAttributesList);
-    connectors.add(entryConnector);
-    connectors.add(exitConnector);
-  }
+  protected abstract void initConnectors(
+      List<AttributeAccessor<?>> entryAttributesList,
+      List<AttributeAccessor<?>> exitAttributesList);
 
   /**
    * Provides the entry Connector for this Segment.
@@ -162,7 +153,6 @@ public abstract class HighwaySegment
   public void move(Movement movement) {
     center.setX(center.getX() + movement.getX());
     center.setY(center.getY() + movement.getY());
-    connectors.forEach(c -> c.move(movement));
     notifySubscribers();
   }
 
@@ -197,7 +187,7 @@ public abstract class HighwaySegment
   }
 
   @Override
-  public Position getRotatedConnectorPosition(Connector connector) {
+  public Position getAbsoluteConnectorPosition(Connector connector) {
     if (!this.connectors.contains(connector)) {
       throw new IllegalArgumentException("connector is not part of this segment");
     }
@@ -208,13 +198,9 @@ public abstract class HighwaySegment
     var x = connector.getPosition().getX();
     var y = connector.getPosition().getY();
 
-    // translate point back to origin:
-    x -= center.getX();
-    y -= center.getY();
-
     // rotate point
-    double newX = y * s - x * c;
-    double newY = -x * s - y * c;
+    double newX = x * c - y * s;
+    double newY = x * s + y * c;
 
     // translate point back:
     return new Position((int) Math.round(newX + center.getX()),

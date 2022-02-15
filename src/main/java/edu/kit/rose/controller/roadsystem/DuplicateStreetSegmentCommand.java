@@ -42,7 +42,7 @@ public class DuplicateStreetSegmentCommand implements ChangeCommand {
     for (int i = 0; i < this.segmentsToDuplicate.size(); i++) {
       var copy = copier
               .copySegment(this.replacementLog.getCurrentVersion(
-                      this.segmentsToDuplicate.get(i)), false);
+                      this.segmentsToDuplicate.get(i)));
       if (this.segments.size() <= i) {
         this.segments.add(copy);
       } else {

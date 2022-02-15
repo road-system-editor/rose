@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 public class HierarchyCopier {
   private final ReplacementLog replacementLog;
   private final RoadSystem target;
+  private final boolean makeReplacement;
 
   /**
    *  Constructor.
@@ -31,6 +32,7 @@ public class HierarchyCopier {
    */
   public HierarchyCopier(ReplacementLog replacementLog, RoadSystem target) {
     this.replacementLog = replacementLog;
+    makeReplacement = replacementLog != null;
     this.target = Objects.requireNonNull(target);
   }
 
@@ -40,14 +42,16 @@ public class HierarchyCopier {
    * @param original the group to copy.
    * @return the copy of the original in the target road system.
    */
-  public Group copyGroup(Group original, boolean makeReplacement) {
+  public Group copyGroup(Group original) {
     Set<Element> elementsCopy = original.getElements().stream()
-        .map(e -> copyElement(e, makeReplacement))
+        .map(this::copyElement)
         .collect(Collectors.toCollection(LinkedHashSet::new));
 
     Group copy = this.target.createGroup(elementsCopy);
     this.copyAccessors(original, copy);
-    this.replacementLog.replaceElement(original, copy);
+    if (makeReplacement) {
+      this.replacementLog.replaceElement(original, copy);
+    }
 
     return copy;
   }
@@ -58,7 +62,7 @@ public class HierarchyCopier {
    * @param original the segment to copy.
    * @return the copy of the original in the target road system.
    */
-  public Segment copySegment(Segment original, boolean makeReplacement) {
+  public Segment copySegment(Segment original) {
     Segment copy = this.target.createSegment(original.getSegmentType());
 
     this.copyPositionData(original, copy);
@@ -76,10 +80,10 @@ public class HierarchyCopier {
    * @param original the element to copy.
    * @return the copy of the original in the target road system.
    */
-  public Element copyElement(Element original, boolean makeReplacement) {
+  public Element copyElement(Element original) {
     return original.isContainer()
-        ? this.copyGroup((Group) original, makeReplacement)
-        : this.copySegment((Segment) original, makeReplacement);
+        ? this.copyGroup((Group) original)
+        : this.copySegment((Segment) original);
   }
 
   private void copyPositionData(Segment source, Segment target) {

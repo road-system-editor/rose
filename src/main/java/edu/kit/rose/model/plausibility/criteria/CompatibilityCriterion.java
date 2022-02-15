@@ -195,9 +195,8 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
       throw new IllegalStateException("can not check connections without set roadSystem.");
     }
     ArrayList<Segment> invalidSegments;
-    if (this.operatorType != null && !this.operatorType.equals(ValidationType.DEFAULT)
-        && !unit.isContainer()) {
-      ValidationStrategy strategy;
+    if (this.operatorType != null && !unit.isContainer()) {
+      ValidationStrategy<?> strategy;
 
       switch (this.operatorType) {
         case EQUALS -> {

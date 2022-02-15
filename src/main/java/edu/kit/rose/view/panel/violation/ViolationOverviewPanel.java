@@ -55,6 +55,7 @@ public class ViolationOverviewPanel extends FxmlContainer
   @Override
   public void init(Injector injector) {
     super.init(injector);
+    project.getPlausibilitySystem().getViolationManager().addSubscriber(this);
     this.messageFactory = new MessageFactory(getTranslator());
     setupView();
     initViolationBox();

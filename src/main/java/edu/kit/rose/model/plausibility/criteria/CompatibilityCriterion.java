@@ -86,6 +86,7 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
    */
   public void setAttributeType(AttributeType attributeType) {
     this.attributeType = attributeType;
+    checkAll();
     notifySubscribers();
   }
 
@@ -106,6 +107,7 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
   public void setOperatorType(ValidationType operatorType) {
     if (this.operatorType != operatorType) {
       this.operatorType = operatorType;
+      checkAll();
       notifySubscribers();
     }
   }
@@ -140,6 +142,7 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
    */
   public void setLegalDiscrepancy(double discrepancy) {
     this.discrepancy = discrepancy;
+    checkAll();
     notifySubscribers();
   }
 
@@ -167,24 +170,23 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
   @Override
   public void setViolationManager(ViolationManager violationManager) {
     this.violationManager = violationManager;
+    checkAll();
   }
 
   @Override
   public void addSegmentType(SegmentType type) {
     this.segmentTypes.add(type);
-    Iterator<SetObserver<SegmentType, PlausibilityCriterion>> iterator = getSubscriberIterator();
-    while (iterator.hasNext()) {
-      iterator.next().notifyAddition(type);
-    }
+    subscribers.forEach(s -> s.notifyAddition(type));
+    checkAll();
+    notifySubscribers();
   }
 
   @Override
   public void removeSegmentType(SegmentType type) {
     this.segmentTypes.remove(type);
-    Iterator<SetObserver<SegmentType, PlausibilityCriterion>> iterator = getSubscriberIterator();
-    while (iterator.hasNext()) {
-      iterator.next().notifyRemoval(type);
-    }
+    subscribers.forEach(s -> s.notifyRemoval(type));
+    checkAll();
+    notifySubscribers();
   }
 
   @Override
@@ -193,7 +195,8 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
       throw new IllegalStateException("can not check connections without set roadSystem.");
     }
     ArrayList<Segment> invalidSegments;
-    if (!this.operatorType.equals(ValidationType.DEFAULT) && !unit.isContainer()) {
+    if (this.operatorType != null && !this.operatorType.equals(ValidationType.DEFAULT)
+        && !unit.isContainer()) {
       ValidationStrategy strategy;
 
       switch (this.operatorType) {
@@ -329,5 +332,11 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
               auxAccessor2.getValue(), this.discrepancy);
     }
     return auxStrategy.validate(auxAccessor1.getValue(), auxAccessor2.getValue());
+  }
+
+  private void checkAll() {
+    if (this.roadSystem != null) {
+      roadSystem.getElements().forEach(this::notifyChange);
+    }
   }
 }

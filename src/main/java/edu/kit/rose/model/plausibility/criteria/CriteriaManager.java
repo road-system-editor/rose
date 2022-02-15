@@ -8,6 +8,8 @@ import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.infrastructure.UnitObserver;
 import edu.kit.rose.model.plausibility.violation.ViolationManager;
 import edu.kit.rose.model.roadsystem.RoadSystem;
+import edu.kit.rose.model.roadsystem.elements.Element;
+import edu.kit.rose.model.roadsystem.elements.Segment;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -25,6 +27,7 @@ public class CriteriaManager extends RoseSetObservable<PlausibilityCriterion, Cr
   private final ArrayList<PlausibilityCriterion> criteria;
   private ViolationManager violationManager;
   private CriterionFactory criterionFactory;
+  private RoadSystem roadSystem;
 
   /**
    * Constructor.
@@ -43,11 +46,23 @@ public class CriteriaManager extends RoseSetObservable<PlausibilityCriterion, Cr
    *     will be observed by created criteria
    */
   public void setRoadSystem(RoadSystem roadSystem) {
+    this.roadSystem = roadSystem;
     this.criterionFactory.setRoadSystem(roadSystem);
     this.criteria.stream()
         .filter(c -> c.getType() == PlausibilityCriterionType.COMPATIBILITY)
         .map(c -> (CompatibilityCriterion) c)
         .forEach(c -> c.setRoadSystem(roadSystem));
+    var elements = roadSystem.getElements();
+    var segments = elements.stream()
+        .filter(element -> !element.isContainer())
+        .map(element -> (Segment) element)
+        .toList();
+    for (Segment segment : segments) {
+      for (PlausibilityCriterion criterion : criteria) {
+        segment.addSubscriber(criterion);
+      }
+      segment.notifySubscribers();
+    }
   }
 
   /**
@@ -107,11 +122,16 @@ public class CriteriaManager extends RoseSetObservable<PlausibilityCriterion, Cr
   /**
    * Removes a given {@link PlausibilityCriterion} from this CriterionManager.
    *
-   * @param criteria the Criterion to remove.
+   * @param criterion the Criterion to remove.
    */
-  public void removeCriterion(PlausibilityCriterion criteria) {
-    this.criteria.remove(criteria);
-    notifyRemovalToSubscribers(criteria);
+  public void removeCriterion(PlausibilityCriterion criterion) {
+    this.criteria.remove(criterion);
+    roadSystem.getElements().forEach(element -> element.removeSubscriber(criterion));
+    notifyRemovalToSubscribers(criterion);
+    var violationsToRemove = violationManager.getViolations().stream()
+        .filter(violation -> violation.violatedCriterion() == criterion)
+        .toList();
+    violationsToRemove.forEach(violationManager::removeViolation);
   }
 
   /**
@@ -150,18 +170,10 @@ public class CriteriaManager extends RoseSetObservable<PlausibilityCriterion, Cr
   }
 
   private void notifyAdditionToSubscribers(PlausibilityCriterion criterion) {
-    Iterator<SetObserver<PlausibilityCriterion,
-            CriteriaManager>> iterator = getSubscriberIterator();
-    while (iterator.hasNext()) {
-      iterator.next().notifyAddition(criterion);
-    }
+    subscribers.forEach(s -> s.notifyAddition(criterion));
   }
 
   private void notifyRemovalToSubscribers(PlausibilityCriterion criterion) {
-    Iterator<SetObserver<PlausibilityCriterion,
-            CriteriaManager>> iterator = getSubscriberIterator();
-    while (iterator.hasNext()) {
-      iterator.next().notifyRemoval(criterion);
-    }
+    subscribers.forEach(s -> s.notifyRemoval(criterion));
   }
 }

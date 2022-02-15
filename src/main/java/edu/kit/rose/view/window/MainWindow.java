@@ -2,6 +2,7 @@ package edu.kit.rose.view.window;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import edu.kit.rose.controller.project.ProjectController;
 import edu.kit.rose.view.commons.FxmlUtility;
 import edu.kit.rose.view.panel.hierarchy.HierarchyPanel;
 import edu.kit.rose.view.panel.roadsystem.RoadSystemPanel;
@@ -18,6 +19,9 @@ import javafx.stage.Stage;
  * This class lays out the contained panels and sets up the menu bar, as specified in PF11.1.2.
  */
 public class MainWindow extends RoseWindow {
+
+  @Inject
+  private ProjectController projectController;
 
   @FXML
   private RoseMenuBar roseMenuBar;
@@ -45,6 +49,7 @@ public class MainWindow extends RoseWindow {
   @Override
   public void close() {
     super.close();
+    this.projectController.shutDown();
     Platform.exit();
   }
 

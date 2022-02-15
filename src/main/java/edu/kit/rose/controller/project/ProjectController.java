@@ -53,5 +53,10 @@ public interface ProjectController {
    * @param onDone  called after the import or export
    */
   void unsubscribeFromProjectIoAction(Runnable onBegin, Runnable onDone);
+
+  /**
+   * Shuts down the {@link ProjectController} and stops its automatic backups.
+   */
+  void shutDown();
 }
 

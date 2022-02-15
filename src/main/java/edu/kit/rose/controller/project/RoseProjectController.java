@@ -195,4 +195,9 @@ public class RoseProjectController extends Controller implements ProjectControll
     this.onProjectIoActionBeginCallbacks.remove(onBegin);
     this.onProjectIoActionEndCallbacks.remove(onEnd);
   }
+
+  @Override
+  public void shutDown() {
+    this.backupTimer.cancel();
+  }
 }

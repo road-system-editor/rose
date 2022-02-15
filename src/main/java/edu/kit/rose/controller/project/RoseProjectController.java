@@ -67,7 +67,7 @@ public class RoseProjectController extends Controller implements ProjectControll
       this.onProjectIoActionBeginCallbacks.forEach(Runnable::run);
 
       FileFormat targetFileFormat = toFileFormat(targetFormat);
-      ;
+
       Path targetFilePath
           = getNavigator().showFileDialog(FileDialogType.SAVE_FILE, targetFileFormat);
 

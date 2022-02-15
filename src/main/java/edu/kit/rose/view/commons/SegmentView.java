@@ -74,7 +74,6 @@ public abstract class SegmentView<T extends Segment> extends Pane
     this.widthProperty().addListener(e -> draw());
     this.heightProperty().addListener(e -> draw());
 
-    setOnMouseClicked(Event::consume);
     setupSelection();
     setupDrag();
   }

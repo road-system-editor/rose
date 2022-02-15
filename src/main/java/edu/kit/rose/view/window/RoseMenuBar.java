@@ -7,6 +7,7 @@ import edu.kit.rose.controller.navigation.Navigator;
 import edu.kit.rose.controller.navigation.WindowType;
 import edu.kit.rose.controller.project.ProjectController;
 import edu.kit.rose.infrastructure.language.Language;
+import edu.kit.rose.model.Project;
 import edu.kit.rose.model.ProjectFormat;
 import edu.kit.rose.view.commons.FxmlContainer;
 import java.nio.file.Path;
@@ -34,7 +35,7 @@ public class RoseMenuBar extends FxmlContainer {
   @FXML
   private MenuItem loadProject;
   @FXML
-  private MenuItem exportProject;
+  private Menu exportProject;
   @FXML
   private MenuItem saveProject;
   @FXML
@@ -117,9 +118,18 @@ public class RoseMenuBar extends FxmlContainer {
   public void init(Injector injector) {
     super.init(injector);
 
+    populateExportMenu();
     populateBackupMenu();
     populateRecentProjectsMenu();
     registerMenuListeners();
+  }
+
+  private void populateExportMenu() {
+    for (var format : ProjectFormat.values()) {
+      var item = new MenuItem(format.toString());
+      item.setOnAction(evt -> this.projectController.export(format));
+      this.exportProject.getItems().add(item);
+    }
   }
 
   private void populateBackupMenu() {
@@ -168,8 +178,6 @@ public class RoseMenuBar extends FxmlContainer {
     // Project
     newProject.setOnAction(evt -> this.projectController.createNewProject());
     loadProject.setOnAction(evt -> this.projectController.loadProject());
-    // TODO allow format configuration
-    exportProject.setOnAction(evt -> projectController.export(ProjectFormat.ROSE));
     saveProject.setOnAction(evt -> projectController.save());
     saveProjectAs.setOnAction(evt -> projectController.saveAs());
     // Validation

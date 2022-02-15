@@ -7,7 +7,6 @@ import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterion;
 import edu.kit.rose.model.plausibility.violation.Violation;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import edu.kit.rose.view.commons.FxmlContainer;
-import edu.kit.rose.view.panel.problem.MessageFactory;
 import java.util.Collection;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -45,7 +44,7 @@ public class ViolationHandle extends FxmlContainer implements SetObserver<Segmen
    * that is only visible when this component is hovered.
    */
   @FXML
-  private Tooltip extendedMessage;
+  private final Tooltip extendedMessage;
   private final MessageFactory messageFactory;
 
   /**

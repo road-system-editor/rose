@@ -203,6 +203,7 @@ public class RoadSystemPanel extends FxmlContainer
       case DELETE -> roadSystemController::deleteStreetSegments;
       case Z -> keyEvent.isControlDown() ? applicationController::undo : () -> {};
       case Y -> keyEvent.isControlDown() ? applicationController::redo : () -> {};
+      case D -> keyEvent.isControlDown() ? roadSystemController::duplicateStreetSegment : () -> {};
       default -> () -> {};
     };
   }

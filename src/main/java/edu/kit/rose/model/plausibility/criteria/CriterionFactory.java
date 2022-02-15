@@ -41,10 +41,8 @@ class CriterionFactory {
    * @return the new CompletenessCriterion
    */
   public CompletenessCriterion createCompletenessCriterion() {
-    CompletenessCriterion criterion = new CompletenessCriterion((this.violationManager));
-    if (this.roadSystem != null) {
-      this.roadSystem.getElements().forEach(element -> element.addSubscriber(criterion));
-    }
+    var criterion = new CompletenessCriterion((this.violationManager));
+    subscribeAndCheckSegmentsIfPossible(criterion);
     return criterion;
   }
 
@@ -56,39 +54,26 @@ class CriterionFactory {
   public List<ValueCriterion> createValueCriteria() {
     ArrayList<ValueCriterion> valueCriteria = new ArrayList<>();
 
-    ValueCriterion criterion1 = new ValueCriterion(this.violationManager, AttributeType.LANE_COUNT,
-            ValueCriterion.LANE_COUNT_RANGE);
-    valueCriteria.add(criterion1);
+    valueCriteria.add(new ValueCriterion(this.violationManager, AttributeType.LANE_COUNT,
+        ValueCriterion.LANE_COUNT_RANGE));
 
-    ValueCriterion criterion2 = new ValueCriterion(this.violationManager,
-        AttributeType.LANE_COUNT_RAMP,
-            ValueCriterion.LANE_COUNT_RAMP_RANGE);
-    valueCriteria.add(criterion2);
+    valueCriteria.add(new ValueCriterion(this.violationManager, AttributeType.LANE_COUNT_RAMP,
+        ValueCriterion.LANE_COUNT_RAMP_RANGE));
 
-    ValueCriterion criterion3 = new ValueCriterion(this.violationManager, AttributeType.LENGTH,
-            ValueCriterion.LENGTH_RANGE);
-    valueCriteria.add(criterion3);
+    valueCriteria.add(new ValueCriterion(this.violationManager, AttributeType.LENGTH,
+        ValueCriterion.LENGTH_RANGE));
 
-    ValueCriterion criterion4 = new ValueCriterion(this.violationManager, AttributeType.MAX_SPEED,
-            ValueCriterion.MAX_SPEED_RANGE);
-    valueCriteria.add(criterion4);
+    valueCriteria.add(new ValueCriterion(this.violationManager, AttributeType.MAX_SPEED,
+        ValueCriterion.MAX_SPEED_RANGE));
 
-    ValueCriterion criterion5 = new ValueCriterion(this.violationManager,
-        AttributeType.MAX_SPEED_RAMP,
-            ValueCriterion.MAX_SPEED_RAMP_RANGE);
-    valueCriteria.add(criterion5);
+    valueCriteria.add(new ValueCriterion(this.violationManager, AttributeType.MAX_SPEED_RAMP,
+        ValueCriterion.MAX_SPEED_RAMP_RANGE));
 
-    ValueCriterion criterion6 = new ValueCriterion(this.violationManager, AttributeType.SLOPE,
-            ValueCriterion.SLOPE_RANGE);
-    valueCriteria.add(criterion6);
+    valueCriteria.add(new ValueCriterion(this.violationManager, AttributeType.SLOPE,
+        ValueCriterion.SLOPE_RANGE));
 
-    if (this.roadSystem != null) {
-      this.roadSystem.getElements().forEach(element -> element.addSubscriber(criterion1));
-      this.roadSystem.getElements().forEach(element -> element.addSubscriber(criterion2));
-      this.roadSystem.getElements().forEach(element -> element.addSubscriber(criterion3));
-      this.roadSystem.getElements().forEach(element -> element.addSubscriber(criterion4));
-      this.roadSystem.getElements().forEach(element -> element.addSubscriber(criterion5));
-      this.roadSystem.getElements().forEach(element -> element.addSubscriber(criterion6));
+    for (var criterion : valueCriteria) {
+      subscribeAndCheckSegmentsIfPossible(criterion);
     }
 
     return valueCriteria;
@@ -100,17 +85,19 @@ class CriterionFactory {
    * @return the new CompatibilityCriterion
    */
   public CompatibilityCriterion createCompatibilityCriterion() {
-    CompatibilityCriterion criterion =
-        new CompatibilityCriterion(this.roadSystem, this.violationManager);
+    var criterion = new CompatibilityCriterion(this.roadSystem, this.violationManager);
+    subscribeAndCheckSegmentsIfPossible(criterion);
+    return criterion;
+  }
+
+  private void subscribeAndCheckSegmentsIfPossible(PlausibilityCriterion criterion) {
     if (this.roadSystem != null) {
-      this.roadSystem.getElements().forEach(element -> {
+      for (Element element : this.roadSystem.getElements()) {
         if (!element.isContainer()) {
           element.addSubscriber(criterion);
-          element.notifySubscribers();
+          criterion.notifyChange(element);
         }
-      });
-
+      }
     }
-    return criterion;
   }
 }

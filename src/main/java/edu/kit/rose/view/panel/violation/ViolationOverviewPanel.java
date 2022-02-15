@@ -9,7 +9,6 @@ import edu.kit.rose.model.Project;
 import edu.kit.rose.model.plausibility.violation.Violation;
 import edu.kit.rose.model.plausibility.violation.ViolationManager;
 import edu.kit.rose.view.commons.FxmlContainer;
-import edu.kit.rose.view.panel.problem.MessageFactory;
 import java.util.Collection;
 import java.util.Objects;
 import javafx.fxml.FXML;

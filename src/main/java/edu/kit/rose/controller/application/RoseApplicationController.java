@@ -5,11 +5,12 @@ import edu.kit.rose.controller.commons.Controller;
 import edu.kit.rose.controller.commons.StorageLock;
 import edu.kit.rose.controller.navigation.Navigator;
 import edu.kit.rose.controller.navigation.WindowType;
-import edu.kit.rose.infrastructure.SetObserver;
+import edu.kit.rose.infrastructure.DualSetObserver;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.infrastructure.language.LanguageSelector;
 import edu.kit.rose.model.ApplicationDataSystem;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
+import java.nio.file.Path;
 
 /**
  * Provides functionality for application settings
@@ -66,13 +67,23 @@ public class RoseApplicationController extends Controller implements Application
    */
   private void setupLanguageBinding() {
     this.languageSelector.setSelectedLanguage(this.applicationDataSystem.getLanguage());
-    this.applicationDataSystem.addSubscriber(new SetObserver<>() {
+    this.applicationDataSystem.addSubscriber(new DualSetObserver<>() {
       @Override
       public void notifyAddition(AttributeType unit) {
       }
 
       @Override
       public void notifyRemoval(AttributeType unit) {
+      }
+
+      @Override
+      public void notifyAdditionSecond(Path unit) {
+
+      }
+
+      @Override
+      public void notifyRemovalSecond(Path unit) {
+
       }
 
       @Override

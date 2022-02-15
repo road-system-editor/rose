@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import edu.kit.rose.infrastructure.Box;
 import edu.kit.rose.infrastructure.RoseBox;
-import edu.kit.rose.infrastructure.RoseSetObservable;
+import edu.kit.rose.infrastructure.RoseDualSetObservable;
 import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.model.plausibility.criteria.CriteriaManager;
@@ -15,15 +15,17 @@ import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * A standard implementation for the {@link ApplicationDataSystem}.
  * Provided with a global config file it will write changes in the applicationData to the
  * config file in real time.
  */
-class RoseApplicationDataSystem extends RoseSetObservable<AttributeType, ApplicationDataSystem>
-    implements ApplicationDataSystem {
+class RoseApplicationDataSystem extends RoseDualSetObservable<AttributeType,
+    Path, ApplicationDataSystem> implements ApplicationDataSystem {
   /**
    * This adapter calls {@link #save()} once a plausibility criterion changes.
    */
@@ -50,6 +52,7 @@ class RoseApplicationDataSystem extends RoseSetObservable<AttributeType, Applica
       .enable(SerializationFeature.INDENT_OUTPUT);
   private final CriteriaManager criteriaManager;
   private final Set<AttributeType> shownAttributeTypes;
+  private final Set<Path> recentProjectPaths;
   private Language language = Language.DEFAULT;
 
   /**
@@ -63,6 +66,7 @@ class RoseApplicationDataSystem extends RoseSetObservable<AttributeType, Applica
     this.criteriaManager = new CriteriaManager();
     this.criteriaManager.addSubscriber(this);
     this.shownAttributeTypes = new HashSet<>(); //fill with standard AttributeTypes
+    this.recentProjectPaths = new TreeSet<>();
 
     // or get from config file
     if (configFilePath.toFile().exists()) {
@@ -108,6 +112,21 @@ class RoseApplicationDataSystem extends RoseSetObservable<AttributeType, Applica
 
     if (removed) {
       getSubscriberIterator().forEachRemaining(sub -> sub.notifyRemoval(attributeType));
+      this.save();
+    }
+  }
+
+  @Override
+  public Box<Path> getRecentProjectPaths() {
+    return new RoseBox<>(this.recentProjectPaths);
+  }
+
+  @Override
+  public void addRecentProjectPath(Path recentProjectPath) {
+    var absolute = Objects.requireNonNull(recentProjectPath).toAbsolutePath();
+
+    if (this.recentProjectPaths.add(absolute)) {
+      getSubscriberIterator().forEachRemaining(sub -> sub.notifyAdditionSecond(absolute));
       this.save();
     }
   }

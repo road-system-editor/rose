@@ -65,4 +65,8 @@ public interface Project {
    */
   ZoomSetting getZoomSetting();
 
+  /**
+   * Resets this project and all contained data.
+   */
+  void reset();
 }

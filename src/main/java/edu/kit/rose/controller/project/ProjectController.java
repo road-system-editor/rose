@@ -2,6 +2,7 @@ package edu.kit.rose.controller.project;
 
 
 import edu.kit.rose.controller.navigation.FileFormat;
+import edu.kit.rose.infrastructure.Box;
 import edu.kit.rose.model.ProjectFormat;
 import java.nio.file.Path;
 
@@ -58,5 +59,26 @@ public interface ProjectController {
    * Shuts down the {@link ProjectController} and stops its automatic backups.
    */
   void shutDown();
+
+  /**
+   * Creates a new project in this editor.
+   * This will clear all project data.
+   */
+  void createNewProject();
+
+  /**
+   * Lets the user pick a file to load.
+   */
+  void loadProject();
+
+  /**
+   * Returns the paths of all backed up files.
+   */
+  Box<Path> getBackupPaths();
+
+  /**
+   * Load recent project from the given path.
+   */
+  void loadRecentProject(Path recentProjectPath);
 }
 

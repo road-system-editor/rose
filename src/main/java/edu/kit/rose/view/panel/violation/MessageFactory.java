@@ -1,14 +1,11 @@
-package edu.kit.rose.view.panel.problem;
+package edu.kit.rose.view.panel.violation;
 
-import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterionType;
 import edu.kit.rose.model.plausibility.violation.Violation;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.view.commons.EnumLocalizationUtility;
-import java.util.Iterator;
 import java.util.List;
-import java.util.function.Consumer;
 
 /**
  * The message factory generates short and detailed descriptions of

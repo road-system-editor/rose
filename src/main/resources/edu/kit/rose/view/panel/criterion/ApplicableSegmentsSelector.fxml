@@ -1,9 +1,10 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.VBox?>
-<fx:root xmlns="http://javafx.com/javafx"
+<fx:root fx:id="parentContainer"
+        xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml" type="Pane">
-    <VBox>
-        <ListView fx:id="typeSelector" prefHeight="100"/>
+    <VBox prefWidth="${parentContainer.width}">
+        <ListView fx:id="typeSelector" prefHeight = "80" styleClass="rounded-list-view"/>
     </VBox>
 </fx:root>

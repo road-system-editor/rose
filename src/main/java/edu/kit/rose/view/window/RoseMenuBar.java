@@ -3,31 +3,29 @@ package edu.kit.rose.view.window;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import edu.kit.rose.controller.application.ApplicationController;
-import edu.kit.rose.controller.navigation.FileFormat;
 import edu.kit.rose.controller.navigation.Navigator;
 import edu.kit.rose.controller.navigation.WindowType;
 import edu.kit.rose.controller.project.ProjectController;
+import edu.kit.rose.infrastructure.DualSetObserver;
 import edu.kit.rose.infrastructure.language.Language;
+import edu.kit.rose.model.ApplicationDataSystem;
 import edu.kit.rose.model.ProjectFormat;
+import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.view.commons.FxmlContainer;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import javafx.fxml.FXML;
 import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 
 /**
  * Represents the {@link javafx.scene.control.MenuBar} that
  * is displayed in {@link MainWindow}.
  */
-public class RoseMenuBar extends FxmlContainer {
-
-  @FXML
-  private MenuBar menuBar;
+public class RoseMenuBar extends FxmlContainer implements DualSetObserver<AttributeType, Path,
+    ApplicationDataSystem> {
   @FXML
   private Menu project;
   @FXML
@@ -35,7 +33,7 @@ public class RoseMenuBar extends FxmlContainer {
   @FXML
   private MenuItem loadProject;
   @FXML
-  private MenuItem exportProject;
+  private Menu exportProject;
   @FXML
   private MenuItem saveProject;
   @FXML
@@ -69,8 +67,10 @@ public class RoseMenuBar extends FxmlContainer {
   private ProjectController projectController;
   @Inject
   private Navigator navigator;
+  @Inject
+  private ApplicationDataSystem applicationData;
 
-  private Map<MenuItem, Path> recentProjectMenuItems;
+  private Map<Path, MenuItem> recentProjectMenuItems;
 
 
 
@@ -118,51 +118,58 @@ public class RoseMenuBar extends FxmlContainer {
   public void init(Injector injector) {
     super.init(injector);
 
+    populateExportMenu();
     populateBackupMenu();
     populateRecentProjectsMenu();
     registerMenuListeners();
+
+    this.applicationData.addSubscriber(this);
+  }
+
+  private void populateExportMenu() {
+    for (var format : ProjectFormat.values()) {
+      var item = new MenuItem(format.toString());
+      item.setOnAction(evt -> this.projectController.export(format));
+      this.exportProject.getItems().add(item);
+    }
   }
 
   private void populateBackupMenu() {
-    // TODO get backups from a proper place
-    var backups = List.of(
-        Path.of("C:", "project1.rose"),
-        Path.of("D:", "bigroadsystem.rose"),
-        Path.of("G:", "ehre.rose")
-    );
+    var backups = this.projectController.getBackupPaths();
 
     loadProjectBackup.getItems().clear();
     for (var backup : backups) {
       var item = new MenuItem(backup.getFileName().toString());
-      item.setOnAction(evt -> {/* TODO load backup */});
+      item.setOnAction(evt -> this.projectController.loadBackup(backup));
       loadProjectBackup.getItems().add(item);
     }
   }
 
   private void populateRecentProjectsMenu() {
-    if (recentProjectMenuItems == null) { // TODO move to field definition, if possible without NPEs
+    if (recentProjectMenuItems == null) {
       recentProjectMenuItems = new HashMap<>();
     }
 
-    // clear old items
-    for (var item : recentProjectMenuItems.keySet()) {
-      project.getItems().remove(item);
-    }
     recentProjectMenuItems.clear();
 
     // insert new items
-    // TODO get recent projects from a proper place
-    var recentProjects = List.of(
-        Path.of("C:", "project1.rose"),
-        Path.of("D:", "bigroadsystem.rose"),
-        Path.of("G:", "ehre.rose")
-    );
+    var recentProjects = this.applicationData.getRecentProjectPaths();
     for (var recentProject : recentProjects) {
-      var item = new MenuItem(recentProject.getFileName().toString());
-      recentProjectMenuItems.put(item, recentProject);
-      item.setOnAction(evt -> {/* TODO load recent project */});
-      project.getItems().add(item);
+      addMenuItemForRecentProject(recentProject);
     }
+  }
+
+  private void addMenuItemForRecentProject(Path recentProject) {
+    var item = new MenuItem(recentProject.getFileName().toString());
+    recentProjectMenuItems.put(recentProject, item);
+    item.setOnAction(evt -> this.projectController.loadRecentProject(recentProject));
+    project.getItems().add(item);
+  }
+
+  private void removeMenuItemForRecentProject(Path recentProject) {
+    var item = recentProjectMenuItems.get(recentProject);
+    project.getItems().remove(item);
+    recentProjectMenuItems.remove(recentProject);
   }
 
   /**
@@ -172,21 +179,14 @@ public class RoseMenuBar extends FxmlContainer {
    */
   private void registerMenuListeners() {
     // Project
-    newProject.setOnAction(evt -> {
-      /* TODO how do we create projects? */
-      System.out.println("x");
-    });
-    loadProject.setOnAction(evt -> {/* TODO how do we load projects? */});
-    // TODO allow format configuration
-    exportProject.setOnAction(evt -> projectController.export(ProjectFormat.ROSE));
+    newProject.setOnAction(evt -> this.projectController.createNewProject());
+    loadProject.setOnAction(evt -> this.projectController.loadProject());
     saveProject.setOnAction(evt -> projectController.save());
     saveProjectAs.setOnAction(evt -> projectController.saveAs());
     // Validation
-    // TODO remove sub-menu and detect clicks on top-level menu
     criteria.setOnAction(evt -> navigator.showWindow(WindowType.CRITERION));
 
     // Measurements
-    // TODO remove sub-menu and detect clicks on top-level menu
     measurementsOverview.setOnAction(evt -> navigator.showWindow(WindowType.MEASUREMENT_OVERVIEW));
 
     // Language
@@ -200,5 +200,30 @@ public class RoseMenuBar extends FxmlContainer {
   @Override
   protected Collection<FxmlContainer> getSubFxmlContainer() {
     return null;
+  }
+
+  @Override
+  public void notifyAdditionSecond(Path unit) {
+    addMenuItemForRecentProject(unit);
+  }
+
+  @Override
+  public void notifyRemovalSecond(Path unit) {
+    removeMenuItemForRecentProject(unit);
+  }
+
+  @Override
+  public void notifyAddition(AttributeType unit) {
+    // irrelevant for the menu bar
+  }
+
+  @Override
+  public void notifyRemoval(AttributeType unit) {
+    // irrelevant for the menu bar
+  }
+
+  @Override
+  public void notifyChange(ApplicationDataSystem unit) {
+    // irrelevant for the menu bar
   }
 }

@@ -11,7 +11,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import edu.kit.rose.infrastructure.SetObserver;
+import edu.kit.rose.infrastructure.DualSetObserver;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.model.plausibility.violation.ViolationManager;
 import edu.kit.rose.model.roadsystem.GraphRoadSystem;
@@ -20,7 +20,6 @@ import edu.kit.rose.model.roadsystem.TimeSliceSetting;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.net.URISyntaxException;
@@ -52,7 +51,7 @@ public class RoseApplicationDataSystemTest {
   static int defaultCriteriaAmount;
 
   ApplicationDataSystem applicationDataSystem;
-  SetObserver<AttributeType, ApplicationDataSystem> observer;
+  DualSetObserver<AttributeType, Path, ApplicationDataSystem> observer;
   /**
    * Required for criteria manager creation.
    */
@@ -269,7 +268,7 @@ public class RoseApplicationDataSystemTest {
    * Helper method to extract the "unchecked" (but correct) cast of the observer mock.
    */
   @SuppressWarnings("unchecked")
-  private static SetObserver<AttributeType, ApplicationDataSystem> mockObserver() {
-    return mock(SetObserver.class);
+  private static DualSetObserver<AttributeType, Path, ApplicationDataSystem> mockObserver() {
+    return mock(DualSetObserver.class);
   }
 }

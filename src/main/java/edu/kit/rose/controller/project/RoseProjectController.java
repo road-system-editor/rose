@@ -6,14 +6,23 @@ import edu.kit.rose.controller.navigation.ErrorType;
 import edu.kit.rose.controller.navigation.FileDialogType;
 import edu.kit.rose.controller.navigation.FileFormat;
 import edu.kit.rose.controller.navigation.Navigator;
+import edu.kit.rose.infrastructure.Box;
+import edu.kit.rose.infrastructure.RoseBox;
+import edu.kit.rose.model.ApplicationDataSystem;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.ProjectFormat;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.stream.Collectors;
 
 /**
  * Provides functionality to save, load and
@@ -27,6 +36,7 @@ public class RoseProjectController extends Controller implements ProjectControll
   private static final long BACKUP_DELAY_MILLISECONDS = 300000;
 
   private final Project project;
+  private final ApplicationDataSystem applicationDataSystem;
 
   private final Set<Runnable> onProjectIoActionBeginCallbacks;
   private final Set<Runnable> onProjectIoActionEndCallbacks;
@@ -40,14 +50,18 @@ public class RoseProjectController extends Controller implements ProjectControll
   /**
    * Creates a new {@link RoseProjectController}.
    *
-   * @param storageLock the coordinator for controller actions
-   * @param navigator   the navigator for the controller
-   * @param project     the model facade for project data
+   * @param storageLock           the coordinator for controller actions
+   * @param navigator             the navigator for the controller
+   * @param project               the model facade for project data
+   * @param applicationDataSystem the application data system to store recently opened project
+   *                              paths in.
    */
-  public RoseProjectController(StorageLock storageLock, Navigator navigator, Project project) {
+  public RoseProjectController(StorageLock storageLock, Navigator navigator, Project project,
+                               ApplicationDataSystem applicationDataSystem) {
     super(storageLock, navigator);
 
     this.project = project;
+    this.applicationDataSystem = applicationDataSystem;
     this.onProjectIoActionBeginCallbacks = new HashSet<>();
     this.onProjectIoActionEndCallbacks = new HashSet<>();
 
@@ -156,7 +170,7 @@ public class RoseProjectController extends Controller implements ProjectControll
       if (targetFilePath != null) {
         boolean savingSucceeded = project.save(targetFilePath);
         if (savingSucceeded) {
-          currentProjectPath = targetFilePath;
+          setCurrentProjectPath(targetFilePath);
         } else {
           getNavigator().showErrorDialog(ErrorType.SAVE_ERROR);
         }
@@ -174,7 +188,7 @@ public class RoseProjectController extends Controller implements ProjectControll
 
       boolean loadingSucceeded = project.load(backUpPath);
       if (loadingSucceeded) {
-        currentProjectPath = null;
+        setCurrentProjectPath(null);
       } else {
         getNavigator().showErrorDialog(ErrorType.LOAD_ERROR);
       }
@@ -199,5 +213,80 @@ public class RoseProjectController extends Controller implements ProjectControll
   @Override
   public void shutDown() {
     this.backupTimer.cancel();
+  }
+
+  @Override
+  public void createNewProject() {
+    setCurrentProjectPath(null);
+    this.project.reset();
+  }
+
+  @Override
+  public void loadProject() {
+    if (!getStorageLock().isStorageLockAcquired()) {
+      getStorageLock().acquireStorageLock();
+      this.onProjectIoActionBeginCallbacks.forEach(Runnable::run);
+      Path sourceFilePath
+          = getNavigator().showFileDialog(FileDialogType.LOAD_FILE, FileFormat.ROSE);
+
+      if (sourceFilePath != null) {
+        boolean loadingSucceeded = project.load(sourceFilePath);
+        if (loadingSucceeded) {
+          setCurrentProjectPath(sourceFilePath);
+        } else {
+          getNavigator().showErrorDialog(ErrorType.LOAD_ERROR);
+        }
+      }
+      this.onProjectIoActionEndCallbacks.forEach(Runnable::run);
+      getStorageLock().releaseStorageLock();
+    }
+  }
+
+  @Override
+  public Box<Path> getBackupPaths() {
+    if (ensureBackupDirectoryExists()) {
+      List<Path> backupPaths = new LinkedList<>();
+      try {
+        Files.newDirectoryStream(Paths.get(BACKUP_FOLDER_PATH)).forEach(backupPaths::add);
+      } catch (IOException e) {
+        e.printStackTrace();
+        return new RoseBox<>();
+      }
+
+      Set<String> allowedExtensions = FileFormat.ROSE.getFileExtensions().stream()
+          .map(ext -> ext.substring(ext.lastIndexOf("*") + 1))
+          .collect(Collectors.toSet());
+
+      backupPaths.removeIf(
+          path -> allowedExtensions.stream().noneMatch(path.getFileName().toString()::endsWith));
+
+      return new RoseBox<>(backupPaths);
+    }
+    return new RoseBox<>();
+  }
+
+  @Override
+  public void loadRecentProject(Path recentProjectPath) {
+    if (!getStorageLock().isStorageLockAcquired()) {
+      getStorageLock().acquireStorageLock();
+      this.onProjectIoActionBeginCallbacks.forEach(Runnable::run);
+
+      boolean loadingSucceeded = project.load(recentProjectPath);
+      if (loadingSucceeded) {
+        setCurrentProjectPath(recentProjectPath);
+      } else {
+        getNavigator().showErrorDialog(ErrorType.LOAD_ERROR);
+      }
+
+      this.onProjectIoActionEndCallbacks.forEach(Runnable::run);
+      getStorageLock().releaseStorageLock();
+    }
+  }
+
+  private void setCurrentProjectPath(Path projectPath) {
+    this.currentProjectPath = projectPath;
+    if (projectPath != null) {
+      this.applicationDataSystem.addRecentProjectPath(projectPath);
+    }
   }
 }

@@ -3,6 +3,7 @@ package edu.kit.rose.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +17,8 @@ class SerializedApplicationData {
   private SerializedCriteria criteria;
   @JsonProperty("language")
   private Language language;
+  @JsonProperty("recentProjectPaths")
+  private List<Path> recentProjectPaths;
 
   /**
    * Creates a new serializable application data object with the data of the given {@code source}.
@@ -28,6 +31,11 @@ class SerializedApplicationData {
 
     this.criteria = new SerializedCriteria(source.getCriteriaManager());
     this.language = source.getLanguage();
+
+    this.recentProjectPaths = new ArrayList<>(source.getRecentProjectPaths().getSize());
+    for (var recentPath : source.getRecentProjectPaths()) {
+      this.recentProjectPaths.add(recentPath);
+    }
   }
 
   /**
@@ -45,5 +53,8 @@ class SerializedApplicationData {
     this.shownAttributeTypes.forEach(target::addShownAttributeType);
     this.criteria.populateCriteriaManager(target.getCriteriaManager());
     target.setLanguage(this.language);
+    for (var recent : this.recentProjectPaths) {
+      target.addRecentProjectPath(recent);
+    }
   }
 }

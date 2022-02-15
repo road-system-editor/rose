@@ -2,10 +2,12 @@
 <?import edu.kit.rose.view.panel.criterion.CriteriaOverviewPanel?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <GridPane xmlns="http://javafx.com/javafx"
-          xmlns:fx="http://javafx.com/fxml">
+          xmlns:fx="http://javafx.com/fxml"
+          maxHeight="Infinity"
+          maxWidth="Infinity">
+
     <columnConstraints>
         <ColumnConstraints percentWidth="50"/>
         <ColumnConstraints percentWidth="50"/>
@@ -15,22 +17,12 @@
         <RowConstraints percentHeight="100"/>
     </rowConstraints>
 
-    <AnchorPane GridPane.columnIndex="0"
-                GridPane.rowIndex="0">
         <CriteriaOverviewPanel
-                AnchorPane.topAnchor="0.0"
-                AnchorPane.bottomAnchor="0.0"
-                AnchorPane.leftAnchor="0.0"
-                AnchorPane.rightAnchor="0.0"
+                GridPane.columnIndex="0"
+                GridPane.rowIndex="0"
                 fx:id="overview"/>
-    </AnchorPane>
-    <AnchorPane GridPane.columnIndex="1"
-                GridPane.rowIndex="0">
         <ScrollPane
-                AnchorPane.topAnchor="0.0"
-                AnchorPane.bottomAnchor="0.0"
-                AnchorPane.leftAnchor="0.0"
-                AnchorPane.rightAnchor="0.0"
+                GridPane.columnIndex="1"
+                GridPane.rowIndex="0"
                 fx:id="criterionContainer"/>
-    </AnchorPane>
 </GridPane>

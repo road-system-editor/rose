@@ -24,6 +24,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.VBox;
 
 /**
@@ -31,6 +32,21 @@ import javafx.scene.layout.VBox;
  */
 class CompatibilityCriterionPanel
     extends CriterionPanel<CompatibilityCriterion> { // also uses VBox and ScrollPane
+  private static final String CRITERION_PANEL_STYLE_SHEET = "/edu/kit/rose/view/panel/criterion"
+      + "/CriterionPanel.css";
+  private static final int TOOLTIP_WIDTH = 200;
+  private static final boolean TOOLTIP_WRAP_TEXT = true;
+  private static final String OR_TRANSLATION_KEY = "view.panel.criterion"
+      + ".compatibilityCriterionPanel.orExplanation";
+  private static final String NOR_TRANSLATION_KEY = "view.panel.criterion."
+      + "compatibilityCriterionPanel.norExplanation";
+  private static final String EQUALS_TRANSLATION_KEY = "view.panel.criterion"
+      + ".compatibilityCriterionPanel.equalsExplanation";
+  private static final String NOT_EQUALS_TRANSLATION_KEY = "view.panel.criterion"
+      + ".compatibilityCriterionPanel.notEqualsExplanation";
+  private static final String LESS_THAN_TRANSLATION_KEY = "view.panel.criterion"
+      + ".compatibilityCriterionPanel.lessThanExplanation";
+
   private static final String VALUE_REGEX = "[0-9]{1,13}(\\.[0-9]+)?";
   private static final String VALID_VALUE_STYLE = "-fx-text-fill: black;";
   private static final String INVALID_VALUE_STYLE = "-fx-text-fill: red;";
@@ -51,10 +67,13 @@ class CompatibilityCriterionPanel
   private VBox criterionLayout;
   @FXML
   private ComboBox<AttributeType> attributeSelector;
+  private Tooltip attributeTooltip;
   @FXML
   private ComboBox<ValidationType> validationSelector;
+  private Tooltip validationTooltip;
   @FXML
   private TextField valueField;
+  private Tooltip valueTooltip;
 
   /**
    * Creates a new CompatibilityCriterionPanel.
@@ -66,7 +85,18 @@ class CompatibilityCriterionPanel
 
     this.valueFormat = new DecimalFormat("0", DecimalFormatSymbols.getInstance(Locale.ENGLISH));
     this.valueFormat.setMaximumFractionDigits(9);
+
+    setupView();
+    setupTooltips();
   }
+
+  private void setupView() {
+    String criterionStyleSheetUrl =
+        Objects.requireNonNull(getClass().getResource(CRITERION_PANEL_STYLE_SHEET))
+            .toExternalForm();
+    this.getStylesheets().add(criterionStyleSheetUrl);
+  }
+
 
   @Override
   public void init(Injector injector) {
@@ -90,7 +120,22 @@ class CompatibilityCriterionPanel
 
     this.valueField.textProperty().addListener(this::onValueChange);
 
+    updateTranslatableStrings(getTranslator().getSelectedLanguage());
     this.notifyChange(getCriterion());
+  }
+
+  private void setupTooltips() {
+    this.attributeTooltip = new Tooltip();
+    this.validationTooltip = new Tooltip();
+    this.valueTooltip = new Tooltip();
+
+    setupTooltip(attributeTooltip);
+    setupTooltip(validationTooltip);
+    setupTooltip(valueTooltip);
+
+    attributeSelector.setTooltip(attributeTooltip);
+    validationSelector.setTooltip(valueTooltip);
+    valueField.setTooltip(valueTooltip);
   }
 
   private void onNameChange(ObservableValue<? extends String> observable, String oldValue,
@@ -219,6 +264,13 @@ class CompatibilityCriterionPanel
         "view.panel.criterion.compatibilityCriterionPanel.validationPrompt"));
     this.valueField.setPromptText(getTranslator().getLocalizedText(
         "view.panel.criterion.compatibilityCriterionPanel.valuePrompt"));
+
+    this.attributeTooltip.setText(getTranslator().getLocalizedText("view.panel.criterion"
+        + ".compatibilityCriterionPanel.attributeSelectorExplanation"));
+    this.validationTooltip.setText(getTranslator().getLocalizedText("view.panel.criterion"
+        + ".compatibilityCriterionPanel.validationSelectorExplanation"));
+    this.valueTooltip.setText(getTranslator().getLocalizedText("view.panel.criterion"
+        + ".compatibilityCriterionPanel.valueFieldExplanation"));
   }
 
   @Override
@@ -247,8 +299,26 @@ class CompatibilityCriterionPanel
 
         if (item != null && !empty) {
           setText(EnumLocalizationUtility.localizeValidationTypeTitle(getTranslator(), item));
+          String tooltipKey;
+          switch (item) {
+            case OR -> tooltipKey = OR_TRANSLATION_KEY;
+            case NOR -> tooltipKey = NOR_TRANSLATION_KEY;
+            case EQUALS -> tooltipKey = EQUALS_TRANSLATION_KEY;
+            case LESS_THAN -> tooltipKey = LESS_THAN_TRANSLATION_KEY;
+            case NOT_EQUALS -> tooltipKey = NOT_EQUALS_TRANSLATION_KEY;
+            default -> throw new IllegalArgumentException("unknown Item");
+          }
+          Tooltip tooltip = new Tooltip();
+          setupTooltip(tooltip);
+          tooltip.setText(getTranslator().getLocalizedText(tooltipKey));
+          setTooltip(tooltip);
         }
       }
     };
+  }
+
+  private void setupTooltip(Tooltip tooltip) {
+    tooltip.setPrefWidth(TOOLTIP_WIDTH);
+    tooltip.setWrapText(TOOLTIP_WRAP_TEXT);
   }
 }

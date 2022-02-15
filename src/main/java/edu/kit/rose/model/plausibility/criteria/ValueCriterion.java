@@ -147,7 +147,9 @@ class ValueCriterion extends RoseSetObservable<SegmentType, PlausibilityCriterio
 
   private boolean checkValue(AttributeAccessor<?> accessor) {
     var dataType = accessor.getAttributeType().getDataType();
-    if (dataType == DataType.INTEGER || dataType == DataType.FRACTIONAL) {
+    if (dataType == DataType.INTEGER) {
+      return this.range.contains(((Integer) accessor.getValue()).doubleValue());
+    } else if (dataType == DataType.FRACTIONAL) {
       return this.range.contains((Double) accessor.getValue());
     } else {
       return false;

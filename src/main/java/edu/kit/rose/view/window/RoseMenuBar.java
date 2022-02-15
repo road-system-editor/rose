@@ -184,11 +184,9 @@ public class RoseMenuBar extends FxmlContainer implements DualSetObserver<Attrib
     saveProject.setOnAction(evt -> projectController.save());
     saveProjectAs.setOnAction(evt -> projectController.saveAs());
     // Validation
-    // TODO remove sub-menu and detect clicks on top-level menu
     criteria.setOnAction(evt -> navigator.showWindow(WindowType.CRITERION));
 
     // Measurements
-    // TODO remove sub-menu and detect clicks on top-level menu
     measurementsOverview.setOnAction(evt -> navigator.showWindow(WindowType.MEASUREMENT_OVERVIEW));
 
     // Language

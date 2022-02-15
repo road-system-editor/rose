@@ -1,12 +1,14 @@
 package edu.kit.rose.infrastructure;
 
+import java.util.Objects;
+
 /**
  * A Position in a two Dimensional Plane.
  */
 public class Position {
 
-  private int xcoordinate;
-  private int ycoordinate;
+  private double xcoordinate;
+  private double ycoordinate;
 
   /**
    * Standard Constructor.
@@ -23,7 +25,7 @@ public class Position {
    * @param xcoordinate the x coordinate for this Position.
    * @param ycoordinate the y coordinate for this Position.
    */
-  public Position(int xcoordinate, int ycoordinate) {
+  public Position(double xcoordinate, double ycoordinate) {
     this.xcoordinate = xcoordinate;
     this.ycoordinate = ycoordinate;
   }
@@ -33,7 +35,7 @@ public class Position {
    *
    * @return The x axis value of the Position.
    */
-  public int getX() {
+  public double getX() {
     return xcoordinate;
   }
 
@@ -42,7 +44,7 @@ public class Position {
    *
    * @param x The x axis value of the Position.
    */
-  public void setX(int x) {
+  public void setX(double x) {
     this.xcoordinate = x;
   }
 
@@ -51,7 +53,7 @@ public class Position {
    *
    * @return The y axis value of the Position.
    */
-  public int getY() {
+  public double getY() {
     return ycoordinate;
   }
 
@@ -60,8 +62,33 @@ public class Position {
    *
    * @param y The x axis value of the Position.
    */
-  public void setY(int y) {
+  public void setY(double y) {
     this.ycoordinate = y;
+  }
+
+  /**
+   * Returns a {@link Position} that is translated by the given {@link Movement} to
+   * the current {@link Position}.
+   *
+   * @param translation the translation to apply to the current {@link Position}
+   * @return the translated {@link Position}
+   */
+  public Position add(Movement translation) {
+    return new Position(
+        this.getX() + translation.getX(),
+        this.getY() + translation.getY());
+  }
+
+  /**
+   * Provides the distance between this position and a provided position.
+   *
+   * @param position the other position
+   * @return the distance
+   */
+  public double distanceTo(Position position) {
+    var horizontalDistance = xcoordinate - position.getX();
+    var verticalDistance = ycoordinate - position.getY();
+    return Math.sqrt(Math.pow(horizontalDistance, 2) + Math.pow(verticalDistance, 2));
   }
 
   @Override
@@ -75,7 +102,12 @@ public class Position {
   }
 
   @Override
+  public int hashCode() {
+    return Objects.hash(getX(), getY());
+  }
+
+  @Override
   public String toString() {
-    return String.format("Position [x=%d, y=%d]", getX(), getY());
+    return String.format("Position [x=%f, y=%f]", getX(), getY());
   }
 }

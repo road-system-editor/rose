@@ -62,7 +62,7 @@ class SerializedProject {
     @JsonProperty("center")
     private SerializedVector center;
     @JsonProperty("zoomLevel")
-    private int zoomLevel;
+    private double zoomLevel;
 
     /**
      * Creates a new serialized zoom setting with the data from the given {@code source}.
@@ -95,9 +95,9 @@ class SerializedProject {
    */
   private static class SerializedVector {
     @JsonProperty("coordinateX")
-    private int coordinateX;
+    private double coordinateX;
     @JsonProperty("coordinateY")
-    private int coordinateY;
+    private double coordinateY;
 
     /**
      * Creates a new serialized position with the data from the given {@code source}.

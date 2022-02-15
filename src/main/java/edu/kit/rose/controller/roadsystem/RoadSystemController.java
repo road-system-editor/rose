@@ -21,7 +21,7 @@ public interface RoadSystemController extends SetObservable<Segment, RoadSystemC
    *
    * @param zoomLevel zoomlevel of the road system editor
    */
-  void setZoomLevel(int zoomLevel);
+  void setZoomLevel(double zoomLevel);
 
   /**
    * Sets the position of the roadsystem editor on the
@@ -43,7 +43,12 @@ public interface RoadSystemController extends SetObservable<Segment, RoadSystemC
    *
    * @param segment the street segment to delete
    */
-  void deleteStreetSegment(Segment segment);
+  void deleteStreetSegment(Segment segment); //TODO: remove?
+
+  /**
+   * Deletes the currently selected {@link Segment}s.
+   */
+  void deleteStreetSegments();
 
   /**
    * Stores the starting {@link Position} of the {@link Segment} which will be dragged.
@@ -69,6 +74,15 @@ public interface RoadSystemController extends SetObservable<Segment, RoadSystemC
   void endDragStreetSegment(Position segmentPosition);
 
   /**
+   * Stores the end {@link Position} of the {@link Segment} which was dragged.
+   * The required connector might connect to other connectors in reach.
+   *
+   * @param segmentPosition the final position of the segment
+   * @param draggedConnector the connector
+   */
+  void endDragStreetSegment(Position segmentPosition, Connector draggedConnector);
+
+  /**
    * Toggles the selection status of a {@link Segment}.
    *
    * @param segment the segment whose selection status gets toggle
@@ -76,18 +90,30 @@ public interface RoadSystemController extends SetObservable<Segment, RoadSystemC
   void toggleSegmentSelection(Segment segment);
 
   /**
-   * Marks a segment as selected.
+   * selects a segment as selected.
    *
    * @param segment the segment to select
    */
   void addSegmentSelection(Segment segment);
 
   /**
-   * Marks a segment as unselected.
+   * selects a segment as selected. Unselects all currently selected segments.
+   *
+   * @param segment the segment that is to be selected
+   */
+  void putSegmentSelection(Segment segment);
+
+  /**
+   * selects a segment as unselected.
    *
    * @param segment the segment to unselect
    */
   void removeSegmentSelection(Segment segment);
+
+  /**
+   * Unselects all currently selected segments.
+   */
+  void clearSegmentSelection();
 
   /**
    * Selects all segments that have a connector inside the rectangle
@@ -121,5 +147,14 @@ public interface RoadSystemController extends SetObservable<Segment, RoadSystemC
    * Rotates a single selected segment, if only that segment is selected.
    */
   void rotateSegment();
+
+  /**
+   * Provides the intersection distance. This distance describes how far two connectors
+   * can be apart before they intersect each other.
+   * Distance between connectors <= getIntersectionDistance() --> intersection
+   *
+   * @return the intersection distance
+   */
+  double getIntersectionDistance();
 
 }

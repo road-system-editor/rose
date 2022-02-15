@@ -1,6 +1,5 @@
 package edu.kit.rose.model.plausibility.criteria;
 
-
 import edu.kit.rose.infrastructure.Box;
 import edu.kit.rose.infrastructure.RoseBox;
 import edu.kit.rose.infrastructure.RoseSetObservable;

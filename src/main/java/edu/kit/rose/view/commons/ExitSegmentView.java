@@ -2,32 +2,59 @@ package edu.kit.rose.view.commons;
 
 import edu.kit.rose.controller.roadsystem.RoadSystemController;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
-import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Exit;
-import javafx.scene.canvas.GraphicsContext;
 
 /**
  * An exit segment view is the visual representation of an exit street segment.
  */
-class ExitSegmentView extends SegmentView<Exit> {
+public class ExitSegmentView extends RampSegmentView<Exit> {
+
+  private static final String IMAGE_RESOURCE_DEFAULT = "exit_segment_raw.png";
+  private static final String IMAGE_RESOURCE_SELECTED = "exit_segment_raw_selected.png";
+  private static final int IMAGE_WIDTH = 60;
+  private static final int IMAGE_HEIGHT = 70;
+  private static final double IMAGE_POS_OFFSET_X = -20.5;
+  private static final double IMAGE_POS_OFFSET_Y = -38;
+
   /**
-   * Creates a new entrance segment view for a given exit {@code segment}.
+   * Creates a new segment view that acts as visual representation of a given segment.
    *
-   * @param segment the segment to display.
-   * @param controller the controller to use for handling position updates.
-   * @param translator the translator to use for localizing label.
+   * @param segment    the segment to create a visual representation for
+   * @param controller the road system controller.
+   * @param translator the translator.
    */
-  ExitSegmentView(Exit segment, RoadSystemController controller, LocalizedTextProvider translator) {
+  public ExitSegmentView(Exit segment, RoadSystemController controller,
+                         LocalizedTextProvider translator) {
     super(segment, controller, translator);
   }
 
   @Override
-  protected void redraw(GraphicsContext graphicsContext) {
-
+  protected double getImagePosOffsetX() {
+    return IMAGE_POS_OFFSET_X;
   }
 
   @Override
-  public void notifyChange(Element unit) {
+  protected double getImagePosOffsetY() {
+    return IMAGE_POS_OFFSET_Y;
+  }
 
+  @Override
+  protected String getDefaultImageResource() {
+    return IMAGE_RESOURCE_DEFAULT;
+  }
+
+  @Override
+  protected String getSelectedImageResource() {
+    return IMAGE_RESOURCE_SELECTED;
+  }
+
+  @Override
+  protected int getImageWidth() {
+    return IMAGE_WIDTH;
+  }
+
+  @Override
+  protected int getImageHeight() {
+    return IMAGE_HEIGHT;
   }
 }

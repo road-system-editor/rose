@@ -1,22 +1,18 @@
 package edu.kit.rose.model;
 
 import edu.kit.rose.infrastructure.Position;
-import edu.kit.rose.infrastructure.UnitObservable;
-import edu.kit.rose.infrastructure.UnitObserver;
-import java.util.ArrayList;
-import java.util.List;
+import edu.kit.rose.infrastructure.RoseUnitObservable;
 
 /**
  * A ZoomSetting describes the Position and "level of Zoom" a possible View of the RoadSystem has.
  * It uses a Number to describe the amount of Zoom a view has and a {@link Position}
  * for the center of the current view.
  */
-public class ZoomSetting implements UnitObservable<ZoomSetting> {
-  private static final int DEFAULT_ZOOM_LEVEL = 1;
+public class ZoomSetting extends RoseUnitObservable<ZoomSetting> {
+  private static final double DEFAULT_ZOOM_LEVEL = 1.0;
 
-  private Position centerOfView = new Position();
-  private int zoomLevel = 1;
-  private final List<UnitObserver<ZoomSetting>> observers = new ArrayList<>();
+  private Position centerOfView;
+  private double zoomLevel;
 
   public ZoomSetting(Position centerOfView) {
     this.centerOfView = centerOfView;
@@ -47,7 +43,7 @@ public class ZoomSetting implements UnitObservable<ZoomSetting> {
    *
    * @return the level of Zoom the View has.
    */
-  public int getZoomLevel() {
+  public double getZoomLevel() {
     return this.zoomLevel;
   }
 
@@ -56,30 +52,13 @@ public class ZoomSetting implements UnitObservable<ZoomSetting> {
    *
    * @param zoomLevel the new level of zoom of the view.
    */
-  public void setZoomLevel(int zoomLevel) {
+  public void setZoomLevel(double zoomLevel) {
     this.zoomLevel = zoomLevel;
     notifySubscribers();
   }
 
   @Override
-  public void notifySubscribers() {
-    observers.forEach(e -> e.notifyChange(this));
-  }
-
-  @Override
   public ZoomSetting getThis() {
     return this;
-  }
-
-  @Override
-  public void addSubscriber(UnitObserver<ZoomSetting> observer) {
-    if (!this.observers.contains(observer)) {
-      this.observers.add(observer);
-    }
-  }
-
-  @Override
-  public void removeSubscriber(UnitObserver<ZoomSetting> observer) {
-    this.observers.remove(observer);
   }
 }

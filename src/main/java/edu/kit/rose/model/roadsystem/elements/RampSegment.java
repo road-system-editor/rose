@@ -9,9 +9,9 @@ import java.util.List;
 /**
  * A {@link Base} segment with a ramp {@link Connector}.
  */
-abstract class RampSegment extends HighwaySegment {
+public abstract class RampSegment extends HighwaySegment {
 
-  private static final int INITIAL_RAMP_DISTANCE_TO_CENTER = 50;
+  protected static final int INITIAL_RAMP_DISTANCE_TO_CENTER_Y = -14;
   private int nrOfRampLanes = 1;
   private final AttributeAccessor<Integer> nrOfRampLanesAccessor;
   private int rampSpeedLimit = 100;
@@ -23,6 +23,12 @@ abstract class RampSegment extends HighwaySegment {
     this(segmentType, segmentType.name());
   }
 
+  /**
+   * Constructor.
+   *
+   * @param segmentType the type of ramp segment this is
+   * @param name the name this ramp segment is to have
+   */
   public RampSegment(SegmentType segmentType, String name) {
     super(segmentType, name);
 
@@ -38,19 +44,27 @@ abstract class RampSegment extends HighwaySegment {
 
 
   private void initRamp() {
-    Position rampConnectorPosition = new Position(this.getCenter().getX(),
-        this.getCenter().getY() - INITIAL_RAMP_DISTANCE_TO_CENTER);
-
     List<AttributeAccessor<?>> rampAttributesList =
         Arrays.asList(nrOfRampLanesAccessor, this.maxSpeedRampAccessor);
 
-    initRampConnector(rampAttributesList, rampConnectorPosition);
+    initRampConnector(rampAttributesList);
 
     this.connectors.add(rampConnector);
   }
 
-  protected abstract void initRampConnector(List<AttributeAccessor<?>> rampAttributesList,
-                                   Position rampPosition);
+  protected abstract void initRampConnector(List<AttributeAccessor<?>> rampAttributesList);
+
+  protected void initConnectors(List<AttributeAccessor<?>> entryAttributesList,
+                                List<AttributeAccessor<?>> exitAttributesList) {
+    this.entryConnector = new Connector(ConnectorType.ENTRY,
+        new Position(0, INITIAL_ENTRY_DISTANCE_TO_CENTER),
+        entryAttributesList);
+    this.exitConnector = new Connector(ConnectorType.EXIT,
+        new Position(0, -INITIAL_EXIT_DISTANCE_TO_CENTER),
+        exitAttributesList);
+    connectors.add(entryConnector);
+    connectors.add(exitConnector);
+  }
 
 
   /**

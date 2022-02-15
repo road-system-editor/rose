@@ -18,7 +18,7 @@ public interface ChangeCommandBuffer {
   void redo();
 
   /**
-   * Adds a new {@link ChangeCommand}.
+   * Adds a new {@link ChangeCommand} and executes it.
    *
    * @param changeCommand the command to be added
    */

@@ -25,12 +25,15 @@ class ConnectorTest {
       newValue -> {});
   private ArrayList<AttributeAccessor<?>> accessors;
   private Connector connector;
+  private MovableConnector movableConnector;
 
   @BeforeEach
   public void setUp() {
     this.accessors = new ArrayList<>();
     this.accessors.add(attribute);
     this.connector = new Connector(ConnectorType.ENTRY, new Position(X, Y), accessors);
+    this.movableConnector =
+        new MovableConnector(ConnectorType.ENTRY, new Position(X, Y), accessors);
   }
 
   @Test
@@ -45,16 +48,27 @@ class ConnectorTest {
 
   @Test
   public void move() {
-    Movement move = new Movement();
-    move.setX(X);
-    move.setY(Y);
+    Movement move = new Movement(X, Y);
 
     Assertions.assertEquals(X, this.connector.getPosition().getX());
     Assertions.assertEquals(Y, this.connector.getPosition().getY());
 
     this.connector.move(move);
 
-    Assertions.assertEquals(X + X, this.connector.getPosition().getX());
-    Assertions.assertEquals(Y + Y, this.connector.getPosition().getY());
+    Assertions.assertEquals(X, this.connector.getPosition().getX());
+    Assertions.assertEquals(Y, this.connector.getPosition().getY());
+  }
+
+  @Test
+  public void moveMovableConnector() {
+    Movement move = new Movement(X, Y);
+
+    Assertions.assertEquals(X, this.movableConnector.getPosition().getX());
+    Assertions.assertEquals(Y, this.movableConnector.getPosition().getY());
+
+    this.movableConnector.move(move);
+
+    Assertions.assertEquals(X + X, this.movableConnector.getPosition().getX());
+    Assertions.assertEquals(Y + Y, this.movableConnector.getPosition().getY());
   }
 }

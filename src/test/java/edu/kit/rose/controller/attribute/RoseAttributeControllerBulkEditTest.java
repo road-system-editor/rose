@@ -45,20 +45,23 @@ public class RoseAttributeControllerBulkEditTest {
           stubAccessor(AttributeType.COMMENT, ""),
           new AttributeAccessor<>(AttributeType.SLOPE, () -> slope1, val -> slope1 = val),
           new AttributeAccessor<>(AttributeType.MAX_SPEED, () -> speed1, val -> speed1 = val),
-          new AttributeAccessor<>(AttributeType.CONURBATION, () -> conurbation1, val -> conurbation1 = val)
+          new AttributeAccessor<>(AttributeType.CONURBATION,
+                  () -> conurbation1, val -> conurbation1 = val)
       ),
       mockSegmentWithAccessors(
           stubAccessor(AttributeType.NAME, "test"),
           new AttributeAccessor<>(AttributeType.LANE_COUNT, () -> lane2, val -> lane2 = val),
           new AttributeAccessor<>(AttributeType.SLOPE, () -> slope2, val -> slope2 = val),
           new AttributeAccessor<>(AttributeType.MAX_SPEED, () -> speed2, val -> speed2 = val),
-          new AttributeAccessor<>(AttributeType.CONURBATION, () -> conurbation2, val -> conurbation2 = val)
+          new AttributeAccessor<>(AttributeType.CONURBATION,
+                  () -> conurbation2, val -> conurbation2 = val)
       ),
       mockSegmentWithAccessors(
           new AttributeAccessor<>(AttributeType.LANE_COUNT, () -> lane3, val -> lane3 = val),
           new AttributeAccessor<>(AttributeType.SLOPE, () -> slope3, val -> slope3 = val),
           new AttributeAccessor<>(AttributeType.MAX_SPEED, () -> speed3, val -> speed3 = val),
-          new AttributeAccessor<>(AttributeType.CONURBATION, () -> conurbation3, val -> conurbation3 = val)
+          new AttributeAccessor<>(AttributeType.CONURBATION,
+                  () -> conurbation3, val -> conurbation3 = val)
       )
   );
 

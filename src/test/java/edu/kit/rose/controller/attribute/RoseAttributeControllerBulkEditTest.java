@@ -25,20 +25,40 @@ import org.mockito.Mockito;
 public class RoseAttributeControllerBulkEditTest {
   int lane1 = 3;
   int lane2 = 2;
+  int lane3 = 2;
 
   double slope1 = 3.4;
   double slope2 = 3.4;
+  double slope3 = 3.4;
+
+  boolean conurbation1 = true;
+  boolean conurbation2 = true;
+  boolean conurbation3 = true;
+
+  int speed1 = 80;
+  int speed2 = 90;
+  int speed3 = 100;
 
   List<Segment> elements = List.of(
       mockSegmentWithAccessors(
           new AttributeAccessor<>(AttributeType.LANE_COUNT, () -> lane1, val -> lane1 = val),
           stubAccessor(AttributeType.COMMENT, ""),
-          new AttributeAccessor<>(AttributeType.SLOPE, () -> slope1, val -> slope1 = val)
+          new AttributeAccessor<>(AttributeType.SLOPE, () -> slope1, val -> slope1 = val),
+          new AttributeAccessor<>(AttributeType.MAX_SPEED, () -> speed1, val -> speed1 = val),
+          new AttributeAccessor<>(AttributeType.CONURBATION, () -> conurbation1, val -> conurbation1 = val)
       ),
       mockSegmentWithAccessors(
           stubAccessor(AttributeType.NAME, "test"),
           new AttributeAccessor<>(AttributeType.LANE_COUNT, () -> lane2, val -> lane2 = val),
-          new AttributeAccessor<>(AttributeType.SLOPE, () -> slope2, val -> slope2 = val)
+          new AttributeAccessor<>(AttributeType.SLOPE, () -> slope2, val -> slope2 = val),
+          new AttributeAccessor<>(AttributeType.MAX_SPEED, () -> speed2, val -> speed2 = val),
+          new AttributeAccessor<>(AttributeType.CONURBATION, () -> conurbation2, val -> conurbation2 = val)
+      ),
+      mockSegmentWithAccessors(
+          new AttributeAccessor<>(AttributeType.LANE_COUNT, () -> lane3, val -> lane3 = val),
+          new AttributeAccessor<>(AttributeType.SLOPE, () -> slope3, val -> slope3 = val),
+          new AttributeAccessor<>(AttributeType.MAX_SPEED, () -> speed3, val -> speed3 = val),
+          new AttributeAccessor<>(AttributeType.CONURBATION, () -> conurbation3, val -> conurbation3 = val)
       )
   );
 
@@ -68,7 +88,7 @@ public class RoseAttributeControllerBulkEditTest {
         Mockito.mock(ReplacementLog.class));
 
     SortedBox<AttributeAccessor<?>> shared = controller.getBulkEditAccessors();
-    Assertions.assertEquals(2, shared.getSize());
+    Assertions.assertEquals(4, shared.getSize());
 
     @SuppressWarnings("unchecked")
     AttributeAccessor<Integer> laneCount = (AttributeAccessor<Integer>) shared.get(0);
@@ -87,5 +107,23 @@ public class RoseAttributeControllerBulkEditTest {
     Assertions.assertEquals(4.1, slope1);
     Assertions.assertEquals(4.1, slope2);
     Assertions.assertEquals(4.1, slope.getValue()); // same values -> return value
+  }
+
+  @Test
+  void testWithNoSelectedElements() {
+    var selectionBuffer = Mockito.mock(SelectionBuffer.class);
+    Mockito.when(selectionBuffer.getSelectedSegments()).thenReturn(List.of());
+
+    var controller = new RoseAttributeController(
+            Mockito.mock(ChangeCommandBuffer.class),
+            selectionBuffer,
+            Mockito.mock(StorageLock.class),
+            Mockito.mock(Navigator.class),
+            Mockito.mock(Project.class),
+            Mockito.mock(ApplicationDataSystem.class),
+            Mockito.mock(ReplacementLog.class));
+
+    SortedBox<AttributeAccessor<?>> shared = controller.getBulkEditAccessors();
+    Assertions.assertEquals(0, shared.getSize());
   }
 }

@@ -78,18 +78,17 @@ public class RoseApplicationController extends Controller implements Application
 
       @Override
       public void notifyAdditionSecond(Path unit) {
-
       }
 
       @Override
       public void notifyRemovalSecond(Path unit) {
-
       }
 
       @Override
       public void notifyChange(ApplicationDataSystem unit) {
         if (unit.getLanguage() != languageSelector.getSelectedLanguage()) {
           languageSelector.setSelectedLanguage(unit.getLanguage());
+          System.out.println("eyooooo");
         }
       }
     });

@@ -33,9 +33,4 @@ public class RoseSortedBox<T> extends RoseBox<T> implements SortedBox<T> {
   public T get(int index) {
     return getContent().get(index);
   }
-
-  @Override
-  public Iterator<T> iterator() {
-    return getContent().iterator();
-  }
 }

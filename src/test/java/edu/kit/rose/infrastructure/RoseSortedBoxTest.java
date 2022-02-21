@@ -1,7 +1,7 @@
 package edu.kit.rose.infrastructure;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -9,7 +9,6 @@ import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-
 
 /**
  * Unit Test for the RoseBox Class.
@@ -42,6 +41,13 @@ public class RoseSortedBoxTest {
     for (int i = 0; i < numberOfElements; i++) {
       Assertions.assertEquals(i, iterator.next());
     }
+  }
+
+  @Test
+  void testIteratorDoesNotSupportRemove() {
+    Iterator<Integer> iterator = sortedBox.iterator();
+
+    assertThrows(UnsupportedOperationException.class, iterator::remove);
   }
 
   @Test

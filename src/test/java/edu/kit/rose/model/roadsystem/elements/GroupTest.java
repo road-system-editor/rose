@@ -1,25 +1,33 @@
 package edu.kit.rose.model.roadsystem.elements;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
+import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
+import java.util.Iterator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 /**
  * Tests the {@link Group} class.
  */
 public class GroupTest {
   private Element element;
-
   private Segment segment;
 
   @BeforeEach
-  private void setUp() {
-    element = Mockito.mock(Element.class);
-    segment = Mockito.mock(Segment.class);
+  void setUp() {
+    element = mock(Element.class);
+    segment = mock(Segment.class);
   }
 
   @Test()
@@ -76,16 +84,16 @@ public class GroupTest {
     group.addElement(segment);
     group.addElement(groupToAdd);
 
-    Assertions.assertTrue(group.contains(element));
-    Assertions.assertTrue(group.contains(segment));
-    Assertions.assertTrue(group.contains(groupToAdd));
+    assertTrue(group.contains(element));
+    assertTrue(group.contains(segment));
+    assertTrue(group.contains(groupToAdd));
   }
 
   @Test
   public void testIsContainer() {
     Group group = new Group();
 
-    Assertions.assertTrue(group.isContainer());
+    assertTrue(group.isContainer());
   }
 
   @Test
@@ -101,8 +109,8 @@ public class GroupTest {
 
     SortedBox<AttributeAccessor<?>> attributeAccessors = group.getAttributeAccessors();
 
-    Assertions.assertTrue(hasAccessorOfAttributeType(attributeAccessors, AttributeType.NAME));
-    Assertions.assertTrue(hasAccessorOfAttributeType(attributeAccessors, AttributeType.COMMENT));
+    assertTrue(hasAccessorOfAttributeType(attributeAccessors, AttributeType.NAME));
+    assertTrue(hasAccessorOfAttributeType(attributeAccessors, AttributeType.COMMENT));
   }
 
   private boolean hasAccessorOfAttributeType(
@@ -114,5 +122,43 @@ public class GroupTest {
     }
 
     return false;
+  }
+
+  @Test
+  void testIterator() {
+    var group = new Group();
+    group.addElement(segment);
+    group.addElement(element);
+
+    Iterator<Element> iterator = group.iterator();
+    assertSame(segment, iterator.next());
+    assertThrows(UnsupportedOperationException.class, iterator::remove);
+    assertSame(element, iterator.next());
+    assertThrows(UnsupportedOperationException.class, iterator::remove);
+    assertFalse(iterator.hasNext());
+  }
+
+  @Test
+  void testNotification() {
+    var group = new Group();
+    var subscriber = mockSubscriber();
+    group.addSubscriber(subscriber);
+
+    group.addElement(segment);
+    verify(subscriber, times(1)).notifyAddition(segment);
+
+    group.removeElement(segment);
+    verify(subscriber, times(1)).notifyRemoval(segment);
+
+    group.setName("descriptive name");
+    verify(subscriber, times(1)).notifyChange(group);
+
+    group.setComment("insightful comment");
+    verify(subscriber, times(2)).notifyChange(group);
+  }
+
+  @SuppressWarnings("unchecked")
+  private SetObserver<Element, Element> mockSubscriber() {
+    return mock(SetObserver.class);
   }
 }

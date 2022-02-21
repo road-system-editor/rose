@@ -74,6 +74,6 @@ public class AttributeAccessorTest {
 
   @Test
   public void testGetThis() {
-    Assertions.assertTrue(accessor.getThis() instanceof AttributeAccessor<Integer>);
+    Assertions.assertSame(accessor, accessor.getThis());
   }
 }

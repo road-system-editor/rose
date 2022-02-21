@@ -1,4 +1,4 @@
-package edu.kit.rose.model.roadsystem;
+package edu.kit.rose.model.roadsystem.elements;
 
 import edu.kit.rose.infrastructure.Box;
 import edu.kit.rose.infrastructure.Movement;
@@ -6,11 +6,6 @@ import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
-import edu.kit.rose.model.roadsystem.elements.Base;
-import edu.kit.rose.model.roadsystem.elements.Connector;
-import edu.kit.rose.model.roadsystem.elements.MovableConnector;
-import edu.kit.rose.model.roadsystem.elements.SegmentType;
-import java.util.LinkedList;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeEach;

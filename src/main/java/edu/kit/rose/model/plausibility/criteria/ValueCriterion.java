@@ -50,6 +50,11 @@ class ValueCriterion extends RoseSetObservable<SegmentType, PlausibilityCriterio
    */
   public ValueCriterion(ViolationManager violationManager,
                         AttributeType type, Range<Double> range) {
+    if (type.getDataType() != DataType.INTEGER && type.getDataType() != DataType.FRACTIONAL
+        && type.getDataType() != DataType.SPEED_LIMIT) {
+      throw new IllegalArgumentException("the value criterion can evaluate only attributes"
+              + "with integer, fractional, or speed limit data types");
+    }
     this.name = "";
     this.segmentTypes = new HashSet<>();
     this.violationManager = violationManager;
@@ -149,10 +154,8 @@ class ValueCriterion extends RoseSetObservable<SegmentType, PlausibilityCriterio
     var dataType = accessor.getAttributeType().getDataType();
     if (dataType == DataType.INTEGER) {
       return this.range.contains(((Integer) accessor.getValue()).doubleValue());
-    } else if (dataType == DataType.FRACTIONAL) {
-      return this.range.contains((Double) accessor.getValue());
     } else {
-      return false;
+      return this.range.contains((Double) accessor.getValue());
     }
   }
 }

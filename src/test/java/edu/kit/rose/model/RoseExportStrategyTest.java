@@ -74,7 +74,7 @@ public class RoseExportStrategyTest {
     exit.setName("AusfahrtKarlsbadFRStuttgart");
     exit.setLength(250);
     exit.setLaneCount(2);
-    exit.setSlope(2);
+    exit.setSlope(2.0);
     exit.setConurbation(true);
     exit.setMaxSpeed(SpeedLimit.NONE);
     exit.setMaxSpeedRamp(SpeedLimit.SBA);
@@ -85,7 +85,7 @@ public class RoseExportStrategyTest {
     entrance.setName("EinfahrtKarlsbadFRStuttgart");
     entrance.setLength(250);
     entrance.setLaneCount(2);
-    entrance.setSlope(2);
+    entrance.setSlope(2.0);
     entrance.setConurbation(true);
     entrance.setMaxSpeed(SpeedLimit.NONE);
     entrance.setMaxSpeedRamp(SpeedLimit.SBA);
@@ -159,7 +159,7 @@ public class RoseExportStrategyTest {
     assertEquals(250, RoseExportStrategyTest
         .<Integer>getAttributeValue(exitSegment, AttributeType.LENGTH));
     assertEquals(2, RoseExportStrategyTest
-        .<Integer>getAttributeValue(exitSegment, AttributeType.SLOPE));
+        .<Double>getAttributeValue(exitSegment, AttributeType.SLOPE));
     assertEquals(SpeedLimit.SBA, RoseExportStrategyTest
         .<SpeedLimit>getAttributeValue(exitSegment, AttributeType.MAX_SPEED_RAMP));
     assertEquals(EXIT_CENTER, exitSegment.getCenter());
@@ -171,7 +171,7 @@ public class RoseExportStrategyTest {
     assertEquals(250, RoseExportStrategyTest
         .<Integer>getAttributeValue(entranceSegment, AttributeType.LENGTH));
     assertEquals(2, RoseExportStrategyTest
-        .<Integer>getAttributeValue(entranceSegment, AttributeType.SLOPE));
+        .<Double>getAttributeValue(entranceSegment, AttributeType.SLOPE));
     assertEquals(SpeedLimit.SBA, RoseExportStrategyTest
         .<SpeedLimit>getAttributeValue(entranceSegment, AttributeType.MAX_SPEED_RAMP));
     assertEquals(ENTRANCE_CENTER, entranceSegment.getCenter());

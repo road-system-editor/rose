@@ -51,7 +51,7 @@ public class HierarchyCopierTest {
     original.setLaneCount(3);
     original.setLength(260);
     original.setMaxSpeed(SpeedLimit.SBA);
-    original.setSlope(10);
+    original.setSlope(10.0);
     original.move(new Movement(12, 34));
     original.rotate(74);
     // TODO move entrance and exit connector once movable connectors are merged
@@ -72,7 +72,7 @@ public class HierarchyCopierTest {
     original.setLaneCount(2);
     original.setLength(842);
     original.setMaxSpeed(SpeedLimit.T80);
-    original.setSlope(11);
+    original.setSlope(11.0);
     original.move(new Movement(31, 44));
     original.rotate(19);
 
@@ -93,7 +93,7 @@ public class HierarchyCopierTest {
     original.setLaneCount(1);
     original.setLength(1);
     original.setMaxSpeed(SpeedLimit.TUNNEL);
-    original.setSlope(1234);
+    original.setSlope(1234.0);
     original.move(new Movement(2, -1));
     original.rotate(10);
 
@@ -131,7 +131,7 @@ public class HierarchyCopierTest {
     child.addElement(grandChild1);
 
     var grandChild2 = new Base();
-    grandChild2.setSlope(2);
+    grandChild2.setSlope(2.0);
     child.addElement(grandChild2);
 
     var parentCopy = copier.copyGroup(parent);

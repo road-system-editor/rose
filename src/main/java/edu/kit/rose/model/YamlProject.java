@@ -125,7 +125,7 @@ class YamlProject {
     private int laneCount;
     @SuppressWarnings("unused")
     @JsonProperty("Steigung")
-    private int slope;
+    private double slope;
     @SuppressWarnings("unused")
     @JsonProperty("Ballungsraum")
     private String conurbation;

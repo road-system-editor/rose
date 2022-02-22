@@ -72,7 +72,6 @@ public class RoseAttributeController extends Controller implements AttributeCont
     if (getStorageLock().isStorageLockAcquired()) {
       return;
     }
-
     this.applicationDataSystem.addShownAttributeType(attributeType);
   }
 

@@ -142,8 +142,8 @@ class CompatibilityCriterionTest {
             segment2.getConnectors().iterator().next());
 
 
-    segment1.setSlope(3);
-    segment2.setSlope(3);
+    segment1.setSlope(3.0);
+    segment2.setSlope(3.0);
     this.criterion.setAttributeType(AttributeType.SLOPE);
     this.criterion.setOperatorType(ValidationType.NOT_EQUALS);
     this.criterion.addSegmentType(SegmentType.BASE);

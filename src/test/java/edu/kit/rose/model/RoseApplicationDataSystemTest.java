@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -262,6 +263,55 @@ public class RoseApplicationDataSystemTest {
   @Test
   void testCantImportCriteria() {
     assertFalse(applicationDataSystem.importCriteriaFromFile(NON_EXISTENT_PATH));
+  }
+
+  @Test
+  void testAddRecentProjectPathNull() {
+    assertThrows(NullPointerException.class,
+        () -> this.applicationDataSystem.addRecentProjectPath(null));
+  }
+
+  @Test
+  void testAddRecentProjectPath() {
+    assertEquals(0, this.applicationDataSystem.getRecentProjectPaths().getSize());
+
+    var somePath = Path.of("build/tmp/some-project.rose.json");
+    var absolute = somePath.toAbsolutePath();
+    this.applicationDataSystem.addRecentProjectPath(somePath);
+
+    assertEquals(1, this.applicationDataSystem.getRecentProjectPaths().getSize());
+    // make sure the absolute path was added
+    assertTrue(this.applicationDataSystem.getRecentProjectPaths().contains(absolute));
+
+    verify(this.observer, times(1)).notifyAdditionSecond(eq(absolute));
+  }
+
+  @Test
+  void testAddRecentProjectPathAgainIsIgnored() {
+    var somePath = Path.of("build", "tmp", "some-project.rose.json");
+
+    this.applicationDataSystem.addRecentProjectPath(somePath);
+    assertEquals(1, this.applicationDataSystem.getRecentProjectPaths().getSize());
+    verify(observer, times(1))
+        .notifyAdditionSecond(eq(somePath.toAbsolutePath()));
+
+    // adding a path to the same file again should not go through to recent project paths
+    var equalPath = Path.of(".", "build", "tmp", "some-project.rose.json");
+    this.applicationDataSystem.addRecentProjectPath(equalPath);
+    assertEquals(1, this.applicationDataSystem.getRecentProjectPaths().getSize());
+    verify(observer, times(1)) // no additional notify
+        .notifyAdditionSecond(eq(somePath.toAbsolutePath()));
+  }
+
+  @Test
+  void testSaveOnAddNewRecentProjectPath() throws IOException {
+    var somePath = Path.of("build", "tmp", "some-project.rose.json");
+    this.applicationDataSystem.addRecentProjectPath(somePath);
+    assertTrue(Files.deleteIfExists(CONFIG_FILE));
+
+    // if the path already existed, no save should have been triggered
+    this.applicationDataSystem.addRecentProjectPath(somePath);
+    assertFalse(Files.exists(CONFIG_FILE));
   }
 
   /**

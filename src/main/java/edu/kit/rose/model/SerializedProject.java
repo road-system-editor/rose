@@ -234,17 +234,11 @@ class SerializedProject {
       }
       var otherConnector = connection.getOther(connector);
 
-      for (var adjacent : this.roadSystem.getAdjacentSegments(segment)) {
-        for (var adjConnector : adjacent.getConnectors()) {
-          if (adjConnector == otherConnector) {
-            return adjacent;
-          }
-        }
-      }
-
-      throw new RuntimeException("couldn't find adjacent segment");
+      return this.roadSystem.getAdjacentSegments(segment).stream()
+          .filter(adjacent -> adjacent.getConnectors().contains(otherConnector))
+          .findAny()
+          .orElseThrow(); // this should never happen if the road system is consistent
     }
-
   }
 
   /**
@@ -303,18 +297,6 @@ class SerializedProject {
     private void populateAttributes() {
       this.name = this.roseElement.getName();
       this.comment = this.roseElement.getComment();
-    }
-
-    @SuppressWarnings("unchecked")
-    protected <V> void setAttributeValue(AttributeType type, V value) {
-      for (var accessor : this.roseElement.getAttributeAccessors()) {
-        if (accessor.getAttributeType() == type) {
-          ((AttributeAccessor<V>) accessor).setValue(value);
-          return;
-        }
-      }
-
-      throw new RuntimeException("element does not have an attribute of the given type");
     }
 
     public abstract void link(SerializedRoadSystem serializedRoadSystem);
@@ -425,11 +407,11 @@ class SerializedProject {
     public void linkRoseElement(SerializedRoadSystem source, RoadSystem target) {
       super.linkRoseElement(source, target);
 
-      this.setAttributeValue(AttributeType.LENGTH, this.length);
-      this.setAttributeValue(AttributeType.SLOPE, this.slope);
-      this.setAttributeValue(AttributeType.LANE_COUNT, this.laneCount);
-      this.setAttributeValue(AttributeType.CONURBATION, this.conurbation);
-      this.setAttributeValue(AttributeType.MAX_SPEED, this.maxSpeed);
+      this.roseElement.setLength(this.length);
+      this.roseElement.setSlope(this.slope);
+      this.roseElement.setLaneCount(this.laneCount);
+      this.roseElement.setConurbation(this.conurbation);
+      this.roseElement.setMaxSpeed(this.maxSpeed);
 
       this.getRoseElement().move(this.centerPosition.createMovement());
       this.getRoseElement().rotate(this.rotation);
@@ -586,8 +568,8 @@ class SerializedProject {
     public void linkRoseElement(SerializedRoadSystem source, RoadSystem target) {
       super.linkRoseElement(source, target);
 
-      this.setAttributeValue(AttributeType.LANE_COUNT_RAMP, this.laneCountRamp);
-      this.setAttributeValue(AttributeType.MAX_SPEED_RAMP, this.maxSpeedRamp);
+      this.roseElement.setNrOfRampLanes(this.laneCountRamp);
+      this.roseElement.setMaxSpeedRamp(this.maxSpeedRamp);
 
       createRoseConnection(source, target, entranceConnectedSegmentId, roseElement.getEntry());
       createRoseConnection(source, target, exitConnectedSegmentId, roseElement.getExit());

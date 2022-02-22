@@ -96,12 +96,11 @@ class CompletenessCriterion extends RoseSetObservable<SegmentType, PlausibilityC
         if (this.necessaryAttributeTypes.contains(accessor.getAttributeType())) {
           if (accessor.getValue() == null) {
             violated = true;
-            if (segmentTypes.contains(segment.getSegmentType())) {
-              if (!this.elementViolationMap.containsKey(unit)) {
-                Violation violation = new Violation(this, List.of((Segment) unit));
-                this.violationManager.addViolation(violation);
-                this.elementViolationMap.put(unit, violation);
-              }
+            if (segmentTypes.contains(segment.getSegmentType())
+                    && !this.elementViolationMap.containsKey(unit)) {
+              Violation violation = new Violation(this, List.of((Segment) unit));
+              this.violationManager.addViolation(violation);
+              this.elementViolationMap.put(unit, violation);
             }
           }
         }

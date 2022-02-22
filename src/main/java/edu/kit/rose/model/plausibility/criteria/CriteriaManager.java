@@ -3,15 +3,12 @@ package edu.kit.rose.model.plausibility.criteria;
 import edu.kit.rose.infrastructure.RoseSetObservable;
 import edu.kit.rose.infrastructure.RoseSortedBox;
 import edu.kit.rose.infrastructure.SetObservable;
-import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.infrastructure.UnitObserver;
 import edu.kit.rose.model.plausibility.violation.ViolationManager;
 import edu.kit.rose.model.roadsystem.RoadSystem;
-import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 
 /**
@@ -26,7 +23,7 @@ public class CriteriaManager extends RoseSetObservable<PlausibilityCriterion, Cr
 
   private final ArrayList<PlausibilityCriterion> criteria;
   private ViolationManager violationManager;
-  private CriterionFactory criterionFactory;
+  private final CriterionFactory criterionFactory;
   private RoadSystem roadSystem;
 
   /**

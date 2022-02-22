@@ -33,7 +33,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -96,7 +95,6 @@ public class RoseApplicationDataSystemTest {
     lock.release();
   }
 
-  @Disabled("test fails because criteria manager is not initialized -> disabled to see coverage")
   @Test
   void testLoad() throws URISyntaxException {
     Assumptions.assumeTrue(SAMPLE_CONFIG_URL != null);
@@ -108,7 +106,11 @@ public class RoseApplicationDataSystemTest {
     assertTrue(ads.getShownAttributeTypes().contains(AttributeType.SLOPE));
     assertTrue(ads.getShownAttributeTypes().contains(AttributeType.COMMENT));
 
-    assertEquals(defaultCriteriaAmount, ads.getCriteriaManager().getCriteria().getSize());
+    var criteriaInFile = 2;
+    assertEquals(defaultCriteriaAmount + criteriaInFile,
+        ads.getCriteriaManager().getCriteria().getSize());
+    
+    assertEquals(3, ads.getRecentProjectPaths().getSize());
 
     assertSame(Language.GERMAN, ads.getLanguage());
   }

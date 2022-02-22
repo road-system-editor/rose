@@ -8,6 +8,8 @@ import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.TimeSliceSetting;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
+import edu.kit.rose.model.roadsystem.elements.Base;
+import edu.kit.rose.model.roadsystem.elements.HighwaySegment;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import org.junit.jupiter.api.Assertions;
@@ -29,7 +31,8 @@ class CompatibilityCriterionTest {
     this.roadSystem = new GraphRoadSystem(new CriteriaManager(),
             Mockito.mock(TimeSliceSetting.class));
     this.violationManager = new ViolationManager();
-    this.criterion = new CompatibilityCriterion(roadSystem, this.violationManager);
+    this.criterion = new CompatibilityCriterion(null, this.violationManager);
+    this.criterion.setRoadSystem(this.roadSystem);
   }
 
   @Test
@@ -97,74 +100,101 @@ class CompatibilityCriterionTest {
     Assertions.assertFalse(criterion.getSegmentTypes().contains(SegmentType.EXIT));
   }
 
-  @Disabled
   @Test
   void testNotifyChange() {
-    Segment segment1 = roadSystem.createSegment(SegmentType.BASE);
-    Segment segment2 = roadSystem.createSegment(SegmentType.BASE);
+    HighwaySegment segment1 = (HighwaySegment) roadSystem.createSegment(SegmentType.BASE);
+    HighwaySegment segment2 = (HighwaySegment) roadSystem.createSegment(SegmentType.BASE);
 
     roadSystem.connectConnectors(segment1.getConnectors().iterator().next(),
             segment2.getConnectors().iterator().next());
 
-    SortedBox<AttributeAccessor<?>> accessors1 = segment1.getAttributeAccessors();
-    SortedBox<AttributeAccessor<?>> accessors2 = segment2.getAttributeAccessors();
+    segment1.setName("str");
+    segment2.setName("str");
 
-    this.<String>setValueToAccessor(accessors1, "str", AttributeType.NAME);
-    this.<String>setValueToAccessor(accessors2, "str", AttributeType.NAME);
     this.criterion.setOperatorType(ValidationType.EQUALS);
     this.criterion.setAttributeType(AttributeType.NAME);
     this.criterion.addSegmentType(SegmentType.BASE);
-    this.criterion.notifyChange(segment1);
 
     Assertions.assertEquals(0, this.violationManager.getViolations().getSize());
 
-    this.<Integer>setValueToAccessor(accessors1, 3, AttributeType.LENGTH);
-    this.<Integer>setValueToAccessor(accessors2, 1, AttributeType.LENGTH);
+    segment1.setLength(3);
+    segment2.setLength(1);
     this.criterion.setLegalDiscrepancy(1);
     this.criterion.setAttributeType(AttributeType.LENGTH);
     this.criterion.setOperatorType(ValidationType.LESS_THAN);
-    this.criterion.notifyChange(segment1);
 
 
     Assertions.assertEquals(1, this.violationManager.getViolations().getSize());
 
-    this.<Integer>setValueToAccessor(accessors1, 1, AttributeType.LENGTH);
+    segment1.setLength(1);
     this.criterion.notifyChange(segment1);
 
+    // the violation is now resolved
     Assertions.assertEquals(0, this.violationManager.getViolations().getSize());
-  }
-
-  private <T> void setValueToAccessor(SortedBox<AttributeAccessor<?>> attributeAccessor, T value,
-                                      AttributeType type) {
-    for (AttributeAccessor<?> accessor : attributeAccessor) {
-      if (accessor.getAttributeType().equals(type)) {
-        AttributeAccessor<T> auxAccessor = (AttributeAccessor<T>) accessor;
-        auxAccessor.setValue(value);
-      }
-    }
   }
 
   @Test
   void testNotifyRemoval() {
-    Segment segment1 = roadSystem.createSegment(SegmentType.BASE);
-    Segment segment2 = roadSystem.createSegment(SegmentType.BASE);
+    HighwaySegment segment1 = (HighwaySegment) roadSystem.createSegment(SegmentType.BASE);
+    HighwaySegment segment2 = (HighwaySegment) roadSystem.createSegment(SegmentType.BASE);
 
     roadSystem.connectConnectors(segment1.getConnectors().iterator().next(),
             segment2.getConnectors().iterator().next());
 
-    SortedBox<AttributeAccessor<?>> accessors1 = segment1.getAttributeAccessors();
-    SortedBox<AttributeAccessor<?>> accessors2 = segment2.getAttributeAccessors();
 
-
-    this.<Integer>setValueToAccessor(accessors1, 3, AttributeType.LENGTH);
-    this.<Integer>setValueToAccessor(accessors2, 1, AttributeType.LENGTH);
-    this.criterion.setLegalDiscrepancy(1);
-    this.criterion.setAttributeType(AttributeType.LENGTH);
-    this.criterion.setOperatorType(ValidationType.LESS_THAN);
+    segment1.setSlope(3);
+    segment2.setSlope(3);
+    this.criterion.setAttributeType(AttributeType.SLOPE);
+    this.criterion.setOperatorType(ValidationType.NOT_EQUALS);
     this.criterion.addSegmentType(SegmentType.BASE);
-    this.criterion.notifyChange(segment1);
+
     this.criterion.notifyRemoval(segment1);
 
+    // all violations removed after the segment is removed
+    Assertions.assertEquals(0, this.violationManager.getViolations().getSize());
+  }
+
+  @Test
+  void testNotifyAddition() {
+    this.criterion.setOperatorType(ValidationType.NOR);
+    this.criterion.setAttributeType(AttributeType.CONURBATION);
+    this.criterion.addSegmentType(SegmentType.BASE);
+    HighwaySegment segment1 = (HighwaySegment) roadSystem.createSegment(SegmentType.BASE);
+    HighwaySegment segment2 = (HighwaySegment) roadSystem.createSegment(SegmentType.BASE);
+    roadSystem.connectConnectors(segment1.getConnectors().iterator().next(),
+            segment2.getConnectors().iterator().next());
+    segment1.setConurbation(true);
+    segment2.setConurbation(true);
+    this.criterion.notifyAddition(segment1);
+
     Assertions.assertEquals(1, this.violationManager.getViolations().getSize());
+  }
+
+  @Test
+  void testSetViolationManager() {
+    ViolationManager violationManager2 = new ViolationManager();
+    HighwaySegment segment1 = (HighwaySegment) roadSystem.createSegment(SegmentType.BASE);
+    HighwaySegment segment2 = (HighwaySegment) roadSystem.createSegment(SegmentType.BASE);
+
+    roadSystem.connectConnectors(segment1.getConnectors().iterator().next(),
+            segment2.getConnectors().iterator().next());
+
+    this.criterion.setViolationManager(violationManager2);
+
+    segment1.setConurbation(false);
+    segment2.setConurbation(false);
+
+    this.criterion.setAttributeType(AttributeType.CONURBATION);
+    this.criterion.addSegmentType(SegmentType.BASE);
+    this.criterion.setOperatorType(ValidationType.OR);
+    Assertions.assertEquals(1, violationManager2.getViolations().getSize());
+  }
+
+  @Test
+  void testThrowsException() {
+    this.criterion = new CompatibilityCriterion(null, this.violationManager);
+
+    Assertions.assertThrows(IllegalStateException.class,
+            () -> this.criterion.notifyChange(new Base()));
   }
 }

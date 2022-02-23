@@ -1,9 +1,12 @@
 package edu.kit.rose.view.panel.segment;
 
 import edu.kit.rose.controller.attribute.AttributeController;
+import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
+import edu.kit.rose.view.commons.ComboBoxLocalizationManager;
 import edu.kit.rose.view.commons.FxmlContainer;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Objects;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
@@ -23,6 +26,7 @@ abstract class SelectableAttribute<T> extends EditableAttribute<T> {
       "/edu/kit/rose/view/panel/segment/AttributePanel.css";
 
   private ComboBox<T> inputField;
+  private ComboBoxLocalizationManager<T> localizationManager;
 
   /**
    * Creates a new selectable attribute editor for the given {@code attribute} with the given
@@ -56,6 +60,10 @@ abstract class SelectableAttribute<T> extends EditableAttribute<T> {
     inputField.getSelectionModel().selectedItemProperty().addListener(
         (options, old, newVal) -> getController().setAttribute(getAttribute(), newVal));
 
+    this.localizationManager = new ComboBoxLocalizationManager<>(
+        this.inputField,
+        INHOMOGENEOUS_VALUE_PLACEHOLDER,
+        this::localizeOption);
     return inputField;
   }
 
@@ -65,9 +73,14 @@ abstract class SelectableAttribute<T> extends EditableAttribute<T> {
       protected void updateItem(T item, boolean empty) {
         super.updateItem(item, empty);
 
-        if (item == null) {
+        if (item == null || empty) {
           setText(INHOMOGENEOUS_VALUE_PLACEHOLDER);
         } else {
+          if (listView == null) {
+            localizationManager.setShownCell(this);
+          } else {
+            localizationManager.putCell(item, this);
+          }
           setText(localizeOption(item));
         }
       }
@@ -77,6 +90,12 @@ abstract class SelectableAttribute<T> extends EditableAttribute<T> {
   @Override
   protected Collection<FxmlContainer> getSubFxmlContainer() {
     return null;
+  }
+
+  @Override
+  protected void updateTranslatableStrings(Language newLang) {
+    super.updateTranslatableStrings(newLang);
+    localizationManager.updateLocalization();
   }
 
   @Override

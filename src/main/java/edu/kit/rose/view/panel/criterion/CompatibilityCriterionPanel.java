@@ -8,6 +8,7 @@ import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterion;
 import edu.kit.rose.model.plausibility.criteria.validation.ValidationType;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
+import edu.kit.rose.view.commons.ComboBoxLocalizationManager;
 import edu.kit.rose.view.commons.EnumLocalizationUtility;
 import edu.kit.rose.view.commons.FxmlContainer;
 import java.text.DecimalFormat;
@@ -67,9 +68,11 @@ class CompatibilityCriterionPanel
   private VBox criterionLayout;
   @FXML
   private ComboBox<AttributeType> attributeSelector;
+  private ComboBoxLocalizationManager<AttributeType> attributeSelectorLocalizationManager;
   private Tooltip attributeTooltip;
   @FXML
   private ComboBox<ValidationType> validationSelector;
+  private ComboBoxLocalizationManager<ValidationType> validationSelectorLocalizationManager;
   private Tooltip validationTooltip;
   @FXML
   private TextField valueField;
@@ -111,12 +114,20 @@ class CompatibilityCriterionPanel
     this.attributeSelector.getItems().addAll(AttributeType.values());
     this.attributeSelector.getSelectionModel().selectedItemProperty()
         .addListener(this::onAttributeChange);
+    this.attributeSelectorLocalizationManager = new ComboBoxLocalizationManager<>(
+        this.attributeSelector,
+        null,
+        this::getLocalizedStringForAttributeType);
 
     this.validationSelector.setCellFactory(this::createValidationSelectorCell);
     this.validationSelector.setButtonCell(this.createValidationSelectorCell(null));
     this.validationSelector.getItems().addAll(ValidationType.values());
     this.validationSelector.getSelectionModel().selectedItemProperty()
         .addListener(this::onValidationChange);
+    this.validationSelectorLocalizationManager = new ComboBoxLocalizationManager<>(
+        this.validationSelector,
+        null,
+        this::getLocalizedStringForValidationType);
 
     this.valueField.textProperty().addListener(this::onValueChange);
 
@@ -271,6 +282,15 @@ class CompatibilityCriterionPanel
         + ".compatibilityCriterionPanel.validationSelectorExplanation"));
     this.valueTooltip.setText(getTranslator().getLocalizedText("view.panel.criterion"
         + ".compatibilityCriterionPanel.valueFieldExplanation"));
+
+    if (this.attributeSelectorLocalizationManager != null) {
+      this.attributeSelectorLocalizationManager.updateLocalization();
+
+    }
+
+    if (this.validationSelectorLocalizationManager != null) {
+      this.validationSelectorLocalizationManager.updateLocalization();
+    }
   }
 
   @Override
@@ -278,27 +298,41 @@ class CompatibilityCriterionPanel
     return List.of(this.applicableSegmentsSelector);
   }
 
-  private ListCell<AttributeType> createAttributeSelectorCell(ListView<AttributeType> ignored) {
+  private ListCell<AttributeType> createAttributeSelectorCell(ListView<AttributeType> listView) {
     return new ListCell<>() {
       @Override
       protected void updateItem(AttributeType item, boolean empty) {
         super.updateItem(item, empty);
 
         if (item != null && !empty) {
-          setText(EnumLocalizationUtility.localizeAttributeTypeTitle(getTranslator(), item));
+          if (listView == null) {
+            attributeSelectorLocalizationManager.setShownCell(this);
+          } else {
+            attributeSelectorLocalizationManager.putCell(item, this);
+          }
+          setText(getLocalizedStringForAttributeType(item));
         }
       }
     };
   }
 
-  private ListCell<ValidationType> createValidationSelectorCell(ListView<ValidationType> ignored) {
+  private String getLocalizedStringForAttributeType(AttributeType attributeType) {
+    return EnumLocalizationUtility.localizeAttributeTypeTitle(getTranslator(), attributeType);
+  }
+
+  private ListCell<ValidationType> createValidationSelectorCell(ListView<ValidationType> listView) {
     return new ListCell<>() {
       @Override
       protected void updateItem(ValidationType item, boolean empty) {
         super.updateItem(item, empty);
 
         if (item != null && !empty) {
-          setText(EnumLocalizationUtility.localizeValidationTypeTitle(getTranslator(), item));
+          if (listView == null) {
+            validationSelectorLocalizationManager.setShownCell(this);
+          } else {
+            validationSelectorLocalizationManager.putCell(item, this);
+          }
+          setText(getLocalizedStringForValidationType(item));
           String tooltipKey;
           switch (item) {
             case OR -> tooltipKey = OR_TRANSLATION_KEY;
@@ -315,6 +349,10 @@ class CompatibilityCriterionPanel
         }
       }
     };
+  }
+
+  private String getLocalizedStringForValidationType(ValidationType validationType) {
+    return EnumLocalizationUtility.localizeValidationTypeTitle(getTranslator(), validationType);
   }
 
   private void setupTooltip(Tooltip tooltip) {

@@ -1,5 +1,7 @@
 package edu.kit.rose.infrastructure;
 
+import java.util.Objects;
+
 /**
  * A range consists of two constants and includes all values between the two.
  * Closed range.
@@ -11,10 +13,13 @@ public class Range<T extends Comparable<T>> {
   /**
    * Constructor. Provided bounds are sorted automatically.
    *
-   * @param lowerEndPoint first bound
-   * @param upperEndPoint second bound.
+   * @param lowerEndPoint first bound, may not be {@code null}.
+   * @param upperEndPoint second bound, may not be {@code null}.
    */
   public Range(T lowerEndPoint, T upperEndPoint) {
+    Objects.requireNonNull(lowerEndPoint, "lower end point may not be null");
+    Objects.requireNonNull(upperEndPoint, "upper end point may not be null");
+
     if (lowerEndPoint.compareTo(upperEndPoint) > 0) {
       this.upperEndPoint = lowerEndPoint;
       this.lowerEndPoint = upperEndPoint;

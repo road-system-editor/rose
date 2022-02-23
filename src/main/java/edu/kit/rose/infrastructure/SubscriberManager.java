@@ -4,6 +4,7 @@ package edu.kit.rose.infrastructure;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Default implementation of the observable subscriber management logic.
@@ -21,6 +22,8 @@ abstract class SubscriberManager<T extends UnitObserver<S>, S> implements Observ
 
   @Override
   public void addSubscriber(T observer) {
+    Objects.requireNonNull(observer, "observer may not be null");
+
     if (!subscribers.contains(observer)) {
       subscribers.add(observer);
     }

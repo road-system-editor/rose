@@ -15,7 +15,8 @@ public interface Observable<T extends UnitObserver<S>, S> {
    * Adds a given Observer so that it will be notified by the Observable in case of change
    * to the Observable.
    *
-   * @param observer The Observer that wants to be notified by this Observable.
+   * @param observer The Observer that wants to be notified by this Observable, may not be
+   *     {@code null};
    */
   void addSubscriber(T observer);
 

@@ -11,7 +11,10 @@ import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
+import org.apache.commons.collections4.functors.ComparatorPredicate;
 
 
 /**
@@ -26,7 +29,7 @@ public class CriteriaManager extends RoseSetObservable<PlausibilityCriterion, Cr
 
   private final ArrayList<PlausibilityCriterion> criteria;
   private ViolationManager violationManager;
-  private CriterionFactory criterionFactory;
+  private final CriterionFactory criterionFactory;
   private RoadSystem roadSystem;
 
   /**
@@ -134,12 +137,17 @@ public class CriteriaManager extends RoseSetObservable<PlausibilityCriterion, Cr
     violationsToRemove.forEach(violationManager::removeViolation);
   }
 
+  private void removeCriteria(Collection<PlausibilityCriterion> criteriaToRemove) {
+    criteriaToRemove.forEach(this::removeCriterion);
+    criteriaToRemove.forEach(this::notifyRemovalToSubscribers);
+  }
+
   /**
    * Removes all {@link PlausibilityCriterion} from this CriterionManager.
    */
   public void removeAllCriteria() {
-    this.criteria.forEach(this::notifyRemovalToSubscribers);
-    this.criteria.clear();
+    List<PlausibilityCriterion> criteriaToRemove = new ArrayList<>(criteria);
+    removeCriteria(criteriaToRemove);
   }
 
   /**
@@ -149,14 +157,9 @@ public class CriteriaManager extends RoseSetObservable<PlausibilityCriterion, Cr
    * @param type the type of {@link PlausibilityCriterion} to remove.
    */
   public void removeAllCriteriaOfType(PlausibilityCriterionType type) {
-    ArrayList<PlausibilityCriterion> toRemove = new ArrayList<>();
-    for (PlausibilityCriterion criteria : this.criteria) {
-      if (criteria.getType() == type) {
-        notifyRemovalToSubscribers(criteria);
-        toRemove.add(criteria);
-      }
-    }
-    this.criteria.removeAll(toRemove);
+    List<PlausibilityCriterion> criteriaToRemove = criteria.stream().filter(criterion ->
+        criterion.getType() == type).toList();
+    removeCriteria(criteriaToRemove);
   }
 
   @Override

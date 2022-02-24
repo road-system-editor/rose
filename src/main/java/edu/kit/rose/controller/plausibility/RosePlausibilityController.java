@@ -104,7 +104,8 @@ public class RosePlausibilityController extends Controller implements Plausibili
 
   @Override
   public void deleteAllCompatibilityCriteria() {
-    this.applicationDataSystem.getCriteriaManager().removeAllCriteria();
+    this.applicationDataSystem.getCriteriaManager()
+        .removeAllCriteriaOfType(PlausibilityCriterionType.COMPATIBILITY);
   }
 
   @Override

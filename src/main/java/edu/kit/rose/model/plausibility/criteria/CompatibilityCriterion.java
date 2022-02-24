@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -194,60 +195,61 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
     if (this.roadSystem == null) {
       throw new IllegalStateException("can not check connections without set roadSystem.");
     }
-    ArrayList<Segment> invalidSegments;
+
     if (this.operatorType != null && !unit.isContainer()) {
       ValidationStrategy<?> strategy;
+      ArrayList<Segment> invalidSegments;
+      Segment segment = (Segment) unit;
 
       switch (this.operatorType) {
         case EQUALS -> {
           strategy = new EqualsValidationStrategy<>();
-          invalidSegments = getInvalidSegments(strategy, (Segment) unit, NOT_USE_DISCREPANCY);
+          invalidSegments = getInvalidSegments(strategy, segment, NOT_USE_DISCREPANCY);
         }
         case LESS_THAN -> {
           strategy = new LessThanValidationStrategy<>();
-          invalidSegments = getInvalidSegments(strategy, (Segment) unit, USE_DISCREPANCY);
+          invalidSegments = getInvalidSegments(strategy, segment, USE_DISCREPANCY);
         }
         case NOR -> {
           strategy = new NorValidationStrategy();
-          invalidSegments = getInvalidSegments(strategy, (Segment) unit, NOT_USE_DISCREPANCY);
+          invalidSegments = getInvalidSegments(strategy, segment, NOT_USE_DISCREPANCY);
         }
         case NOT_EQUALS -> {
           strategy = new NotEqualsValidationStrategy<>();
-          invalidSegments = getInvalidSegments(strategy, (Segment) unit, NOT_USE_DISCREPANCY);
+          invalidSegments = getInvalidSegments(strategy, segment, NOT_USE_DISCREPANCY);
         }
         case OR -> {
           strategy = new OrValidationStrategy();
-          invalidSegments = getInvalidSegments(strategy, (Segment) unit, NOT_USE_DISCREPANCY);
+          invalidSegments = getInvalidSegments(strategy, segment, NOT_USE_DISCREPANCY);
         }
         default -> throw new IllegalArgumentException("invalid operator type");
       }
-      if (!invalidSegments.isEmpty()
-              && this.segmentTypes.contains(((Segment) unit).getSegmentType())) {
-        if (!(this.elementViolationMap.containsKey(unit)
-                && this.elementViolationMap.get(unit).offendingSegments().size()
-                == invalidSegments.size()
-                && this.elementViolationMap.get(unit).offendingSegments().containsAll(
-                invalidSegments
-        ))) {
-          if (this.elementViolationMap.containsKey(unit)) {
-            this.violationManager.removeViolation(elementViolationMap.get(unit));
-            elementViolationMap.remove(unit);
-          }
-          invalidSegments.add((Segment) unit);
-          Violation violation = new Violation(this, invalidSegments);
-          this.violationManager.addViolation(violation);
-          this.elementViolationMap.put(unit, violation);
-        }
-      } else if (elementViolationMap.containsKey(unit)) {
-        this.violationManager.removeViolation(elementViolationMap.get(unit));
-        elementViolationMap.remove(unit);
-      }
+      updateViolations(invalidSegments, segment);
     }
   }
 
-  @Override
-  public PlausibilityCriterion getThis() {
-    return this;
+  private void updateViolations(List<Segment> invalidSegments, Segment segment) {
+    if (!invalidSegments.isEmpty()
+        && this.segmentTypes.contains((segment).getSegmentType())) {
+      if (!(this.elementViolationMap.containsKey(segment)
+          && this.elementViolationMap.get(segment).offendingSegments().size()
+          == invalidSegments.size()
+          && this.elementViolationMap.get(segment).offendingSegments()
+          .containsAll(invalidSegments))) {
+
+        if (this.elementViolationMap.containsKey(segment)) {
+          this.violationManager.removeViolation(elementViolationMap.get(segment));
+          elementViolationMap.remove(segment);
+        }
+        invalidSegments.add(segment);
+        Violation violation = new Violation(this, invalidSegments);
+        this.violationManager.addViolation(violation);
+        this.elementViolationMap.put(segment, violation);
+      }
+    } else if (elementViolationMap.containsKey(segment)) {
+      this.violationManager.removeViolation(elementViolationMap.get(segment));
+      elementViolationMap.remove(segment);
+    }
   }
 
   private ArrayList<Segment> getInvalidSegments(ValidationStrategy<?> strategy,
@@ -256,7 +258,6 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
     Box<Segment> adjacentSegments = this.roadSystem.getAdjacentSegments(segment);
     AttributeAccessor<?> segmentAccessor =
             getAccessorOfType(segment.getAttributeAccessors(), this.attributeType);
-
 
     for (Segment adjacentSegment : adjacentSegments) {
       if (this.segmentTypes.contains(adjacentSegment.getSegmentType())) {
@@ -268,6 +269,11 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
       }
     }
     return invalidSegments;
+  }
+
+  @Override
+  public PlausibilityCriterion getThis() {
+    return this;
   }
 
   private AttributeAccessor<?> getAccessorOfType(SortedBox<AttributeAccessor<?>> accessors,

@@ -97,7 +97,6 @@ class CompatibilityCriterionTest {
     Assertions.assertFalse(criterion.getSegmentTypes().contains(SegmentType.EXIT));
   }
 
-  @Disabled
   @Test
   void testNotifyChange() {
     Segment segment1 = roadSystem.createSegment(SegmentType.BASE);
@@ -109,8 +108,8 @@ class CompatibilityCriterionTest {
     SortedBox<AttributeAccessor<?>> accessors1 = segment1.getAttributeAccessors();
     SortedBox<AttributeAccessor<?>> accessors2 = segment2.getAttributeAccessors();
 
-    this.<String>setValueToAccessor(accessors1, "str", AttributeType.NAME);
-    this.<String>setValueToAccessor(accessors2, "str", AttributeType.NAME);
+    this.setValueToAccessor(accessors1, "str", AttributeType.NAME);
+    this.setValueToAccessor(accessors2, "str", AttributeType.NAME);
     this.criterion.setOperatorType(ValidationType.EQUALS);
     this.criterion.setAttributeType(AttributeType.NAME);
     this.criterion.addSegmentType(SegmentType.BASE);
@@ -118,8 +117,8 @@ class CompatibilityCriterionTest {
 
     Assertions.assertEquals(0, this.violationManager.getViolations().getSize());
 
-    this.<Integer>setValueToAccessor(accessors1, 3, AttributeType.LENGTH);
-    this.<Integer>setValueToAccessor(accessors2, 1, AttributeType.LENGTH);
+    this.setValueToAccessor(accessors1, 3, AttributeType.LENGTH);
+    this.setValueToAccessor(accessors2, 1, AttributeType.LENGTH);
     this.criterion.setLegalDiscrepancy(1);
     this.criterion.setAttributeType(AttributeType.LENGTH);
     this.criterion.setOperatorType(ValidationType.LESS_THAN);
@@ -128,7 +127,7 @@ class CompatibilityCriterionTest {
 
     Assertions.assertEquals(1, this.violationManager.getViolations().getSize());
 
-    this.<Integer>setValueToAccessor(accessors1, 1, AttributeType.LENGTH);
+    this.setValueToAccessor(accessors1, 1, AttributeType.LENGTH);
     this.criterion.notifyChange(segment1);
 
     Assertions.assertEquals(0, this.violationManager.getViolations().getSize());
@@ -156,8 +155,8 @@ class CompatibilityCriterionTest {
     SortedBox<AttributeAccessor<?>> accessors2 = segment2.getAttributeAccessors();
 
 
-    this.<Integer>setValueToAccessor(accessors1, 3, AttributeType.LENGTH);
-    this.<Integer>setValueToAccessor(accessors2, 1, AttributeType.LENGTH);
+    this.setValueToAccessor(accessors1, 3, AttributeType.LENGTH);
+    this.setValueToAccessor(accessors2, 1, AttributeType.LENGTH);
     this.criterion.setLegalDiscrepancy(1);
     this.criterion.setAttributeType(AttributeType.LENGTH);
     this.criterion.setOperatorType(ValidationType.LESS_THAN);
@@ -165,6 +164,6 @@ class CompatibilityCriterionTest {
     this.criterion.notifyChange(segment1);
     this.criterion.notifyRemoval(segment1);
 
-    Assertions.assertEquals(1, this.violationManager.getViolations().getSize());
+    Assertions.assertEquals(0, this.violationManager.getViolations().getSize());
   }
 }

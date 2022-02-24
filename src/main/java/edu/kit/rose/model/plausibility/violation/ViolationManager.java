@@ -36,6 +36,9 @@ public class ViolationManager extends RoseSetObservable<Violation, ViolationMana
    * @param violation The {@link Violation} to add.
    */
   public void addViolation(Violation violation) {
+    if (getViolation(violation.violatedCriterion(), violation.offendingSegments()) != null) {
+      return;
+    }
     criterionViolationMap.put(violation.violatedCriterion(), violation);
     getSubscriberIterator().forEachRemaining(sub -> sub.notifyAddition(violation));
   }

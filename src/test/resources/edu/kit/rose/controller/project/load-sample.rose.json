@@ -1,0 +1,41 @@
+{
+  "roadSystem" : {
+    "elements" : [ {
+      "elementType" : "BASE_SEGMENT",
+      "index" : 0,
+      "name" : "BASE",
+      "comment" : null,
+      "length" : 60,
+      "slope" : 0,
+      "laneCount" : 1,
+      "conurbation" : false,
+      "maxSpeed" : "NONE",
+      "centerPosition" : {
+        "coordinateX" : 1500.5,
+        "coordinateY" : 1500.5
+      },
+      "rotation" : 0,
+      "entranceConnectedSegmentId" : null,
+      "exitConnectedSegmentId" : null,
+      "entrancePosition" : {
+        "coordinateX" : 0.0,
+        "coordinateY" : 27.0
+      },
+      "exitPosition" : {
+        "coordinateX" : 0.0,
+        "coordinateY" : -33.0
+      }
+    } ],
+    "timeSliceSetting" : {
+      "timeSliceLength" : 0,
+      "numberOfTimeSlices" : 0
+    }
+  },
+  "zoomSetting" : {
+    "center" : {
+      "coordinateX" : 1500.5,
+      "coordinateY" : 1500.5
+    },
+    "zoomLevel" : 1.0
+  }
+}

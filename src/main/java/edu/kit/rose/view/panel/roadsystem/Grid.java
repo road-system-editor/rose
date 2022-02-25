@@ -7,7 +7,9 @@ import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import edu.kit.rose.view.commons.ConnectorView;
+import edu.kit.rose.view.commons.FxmlContainer;
 import edu.kit.rose.view.commons.SegmentView;
+import edu.kit.rose.view.panel.segment.BulkEditPanel;
 import edu.kit.rose.view.panel.segment.SegmentEditorPanel;
 import java.util.Collection;
 import java.util.HashMap;
@@ -49,7 +51,7 @@ public class Grid extends Pane implements SetObserver<Segment, RoadSystemControl
   private final List<SegmentView<?>> segmentViews = new LinkedList<>();
   private final Map<Segment, SegmentView<?>> segmentViewMap = new HashMap<>();
   private final List<ConnectorView> connectorViews = new LinkedList<>();
-  private final List<SegmentEditorPanel> editors = new LinkedList<>();
+  private final List<FxmlContainer> editors = new LinkedList<>();
   private SelectionBox selectionBox;
   private BiConsumer<Position, Position> onAreaSelectedEventHandler;
   private boolean dragInProgress = false;
@@ -90,7 +92,11 @@ public class Grid extends Pane implements SetObserver<Segment, RoadSystemControl
       segmentView.setOnMouseClicked(event -> {
         event.consume();
         if (event.getClickCount() == DOUBLE_CLICK) {
-          buildEditorOnSegment(segmentView.getSegment());
+          if (event.isControlDown()) {
+            buildBulkEditor(segmentView.getSegment());
+          } else {
+            buildEditorOnSegment(segmentView.getSegment());
+          }
         }
       });
     }
@@ -103,6 +109,21 @@ public class Grid extends Pane implements SetObserver<Segment, RoadSystemControl
     getChildren().add(editor);
     editor.init(injector);
     editor.setSegment(segment);
+    Platform.runLater(() -> {
+      var center = segment.getCenter();
+      var width = editor.getWidth();
+      var height = editor.getHeight();
+      editor.relocate(center.getX() - width / 2, center.getY() - height);
+    });
+    editors.add(editor);
+  }
+
+  private void buildBulkEditor(Segment segment) {
+    getChildren().removeAll(editors);
+    editors.clear();
+    BulkEditPanel editor = new BulkEditPanel();
+    getChildren().add(editor);
+    editor.init(injector);
     Platform.runLater(() -> {
       var center = segment.getCenter();
       var width = editor.getWidth();
@@ -160,7 +181,7 @@ public class Grid extends Pane implements SetObserver<Segment, RoadSystemControl
   private void onDragDropped(DragEvent dragEvent) {
     Dragboard db = dragEvent.getDragboard();
     if (db.hasString()) {
-      SegmentType segmentType = null;
+      SegmentType segmentType;
       try {
         segmentType = SegmentType.valueOf(db.getString());
       } catch (IllegalArgumentException iaex) {

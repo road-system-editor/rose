@@ -6,6 +6,7 @@ import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.view.commons.EnumLocalizationUtility;
 import edu.kit.rose.view.commons.FxmlContainer;
+import edu.kit.rose.view.commons.UnmountUtility;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 import javafx.fxml.FXML;
@@ -48,10 +49,11 @@ abstract class EditableAttribute<T> extends FxmlContainer
     this.attribute = Objects.requireNonNull(attribute);
     this.controller = Objects.requireNonNull(controller);
     this.consumer = consumer;
-    //UnmountUtility.subscribeUntilUnmount(this, this, attribute); TODO run later bc this is not
-    // mounted yet
     setupView();
-    layout.getChildren().add(createInputField());
+    Node inputField = createInputField();
+    layout.getChildren().add(inputField);
+    UnmountUtility.subscribeUntilUnmount(inputField, this, attribute);
+
     tooltip = new Tooltip();
     label.setTooltip(tooltip);
   }

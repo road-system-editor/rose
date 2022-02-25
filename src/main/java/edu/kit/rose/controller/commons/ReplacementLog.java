@@ -1,15 +1,10 @@
 package edu.kit.rose.controller.commons;
 
-import edu.kit.rose.infrastructure.Box;
-import edu.kit.rose.infrastructure.RoseBox;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.elements.Connector;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Segment;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -32,10 +27,15 @@ public class ReplacementLog {
   /**
    * Registers an element replacement.
    * The old and new element must be of the same class.
+   *
+   * @param oldElement the element that was replaced by {@code newElement}, may not be {@code null}.
+   * @param newElement the element that replaces {@code oldElement}, may not be {@code null}.
+   * @throws IllegalArgumentException if the old and new element are not instances of the same
+   *     class.
    */
   public <T extends Element> void replaceElement(T oldElement, T newElement) {
-    Objects.requireNonNull(oldElement);
-    Objects.requireNonNull(newElement);
+    Objects.requireNonNull(oldElement, "old element may not be null");
+    Objects.requireNonNull(newElement, "new element may not be null");
     if (oldElement.getClass() != newElement.getClass()) {
       throw new IllegalArgumentException("replacement must have elements of the same class!");
     }
@@ -130,17 +130,15 @@ public class ReplacementLog {
   /**
    * Finds the accessor in a given element that matches the type of the given accessor.
    *
-   * @throws RuntimeException if the given element does not contain a matching accessor.
+   * @throws java.util.NoSuchElementException if the given element does not contain a matching
+   *     accessor.
    */
   @SuppressWarnings("unchecked")
   private <T> AttributeAccessor<T> findMatchingAccessor(Element element,
                                                         AttributeAccessor<T> oldAccessor) {
-    for (var newAccessor : element.getAttributeAccessors()) {
-      if (newAccessor.getAttributeType() == oldAccessor.getAttributeType()) {
-        return (AttributeAccessor<T>) newAccessor;
-      }
-    }
-
-    throw new RuntimeException("target element does not contain a matching accessor");
+    return (AttributeAccessor<T>) element.getAttributeAccessors().stream()
+        .filter(newAccessor -> newAccessor.getAttributeType() == oldAccessor.getAttributeType())
+        .findAny()
+        .orElseThrow();
   }
 }

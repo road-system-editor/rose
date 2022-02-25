@@ -1,46 +1,75 @@
 package edu.kit.rose.model.roadsystem.elements;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
+
 import edu.kit.rose.infrastructure.Position;
-import edu.kit.rose.infrastructure.RoseBox;
 import java.util.List;
-import org.junit.jupiter.api.Assertions;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-
 
 /**
- * Tests {@link Connection}.
+ * Unit tests for {@link Connection}.
  */
 public class ConnectionTest {
+  private Connector connector1;
+  private Connector connector2;
+  private Connector connector3;
 
-  private static final Connector CONNECTOR1 = new Connector(ConnectorType.ENTRY,
-      Mockito.mock(Position.class), List.of());
-  private static final Connector CONNECTOR2 = new Connector(ConnectorType.EXIT,
-      Mockito.mock(Position.class), List.of());
-  private static final Connector CONNECTOR3 = new Connector(ConnectorType.RAMP_ENTRY,
-      Mockito.mock(Position.class), List.of());
-
-  private static Connection testConnection;
+  private Position center;
+  private Connection testConnection;
 
   @BeforeEach
   void setup() {
-    testConnection = new Connection(CONNECTOR1, CONNECTOR2, new Position());
+    this.connector1 = new Connector(ConnectorType.ENTRY, mock(Position.class), List.of());
+    this.connector2 = new Connector(ConnectorType.EXIT, mock(Position.class), List.of());
+    this.connector3 = new Connector(ConnectorType.RAMP_ENTRY, mock(Position.class), List.of());
+    this.center = new Position(18, 15);
+
+    this.testConnection = new Connection(connector1, connector2, this.center);
   }
 
   @Test
-  void testGetConnectors() {
-    Assertions.assertEquals(2, testConnection.getConnectors().getSize());
-    testConnection.getConnectors().forEach(
-        c -> Assertions.assertTrue(c == CONNECTOR1 || c == CONNECTOR2));
+  void testConstructorValidatesParameters() {
+    assertThrows(NullPointerException.class,
+        () -> new Connection(null, connector2, this.center));
+    assertThrows(NullPointerException.class,
+        () -> new Connection(connector1, null, this.center));
+    assertThrows(NullPointerException.class,
+        () -> new Connection(connector1, connector2, null));
+    assertThrows(IllegalArgumentException.class,
+        () -> new Connection(connector1, connector1, this.center));
+  }
+
+  @Test
+  void testConstructorCopiesPosition() {
+    assertNotSame(this.center, this.testConnection.getCenter());
+    assertEquals(this.center, this.testConnection.getCenter());
+  }
+
+  @Test
+  void testConstructorSetsConnectors() {
+    Set<Connector> expectedConnectors = Set.of(connector1, connector2);
+    Set<Connector> actualConnectors =
+        this.testConnection.getConnectors().stream().collect(Collectors.toSet());
+    assertEquals(expectedConnectors, actualConnectors);
   }
 
   @Test
   void testGetOther() {
-    Assertions.assertThrows(IllegalArgumentException.class,
-        () -> testConnection.getOther(CONNECTOR3));
-    Assertions.assertEquals(testConnection.getOther(CONNECTOR1), CONNECTOR2);
-    Assertions.assertEquals(testConnection.getOther(CONNECTOR2), CONNECTOR1);
+    assertThrows(IllegalArgumentException.class,
+        () -> testConnection.getOther(connector3));
+    assertEquals(testConnection.getOther(connector1), connector2);
+    assertEquals(testConnection.getOther(connector2), connector1);
   }
 
+  @Test
+  void testGetThis() {
+    assertSame(testConnection, testConnection.getThis());
+  }
 }

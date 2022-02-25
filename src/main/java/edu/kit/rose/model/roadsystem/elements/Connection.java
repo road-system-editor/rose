@@ -6,6 +6,7 @@ import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.infrastructure.RoseSortedBox;
 import edu.kit.rose.infrastructure.RoseUnitObservable;
 import edu.kit.rose.infrastructure.SortedBox;
+import java.util.Objects;
 
 /**
  * A connection between two {@link Connector}s.
@@ -20,10 +21,18 @@ public class Connection extends RoseUnitObservable<Connection> {
    * Constructor.
    *
    * @param connector1 the first connector of this connection.
-   * @param connector2 the second connector of this connection.
+   * @param connector2 the second connector of this connection, must be different to the first one.
    * @param center the absolute position of the center of this connection.
    */
   public Connection(Connector connector1, Connector connector2, Position center) {
+    Objects.requireNonNull(connector1);
+    Objects.requireNonNull(connector2);
+    Objects.requireNonNull(center);
+
+    if (connector1 == connector2) {
+      throw new IllegalArgumentException("can not connect a connector to itself");
+    }
+
     this.connector1 = connector1;
     this.connector2 = connector2;
     this.center = new Position(center.getX(), center.getY());

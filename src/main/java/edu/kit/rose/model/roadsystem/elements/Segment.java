@@ -67,6 +67,7 @@ public interface Segment extends Element, Comparable<Segment> {
    *
    * @param connector the connector, must be of this segment!
    * @return the Position the Connector has when factoring in the rotation.
+   * @throws IllegalArgumentException if {@code connector} isn't a connector from this segment.
    */
   Position getAbsoluteConnectorPosition(Connector connector);
 }

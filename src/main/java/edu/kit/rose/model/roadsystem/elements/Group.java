@@ -49,7 +49,7 @@ public class Group
 
   @Override
   public Iterator<Element> iterator() {
-    return elements.iterator();
+    return getElements().iterator();
   }
 
   /**
@@ -97,7 +97,7 @@ public class Group
    * @return True if the given element is in the Group.
    */
   public boolean contains(Element element) {
-    return elements.contains(element);
+    return getElements().contains(element);
   }
 
   @Override

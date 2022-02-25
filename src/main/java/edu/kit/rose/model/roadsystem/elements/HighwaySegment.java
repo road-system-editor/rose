@@ -159,21 +159,16 @@ public abstract class HighwaySegment
 
   @Override
   public int compareTo(Segment segment) {
-    try {
-      var highWaySegment = (HighwaySegment) segment;
-      return creationTime.compareTo(highWaySegment.getCreationTime());
-    } catch (ClassCastException e) {
-      return segment.compareTo(this);
+    if (segment instanceof HighwaySegment) {
+      return this.creationTime.compareTo(((HighwaySegment) segment).creationTime);
+    } else {
+      return -segment.compareTo(this);
     }
   }
 
   @Override
   public HighwaySegment getThis() {
     return this;
-  }
-
-  private Long getCreationTime() {
-    return this.creationTime;
   }
 
   @Override

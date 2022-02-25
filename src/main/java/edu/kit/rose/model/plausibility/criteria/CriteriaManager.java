@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+
 /**
  * A CriteriaManager holds {@link PlausibilityCriterion}s .
  * It provides functions to create and remove Criteria as well as getters for them.

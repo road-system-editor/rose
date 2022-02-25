@@ -24,15 +24,16 @@ import javafx.scene.layout.VBox;
 public class BulkEditPanel extends FxmlContainer {
   private static final String ATTRIBUTE_PANEL_STYLE =
       "/edu/kit/rose/view/panel/segment/AttributePanel.css";
+
   @FXML
   private Label label;
-
 
   @FXML
   private VBox attributeList;
 
   @Inject
   private AttributeController controller;
+
 
   /**
    * Creates a new bulk edit panel for a given collection of elements.
@@ -47,6 +48,7 @@ public class BulkEditPanel extends FxmlContainer {
   public void init(Injector injector) {
     super.init(injector);
     setAttributes(injector);
+    updateTranslatableStrings(getTranslator().getSelectedLanguage());
     //attributePanel.setAttributes(controller.getBulkEditAccessors());
   }
 
@@ -69,7 +71,7 @@ public class BulkEditPanel extends FxmlContainer {
 
   @Override
   protected void updateTranslatableStrings(Language newLang) {
-
+    label.setText(getTranslator().getLocalizedText("view.panel.segment.bulkEditor"));
   }
 
   @Override

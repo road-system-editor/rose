@@ -214,10 +214,12 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
     }
     Segment segment = (Segment) unit;
 
+    HashSetValuedHashMap<Element, Violation> elementViolationMapCopy =
+        new HashSetValuedHashMap<>(elementViolationMap);
     //Check if Segment is part of RoadSystem
     if (!this.roadSystem.getElements().contains(unit)) {
       if (elementViolationMap.containsKey(segment)) {
-        for (Violation vio : elementViolationMap.get(segment)) {
+        for (Violation vio : elementViolationMapCopy.get(segment)) {
           this.violationManager.removeViolation(vio);
           elementViolationMap.removeMapping(segment, vio);
         }

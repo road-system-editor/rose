@@ -243,7 +243,6 @@ public class RoseRoadSystemController extends Controller
     if (this.dragConnector == null) {
       return;
     }
-
     Movement draggingTransition = new Movement(
         connectorEndPosition.getX() - initialConnectorDragPosition.getX(),
         connectorEndPosition.getY() - initialConnectorDragPosition.getY());
@@ -251,9 +250,7 @@ public class RoseRoadSystemController extends Controller
     DragSegmentEndCommand dragSegmentEndCommand = new DragSegmentEndCommand(this.replacementLog,
         (MovableConnector) dragConnector, draggingTransition);
 
-    dragSegmentEndCommand.unexecute();
     changeCommandBuffer.addAndExecuteCommand(dragSegmentEndCommand);
-
     buildConnection(dragConnector);
 
     dragConnector = null;

@@ -45,8 +45,6 @@ public class DragSegmentEndCommandTest {
     this.command = new DragSegmentEndCommand(this.replacementLog, this.connector, MOVEMENT);
   }
 
-
-  @Disabled("disabled until movable connectors are merged")
   @Test
   public void testPositionChanges() {
     assumeTrue(ORIGINAL_POSITION.equals(connector.getPosition()));
@@ -56,7 +54,7 @@ public class DragSegmentEndCommandTest {
     assertEquals(ORIGINAL_POSITION, connector.getPosition());
   }
 
-  @Disabled("disabled until movable connectors are merged")
+  @Disabled
   @Test
   public void testConsidersReplacements() {
     // simulate first replacement before execution

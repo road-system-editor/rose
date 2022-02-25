@@ -161,9 +161,9 @@ public class ElementTreeCell extends TreeCell<Element>
   @Override
   public void notifyAddition(Element unit) {
     Platform.runLater(() -> {
-      TreeItem<Element> itemToPlaceOn = getTreeItem();
+      ElementTreeItem itemToPlaceOn = (ElementTreeItem) getTreeItem();
       if (itemToPlaceOn != null) {
-        itemToPlaceOn.getChildren().add(new TreeItem<>(unit));
+        itemToPlaceOn.getInternalChildren().add(new TreeItem<>(unit));
       }
     });
   }
@@ -172,9 +172,9 @@ public class ElementTreeCell extends TreeCell<Element>
   @Override
   public void notifyRemoval(Element unit) {
     Platform.runLater(() -> {
-      TreeItem<Element> treeItem = getTreeItem().getParent();
+      ElementTreeItem treeItem = (ElementTreeItem) getTreeItem().getParent();
       if (treeItem != null) {
-        treeItem.getChildren().removeIf(child -> child.getValue() == unit);
+        treeItem.getInternalChildren().removeIf(child -> child.getValue() == unit);
         unit.removeSubscriber(this);
       }
     });

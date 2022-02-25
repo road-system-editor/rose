@@ -5,6 +5,10 @@ import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.view.commons.FxmlContainer;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.concurrent.Callable;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
@@ -22,14 +26,16 @@ public abstract class TextFieldAttribute<T> extends EditableAttribute<T> {
    */
   private boolean inhomogeneousInsertion = false;
 
+
   private TextField inputField; //TODO make final and init immediately
 
   /**
    * Creates an editable attribute component for a given attribute accessor.
    */
   protected TextFieldAttribute(AttributeAccessor<T> attribute,
-                               AttributeController controller) {
-    super(attribute, controller);
+                               AttributeController controller, BiConsumer<AttributeAccessor<T>,
+                                                              T> consumer) {
+    super(attribute, controller, consumer);
     setupView();
   }
 
@@ -72,7 +78,8 @@ public abstract class TextFieldAttribute<T> extends EditableAttribute<T> {
                                   String newVal) {
     if (!inhomogeneousInsertion) {
       if (this.validate(newVal)) {
-        getController().setAttribute(getAttribute(), parse(newVal));
+        //getController().setAttribute(getAttribute(), parse(newVal));
+        this.consumer.accept(getAttribute(), parse(newVal));
       } else {
         inputField.setText(oldVal);
       }

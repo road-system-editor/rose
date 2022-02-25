@@ -68,6 +68,17 @@ public class RoseAttributeController extends Controller implements AttributeCont
   }
 
   @Override
+  public <T> void setBulkAttribute(AttributeAccessor<T> accessor, T value) {
+    if (getStorageLock().isStorageLockAcquired()) {
+      return;
+    }
+
+    var command  = new SetBulkAttributeAccessorCommand<>(replacementLog, accessor,
+        accessor.getValue(), value, selectionBuffer.getSelectedSegments());
+    changeCommandBuffer.addAndExecuteCommand(command);
+  }
+
+  @Override
   public void addShownAttributeType(AttributeType attributeType) {
     if (getStorageLock().isStorageLockAcquired()) {
       return;

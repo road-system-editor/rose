@@ -2,6 +2,7 @@ package edu.kit.rose.view.panel.segment;
 
 import edu.kit.rose.controller.attribute.AttributeController;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
+import java.util.function.BiConsumer;
 import java.util.regex.Pattern;
 
 
@@ -19,8 +20,9 @@ class IntegerAttribute extends TextFieldAttribute<Integer> {
    * @param attribute the attribute to display.
    * @param controller the controller that should handle attribute value updates.
    */
-  IntegerAttribute(AttributeAccessor<Integer> attribute, AttributeController controller) {
-    super(attribute, controller);
+  IntegerAttribute(AttributeAccessor<Integer> attribute, AttributeController controller,
+                   BiConsumer<AttributeAccessor<Integer>, Integer> consumer) {
+    super(attribute, controller, consumer);
   }
 
   @Override

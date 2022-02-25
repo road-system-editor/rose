@@ -5,6 +5,7 @@ import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.view.commons.FxmlContainer;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.function.BiConsumer;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
@@ -29,8 +30,8 @@ abstract class SelectableAttribute<T> extends EditableAttribute<T> {
    * {@code options}.
    */
   SelectableAttribute(AttributeAccessor<T> attribute, AttributeController controller,
-                      Collection<T> options) {
-    super(attribute, controller);
+                      Collection<T> options, BiConsumer<AttributeAccessor<T>, T> consumer) {
+    super(attribute, controller, consumer);
     setupView();
     this.inputField.getItems().addAll(Objects.requireNonNull(options));
   }
@@ -54,7 +55,9 @@ abstract class SelectableAttribute<T> extends EditableAttribute<T> {
     inputField.setCellFactory(this::createListCell);
 
     inputField.getSelectionModel().selectedItemProperty().addListener(
-        (options, old, newVal) -> getController().setAttribute(getAttribute(), newVal));
+        (options, old, newVal) -> consumer.accept(getAttribute(), newVal));
+
+    //getController().setAttribute(getAttribute(), newVal));
 
     return inputField;
   }

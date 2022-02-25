@@ -8,9 +8,9 @@ import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterion;
 import edu.kit.rose.model.plausibility.criteria.validation.ValidationType;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
-import edu.kit.rose.view.commons.ComboBoxLocalizationManager;
 import edu.kit.rose.view.commons.EnumLocalizationUtility;
 import edu.kit.rose.view.commons.FxmlContainer;
+import edu.kit.rose.view.commons.LocalizedComboBox;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Collection;
@@ -20,7 +20,6 @@ import java.util.Objects;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -67,12 +66,10 @@ class CompatibilityCriterionPanel
   @FXML
   private VBox criterionLayout;
   @FXML
-  private ComboBox<AttributeType> attributeSelector;
-  private ComboBoxLocalizationManager<AttributeType> attributeSelectorLocalizationManager;
+  private LocalizedComboBox<AttributeType> attributeSelector;
   private Tooltip attributeTooltip;
   @FXML
-  private ComboBox<ValidationType> validationSelector;
-  private ComboBoxLocalizationManager<ValidationType> validationSelectorLocalizationManager;
+  private LocalizedComboBox<ValidationType> validationSelector;
   private Tooltip validationTooltip;
   @FXML
   private TextField valueField;
@@ -114,20 +111,14 @@ class CompatibilityCriterionPanel
     this.attributeSelector.getItems().addAll(AttributeType.values());
     this.attributeSelector.getSelectionModel().selectedItemProperty()
         .addListener(this::onAttributeChange);
-    this.attributeSelectorLocalizationManager = new ComboBoxLocalizationManager<>(
-        this.attributeSelector,
-        null,
-        this::getLocalizedStringForAttributeType);
+    this.attributeSelector.init(null, this::getLocalizedStringForAttributeType);
 
     this.validationSelector.setCellFactory(this::createValidationSelectorCell);
     this.validationSelector.setButtonCell(this.createValidationSelectorCell(null));
     this.validationSelector.getItems().addAll(ValidationType.values());
     this.validationSelector.getSelectionModel().selectedItemProperty()
         .addListener(this::onValidationChange);
-    this.validationSelectorLocalizationManager = new ComboBoxLocalizationManager<>(
-        this.validationSelector,
-        null,
-        this::getLocalizedStringForValidationType);
+    this.validationSelector.init(null, this::getLocalizedStringForValidationType);
 
     this.valueField.textProperty().addListener(this::onValueChange);
 
@@ -190,7 +181,7 @@ class CompatibilityCriterionPanel
   }
 
   private void onValidationChange(ObservableValue<? extends ValidationType> observable,
-                                 ValidationType oldValue, ValidationType newValue) {
+                                  ValidationType oldValue, ValidationType newValue) {
     if (oldValue != newValue) {
       Platform.runLater(() -> {
         getController().setCompatibilityCriterionValidationType(getCriterion(), newValue);
@@ -283,14 +274,8 @@ class CompatibilityCriterionPanel
     this.valueTooltip.setText(getTranslator().getLocalizedText("view.panel.criterion"
         + ".compatibilityCriterionPanel.valueFieldExplanation"));
 
-    if (this.attributeSelectorLocalizationManager != null) {
-      this.attributeSelectorLocalizationManager.updateLocalization();
-
-    }
-
-    if (this.validationSelectorLocalizationManager != null) {
-      this.validationSelectorLocalizationManager.updateLocalization();
-    }
+    this.attributeSelector.updateLocalization();
+    this.validationSelector.updateLocalization();
   }
 
   @Override
@@ -305,10 +290,8 @@ class CompatibilityCriterionPanel
         super.updateItem(item, empty);
 
         if (item != null && !empty) {
-          if (listView == null) {
-            attributeSelectorLocalizationManager.setShownCell(this);
-          } else {
-            attributeSelectorLocalizationManager.putCell(item, this);
+          if (listView != null) {
+            attributeSelector.putCell(item, this);
           }
           setText(getLocalizedStringForAttributeType(item));
         }
@@ -327,10 +310,8 @@ class CompatibilityCriterionPanel
         super.updateItem(item, empty);
 
         if (item != null && !empty) {
-          if (listView == null) {
-            validationSelectorLocalizationManager.setShownCell(this);
-          } else {
-            validationSelectorLocalizationManager.putCell(item, this);
+          if (listView != null) {
+            validationSelector.putCell(item, this);
           }
           setText(getLocalizedStringForValidationType(item));
           String tooltipKey;

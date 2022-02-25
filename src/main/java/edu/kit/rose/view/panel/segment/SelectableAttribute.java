@@ -3,13 +3,11 @@ package edu.kit.rose.view.panel.segment;
 import edu.kit.rose.controller.attribute.AttributeController;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
-import edu.kit.rose.view.commons.ComboBoxLocalizationManager;
 import edu.kit.rose.view.commons.FxmlContainer;
+import edu.kit.rose.view.commons.LocalizedComboBox;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Objects;
 import javafx.scene.Node;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 
@@ -25,8 +23,7 @@ abstract class SelectableAttribute<T> extends EditableAttribute<T> {
   private static final String ATTRIBUTE_PANEL_STYLE =
       "/edu/kit/rose/view/panel/segment/AttributePanel.css";
 
-  private ComboBox<T> inputField;
-  private ComboBoxLocalizationManager<T> localizationManager;
+  private LocalizedComboBox<T> inputField;
 
   /**
    * Creates a new selectable attribute editor for the given {@code attribute} with the given
@@ -47,7 +44,7 @@ abstract class SelectableAttribute<T> extends EditableAttribute<T> {
 
   @Override
   protected Node createInputField() {
-    this.inputField = new ComboBox<>();
+    this.inputField = new LocalizedComboBox<>();
 
     this.inputField.setPromptText(INHOMOGENEOUS_VALUE_PLACEHOLDER);
     inputField.getStyleClass().add("comboBox");
@@ -60,10 +57,7 @@ abstract class SelectableAttribute<T> extends EditableAttribute<T> {
     inputField.getSelectionModel().selectedItemProperty().addListener(
         (options, old, newVal) -> getController().setAttribute(getAttribute(), newVal));
 
-    this.localizationManager = new ComboBoxLocalizationManager<>(
-        this.inputField,
-        INHOMOGENEOUS_VALUE_PLACEHOLDER,
-        this::localizeOption);
+    this.inputField.init(INHOMOGENEOUS_VALUE_PLACEHOLDER, this::localizeOption);
     return inputField;
   }
 
@@ -76,10 +70,8 @@ abstract class SelectableAttribute<T> extends EditableAttribute<T> {
         if (item == null || empty) {
           setText(INHOMOGENEOUS_VALUE_PLACEHOLDER);
         } else {
-          if (listView == null) {
-            localizationManager.setShownCell(this);
-          } else {
-            localizationManager.putCell(item, this);
+          if (listView != null) {
+            inputField.putCell(item, this);
           }
           setText(localizeOption(item));
         }
@@ -95,7 +87,7 @@ abstract class SelectableAttribute<T> extends EditableAttribute<T> {
   @Override
   protected void updateTranslatableStrings(Language newLang) {
     super.updateTranslatableStrings(newLang);
-    localizationManager.updateLocalization();
+    this.inputField.updateLocalization();
   }
 
   @Override

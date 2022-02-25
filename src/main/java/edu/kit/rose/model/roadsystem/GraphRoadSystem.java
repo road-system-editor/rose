@@ -2,6 +2,7 @@ package edu.kit.rose.model.roadsystem;
 
 import edu.kit.rose.infrastructure.Box;
 import edu.kit.rose.infrastructure.Movement;
+import edu.kit.rose.infrastructure.Observable;
 import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.infrastructure.RoseBox;
 import edu.kit.rose.infrastructure.RoseDualSetObservable;
@@ -15,13 +16,11 @@ import edu.kit.rose.model.roadsystem.elements.SegmentFactory;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 import org.jgrapht.Graph;
 import org.jgrapht.Graphs;
 import org.jgrapht.graph.Pseudograph;
@@ -114,17 +113,21 @@ public class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, 
   }
 
   private void removeSegment(Segment segment) {
+    final var connectedSegments = getAdjacentSegments(segment);
     elements.remove(segment);
     var connectionsToSegment = new LinkedList<>(segmentConnectionGraph.edgesOf(segment));
     segment.getConnectors().forEach(connectorSegmentMap::remove);
     segmentConnectionGraph.removeVertex(segment);
     subscribers.forEach(s -> connectionsToSegment.forEach(s::notifyRemovalSecond));
+    segment.notifySubscribers();
+    connectedSegments.forEach(Observable::notifySubscribers);
     criteriaManager.getCriteria().forEach(segment::removeSubscriber);
     subscribers.forEach(s -> s.notifyRemoval(segment));
     segment.getConnectors().forEach(c -> {
       connectorConnectionMap.remove(c);
       c.removeSubscriber(this);
     });
+
   }
 
   private void removeGroup(Group group) {
@@ -175,8 +178,12 @@ public class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, 
       var segment1 = connectorSegmentMap.get(connection.getConnectors().get(0));
       var segment2 = connectorSegmentMap.get(connection.getConnectors().get(1));
       segmentConnectionGraph.removeEdge(connection);
-      segment1.notifySubscribers();
-      segment2.notifySubscribers();
+      if (segment1 != null) {
+        segment1.notifySubscribers(); //TODO: shouldnt be null?
+      }
+      if (segment2 != null) {
+        segment2.notifySubscribers();
+      }
       connection.getConnectors().forEach(c -> connectorConnectionMap.put(c, null));
       subscribers.forEach(s -> s.notifyRemovalSecond(connection));
     }

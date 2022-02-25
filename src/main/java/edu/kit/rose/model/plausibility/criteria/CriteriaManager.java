@@ -2,19 +2,14 @@ package edu.kit.rose.model.plausibility.criteria;
 
 import edu.kit.rose.infrastructure.RoseSetObservable;
 import edu.kit.rose.infrastructure.RoseSortedBox;
-import edu.kit.rose.infrastructure.SetObservable;
-import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.infrastructure.UnitObserver;
 import edu.kit.rose.model.plausibility.violation.ViolationManager;
 import edu.kit.rose.model.roadsystem.RoadSystem;
-import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import org.apache.commons.collections4.functors.ComparatorPredicate;
 
 
 /**
@@ -24,8 +19,7 @@ import org.apache.commons.collections4.functors.ComparatorPredicate;
  * Criteria to observe the appropriate {@link edu.kit.rose.model.roadsystem.elements.Segment}s.
  */
 public class CriteriaManager extends RoseSetObservable<PlausibilityCriterion, CriteriaManager>
-        implements SetObservable<PlausibilityCriterion, CriteriaManager>,
-        UnitObserver<PlausibilityCriterion> {
+    implements UnitObserver<PlausibilityCriterion> {
 
   private final ArrayList<PlausibilityCriterion> criteria;
   private ViolationManager violationManager;

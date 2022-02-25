@@ -27,6 +27,7 @@ public class RoseAttributeControllerTest {
   private RoseAttributeController attributeController;
   private ApplicationDataSystem applicationDataSystem;
   private AttributeAccessor<Integer> accessor;
+  private StorageLock storageLock;
   private int testInt;
   private static final int INITIAL_VALUE = 0;
   private static final int SET_VALUE = 1;
@@ -37,10 +38,11 @@ public class RoseAttributeControllerTest {
     var modelFactory = new ModelFactory(CONFIG_PATH);
     applicationDataSystem = modelFactory.createApplicationDataSystem();
     ChangeCommandBuffer changeCommandBuffer = new RoseChangeCommandBuffer();
+    storageLock = Mockito.mock(StorageLock.class);
     attributeController = new RoseAttributeController(
         changeCommandBuffer,
         Mockito.mock(SelectionBuffer.class),
-        Mockito.mock(StorageLock.class),
+        storageLock,
         Mockito.mock(Navigator.class),
         modelFactory.createProject(),
         applicationDataSystem,
@@ -71,6 +73,22 @@ public class RoseAttributeControllerTest {
   void testRemoveShownAttribute() {
     attributeController.addShownAttributeType(TEST_TYPE);
     attributeController.removeShownAttributeType(TEST_TYPE);
+    Assertions.assertFalse(applicationDataSystem.getShownAttributeTypes().contains(TEST_TYPE));
+  }
+
+  @Test
+  void testWhenStorageLockAcquired() {
+    attributeController.addShownAttributeType(TEST_TYPE);
+    Mockito.when(storageLock.isStorageLockAcquired()).thenReturn(true);
+    attributeController.removeShownAttributeType(TEST_TYPE);
+    Assertions.assertTrue(applicationDataSystem.getShownAttributeTypes().contains(TEST_TYPE));
+
+    attributeController.setAttribute(accessor, SET_VALUE);
+    Assertions.assertEquals(testInt, INITIAL_VALUE);
+
+    applicationDataSystem.getShownAttributeTypes()
+            .forEach(applicationDataSystem::removeShownAttributeType);
+    attributeController.addShownAttributeType(TEST_TYPE);
     Assertions.assertFalse(applicationDataSystem.getShownAttributeTypes().contains(TEST_TYPE));
   }
 }

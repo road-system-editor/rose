@@ -2,6 +2,7 @@ package edu.kit.rose.view.panel.segment;
 
 import edu.kit.rose.controller.attribute.AttributeController;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
+import java.util.function.BiConsumer;
 import java.util.regex.Pattern;
 
 /**
@@ -18,8 +19,9 @@ class FractionalAttribute extends TextFieldAttribute<Double> {
    * @param attribute  the attribute to display.
    * @param controller the controller that should handle attribute value updates.
    */
-  FractionalAttribute(AttributeAccessor<Double> attribute, AttributeController controller) {
-    super(attribute, controller);
+  FractionalAttribute(AttributeAccessor<Double> attribute, AttributeController controller,
+                      BiConsumer<AttributeAccessor<Double>, Double> consumer) {
+    super(attribute, controller, consumer);
   }
 
   @Override

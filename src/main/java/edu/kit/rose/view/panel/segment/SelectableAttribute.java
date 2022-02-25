@@ -34,6 +34,7 @@ abstract class SelectableAttribute<T> extends EditableAttribute<T> {
     super(attribute, controller, consumer);
     setupView();
     this.inputField.getItems().addAll(Objects.requireNonNull(options));
+    inputField.getSelectionModel().select(attribute.getValue());
   }
 
   private void setupView() {
@@ -56,8 +57,6 @@ abstract class SelectableAttribute<T> extends EditableAttribute<T> {
 
     inputField.getSelectionModel().selectedItemProperty().addListener(
         (options, old, newVal) -> consumer.accept(getAttribute(), newVal));
-
-    //getController().setAttribute(getAttribute(), newVal));
 
     return inputField;
   }

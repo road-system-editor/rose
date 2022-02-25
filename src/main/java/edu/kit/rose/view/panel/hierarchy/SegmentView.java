@@ -57,6 +57,7 @@ class SegmentView extends ElementView<Segment> {
     String deleteButtonImageUrl = Objects.requireNonNull(
             getClass().getResource(DELETE_BUTTON_IMAGE_URL)).toExternalForm();
     deleteGroupButtonImageView.setImage(new Image(deleteButtonImageUrl));
+    onSegmentSelectionChanged(getElement(), getController().getIsSegmentSelected(getElement()));
   }
 
   private void setupListeners() {

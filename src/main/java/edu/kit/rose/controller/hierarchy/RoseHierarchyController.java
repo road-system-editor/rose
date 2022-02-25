@@ -107,6 +107,11 @@ public class RoseHierarchyController extends Controller
   }
 
   @Override
+  public boolean getIsSegmentSelected(Segment segment) {
+    return this.selectionBuffer.isSegmentSelected(segment);
+  }
+
+  @Override
   public void addSubscription(BiConsumer<Segment, Boolean> consumer) {
     this.consumers.add(consumer);
   }

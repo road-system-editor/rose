@@ -4,6 +4,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ComboBox?>
 <?import edu.kit.rose.view.panel.criterion.ApplicableSegmentsSelector?>
+<?import edu.kit.rose.view.commons.LocalizedComboBox?>
 <fx:root fx:id="parentContainer"
          xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml" type="Pane">
@@ -22,10 +23,10 @@
                styleClass="label"/>
         <VBox fx:id="criterionLayout"
                styleClass="vbox">
-            <ComboBox fx:id="attributeSelector"
-                      styleClass="comboBox"
-                      prefWidth="${parentContainer.width}"/>
-            <ComboBox fx:id="validationSelector"
+            <LocalizedComboBox fx:id="attributeSelector"
+                               styleClass="comboBox"
+                               prefWidth="${parentContainer.width}"/>
+            <LocalizedComboBox fx:id="validationSelector"
                       styleClass="comboBox"
                       prefWidth="${parentContainer.width}"/>
             <TextField fx:id="valueField"

@@ -28,6 +28,7 @@
             <rowConstraints>
                 <RowConstraints/>
             </rowConstraints>
+
             <Label GridPane.columnIndex="0" GridPane.rowIndex="0" fx:id="groupNameLabel" textFill="white">
             </Label>
             <Button GridPane.columnIndex="1" GridPane.rowIndex="0" fx:id="deleteGroupButton"
@@ -36,6 +37,14 @@
                     <ImageView fx:id="deleteGroupButtonImageView"/>
                 </graphic>
             </Button>
+
+            <fx:define>
+                <ContextMenu fx:id="groupViewSurfaceContextMenu">
+                    <items>
+                        <MenuItem fx:id="editGroupNameMenuItem"/>
+                    </items>
+                </ContextMenu>
+            </fx:define>
         </GridPane>
     </AnchorPane>
 </fx:root>

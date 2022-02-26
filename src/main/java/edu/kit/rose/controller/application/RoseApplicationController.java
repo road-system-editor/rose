@@ -70,20 +70,22 @@ public class RoseApplicationController extends Controller implements Application
     this.applicationDataSystem.addSubscriber(new DualSetObserver<>() {
       @Override
       public void notifyAddition(AttributeType unit) {
+        // ignore, this is irrelevant for the language binding
       }
 
       @Override
       public void notifyRemoval(AttributeType unit) {
+        // ignore, this is irrelevant for the language binding
       }
 
       @Override
       public void notifyAdditionSecond(Path unit) {
-
+        // ignore, this is irrelevant for the language binding
       }
 
       @Override
       public void notifyRemovalSecond(Path unit) {
-
+        // ignore, this is irrelevant for the language binding
       }
 
       @Override

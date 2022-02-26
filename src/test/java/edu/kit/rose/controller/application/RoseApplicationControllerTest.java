@@ -1,7 +1,7 @@
 package edu.kit.rose.controller.application;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -12,11 +12,12 @@ import edu.kit.rose.controller.command.ChangeCommandBuffer;
 import edu.kit.rose.controller.commons.StorageLock;
 import edu.kit.rose.controller.navigation.Navigator;
 import edu.kit.rose.controller.navigation.WindowType;
-import edu.kit.rose.infrastructure.SetObserver;
+import edu.kit.rose.infrastructure.DualSetObserver;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.infrastructure.language.LanguageSelector;
 import edu.kit.rose.model.ApplicationDataSystem;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
+import java.nio.file.Path;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -31,7 +32,7 @@ public class RoseApplicationControllerTest {
   ApplicationDataSystem applicationDataSystem;
   RoseApplicationController controller;
 
-  SetObserver<AttributeType, ApplicationDataSystem> applicationDataSystemSetObserver;
+  DualSetObserver<AttributeType, Path, ApplicationDataSystem> applicationDataSystemSetObserver;
 
   @BeforeEach
   void beforeEach() {
@@ -78,9 +79,28 @@ public class RoseApplicationControllerTest {
   @Test
   void testLanguageBinding() {
     // simulate application data system had its language changed
+    when(languageSelector.getSelectedLanguage()).thenReturn(Language.ENGLISH);
     when(applicationDataSystem.getLanguage()).thenReturn(Language.GERMAN);
     this.applicationDataSystemSetObserver.notifyChange(this.applicationDataSystem);
+    verify(this.languageSelector, times(1)).setSelectedLanguage(Language.GERMAN);
 
-    verify(this.languageSelector, atLeastOnce()).setSelectedLanguage(Language.GERMAN);
+    // notifications that do not change the language should not
+    // trigger an additional setSelectedLanguage
+    when(languageSelector.getSelectedLanguage()).thenReturn(Language.GERMAN);
+    this.applicationDataSystemSetObserver.notifyChange(this.applicationDataSystem);
+    verify(this.languageSelector, times(1)).setSelectedLanguage(Language.GERMAN);
+  }
+
+  @Test
+  void testIgnoresDualSetNotifications() {
+    assertDoesNotThrow(() -> {
+      var testShownAttribute = AttributeType.COMMENT;
+      this.applicationDataSystemSetObserver.notifyAddition(testShownAttribute);
+      this.applicationDataSystemSetObserver.notifyRemoval(testShownAttribute);
+
+      var testRecentPath = Path.of("./build/tmp/testfile.rose.json");
+      this.applicationDataSystemSetObserver.notifyAdditionSecond(testRecentPath);
+      this.applicationDataSystemSetObserver.notifyRemovalSecond(testRecentPath);
+    });
   }
 }

@@ -1,5 +1,8 @@
 package edu.kit.rose.model.roadsystem;
 
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 import edu.kit.rose.infrastructure.DualSetObserver;
 import edu.kit.rose.infrastructure.Movement;
 import edu.kit.rose.infrastructure.Position;
@@ -300,6 +303,7 @@ public class GraphRoadSystemTestge {
     testRoadSystem.createGroup(Set.of());
     testRoadSystem.clear();
     Assertions.assertEquals(0, testRoadSystem.getElements().getSize());
+    verify(timeSliceSetting, times(1)).reset();
   }
 
   @Test

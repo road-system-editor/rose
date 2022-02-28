@@ -32,4 +32,14 @@ public class TimeSliceSettingTest {
     Assertions.assertEquals(secondTestInt, setting.getNumberOfTimeSlices());
     Assertions.assertEquals(firstTestInt, setting.getTimeSliceLength());
   }
+
+  @Test
+  public void testReset() {
+    TimeSliceSetting setting = new TimeSliceSetting(firstTestInt, firstTestInt);
+    setting.setNumberOfTimeSlices(secondTestInt);
+    setting.setTimeSliceLength(secondTestInt);
+    setting.reset();
+    Assertions.assertEquals(firstTestInt, setting.getTimeSliceLength());
+    Assertions.assertEquals(firstTestInt, setting.getNumberOfTimeSlices());
+  }
 }

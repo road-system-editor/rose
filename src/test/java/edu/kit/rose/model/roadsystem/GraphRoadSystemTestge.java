@@ -1,5 +1,8 @@
 package edu.kit.rose.model.roadsystem;
 
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 import edu.kit.rose.infrastructure.DualSetObserver;
 import edu.kit.rose.infrastructure.Movement;
 import edu.kit.rose.infrastructure.Position;
@@ -7,6 +10,7 @@ import edu.kit.rose.infrastructure.RoseSortedBox;
 import edu.kit.rose.model.plausibility.criteria.CriteriaManager;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
+import edu.kit.rose.model.roadsystem.elements.Base;
 import edu.kit.rose.model.roadsystem.elements.Connection;
 import edu.kit.rose.model.roadsystem.elements.Connector;
 import edu.kit.rose.model.roadsystem.elements.Element;
@@ -291,6 +295,49 @@ public class GraphRoadSystemTestge {
     var connection = testRoadSystem.connectConnectors(initialConnector, entranceConnector);
     testRoadSystem.notifyChange(initialConnector);
     Assertions.assertEquals(connection, connectionArgumentCaptorRemoval.getValue());
+  }
+
+  @Test
+  void clearTest() {
+    testRoadSystem.createSegment(SegmentType.BASE);
+    testRoadSystem.createGroup(Set.of());
+    testRoadSystem.clear();
+    Assertions.assertEquals(0, testRoadSystem.getElements().getSize());
+    verify(timeSliceSetting, times(1)).reset();
+  }
+
+  @Test
+  void throwsExceptionTest() {
+    Assertions.assertThrows(IllegalArgumentException.class,
+            () -> testRoadSystem.createGroup(Set.of(new Base())));
+    Assertions.assertThrows(IllegalArgumentException.class,
+            () -> testRoadSystem.removeElement(new Base()));
+    Assertions.assertThrows(IllegalArgumentException.class,
+            () -> testRoadSystem.connectConnectors(
+                    new Base().getConnectors().iterator().next(),
+                    new Base().getConnectors().iterator().next()));
+    Assertions.assertThrows(IllegalArgumentException.class,
+            () -> this.testRoadSystem.disconnectConnection(new Connection(
+                    new Base().getConnectors().iterator().next(),
+                    new Base().getConnectors().iterator().next(),
+                    new Position(0, 0))));
+    Assertions.assertThrows(IllegalArgumentException.class,
+            () -> testRoadSystem.disconnectFromAll(new Base()));
+    Assertions.assertThrows(IllegalArgumentException.class,
+            () -> testRoadSystem.getAdjacentSegments(new Base()));
+    Assertions.assertThrows(IllegalArgumentException.class,
+            () -> testRoadSystem.getConnections(new Base()));
+    Assertions.assertThrows(IllegalArgumentException.class,
+            () -> testRoadSystem.getConnections(new Base(), new Base()));
+    Assertions.assertThrows(IllegalArgumentException.class,
+            () -> testRoadSystem.getConnection(new Base().getConnectors().iterator().next()));
+    Assertions.assertThrows(IllegalArgumentException.class,
+            () -> testRoadSystem.moveSegments(List.of(new Base()), new Movement(0, 0)));
+    Assertions.assertThrows(IllegalArgumentException.class,
+            () -> testRoadSystem.rotateSegment(new Base(), 0));
+    Assertions.assertThrows(IllegalArgumentException.class,
+            () -> testRoadSystem.notifyChange(new Base().getConnectors().iterator().next()));
+
   }
 
   private Segment createSegmentWithName(SegmentType segmentType, String name) {

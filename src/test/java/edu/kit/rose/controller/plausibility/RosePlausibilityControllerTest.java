@@ -48,6 +48,8 @@ class RosePlausibilityControllerTest {
   private PlausibilityController controller;
   private Navigator navigator;
   private ZoomSetting zoomSetting;
+  private ViolationManager violationManager;
+  private RoadSystem roadSystem;
 
   @BeforeEach
   public void setUp() {
@@ -56,8 +58,10 @@ class RosePlausibilityControllerTest {
     this.selectionBuffer = new RoseSelectionBuffer();
     this.zoomSetting = new ZoomSetting(new Position(0, 0));
     this.navigator = mock(Navigator.class);
+    this.violationManager = mock(ViolationManager.class);
+    this.roadSystem = mock(RoadSystem.class);
     this.criteriaManager.setRoadSystem(
-            new GraphRoadSystem(mock(CriteriaManager.class), mock(TimeSliceSetting.class)));
+            new GraphRoadSystem(criteriaManager, mock(TimeSliceSetting.class)));
     this.criteriaManager.setViolationManager(new ViolationManager());
     Project project = mock(Project.class);
     when(project.getZoomSetting()).thenReturn(this.zoomSetting);
@@ -122,7 +126,7 @@ class RosePlausibilityControllerTest {
     segment3.move(new Movement(3, 3));
 
     PlausibilityCriterion criterion =
-            new CompatibilityCriterion(mock(RoadSystem.class), mock(ViolationManager.class));
+            new CompatibilityCriterion(roadSystem, violationManager);
     Violation violation = new Violation(criterion, List.of(segment2, segment3));
 
     this.controller.jumpToCriterionViolation(violation);
@@ -143,7 +147,7 @@ class RosePlausibilityControllerTest {
   @Test
   void setCompatibilityNameTest() {
     CompatibilityCriterion criterion = new CompatibilityCriterion(
-            mock(RoadSystem.class), mock(ViolationManager.class));
+            roadSystem, violationManager);
     controller.setCompatibilityCriterionName(criterion, "test");
     Assertions.assertEquals("test", criterion.getName());
   }
@@ -159,7 +163,7 @@ class RosePlausibilityControllerTest {
   @Test
   void removeSegmentTypeToCompatibilityCriterionTest() {
     CompatibilityCriterion criterion = new CompatibilityCriterion(
-            mock(RoadSystem.class), mock(ViolationManager.class));
+            roadSystem, violationManager);
     controller.addSegmentTypeToCompatibilityCriterion(criterion, SegmentType.BASE);
     controller.removeSegmentTypeToCompatibilityCriterion(criterion, SegmentType.BASE);
     Assertions.assertFalse(criterion.getSegmentTypes().contains(SegmentType.BASE));
@@ -168,7 +172,7 @@ class RosePlausibilityControllerTest {
   @Test
   void setCompatibilityCriterionAttributeTypeTest() {
     CompatibilityCriterion criterion = new CompatibilityCriterion(
-            mock(RoadSystem.class), mock(ViolationManager.class));
+            roadSystem, violationManager);
     controller.setCompatibilityCriterionAttributeType(criterion, AttributeType.LENGTH);
     Assertions.assertEquals(AttributeType.LENGTH, criterion.getAttributeType());
   }
@@ -176,7 +180,7 @@ class RosePlausibilityControllerTest {
   @Test
   void setCompatibilityCriterionValidationTypeTest() {
     CompatibilityCriterion criterion = new CompatibilityCriterion(
-            mock(RoadSystem.class), mock(ViolationManager.class));
+            roadSystem, violationManager);
     controller.setCompatibilityCriterionValidationType(criterion, ValidationType.EQUALS);
     Assertions.assertEquals(ValidationType.EQUALS, criterion.getOperatorType());
   }
@@ -184,7 +188,7 @@ class RosePlausibilityControllerTest {
   @Test
   void setCompatibilityCriterionLegalDiscrepancyTest() {
     CompatibilityCriterion criterion = new CompatibilityCriterion(
-            mock(RoadSystem.class), mock(ViolationManager.class));
+            roadSystem, violationManager);
     controller.setCompatibilityCriterionLegalDiscrepancy(criterion, 1);
     Assertions.assertEquals(1, criterion.getLegalDiscrepancy());
   }
@@ -194,7 +198,7 @@ class RosePlausibilityControllerTest {
     controller.addCompatibilityCriterion();
     CompatibilityCriterion criterion = (CompatibilityCriterion) criteriaManager.getCriteria()
             .stream().filter(e -> e.getType().equals(PlausibilityCriterionType.COMPATIBILITY))
-            .findFirst().get();
+            .findFirst().orElseThrow();
     controller.deleteCompatibilityCriterion(criterion);
     Assertions.assertEquals(0, criteriaManager.getCriteria().stream()
             .filter(e -> e.getType().equals(PlausibilityCriterionType.COMPATIBILITY)).count());

@@ -1,7 +1,6 @@
 package edu.kit.rose.controller.roadsystem;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import edu.kit.rose.controller.commons.ReplacementLog;
@@ -9,13 +8,9 @@ import edu.kit.rose.infrastructure.Movement;
 import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.model.roadsystem.elements.Base;
 import edu.kit.rose.model.roadsystem.elements.MovableConnector;
-import java.util.concurrent.atomic.AtomicReference;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatchers;
-import org.mockito.Mockito;
 
 /**
  * Tests the {@link DragSegmentEndCommand} class.
@@ -38,7 +33,7 @@ public class DragSegmentEndCommandTest {
   public void setUp() {
     this.segment = new Base();
 
-    connector = (MovableConnector) this.segment.getEntry();
+    connector = this.segment.getEntry();
     connector.move(new Movement(ORIGINAL_POSITION.getX(), ORIGINAL_POSITION.getY()));
 
     this.replacementLog = new ReplacementLog();
@@ -54,12 +49,12 @@ public class DragSegmentEndCommandTest {
     assertEquals(ORIGINAL_POSITION, connector.getPosition());
   }
 
-  @Disabled
+  @Disabled("need to adjust to relative coordinates")
   @Test
   public void testConsidersReplacements() {
     // simulate first replacement before execution
     Base firstReplacement = new Base();
-    MovableConnector firstReplacementConnector = (MovableConnector) firstReplacement.getEntry();
+    MovableConnector firstReplacementConnector = firstReplacement.getEntry();
     firstReplacementConnector.move(new Movement(connector.getPosition().getX(),
         connector.getPosition().getY()));
     this.replacementLog.replaceElement(segment, firstReplacement);
@@ -69,7 +64,7 @@ public class DragSegmentEndCommandTest {
 
     // simulate second replacement after execution
     Base secondReplacement = new Base();
-    MovableConnector secondReplacementConnector = (MovableConnector) secondReplacement.getEntry();
+    MovableConnector secondReplacementConnector = secondReplacement.getEntry();
     secondReplacementConnector.move(new Movement(firstReplacementConnector.getPosition().getX(),
         firstReplacementConnector.getPosition().getY()));
     this.replacementLog.replaceElement(firstReplacement, secondReplacement);

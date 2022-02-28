@@ -43,19 +43,18 @@ public class RoseRoadSystemControllerTest {
   private Project project;
   private RoadSystem roadSystem;
   private ZoomSetting zoomSetting;
-  private ReplacementLog replacementLog;
   private RoadSystemController roadSystemController;
 
   /**
    * Sets up mock objects.
    */
   @BeforeEach
-  private void setUp() {
+  void setUp() {
     selectionBuffer = new RoseSelectionBuffer();
     project = mock(Project.class);
     roadSystem = new GraphRoadSystem(new CriteriaManager(), mock(TimeSliceSetting.class));
     zoomSetting = new ZoomSetting(new Position(0, 0));
-    replacementLog = new ReplacementLog();
+    ReplacementLog replacementLog = new ReplacementLog();
 
     Mockito.when(project.getZoomSetting()).thenReturn(zoomSetting);
     Mockito.when(project.getRoadSystem()).thenReturn(roadSystem);
@@ -66,7 +65,7 @@ public class RoseRoadSystemControllerTest {
         mock(Navigator.class),
         selectionBuffer,
         project,
-        replacementLog);
+            replacementLog);
   }
 
   @Test
@@ -79,19 +78,11 @@ public class RoseRoadSystemControllerTest {
 
   @Test
   public void testSetEditorPosition() {
-    AtomicReference<Boolean> called = new AtomicReference<>(false);
-
-    Position targetPosition = mock(Position.class);
-    ZoomSetting zoomSetting = mock(ZoomSetting.class);
+    Position targetPosition = new Position(0, 0);
     Mockito.when(project.getZoomSetting()).thenReturn(zoomSetting);
-    Mockito.doAnswer(invocation -> {
-      Assertions.assertSame(targetPosition, invocation.getArgument(0));
-      called.set(true);
-      return null;
-    }).when(zoomSetting).setCenterOfView(any(Position.class));
 
     roadSystemController.setEditorPosition(targetPosition);
-    Assertions.assertTrue(called.get());
+    Assertions.assertEquals(targetPosition, zoomSetting.getCenterOfView());
   }
 
   @Test
@@ -224,28 +215,32 @@ public class RoseRoadSystemControllerTest {
     Assertions.assertEquals(0, roadSystem.getElements().getSize());
   }
 
-  @Disabled
+  @Disabled("need to adjust to relative coordinates")
   @Test
   public void testDragSegmentEnd() {
-    Position position = new Position(0, 17);
     Base segment1 = (Base) roadSystem.createSegment(SegmentType.BASE);
     Base segment2 = (Base) roadSystem.createSegment(SegmentType.BASE);
+    System.out.println(segment1.getEntry().getPosition().getX());
+    System.out.println(segment1.getEntry().getPosition().getY());
+    System.out.println(segment2.getExit().getPosition().getX());
+    System.out.println(segment2.getExit().getPosition().getY());
+    Position position1 = new Position(segment1.getEntry().getPosition().getX(),
+                            segment1.getEntry().getPosition().getY() + 17);
+    //Position position2 = new Position()
     roadSystemController.beginDragSegmentEnd(segment1.getEntry(),
             segment1.getEntry().getPosition());
-    roadSystemController.endDragSegmentEnd(position);
+    roadSystemController.endDragSegmentEnd(position1);
     roadSystemController.beginDragSegmentEnd(segment2.getExit(), segment2.getExit().getPosition());
-    roadSystemController.endDragSegmentEnd(position);
-    Assertions.assertEquals(position,
-            replacementLog.getCurrentConnectorVersion(segment1.getEntry()).getPosition());
-    Assertions.assertEquals(position,
-            replacementLog.getCurrentConnectorVersion(segment2.getExit()).getPosition());
+    roadSystemController.endDragSegmentEnd(position1);
+    Assertions.assertEquals(position1, segment1.getEntry().getPosition());
+    Assertions.assertEquals(position1, segment2.getExit().getPosition());
     Assertions.assertTrue(roadSystem.getConnection(segment1.getEntry())
             .getConnectors().contains(segment2.getExit()));
   }
 
   @Test
   public void testNotifies() {
-    SetObserver<Segment, RoadSystemController> observer = mock(SetObserver.class);
+    SetObserver<Segment, RoadSystemController> observer = mockObserver();
     roadSystemController.addSubscriber(observer);
     roadSystemController.notifySubscribers();
     verify(observer, times(1)).notifyChange(roadSystemController);
@@ -253,6 +248,15 @@ public class RoseRoadSystemControllerTest {
     roadSystemController.notifySubscribers();
     verify(observer, times(1)).notifyChange(roadSystemController);
   }
+
+  /**
+   * Helper method to extract the "unchecked" (but correct) cast of the observer mock.
+   */
+  @SuppressWarnings("unchecked")
+  private static SetObserver<Segment, RoadSystemController> mockObserver() {
+    return mock(SetObserver.class);
+  }
+
 
   @Test
   public void testGetThis() {

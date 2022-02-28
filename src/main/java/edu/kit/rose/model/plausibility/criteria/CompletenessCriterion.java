@@ -34,7 +34,7 @@ class CompletenessCriterion extends RoseSetObservable<SegmentType, PlausibilityC
   public CompletenessCriterion(ViolationManager violationManager) {
     this.name = "";
     this.segmentTypes =
-            new HashSet<>(Set.of(SegmentType.BASE, SegmentType.ENTRANCE, SegmentType.EXIT));
+            new HashSet<>(Set.of(SegmentType.values()));
     this.violationManager = violationManager;
     this.necessaryAttributeTypes = new HashSet<>(Set.of(AttributeType.NAME, AttributeType.SLOPE,
             AttributeType.LENGTH, AttributeType.LANE_COUNT,

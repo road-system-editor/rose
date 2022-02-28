@@ -49,7 +49,6 @@ public class AttributePanel extends FxmlContainer {
    * @param attributes the attributes to display.
    */
   public void setAttributes(SortedBox<AttributeAccessor<?>> attributes) {
-
     attributeList.getChildren().clear();
     EditableAttributeFactory factory = new EditableAttributeFactory(controller);
     for (AttributeAccessor<?> attribute : attributes) {

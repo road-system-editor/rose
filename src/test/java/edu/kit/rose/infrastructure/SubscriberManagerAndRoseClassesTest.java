@@ -1,5 +1,13 @@
 package edu.kit.rose.infrastructure;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -8,40 +16,67 @@ import org.junit.jupiter.api.Test;
  * {@link RoseDualSetObservable}. Thus testing the SubscriberManager class as well.
  */
 public class SubscriberManagerAndRoseClassesTest {
+  @Test
+  void testAddSameSubscriberIsIgnored() {
+    var unitObservable = new TestUnitObservable();
+    UnitObserver<TestUnitObservable> unitObserver = mockUnitObserver();
+
+    unitObservable.addSubscriber(unitObserver);
+    unitObservable.addSubscriber(unitObserver);
+
+    unitObservable.notifySubscribers();
+
+    // the unit observer should be added exactly one time
+    verify(unitObserver, times(1)).notifyChange(unitObservable);
+  }
+
+  @Test
+  void testAddSubscriberNull() {
+    var observable = new TestUnitObservable();
+    assertThrows(NullPointerException.class, () -> observable.addSubscriber(null));
+  }
+
+  @SuppressWarnings("unchecked") // mock is allowed to be of generic type T
+  private <T> UnitObserver<T> mockUnitObserver() {
+    return mock(UnitObserver.class);
+  }
 
   @Test
   public void singleSubscriberSubscribeTestRoseUnitObservable() {
     var unitObservable = new TestUnitObservable();
-    var unitObserver = new TestUnitObserver();
+    UnitObserver<TestUnitObservable> unitObserver = mockUnitObserver();
 
     unitObservable.notifySubscribers();
-    Assertions.assertFalse(unitObserver.isNotified);
+    verify(unitObserver, never()).notifyChange(any());
 
     unitObservable.addSubscriber(unitObserver);
-    Assertions.assertFalse(unitObserver.isNotified);
+    verify(unitObserver, never()).notifyChange(any());
+
+    unitObservable.notifySubscribers();
+    verify(unitObserver, times(1)).notifyChange(unitObservable);
 
     unitObservable.removeSubscriber(unitObserver);
-    Assertions.assertFalse(unitObserver.isNotified);
+    verify(unitObserver, times(1)).notifyChange(any());
 
-    unitObservable.addSubscriber(unitObserver);
     unitObservable.notifySubscribers();
-    Assertions.assertTrue(unitObserver.isNotified);
-
+    verify(unitObserver, times(1)).notifyChange(any());
   }
 
   @Test
   public void multipleSubscribersSubscribeTestRoseUnitObservable() {
     var unitObservable = new TestUnitObservable();
-    var unitObserver1 = new TestUnitObserver();
-    var unitObserver2 = new TestUnitObserver();
+    UnitObserver<TestUnitObservable> unitObserver1 = mockUnitObserver();
+    UnitObserver<TestUnitObservable> unitObserver2 = mockUnitObserver();
 
     unitObservable.notifySubscribers();
-    Assertions.assertFalse(unitObserver1.isNotified || unitObserver2.isNotified);
+    verify(unitObserver1, never()).notifyChange(any());
+    verify(unitObserver2, never()).notifyChange(any());
 
     unitObservable.addSubscriber(unitObserver1);
     unitObservable.addSubscriber(unitObserver2);
     unitObservable.notifySubscribers();
-    Assertions.assertTrue(unitObserver1.isNotified && unitObserver2.isNotified);
+    verify(unitObserver1, times(1)).notifyChange(unitObservable);
+    verify(unitObserver2, times(1)).notifyChange(unitObservable);
 
   }
 
@@ -51,13 +86,13 @@ public class SubscriberManagerAndRoseClassesTest {
     var setObserver = new TestSetObserver();
 
     setObservable.notifySubscribers();
-    Assertions.assertFalse(setObserver.isNotified);
+    assertFalse(setObserver.isNotified);
 
     setObservable.addSubscriber(setObserver);
-    Assertions.assertFalse(setObserver.isNotified);
+    assertFalse(setObserver.isNotified);
 
     setObservable.removeSubscriber(setObserver);
-    Assertions.assertFalse(setObserver.isNotified);
+    assertFalse(setObserver.isNotified);
 
     setObservable.addSubscriber(setObserver);
     setObservable.notifySubscribers();
@@ -72,7 +107,7 @@ public class SubscriberManagerAndRoseClassesTest {
     var setObserver2 = new TestSetObserver();
 
     setObservable.notifySubscribers();
-    Assertions.assertFalse(setObserver1.isNotified || setObserver2.isNotified);
+    assertFalse(setObserver1.isNotified || setObserver2.isNotified);
 
     setObservable.addSubscriber(setObserver1);
     setObservable.addSubscriber(setObserver2);
@@ -87,13 +122,13 @@ public class SubscriberManagerAndRoseClassesTest {
     var dualSetObserver = new TestDualSetObserver();
 
     dualSetObservable.notifySubscribers();
-    Assertions.assertFalse(dualSetObserver.isNotified);
+    assertFalse(dualSetObserver.isNotified);
 
     dualSetObservable.addSubscriber(dualSetObserver);
-    Assertions.assertFalse(dualSetObserver.isNotified);
+    assertFalse(dualSetObserver.isNotified);
 
     dualSetObservable.removeSubscriber(dualSetObserver);
-    Assertions.assertFalse(dualSetObserver.isNotified);
+    assertFalse(dualSetObserver.isNotified);
 
     dualSetObservable.addSubscriber(dualSetObserver);
     dualSetObservable.notifySubscribers();
@@ -108,7 +143,7 @@ public class SubscriberManagerAndRoseClassesTest {
     var dualSetObserver2 = new TestDualSetObserver();
 
     dualSetObservable.notifySubscribers();
-    Assertions.assertFalse(dualSetObserver1.isNotified || dualSetObserver2.isNotified);
+    assertFalse(dualSetObserver1.isNotified || dualSetObserver2.isNotified);
 
     dualSetObservable.addSubscriber(dualSetObserver1);
     dualSetObservable.addSubscriber(dualSetObserver2);
@@ -142,16 +177,6 @@ public class SubscriberManagerAndRoseClassesTest {
     @Override
     public TestDualSetObservable getThis() {
       return this;
-    }
-  }
-
-  private static class TestUnitObserver implements UnitObserver<TestUnitObservable> {
-
-    private boolean isNotified = false;
-
-    @Override
-    public void notifyChange(TestUnitObservable unit) {
-      isNotified = true;
     }
   }
 

@@ -10,6 +10,7 @@ import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import edu.kit.rose.view.commons.EnumLocalizationUtility;
 import edu.kit.rose.view.commons.FxmlContainer;
+import edu.kit.rose.view.commons.LocalizedComboBox;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Collection;
@@ -19,7 +20,6 @@ import java.util.Objects;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -66,10 +66,10 @@ class CompatibilityCriterionPanel
   @FXML
   private VBox criterionLayout;
   @FXML
-  private ComboBox<AttributeType> attributeSelector;
+  private LocalizedComboBox<AttributeType> attributeSelector;
   private Tooltip attributeTooltip;
   @FXML
-  private ComboBox<ValidationType> validationSelector;
+  private LocalizedComboBox<ValidationType> validationSelector;
   private Tooltip validationTooltip;
   @FXML
   private TextField valueField;
@@ -111,12 +111,14 @@ class CompatibilityCriterionPanel
     this.attributeSelector.getItems().addAll(AttributeType.values());
     this.attributeSelector.getSelectionModel().selectedItemProperty()
         .addListener(this::onAttributeChange);
+    this.attributeSelector.init(null, this::getLocalizedStringForAttributeType);
 
     this.validationSelector.setCellFactory(this::createValidationSelectorCell);
     this.validationSelector.setButtonCell(this.createValidationSelectorCell(null));
     this.validationSelector.getItems().addAll(ValidationType.values());
     this.validationSelector.getSelectionModel().selectedItemProperty()
         .addListener(this::onValidationChange);
+    this.validationSelector.init(null, this::getLocalizedStringForValidationType);
 
     this.valueField.textProperty().addListener(this::onValueChange);
 
@@ -179,7 +181,7 @@ class CompatibilityCriterionPanel
   }
 
   private void onValidationChange(ObservableValue<? extends ValidationType> observable,
-                                 ValidationType oldValue, ValidationType newValue) {
+                                  ValidationType oldValue, ValidationType newValue) {
     if (oldValue != newValue) {
       Platform.runLater(() -> {
         getController().setCompatibilityCriterionValidationType(getCriterion(), newValue);
@@ -271,6 +273,9 @@ class CompatibilityCriterionPanel
         + ".compatibilityCriterionPanel.validationSelectorExplanation"));
     this.valueTooltip.setText(getTranslator().getLocalizedText("view.panel.criterion"
         + ".compatibilityCriterionPanel.valueFieldExplanation"));
+
+    this.attributeSelector.updateLocalization();
+    this.validationSelector.updateLocalization();
   }
 
   @Override
@@ -278,27 +283,37 @@ class CompatibilityCriterionPanel
     return List.of(this.applicableSegmentsSelector);
   }
 
-  private ListCell<AttributeType> createAttributeSelectorCell(ListView<AttributeType> ignored) {
+  private ListCell<AttributeType> createAttributeSelectorCell(ListView<AttributeType> listView) {
     return new ListCell<>() {
       @Override
       protected void updateItem(AttributeType item, boolean empty) {
         super.updateItem(item, empty);
 
         if (item != null && !empty) {
-          setText(EnumLocalizationUtility.localizeAttributeTypeTitle(getTranslator(), item));
+          if (listView != null) {
+            attributeSelector.putCell(item, this);
+          }
+          setText(getLocalizedStringForAttributeType(item));
         }
       }
     };
   }
 
-  private ListCell<ValidationType> createValidationSelectorCell(ListView<ValidationType> ignored) {
+  private String getLocalizedStringForAttributeType(AttributeType attributeType) {
+    return EnumLocalizationUtility.localizeAttributeTypeTitle(getTranslator(), attributeType);
+  }
+
+  private ListCell<ValidationType> createValidationSelectorCell(ListView<ValidationType> listView) {
     return new ListCell<>() {
       @Override
       protected void updateItem(ValidationType item, boolean empty) {
         super.updateItem(item, empty);
 
         if (item != null && !empty) {
-          setText(EnumLocalizationUtility.localizeValidationTypeTitle(getTranslator(), item));
+          if (listView != null) {
+            validationSelector.putCell(item, this);
+          }
+          setText(getLocalizedStringForValidationType(item));
           String tooltipKey;
           switch (item) {
             case OR -> tooltipKey = OR_TRANSLATION_KEY;
@@ -315,6 +330,10 @@ class CompatibilityCriterionPanel
         }
       }
     };
+  }
+
+  private String getLocalizedStringForValidationType(ValidationType validationType) {
+    return EnumLocalizationUtility.localizeValidationTypeTitle(getTranslator(), validationType);
   }
 
   private void setupTooltip(Tooltip tooltip) {

@@ -1,5 +1,7 @@
 package edu.kit.rose.controller;
 
+import static java.util.Objects.requireNonNull;
+
 import edu.kit.rose.controller.application.ApplicationController;
 import edu.kit.rose.controller.application.RoseApplicationController;
 import edu.kit.rose.controller.attribute.AttributeController;
@@ -52,6 +54,10 @@ public class ControllerFactory {
    */
   public ControllerFactory(Navigator navigator, LanguageSelector languageSelector,
                            ApplicationDataSystem applicationDataSystem, Project project) {
+    requireNonNull(navigator);
+    requireNonNull(languageSelector);
+    requireNonNull(applicationDataSystem);
+    requireNonNull(project);
     this.navigator = navigator;
     this.languageSelector = languageSelector;
     this.applicationDataSystem = applicationDataSystem;

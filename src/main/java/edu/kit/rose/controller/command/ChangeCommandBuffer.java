@@ -9,11 +9,12 @@ public interface ChangeCommandBuffer {
 
   /**
    * Unexecutes/Undoes the newest {@link ChangeCommand} that has not been undone.
+   * If there's not a command in the buffer to be undone, this method does nothing.
    */
   void undo();
 
   /**
-   * Rexecutes/Redoes the last undone {@link ChangeCommand}.
+   * Re-executes/Redoes the last undone {@link ChangeCommand}.
    * If there's not a command in the buffer to be redone, this method does nothing.
    */
   void redo();

@@ -79,7 +79,7 @@ class RoseSelectionBufferTest {
 
   @Test
   void notifyTest() {
-    SetObserver<Segment, SelectionBuffer> observer = mock(SetObserver.class);
+    SetObserver<Segment, SelectionBuffer> observer = mockObserver();
 
     this.selectionBuffer.addSubscriber(observer);
     this.selectionBuffer.addSegmentSelection(segment1);
@@ -92,6 +92,12 @@ class RoseSelectionBufferTest {
     this.selectionBuffer.addSegmentSelection(segment1);
     verify(observer, times(1)).notifyAddition(segment1);
   }
+
+  @SuppressWarnings("unchecked")
+  private static SetObserver<Segment, SelectionBuffer> mockObserver() {
+    return mock(SetObserver.class);
+  }
+
 
   @Test
   void getThisTest() {

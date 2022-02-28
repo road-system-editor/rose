@@ -85,9 +85,11 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
    * @param attributeType the AttributeType that this Criterion is supposed to check.
    */
   public void setAttributeType(AttributeType attributeType) {
-    this.attributeType = attributeType;
-    checkAll();
-    notifySubscribers();
+    if (this.attributeType != attributeType) {
+      this.attributeType = attributeType;
+      checkAll();
+      notifySubscribers();
+    }
   }
 
   /**
@@ -141,9 +143,11 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
    *                    by this criterion.
    */
   public void setLegalDiscrepancy(double discrepancy) {
-    this.discrepancy = discrepancy;
-    checkAll();
-    notifySubscribers();
+    if (this.discrepancy != discrepancy) {
+      this.discrepancy = discrepancy;
+      checkAll();
+      notifySubscribers();
+    }
   }
 
   @Override
@@ -153,8 +157,10 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
 
   @Override
   public void setName(String name) {
-    this.name = name;
-    notifySubscribers();
+    if (!this.name.equals(name)) {
+      this.name = name;
+      notifySubscribers();
+    }
   }
 
   @Override
@@ -169,8 +175,11 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
 
   @Override
   public void setViolationManager(ViolationManager violationManager) {
-    this.violationManager = violationManager;
-    checkAll();
+    if (this.violationManager != violationManager) {
+      this.violationManager.getViolations().forEach(e -> this.violationManager.removeViolation(e));
+      this.violationManager = violationManager;
+      checkAll();
+    }
   }
 
   @Override

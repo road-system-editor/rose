@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 
 import edu.kit.rose.controller.commons.RoseStorageLock;
 import edu.kit.rose.controller.commons.StorageLock;
+import edu.kit.rose.controller.navigation.ErrorType;
 import edu.kit.rose.controller.navigation.FileDialogType;
 import edu.kit.rose.controller.navigation.FileFormat;
 import edu.kit.rose.controller.navigation.Navigator;
@@ -36,6 +37,8 @@ import org.mockito.Mockito;
 
 class RosePlausibilityControllerTest {
   private static final Path NONEXISTENT_CRITERIA_PATH = Path.of("build/tmp/none.criteria.json");
+  private static final Path INVALID_PATH =
+      Path.of("build", "tmp", "invalid-directory", "invalid-file.criteria.json");
   private CriteriaManager criteriaManager;
   private Project project;
   private ApplicationDataSystem applicationDataSystem;
@@ -73,6 +76,16 @@ class RosePlausibilityControllerTest {
     verify(applicationDataSystem, times(1)).importCriteriaFromFile(any());
     Mockito.verify(onBegin, times(1)).run();
     Mockito.verify(onEnd, times(1)).run();
+    // TODO check if criteria have been imported
+  }
+
+  @Test
+  void testImportShowsErrorOnFailure() {
+    when(this.navigator.showFileDialog(FileDialogType.LOAD_FILE, FileFormat.CRITERIA))
+        .thenReturn(INVALID_PATH);
+
+    this.controller.importCompatibilityCriteria();
+    verify(this.navigator, times(1)).showErrorDialog(ErrorType.IMPORT_ERROR);
   }
 
   @Test
@@ -89,6 +102,16 @@ class RosePlausibilityControllerTest {
     verify(applicationDataSystem, times(1)).exportCriteriaToFile(NONEXISTENT_CRITERIA_PATH);
     verify(onBegin, times(1)).run();
     verify(onEnd, times(1)).run();
+    // TODO check if file has been created
+  }
+
+  @Test
+  void testExportShowsErrorOnFailure() {
+    when(this.navigator.showFileDialog(FileDialogType.SAVE_FILE, FileFormat.CRITERIA))
+        .thenReturn(INVALID_PATH);
+
+    this.controller.exportCompatibilityCriteria();
+    verify(this.navigator, times(1)).showErrorDialog(ErrorType.EXPORT_ERROR);
   }
 
   @Test

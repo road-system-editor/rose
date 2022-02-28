@@ -127,7 +127,7 @@ class RoseHierarchyControllerTest {
   @Test
   void subscriptionAndNotifyTest() {
     Segment segment = new Base();
-    BiConsumer<Segment, Boolean> consumer = mock(BiConsumer.class);
+    BiConsumer<Segment, Boolean> consumer = mockConsumer();
 
     this.controller.addSubscription(consumer);
     this.controller.notifyAddition(segment);
@@ -138,4 +138,10 @@ class RoseHierarchyControllerTest {
     this.controller.notifyAddition(segment);
     verify(consumer, times(1)).accept(segment, SELECTED);
   }
+
+  @SuppressWarnings("unchecked")
+  private static BiConsumer<Segment, Boolean> mockConsumer() {
+    return mock(BiConsumer.class);
+  }
+
 }

@@ -193,10 +193,11 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
 
   @Override
   public void removeSegmentType(SegmentType type) {
-    this.segmentTypes.remove(type);
-    subscribers.forEach(s -> s.notifyRemoval(type));
-    checkAll();
-    notifySubscribers();
+    if (this.segmentTypes.remove(type)) {
+      subscribers.forEach(s -> s.notifyRemoval(type));
+      checkAll();
+      notifySubscribers();
+    }
   }
 
   @Override
@@ -344,6 +345,7 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
     };
   }
 
+  @SuppressWarnings("unchecked")
   private <T> boolean validateWithType(ValidationStrategy<?> strategy,
                                        AttributeAccessor<?> accessor1,
                                        AttributeAccessor<?> accessor2,

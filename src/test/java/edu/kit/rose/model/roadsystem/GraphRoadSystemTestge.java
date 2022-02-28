@@ -57,7 +57,7 @@ public class GraphRoadSystemTestge {
         .when(observer).notifyRemovalSecond(connectionArgumentCaptorRemoval.capture());
     //other classes setup
     testRoadSystem = new GraphRoadSystem(criteriaManager, timeSliceSetting);
-    initialSegment = createSegmentWithName(SegmentType.BASE, "PSEge");
+    initialSegment = createSegmentWithName(SegmentType.EXIT, "PSEge");
     //setup observation
     testRoadSystem.addSubscriber(observer);
     //reset calls counters

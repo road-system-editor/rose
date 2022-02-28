@@ -230,6 +230,11 @@ public class BaseSegmentView extends SegmentView<Base> {
   }
 
   @Override
+  protected void setupClicked() {
+    this.curve.setOnMouseClicked(event -> this.onMouseClick.accept(event, getSegment()));
+  }
+
+  @Override
   protected void setupSelection() {
     setupCurve();
     this.curve.setOnMousePressed(this::onMousePressed);

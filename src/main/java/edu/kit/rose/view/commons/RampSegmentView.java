@@ -141,6 +141,11 @@ public abstract class RampSegmentView<T extends RampSegment> extends SegmentView
   }
 
   @Override
+  protected void setupClicked() {
+    setOnMouseClicked(event -> this.onMouseClick.accept(event, getSegment()));
+  }
+
+  @Override
   protected void setupSelection() {
     setOnMousePressed(this::onMousePressed);
   }

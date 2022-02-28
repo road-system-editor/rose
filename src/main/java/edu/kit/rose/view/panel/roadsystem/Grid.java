@@ -32,6 +32,7 @@ import javafx.scene.shape.Line;
 
 /**
  * Represents a background surface that shows a grid, on which segment views can be drawn.
+ * Represents a background surface that shows a grid, on which segment views can be drawn.
  */
 public class Grid extends Pane implements SetObserver<Segment, RoadSystemController> {
 
@@ -45,14 +46,24 @@ public class Grid extends Pane implements SetObserver<Segment, RoadSystemControl
   private static final int DOUBLE_CLICK = 2;
 
   private final Injector injector;
+
   private final RoadSystemController controller;
+
   private final List<SegmentView<?>> segmentViews = new LinkedList<>();
+
   private final Map<Segment, SegmentView<?>> segmentViewMap = new HashMap<>();
+
   private final List<ConnectorView> connectorViews = new LinkedList<>();
+
   private final List<SegmentEditorPanel> editors = new LinkedList<>();
+
   private SelectionBox selectionBox;
+
   private BiConsumer<Position, Position> onAreaSelectedEventHandler;
+
   private boolean dragInProgress = false;
+
+  private boolean segmentDragInProgress = false;
 
 
   /**
@@ -85,15 +96,16 @@ public class Grid extends Pane implements SetObserver<Segment, RoadSystemControl
       segmentViewMap.put(segmentView.getSegment(), segmentView);
       getChildren().add(segmentView);
       this.connectorViews.addAll(segmentView.getConnectorViews());
-      segmentView.setOnConnectorViewDragged(this::onConnectorViewDragged);
-      segmentView.setOnConnectorViewDragEnd(this::onConnectorViewDragEnd);
-      segmentView.setOnMouseClicked(event -> {
-        event.consume();
-        if (event.getClickCount() == DOUBLE_CLICK) {
-          buildEditorOnSegment(segmentView.getSegment());
-        }
-      });
+      setSegmentViewCallbacks(segmentView);
     }
+  }
+
+  private void setSegmentViewCallbacks(SegmentView<?> segmentView) {
+    segmentView.setOnConnectorViewDragged(this::onConnectorViewDragged);
+    segmentView.setOnConnectorViewDragEnd(this::onConnectorViewDragEnd);
+    segmentView.setOnMouseClick(this::onSegmentViewClicked);
+    segmentView.setOnDragged(this::onSegmentViewDragged);
+    segmentView.setOnDragEnd(this::onSegmentViewDragEnd);
   }
 
   private void buildEditorOnSegment(Segment segment) {
@@ -140,54 +152,29 @@ public class Grid extends Pane implements SetObserver<Segment, RoadSystemControl
     this.setOnMouseReleased(this::onMouseDragReleased);
     this.setOnDragOver(this::onDragOver);
     this.setOnDragDropped(this::onDragDropped);
-
-    this.setOnMouseClicked(mouseEvent -> {
-      if (!dragInProgress) {
-        controller.clearSegmentSelection();
-      }
-      dragInProgress = false;
-      getChildren().removeAll(editors);
-      editors.clear();
-    });
-  }
-
-  private void onDragOver(DragEvent dragEvent) {
-    if (dragEvent.getGestureSource() != this && dragEvent.getDragboard().hasString()) {
-      dragEvent.acceptTransferModes(TransferMode.COPY);
-    }
-  }
-
-  private void onDragDropped(DragEvent dragEvent) {
-    Dragboard db = dragEvent.getDragboard();
-    if (db.hasString()) {
-      SegmentType segmentType = null;
-      try {
-        segmentType = SegmentType.valueOf(db.getString());
-      } catch (IllegalArgumentException iaex) {
-        return;
-      }
-
-      this.controller.createStreetSegment(segmentType);
-    }
+    this.setOnMouseClicked(this::onMouseClicked);
   }
 
   private void onMouseDragged(MouseEvent mouseDragEvent) {
-    if (mouseDragEvent.isControlDown() && mouseDragEvent.isPrimaryButtonDown()) {
-      this.dragInProgress = true;
-      if (this.selectionBox == null) {
-        selectionBox = new SelectionBox(
-            new Point2D(mouseDragEvent.getX(), mouseDragEvent.getY()));
-        this.getChildren().add(selectionBox);
-      } else {
-        selectionBox.update(new Point2D(mouseDragEvent.getX(), mouseDragEvent.getY()));
+    if (!this.segmentDragInProgress) {
+      if (mouseDragEvent.isControlDown() && mouseDragEvent.isPrimaryButtonDown()) {
+        this.dragInProgress = true;
+        if (this.selectionBox == null) {
+          selectionBox = new SelectionBox(
+              new Point2D(mouseDragEvent.getX(), mouseDragEvent.getY()));
+          this.getChildren().add(selectionBox);
+        } else {
+          selectionBox.update(new Point2D(mouseDragEvent.getX(), mouseDragEvent.getY()));
+        }
+        mouseDragEvent.consume();
       }
+    } else {
       mouseDragEvent.consume();
     }
   }
 
   private void onMouseDragReleased(MouseEvent mouseEvent) {
-    if (selectionBox != null) {
-
+    if (!this.segmentDragInProgress && selectionBox != null) {
       this.getChildren().remove(selectionBox);
       if (onAreaSelectedEventHandler != null) {
 
@@ -203,6 +190,43 @@ public class Grid extends Pane implements SetObserver<Segment, RoadSystemControl
     mouseEvent.consume();
   }
 
+  private void onDragOver(DragEvent dragEvent) {
+    if (dragEvent.getGestureSource() != this && dragEvent.getDragboard().hasString()) {
+      dragEvent.acceptTransferModes(TransferMode.COPY);
+    }
+  }
+
+  private void onDragDropped(DragEvent dragEvent) {
+    Dragboard db = dragEvent.getDragboard();
+    if (db.hasString()) {
+      SegmentType segmentType;
+      try {
+        segmentType = SegmentType.valueOf(db.getString());
+      } catch (IllegalArgumentException iaex) {
+        return;
+      }
+
+      var mousePos = new Position(dragEvent.getX(), dragEvent.getY());
+      this.controller.createStreetSegment(segmentType, mousePos);
+    }
+  }
+
+  private void onMouseClicked(MouseEvent event) {
+    if (!dragInProgress) {
+      controller.clearSegmentSelection();
+    }
+    dragInProgress = false;
+    getChildren().removeAll(editors);
+    editors.clear();
+  }
+
+  private void onSegmentViewClicked(MouseEvent event, Segment segment) {
+    event.consume();
+    if (event.getClickCount() == DOUBLE_CLICK) {
+      buildEditorOnSegment(segment);
+    }
+  }
+
   private void onConnectorViewDragged(ConnectorView connectorView) {
     connectorView.setDragMode(true);
     var intersectingConnectorViews =
@@ -216,6 +240,14 @@ public class Grid extends Pane implements SetObserver<Segment, RoadSystemControl
 
   private void onConnectorViewDragEnd(ConnectorView connectorView) {
     connectorViews.forEach(c -> c.setConnectMode(false));
+  }
+
+  private void onSegmentViewDragged() {
+    this.segmentDragInProgress = true;
+  }
+
+  private void onSegmentViewDragEnd() {
+    this.segmentDragInProgress = false;
   }
 
   private List<ConnectorView> getIntersectingConnectorViews(ConnectorView connectorView) {

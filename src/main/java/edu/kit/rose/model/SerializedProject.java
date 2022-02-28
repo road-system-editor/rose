@@ -479,9 +479,8 @@ class SerializedProject {
     @Override
     public void createRoseElement(RoadSystem target) {
       this.roseElement = (Base) target.createSegment(SegmentType.BASE);
-      /* TODO uncomment once movable connectors are merged
       this.roseElement.getEntry().move(this.entrancePosition.createMovement());
-      this.roseElement.getExit().move(this.exitPosition.createMovement());*/
+      this.roseElement.getExit().move(this.exitPosition.createMovement());
     }
 
     @Override

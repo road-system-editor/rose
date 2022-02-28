@@ -184,10 +184,11 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
 
   @Override
   public void addSegmentType(SegmentType type) {
-    this.segmentTypes.add(type);
-    subscribers.forEach(s -> s.notifyAddition(type));
-    checkAll();
-    notifySubscribers();
+    if (this.segmentTypes.add(type)) {
+      subscribers.forEach(s -> s.notifyAddition(type));
+      checkAll();
+      notifySubscribers();
+    }
   }
 
   @Override

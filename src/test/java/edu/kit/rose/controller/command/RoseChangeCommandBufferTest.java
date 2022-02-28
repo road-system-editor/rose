@@ -81,7 +81,7 @@ public class RoseChangeCommandBufferTest {
 
   @Test
   void commandsDeletedAfterNewCommandAddedTest() {
-    ChangeCommand command4 = mock(ChangeCommand.class);;
+    ChangeCommand command4 = mock(ChangeCommand.class);
 
     this.buffer.undo();
     this.buffer.undo();

@@ -14,6 +14,7 @@ public interface ChangeCommandBuffer {
 
   /**
    * Rexecutes/Redoes the last undone {@link ChangeCommand}.
+   * If there's not a command in the buffer to be redone, this method does nothing.
    */
   void redo();
 

@@ -35,7 +35,7 @@ class CriteriaManagerTest {
   void testGetCriteriaOfType() {
     for (PlausibilityCriterion criterion : criteriaManager
             .getCriteriaOfType(PlausibilityCriterionType.VALUE)) {
-      Assertions.assertEquals(criterion.getType(), PlausibilityCriterionType.VALUE);
+      Assertions.assertEquals(PlausibilityCriterionType.VALUE, criterion.getType());
     }
   }
 

@@ -1,7 +1,5 @@
 package edu.kit.rose.model.plausibility.criteria;
 
-import static java.util.Objects.requireNonNull;
-
 import edu.kit.rose.infrastructure.Box;
 import edu.kit.rose.infrastructure.RoseBox;
 import edu.kit.rose.infrastructure.RoseSetObservable;
@@ -26,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -52,7 +51,7 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
    * @param violationManager manager to which violations will be added
    */
   public CompatibilityCriterion(RoadSystem roadSystem, ViolationManager violationManager) {
-    requireNonNull(violationManager);
+    Objects.requireNonNull(violationManager);
     this.name = "";
     this.discrepancy = 0;
     this.segmentTypes = new HashSet<>();

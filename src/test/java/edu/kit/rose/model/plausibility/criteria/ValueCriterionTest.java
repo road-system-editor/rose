@@ -38,7 +38,7 @@ class ValueCriterionTest {
 
   @Test
   void testGetAndAddSegmentTypes() {
-    SetObserver<SegmentType, PlausibilityCriterion> observer = Mockito.mock(SetObserver.class);
+    SetObserver<SegmentType, PlausibilityCriterion> observer = mockObserver();
     criterion1.addSubscriber(observer);
     criterion1.addSegmentType(SegmentType.BASE);
 
@@ -54,7 +54,7 @@ class ValueCriterionTest {
 
   @Test
   void removeSegmentType() {
-    SetObserver<SegmentType, PlausibilityCriterion> observer = Mockito.mock(SetObserver.class);
+    SetObserver<SegmentType, PlausibilityCriterion> observer = mockObserver();
     criterion1.addSubscriber(observer);
     criterion1.addSegmentType(SegmentType.BASE);
     criterion1.addSegmentType(SegmentType.EXIT);
@@ -68,6 +68,15 @@ class ValueCriterionTest {
     Assertions.assertFalse(criterion1.getSegmentTypes().contains(SegmentType.EXIT));
     Mockito.verify(observer, Mockito.times(1)).notifyRemoval(SegmentType.EXIT);
   }
+
+  /**
+   * Helper method to extract the "unchecked" (but correct) cast of the observer mock.
+   */
+  @SuppressWarnings("unchecked")
+  private static SetObserver<SegmentType, PlausibilityCriterion> mockObserver() {
+    return Mockito.mock(SetObserver.class);
+  }
+
 
   @Test
   void testNotifyChange() {

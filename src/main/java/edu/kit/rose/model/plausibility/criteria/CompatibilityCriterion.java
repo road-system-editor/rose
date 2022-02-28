@@ -176,7 +176,13 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
   @Override
   public void setViolationManager(ViolationManager violationManager) {
     if (this.violationManager != violationManager) {
-      this.violationManager.getViolations().forEach(e -> this.violationManager.removeViolation(e));
+      SortedBox<Violation> violations = this.violationManager.getViolations();
+      for (var violation : violations) {
+        if (violation.violatedCriterion().getType()
+                .equals(PlausibilityCriterionType.COMPATIBILITY)) {
+          this.violationManager.removeViolation(violation);
+        }
+      }
       this.violationManager = violationManager;
       checkAll();
     }

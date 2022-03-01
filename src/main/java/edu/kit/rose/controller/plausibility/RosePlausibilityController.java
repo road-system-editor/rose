@@ -2,6 +2,7 @@ package edu.kit.rose.controller.plausibility;
 
 import edu.kit.rose.controller.commons.Controller;
 import edu.kit.rose.controller.commons.StorageLock;
+import edu.kit.rose.controller.navigation.ErrorType;
 import edu.kit.rose.controller.navigation.FileDialogType;
 import edu.kit.rose.controller.navigation.FileFormat;
 import edu.kit.rose.controller.navigation.Navigator;
@@ -10,13 +11,11 @@ import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.model.ApplicationDataSystem;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.plausibility.criteria.CompatibilityCriterion;
-import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterionType;
 import edu.kit.rose.model.plausibility.criteria.validation.ValidationType;
 import edu.kit.rose.model.plausibility.violation.Violation;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
-import java.nio.file.Path;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -114,7 +113,10 @@ public class RosePlausibilityController extends Controller implements Plausibili
       this.onBeginSubscribers.forEach((Runnable::run));
       var importPath = this.navigator.showFileDialog(FileDialogType.LOAD_FILE, FileFormat.CRITERIA);
       if (importPath != null) {
-        this.applicationDataSystem.importCriteriaFromFile(importPath);
+        boolean success = this.applicationDataSystem.importCriteriaFromFile(importPath);
+        if (!success) {
+          this.navigator.showErrorDialog(ErrorType.IMPORT_ERROR);
+        }
       }
       this.onDoneSubscribers.forEach(Runnable::run);
       getStorageLock().releaseStorageLock();
@@ -128,7 +130,10 @@ public class RosePlausibilityController extends Controller implements Plausibili
       this.onBeginSubscribers.forEach((Runnable::run));
       var exportPath = this.navigator.showFileDialog(FileDialogType.SAVE_FILE, FileFormat.CRITERIA);
       if (exportPath != null) {
-        this.applicationDataSystem.exportCriteriaToFile(exportPath);
+        boolean success = this.applicationDataSystem.exportCriteriaToFile(exportPath);
+        if (!success) {
+          this.navigator.showErrorDialog(ErrorType.EXPORT_ERROR);
+        }
       }
       this.onDoneSubscribers.forEach(Runnable::run);
       getStorageLock().releaseStorageLock();

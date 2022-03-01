@@ -11,14 +11,13 @@ import edu.kit.rose.infrastructure.RoseBox;
 import edu.kit.rose.model.ApplicationDataSystem;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.ProjectFormat;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -29,8 +28,7 @@ import java.util.stream.Collectors;
  * export a project.
  */
 public class RoseProjectController extends Controller implements ProjectController {
-
-  private static final String BACKUP_FOLDER_PATH = "./backups";
+  private static final Path DEFAULT_BACKUP_FOLDER_PATH = Path.of(".", "backups");
   private static final String BACKUP_FILENAME_TEMPLATE = "Backup%d.rose.json";
   private static final int MAX_BACKUP_COUNT = 4;
   private static final long BACKUP_DELAY_MILLISECONDS = 300000;
@@ -45,6 +43,7 @@ public class RoseProjectController extends Controller implements ProjectControll
 
   private int lastWrittenBackupIndex = 0;
 
+  private final Path backupDirectoryPath;
   private Path currentProjectPath;
 
   /**
@@ -58,10 +57,28 @@ public class RoseProjectController extends Controller implements ProjectControll
    */
   public RoseProjectController(StorageLock storageLock, Navigator navigator, Project project,
                                ApplicationDataSystem applicationDataSystem) {
+    this(storageLock, navigator, project, applicationDataSystem,
+        BACKUP_DELAY_MILLISECONDS, DEFAULT_BACKUP_FOLDER_PATH);
+  }
+
+  /**
+   * Creates a new {@link RoseProjectController}.
+   *
+   * @param storageLock           the coordinator for controller actions
+   * @param navigator             the navigator for the controller
+   * @param project               the model facade for project data
+   * @param applicationDataSystem the application data system to store recently opened project
+   *                              paths in.
+   * @param backupInterval        the amount of time (in milliseconds) between backups.
+   */
+  public RoseProjectController(StorageLock storageLock, Navigator navigator, Project project,
+                               ApplicationDataSystem applicationDataSystem, long backupInterval,
+                               Path backupDirectoryPath) {
     super(storageLock, navigator);
 
-    this.project = project;
-    this.applicationDataSystem = applicationDataSystem;
+    this.project = Objects.requireNonNull(project);
+    this.applicationDataSystem = Objects.requireNonNull(applicationDataSystem);
+    this.backupDirectoryPath = Objects.requireNonNull(backupDirectoryPath);
     this.onProjectIoActionBeginCallbacks = new HashSet<>();
     this.onProjectIoActionEndCallbacks = new HashSet<>();
 
@@ -71,7 +88,8 @@ public class RoseProjectController extends Controller implements ProjectControll
       public void run() {
         saveBackup();
       }
-    }, BACKUP_DELAY_MILLISECONDS, BACKUP_DELAY_MILLISECONDS);
+    }, backupInterval, backupInterval);
+
   }
 
   @Override
@@ -133,9 +151,8 @@ public class RoseProjectController extends Controller implements ProjectControll
       int currentBackupIndex = (lastWrittenBackupIndex + 1) % MAX_BACKUP_COUNT;
 
       if (ensureBackupDirectoryExists()) {
-        Path p = Path.of(
-            BACKUP_FOLDER_PATH,
-            String.format(BACKUP_FILENAME_TEMPLATE, currentBackupIndex));
+        String fileName = String.format(BACKUP_FILENAME_TEMPLATE, currentBackupIndex);
+        Path p = this.backupDirectoryPath.resolve(fileName);
         if (project.save(p)) {
           lastWrittenBackupIndex = currentBackupIndex;
         }
@@ -147,11 +164,11 @@ public class RoseProjectController extends Controller implements ProjectControll
   }
 
   private boolean ensureBackupDirectoryExists() {
-    File f = new File(BACKUP_FOLDER_PATH);
-    if (!f.exists()) {
+    if (!Files.exists(this.backupDirectoryPath)) {
       try {
-        return f.mkdir();
-      } catch (SecurityException e) {
+        Files.createDirectories(this.backupDirectoryPath);
+        return true;
+      } catch (IOException e) {
         return false;
       }
     } else {
@@ -247,7 +264,7 @@ public class RoseProjectController extends Controller implements ProjectControll
     if (ensureBackupDirectoryExists()) {
       List<Path> backupPaths = new LinkedList<>();
       try {
-        Files.newDirectoryStream(Paths.get(BACKUP_FOLDER_PATH)).forEach(backupPaths::add);
+        Files.newDirectoryStream(this.backupDirectoryPath).forEach(backupPaths::add);
       } catch (IOException e) {
         e.printStackTrace();
         return new RoseBox<>();

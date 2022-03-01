@@ -93,12 +93,10 @@ public class Position {
 
   @Override
   public boolean equals(Object obj) {
-    if (getClass() != obj.getClass()) {
-      return false;
-    }
-
-    Position other = (Position) obj;
-    return getX() == other.getX() && getY() == other.getY();
+    return obj != null
+        && obj.getClass() == this.getClass()
+        && ((Position) obj).getX() == this.getX()
+        && ((Position) obj).getY() == this.getY();
   }
 
   @Override

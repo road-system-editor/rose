@@ -1,6 +1,11 @@
 package edu.kit.rose.controller.command;
 
-import org.junit.jupiter.api.Assertions;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -8,9 +13,9 @@ import org.junit.jupiter.api.Test;
  * Unit tests for {@link RoseChangeCommandBuffer}.
  */
 public class RoseChangeCommandBufferTest {
-  private TestChangeCommand command1;
-  private TestChangeCommand command2;
-  private TestChangeCommand command3;
+  private ChangeCommand command1;
+  private ChangeCommand command2;
+  private ChangeCommand command3;
   private RoseChangeCommandBuffer buffer;
 
   /**
@@ -18,9 +23,9 @@ public class RoseChangeCommandBufferTest {
    */
   @BeforeEach
   void setUp() {
-    this.command1 = new TestChangeCommand(1);
-    this.command2 = new TestChangeCommand(2);
-    this.command3 = new TestChangeCommand(3);
+    this.command1 = mock(ChangeCommand.class);
+    this.command2 = mock(ChangeCommand.class);
+    this.command3 = mock(ChangeCommand.class);
     this.buffer = new RoseChangeCommandBuffer();
 
     this.buffer.addAndExecuteCommand(command1);
@@ -33,9 +38,9 @@ public class RoseChangeCommandBufferTest {
     this.buffer.undo();
     this.buffer.undo();
 
-    Assertions.assertEquals("executed0", this.command1.getMessage());
-    Assertions.assertEquals("unexecuted2", this.command2.getMessage());
-    Assertions.assertEquals("unexecuted3", this.command3.getMessage());
+    verify(command1, never()).unexecute();
+    verify(command2, times(1)).unexecute();
+    verify(command3, times(1)).unexecute();
   }
 
   @Test
@@ -44,9 +49,24 @@ public class RoseChangeCommandBufferTest {
     this.buffer.undo();
     this.buffer.redo();
 
-    Assertions.assertEquals("executed0", this.command1.getMessage());
-    Assertions.assertEquals("executed2", this.command2.getMessage());
-    Assertions.assertEquals("unexecuted3", this.command3.getMessage());
+    verify(command1, times(1)).execute();
+    verify(command1, never()).unexecute();
+    verify(command2, times(1)).unexecute();
+    verify(command2, times(2)).execute();
+    verify(command3, times(1)).unexecute();
+    verify(command3, times(1)).execute();
+
+    this.buffer.redo();
+    verify(command3, times(1)).unexecute();
+    verify(command3, times(2)).execute();
+
+    this.buffer.redo();
+    verify(command1, times(1)).execute();
+    verify(command1, never()).unexecute();
+    verify(command2, times(1)).unexecute();
+    verify(command2, times(2)).execute();
+    verify(command3, times(1)).unexecute();
+    verify(command3, times(2)).execute();
   }
 
   @Test
@@ -54,36 +74,26 @@ public class RoseChangeCommandBufferTest {
     this.buffer.clear();
     this.buffer.undo();
 
-    // if the buffer is cleared then undo will not change the initial state of the commands
-    Assertions.assertEquals("executed0", this.command1.getMessage());
-    Assertions.assertEquals("executed0", this.command2.getMessage());
-    Assertions.assertEquals("executed0", this.command3.getMessage());
+    verify(command1, never()).unexecute();
+    verify(command2, never()).unexecute();
+    verify(command3, never()).unexecute();
   }
 
-  private static class TestChangeCommand implements ChangeCommand {
-    private String message = "";
-    private final int id;
+  @Test
+  void commandsDeletedAfterNewCommandAddedTest() {
+    ChangeCommand command4 = mock(ChangeCommand.class);
 
-    public TestChangeCommand(int id) {
-      this.id = id;
-    }
-
-    @Override
-    public void execute() {
-      if (this.message.equals("")) {
-        this.message = "executed0";
-      } else {
-        this.message = "executed" + this.id;
-      }
-    }
-
-    @Override
-    public void unexecute() {
-      this.message = "unexecuted" + this.id;
-    }
-
-    public String getMessage() {
-      return this.message;
-    }
+    this.buffer.undo();
+    this.buffer.undo();
+    this.buffer.addAndExecuteCommand(command4);
+    this.buffer.redo();
+    this.buffer.redo();
+    verify(command1, times(1)).execute();
+    verify(command1, never()).unexecute();
+    verify(command2, times(1)).unexecute();
+    verify(command2, times(1)).execute();
+    verify(command3, times(1)).unexecute();
+    verify(command3, times(1)).execute();
+    verify(command4, times(1)).execute();
   }
 }

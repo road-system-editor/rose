@@ -175,16 +175,13 @@ public class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, 
       throw new IllegalArgumentException("unknown connection");
     }
     if (connection != null) {
-      var segment1 = connectorSegmentMap.get(connection.getConnectors().get(0));
-      var segment2 = connectorSegmentMap.get(connection.getConnectors().get(1));
+      var connectors = connection.getConnectors();
+      var segment1 = connectorSegmentMap.get(connectors.get(0));
+      var segment2 = connectorSegmentMap.get(connectors.get(1));
       segmentConnectionGraph.removeEdge(connection);
-      if (segment1 != null) {
-        segment1.notifySubscribers(); //TODO: shouldnt be null?
-      }
-      if (segment2 != null) {
-        segment2.notifySubscribers();
-      }
-      connection.getConnectors().forEach(c -> connectorConnectionMap.put(c, null));
+      segment1.notifySubscribers();
+      segment2.notifySubscribers();
+      connectors.forEach(c -> connectorConnectionMap.put(c, null));
       subscribers.forEach(s -> s.notifyRemovalSecond(connection));
     }
   }

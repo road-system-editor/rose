@@ -1,8 +1,8 @@
 package edu.kit.rose.controller.plausibility;
 
 import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -13,22 +13,29 @@ import edu.kit.rose.controller.navigation.ErrorType;
 import edu.kit.rose.controller.navigation.FileDialogType;
 import edu.kit.rose.controller.navigation.FileFormat;
 import edu.kit.rose.controller.navigation.Navigator;
+import edu.kit.rose.controller.selection.RoseSelectionBuffer;
 import edu.kit.rose.controller.selection.SelectionBuffer;
 import edu.kit.rose.infrastructure.Movement;
 import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.model.ApplicationDataSystem;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.ZoomSetting;
+import edu.kit.rose.model.plausibility.criteria.CompatibilityCriterion;
 import edu.kit.rose.model.plausibility.criteria.CriteriaManager;
+import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterion;
+import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterionType;
+import edu.kit.rose.model.plausibility.criteria.validation.ValidationType;
 import edu.kit.rose.model.plausibility.violation.Violation;
+import edu.kit.rose.model.plausibility.violation.ViolationManager;
+import edu.kit.rose.model.roadsystem.GraphRoadSystem;
+import edu.kit.rose.model.roadsystem.RoadSystem;
+import edu.kit.rose.model.roadsystem.TimeSliceSetting;
+import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.elements.Base;
 import edu.kit.rose.model.roadsystem.elements.Segment;
+import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,25 +47,31 @@ class RosePlausibilityControllerTest {
   private static final Path INVALID_PATH =
       Path.of("build", "tmp", "invalid-directory", "invalid-file.criteria.json");
   private CriteriaManager criteriaManager;
-  private Project project;
   private ApplicationDataSystem applicationDataSystem;
   private SelectionBuffer selectionBuffer;
   private PlausibilityController controller;
   private Navigator navigator;
+  private ZoomSetting zoomSetting;
+  private ViolationManager violationManager;
+  private RoadSystem roadSystem;
 
   @BeforeEach
   public void setUp() {
     this.applicationDataSystem = mock(ApplicationDataSystem.class);
-    this.criteriaManager = mock(CriteriaManager.class);
-    this.project = mock(Project.class);
-    this.selectionBuffer = mock(SelectionBuffer.class);
-
-    StorageLock storageLock = new RoseStorageLock();
+    this.criteriaManager = new CriteriaManager();
+    this.selectionBuffer = new RoseSelectionBuffer();
+    this.zoomSetting = new ZoomSetting(new Position(0, 0));
     this.navigator = mock(Navigator.class);
-
+    this.violationManager = mock(ViolationManager.class);
+    this.roadSystem = mock(RoadSystem.class);
+    this.criteriaManager.setRoadSystem(
+            new GraphRoadSystem(criteriaManager, mock(TimeSliceSetting.class)));
+    this.criteriaManager.setViolationManager(new ViolationManager());
+    Project project = mock(Project.class);
+    when(project.getZoomSetting()).thenReturn(this.zoomSetting);
     when(applicationDataSystem.getCriteriaManager()).thenAnswer(e -> this.criteriaManager);
-    this.controller = new RosePlausibilityController(storageLock,
-            navigator, this.project, this.selectionBuffer, this.applicationDataSystem);
+    this.controller = new RosePlausibilityController(new RoseStorageLock(),
+            navigator, project, this.selectionBuffer, this.applicationDataSystem);
   }
 
 
@@ -115,39 +128,112 @@ class RosePlausibilityControllerTest {
   }
 
   @Test
+  void unsubscribeFromPlausibilityIoActionTest() {
+    Runnable onBegin = mock(Runnable.class);
+    Runnable onEnd = mock(Runnable.class);
+
+    when(this.navigator.showFileDialog(FileDialogType.SAVE_FILE, FileFormat.CRITERIA))
+            .thenReturn(NONEXISTENT_CRITERIA_PATH);
+
+    this.controller.subscribeToPlausibilityIoAction(onBegin, onEnd);
+    this.controller.unsubscribeFromPlausibilityIoAction(onBegin, onEnd);
+    this.controller.exportCompatibilityCriteria();
+    verify(onBegin, never()).run();
+    verify(onEnd, never()).run();
+  }
+
+  @Test
   void jumpToCriterionViolationTest() {
-    Segment segment1 = new Base();
     Segment segment2 = new Base();
     Segment segment3 = new Base();
     segment2.move(new Movement(1, 1));
     segment3.move(new Movement(3, 3));
 
-    AtomicReference<List<Segment>> selectedSegments = new AtomicReference<>();
-    AtomicReference<Collection<Segment>> segment = new AtomicReference<>();
-    segment.set(Arrays.asList(segment1, segment2, segment3));
-    selectedSegments.set(new ArrayList<>());
-
-    ZoomSetting zoomSetting = mock(ZoomSetting.class);
-    Violation violation = mock(Violation.class);
-    AtomicReference<Position> position = new AtomicReference<>();
-    when(violation.offendingSegments()).thenAnswer(e -> segment.get());
-    doAnswer(e -> {
-      position.set(new Position(2, 2));
-      return null; })
-            .when(zoomSetting).setCenterOfView(any());
-    doAnswer((e -> {
-      selectedSegments.get().add(e.getArgument(0));
-      return null;
-    })).when(this.selectionBuffer).addSegmentSelection(any());
-    when(this.project.getZoomSetting()).thenReturn(zoomSetting);
+    PlausibilityCriterion criterion =
+            new CompatibilityCriterion(roadSystem, violationManager);
+    Violation violation = new Violation(criterion, List.of(segment2, segment3));
 
     this.controller.jumpToCriterionViolation(violation);
 
-    Assertions.assertEquals(2, position.get().getX());
-    Assertions.assertEquals(2, position.get().getY());
-    Assertions.assertTrue(selectedSegments.get().contains(segment1));
-    Assertions.assertTrue(selectedSegments.get().contains(segment2));
-    Assertions.assertTrue(selectedSegments.get().contains(segment3));
+    Assertions.assertEquals(2, zoomSetting.getCenterOfView().getX());
+    Assertions.assertEquals(2, zoomSetting.getCenterOfView().getY());
+    Assertions.assertTrue(selectionBuffer.isSegmentSelected(segment2));
+    Assertions.assertTrue(selectionBuffer.isSegmentSelected(segment3));
   }
 
+  @Test
+  void addCompatibilityCriterionTest() {
+    controller.addCompatibilityCriterion();
+    Assertions.assertEquals(1, criteriaManager.getCriteria().stream()
+            .filter(e -> e.getType().equals(PlausibilityCriterionType.COMPATIBILITY)).count());
+  }
+
+  @Test
+  void setCompatibilityNameTest() {
+    CompatibilityCriterion criterion = new CompatibilityCriterion(
+            roadSystem, violationManager);
+    controller.setCompatibilityCriterionName(criterion, "test");
+    Assertions.assertEquals("test", criterion.getName());
+  }
+
+  @Test
+  void addSegmentTypeToCompatibilityCriterionTest() {
+    CompatibilityCriterion criterion = new CompatibilityCriterion(
+            roadSystem, violationManager);
+    controller.addSegmentTypeToCompatibilityCriterion(criterion, SegmentType.BASE);
+    Assertions.assertTrue(criterion.getSegmentTypes().contains(SegmentType.BASE));
+  }
+
+  @Test
+  void removeSegmentTypeToCompatibilityCriterionTest() {
+    CompatibilityCriterion criterion = new CompatibilityCriterion(
+            roadSystem, violationManager);
+    controller.addSegmentTypeToCompatibilityCriterion(criterion, SegmentType.BASE);
+    controller.removeSegmentTypeToCompatibilityCriterion(criterion, SegmentType.BASE);
+    Assertions.assertFalse(criterion.getSegmentTypes().contains(SegmentType.BASE));
+  }
+
+  @Test
+  void setCompatibilityCriterionAttributeTypeTest() {
+    CompatibilityCriterion criterion = new CompatibilityCriterion(
+            roadSystem, violationManager);
+    controller.setCompatibilityCriterionAttributeType(criterion, AttributeType.LENGTH);
+    Assertions.assertEquals(AttributeType.LENGTH, criterion.getAttributeType());
+  }
+
+  @Test
+  void setCompatibilityCriterionValidationTypeTest() {
+    CompatibilityCriterion criterion = new CompatibilityCriterion(
+            roadSystem, violationManager);
+    controller.setCompatibilityCriterionValidationType(criterion, ValidationType.EQUALS);
+    Assertions.assertEquals(ValidationType.EQUALS, criterion.getOperatorType());
+  }
+
+  @Test
+  void setCompatibilityCriterionLegalDiscrepancyTest() {
+    CompatibilityCriterion criterion = new CompatibilityCriterion(
+            roadSystem, violationManager);
+    controller.setCompatibilityCriterionLegalDiscrepancy(criterion, 1);
+    Assertions.assertEquals(1, criterion.getLegalDiscrepancy());
+  }
+
+  @Test
+  void deleteCompatibilityCriterionTest() {
+    controller.addCompatibilityCriterion();
+    CompatibilityCriterion criterion = (CompatibilityCriterion) criteriaManager.getCriteria()
+            .stream().filter(e -> e.getType().equals(PlausibilityCriterionType.COMPATIBILITY))
+            .findFirst().orElseThrow();
+    controller.deleteCompatibilityCriterion(criterion);
+    Assertions.assertEquals(0, criteriaManager.getCriteria().stream()
+            .filter(e -> e.getType().equals(PlausibilityCriterionType.COMPATIBILITY)).count());
+  }
+
+  @Test
+  void deleteCompatibilityCriteriaTest() {
+    controller.addCompatibilityCriterion();
+    controller.addCompatibilityCriterion();
+    controller.deleteAllCompatibilityCriteria();
+    Assertions.assertEquals(0, criteriaManager.getCriteria().stream()
+            .filter(e -> e.getType().equals(PlausibilityCriterionType.COMPATIBILITY)).count());
+  }
 }

@@ -16,7 +16,8 @@ public enum ValidationType {
   NOT_EQUALS(false, DataType.INTEGER, DataType.FRACTIONAL, DataType.STRING,
       DataType.BOOLEAN, DataType.SPEED_LIMIT),
   OR(false, DataType.BOOLEAN),
-  NOR(false, DataType.BOOLEAN);
+  NOR(false, DataType.BOOLEAN),
+  DIRECTION(false, DataType.CONNECTOR_TYPE);
 
   private final boolean hasDiscrepancy;
   private final DataType[] compatibleDataTypes;

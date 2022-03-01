@@ -78,6 +78,19 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
   }
 
   /**
+   * Constructor.
+   *
+   * @param roadSystem       The Roadsystem this Criterion applied to.
+   * @param violationManager manager to which violations will be added
+   */
+  public CompatibilityCriterion(RoadSystem roadSystem, ViolationManager violationManager,
+                                AttributeType attributeType, ValidationType validationType) {
+    this(roadSystem, violationManager);
+    this.attributeType = attributeType;
+    this.operatorType = validationType;
+  }
+
+  /**
    * Sets the {@link RoadSystem} used by this CompatibilityCriterion.
    * Checks do not work until this method has been called at least once with a valid roadSystem.
    *

@@ -73,6 +73,13 @@ class CriterionFactory {
     return valueCriteria;
   }
 
+  public List<CompatibilityCriterion> createCompatibilityCriteria() {
+    ArrayList<CompatibilityCriterion> compatibilityCriteria = new ArrayList<>();
+    compatibilityCriteria.add(new CompatibilityCriterion(roadSystem, violationManager,
+        AttributeType.))
+
+  }
+
   /**
    * Creates a new CompatibilityCriterion.
    *

@@ -155,7 +155,7 @@ class RosePlausibilityControllerTest {
   @Test
   void addSegmentTypeToCompatibilityCriterionTest() {
     CompatibilityCriterion criterion = new CompatibilityCriterion(
-            mock(RoadSystem.class), mock(ViolationManager.class));
+            roadSystem, violationManager);
     controller.addSegmentTypeToCompatibilityCriterion(criterion, SegmentType.BASE);
     Assertions.assertTrue(criterion.getSegmentTypes().contains(SegmentType.BASE));
   }

@@ -1,36 +1,35 @@
 package edu.kit.rose.controller.roadsystem;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import edu.kit.rose.controller.command.ChangeCommandBuffer;
 import edu.kit.rose.controller.command.RoseChangeCommandBuffer;
 import edu.kit.rose.controller.commons.ReplacementLog;
+import edu.kit.rose.controller.commons.RoseStorageLock;
 import edu.kit.rose.controller.commons.StorageLock;
 import edu.kit.rose.controller.navigation.Navigator;
+import edu.kit.rose.controller.selection.RoseSelectionBuffer;
 import edu.kit.rose.controller.selection.SelectionBuffer;
 import edu.kit.rose.infrastructure.Movement;
 import edu.kit.rose.infrastructure.Position;
-import edu.kit.rose.infrastructure.RoseBox;
+import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.ZoomSetting;
+import edu.kit.rose.model.plausibility.criteria.CriteriaManager;
+import edu.kit.rose.model.roadsystem.GraphRoadSystem;
 import edu.kit.rose.model.roadsystem.RoadSystem;
+import edu.kit.rose.model.roadsystem.TimeSliceSetting;
 import edu.kit.rose.model.roadsystem.elements.Base;
-import edu.kit.rose.model.roadsystem.elements.Connector;
-import edu.kit.rose.model.roadsystem.elements.Entrance;
-import edu.kit.rose.model.roadsystem.elements.Exit;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.Set;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 
 
@@ -42,75 +41,51 @@ public class RoseRoadSystemControllerTest {
   private SelectionBuffer selectionBuffer;
   private Project project;
   private RoadSystem roadSystem;
-
+  private ZoomSetting zoomSetting;
   private RoadSystemController roadSystemController;
 
   /**
    * Sets up mock objects.
    */
   @BeforeEach
-  private void setUp() {
-    selectionBuffer = Mockito.mock(SelectionBuffer.class);
-    project = Mockito.mock(Project.class);
-    roadSystem = Mockito.mock(RoadSystem.class);
-    var zoomSetting = Mockito.mock(ZoomSetting.class);
+  void setUp() {
+    selectionBuffer = new RoseSelectionBuffer();
+    project = mock(Project.class);
+    roadSystem = new GraphRoadSystem(new CriteriaManager(), mock(TimeSliceSetting.class));
+    zoomSetting = new ZoomSetting(new Position(0, 0));
+    ReplacementLog replacementLog = new ReplacementLog();
 
-    Mockito.when(zoomSetting.getCenterOfView()).thenReturn(new Position(0, 0));
     Mockito.when(project.getZoomSetting()).thenReturn(zoomSetting);
     Mockito.when(project.getRoadSystem()).thenReturn(roadSystem);
 
-    ChangeCommandBuffer changeCommandBuffer = new RoseChangeCommandBuffer();
-    StorageLock storageLock = Mockito.mock(StorageLock.class);
-    Navigator navigator = Mockito.mock(Navigator.class);
-    ReplacementLog replacementLog = new ReplacementLog();
     roadSystemController = new RoseRoadSystemController(
-        changeCommandBuffer,
-        storageLock,
-        navigator,
+        new RoseChangeCommandBuffer(),
+        new RoseStorageLock(),
+        mock(Navigator.class),
         selectionBuffer,
         project,
-        replacementLog);
+            replacementLog);
   }
 
   @Test
   public void testSetZoomLevel() {
-    AtomicReference<Boolean> called = new AtomicReference<>(false);
-    double[] targetResult = new double[] { 10.0 };
-
-    ZoomSetting zoomSetting = Mockito.mock(ZoomSetting.class);
-    Mockito.when(project.getZoomSetting()).thenReturn(zoomSetting);
-    Mockito.doAnswer(invocation -> {
-      Assertions.assertEquals(targetResult[0], (double) invocation.getArgument(0));
-      targetResult[0]++;
-      called.set(true);
-      return null;
-    }).when(zoomSetting).setZoomLevel(Mockito.anyDouble());
-
     roadSystemController.setZoomLevel(10.0);
+    Assertions.assertEquals(10, zoomSetting.getZoomLevel());
     roadSystemController.setZoomLevel(11.0);
-    Assertions.assertTrue(called.get());
+    Assertions.assertEquals(11, zoomSetting.getZoomLevel());
   }
 
   @Test
   public void testSetEditorPosition() {
-    AtomicReference<Boolean> called = new AtomicReference<>(false);
-
-    Position targetPosition = Mockito.mock(Position.class);
-    ZoomSetting zoomSetting = Mockito.mock(ZoomSetting.class);
-    Mockito.when(project.getZoomSetting()).thenReturn(zoomSetting);
-    Mockito.doAnswer(invocation -> {
-      Assertions.assertSame(targetPosition, invocation.getArgument(0));
-      called.set(true);
-      return null;
-    }).when(zoomSetting).setCenterOfView(any(Position.class));
+    Position targetPosition = new Position(0, 0);
 
     roadSystemController.setEditorPosition(targetPosition);
-    Assertions.assertTrue(called.get());
+    Assertions.assertEquals(targetPosition, zoomSetting.getCenterOfView());
   }
 
   @Test
   public void testCreateStreetSegment() {
-    RoadSystem roadSystem = Mockito.mock(RoadSystem.class);
+    RoadSystem roadSystem = mock(RoadSystem.class);
     Mockito.when(project.getRoadSystem()).thenReturn(roadSystem);
     Mockito.when(roadSystem.createSegment(SegmentType.BASE)).thenReturn(new Base());
 
@@ -121,9 +96,9 @@ public class RoseRoadSystemControllerTest {
 
   @Test
   public void testDuplicateStreetSegment() {
-    ChangeCommandBuffer changeCommandBuffer = Mockito.mock(ChangeCommandBuffer.class);
-    StorageLock storageLock = Mockito.mock(StorageLock.class);
-    Navigator navigator = Mockito.mock(Navigator.class);
+    ChangeCommandBuffer changeCommandBuffer = mock(ChangeCommandBuffer.class);
+    StorageLock storageLock = mock(StorageLock.class);
+    Navigator navigator = mock(Navigator.class);
     ReplacementLog replacementLog = new ReplacementLog();
     RoadSystemController controller = new RoseRoadSystemController(
             changeCommandBuffer,
@@ -139,178 +114,163 @@ public class RoseRoadSystemControllerTest {
 
   @Test
   public void testDeleteStreetSegment() {
-    Segment segment = Mockito.mock(Segment.class);
-    Mockito.when(roadSystem.getElements()).thenReturn(new RoseBox<>(List.of()));
-
+    Segment segment = roadSystem.createSegment(SegmentType.BASE);
     roadSystemController.deleteStreetSegment(segment);
-    verify(roadSystem, times(1)).removeElement(segment);
+    Assertions.assertEquals(0, roadSystem.getElements().getSize());
   }
 
 
   @Test
   public void testStreetSegmentDragging() {
-    final Position initialPosition = new Position(10, 10);
-    final Position endPosition = new Position(20, 20);
-
-    AtomicReference<Double> centerPositionX = new AtomicReference<>(0.0);
-    AtomicReference<Double> centerPositionY = new AtomicReference<>(0.0);
-    AtomicReference<Boolean> called = new AtomicReference<>(false);
-
-    Segment segment = Mockito.mock(Segment.class);
-    Mockito.doAnswer(invocation -> {
-      Movement movement = invocation.getArgument(0);
-      centerPositionX.set(centerPositionX.get() + movement.getX());
-      centerPositionY.set(centerPositionY.get() + movement.getY());
-      return null;
-    }).when(segment).move(any(Movement.class));
-
-    Mockito.when(segment.getCenter()).thenReturn(new Position(
-        centerPositionX.get(),
-        centerPositionY.get()));
-
-    Mockito.doAnswer(invocation -> {
-      Collection<Segment> segments = invocation.getArgument(0);
-      called.set(true);
-      return null;
-    })
-        .when(roadSystem)
-        .moveSegments(ArgumentMatchers.anyCollection(), any(Movement.class));
-
-    roadSystemController.beginDragStreetSegment(initialPosition);
-
-    roadSystemController.endDragStreetSegment(endPosition);
-
-    Assertions.assertTrue(called.get());
+    Segment segment = roadSystem.createSegment(SegmentType.BASE);
+    Position position = new Position(10, 10);
+    selectionBuffer.addSegmentSelection(segment);
+    roadSystemController.beginDragStreetSegment(segment.getCenter());
+    roadSystemController.dragStreetSegments(new Movement(position.getX(), position.getY()));
+    roadSystemController.endDragStreetSegment(segment.getCenter());
+    Assertions.assertEquals(position, selectionBuffer.getSelectedSegments().get(0).getCenter());
   }
 
-  @Disabled("mock roadSystem does not offer functionality for moving anything")
+  @SuppressWarnings("checkstyle:VariableDeclarationUsageDistance")
   @Test
-  public void testDragStreetSegments() {
-    List<Segment> segments = new ArrayList<>();
-
-    Mockito.when(this.selectionBuffer.getSelectedSegments()).thenReturn(segments);
-    Mockito.doAnswer(invocation -> {
-      if (!segments.contains(invocation.getArgument(0, Segment.class))) {
-        segments.add(invocation.getArgument(0, Segment.class));
-      }
-      return null;
-    }).when(this.selectionBuffer).addSegmentSelection(any(Segment.class));
-    Mockito.doAnswer(invocation -> {
-      segments.remove(invocation.getArgument(0, Segment.class));
-      return null;
-    }).when(this.selectionBuffer).removeSegmentSelection(any(Segment.class));
-
-    Segment exit = new Exit();
-    Segment entrance = new Entrance();
-    int moveOffset = 10;
-    entrance.move(new Movement(moveOffset, moveOffset));
-
-    roadSystemController.addSegmentSelection(exit);
-    roadSystemController.addSegmentSelection(entrance);
-
-    Movement movement = new Movement(50, 50);
-    roadSystemController.dragStreetSegments(movement);
-
-    Assertions.assertEquals(movement.getX(), exit.getCenter().getX());
-    Assertions.assertEquals(movement.getY(), exit.getCenter().getY());
-
-    Assertions.assertEquals(movement.getX() + moveOffset, entrance.getCenter().getX());
-    Assertions.assertEquals(movement.getY() +  moveOffset, entrance.getCenter().getY());
-
-    roadSystemController.removeSegmentSelection(entrance);
-    roadSystemController.dragStreetSegments(movement);
-
-    Assertions.assertEquals(movement.getX() * 2, exit.getCenter().getX());
-    Assertions.assertEquals(movement.getY() * 2, exit.getCenter().getY());
+  public void testStreetSegmentDraggingWithConnection() {
+    Base segment1 = (Base) roadSystem.createSegment(SegmentType.BASE);
+    selectionBuffer.addSegmentSelection(segment1);
+    roadSystemController.beginDragStreetSegment(segment1.getCenter());
+    roadSystemController.dragStreetSegments(new Movement(0, 0));
+    Base segment2 = (Base) roadSystem.createSegment(SegmentType.BASE);
+    roadSystemController.endDragStreetSegment(segment1.getCenter(), segment1.getExit());
+    Assertions.assertTrue(roadSystem.getConnection(segment1.getExit())
+            .getConnectors().contains(segment2.getExit()));
   }
 
   @Test
   public void testToggleSegmentSelection() {
-    AtomicReference<Boolean> called = new AtomicReference<>(false);
-    AtomicReference<Boolean> selectedFlag = new AtomicReference<>(false);
-
-    Segment segment = Mockito.mock(Segment.class);
-
-    Mockito.doAnswer(invocation -> {
-      if (segment == invocation.getArgument(0)) {
-        called.set(true);
-        selectedFlag.set(!selectedFlag.get());
-      }
-      return null;
-    }).when(selectionBuffer).toggleSegmentSelection(any(Segment.class));
-
+    Segment segment = new Base();
     roadSystemController.toggleSegmentSelection(segment);
-    Assertions.assertTrue(selectedFlag.get());
-    Assertions.assertTrue(called.get());
-
-    called.set(false);
+    Assertions.assertTrue(selectionBuffer.isSegmentSelected(segment));
     roadSystemController.toggleSegmentSelection(segment);
-    Assertions.assertFalse(selectedFlag.get());
-    Assertions.assertTrue(called.get());
+    Assertions.assertFalse(selectionBuffer.isSegmentSelected(segment));
+  }
 
-    Segment otherSegment = Mockito.mock(Segment.class);
-    selectedFlag.set(false);
-    called.set(false);
-    roadSystemController.toggleSegmentSelection(otherSegment);
-    Assertions.assertFalse(selectedFlag.get());
-    Assertions.assertFalse(called.get());
+  @Test
+  public void testAddSegmentSelection() {
+    Segment segment = new Base();
+    roadSystemController.addSegmentSelection(segment);
+    Assertions.assertTrue(selectionBuffer.isSegmentSelected(segment));
+  }
+
+  @Test
+  public void testRemoveSegmentSelection() {
+    Segment segment = new Base();
+    roadSystemController.addSegmentSelection(segment);
+    Assertions.assertTrue(selectionBuffer.isSegmentSelected(segment));
+    roadSystemController.removeSegmentSelection(segment);
+    Assertions.assertFalse(selectionBuffer.isSegmentSelected(segment));
+  }
+
+  @Test
+  public void clearSegmentSelection() {
+    Segment segment1 = new Base();
+    Segment segment2 = new Base();
+    roadSystemController.addSegmentSelection(segment1);
+    roadSystemController.addSegmentSelection(segment2);
+    roadSystemController.clearSegmentSelection();
+    Assertions.assertEquals(0, selectionBuffer.getSelectedSegments().size());
+  }
+
+  @Test
+  public void testPutSegmentSelection() {
+    Segment segment1 = new Base();
+    Segment segment2 = new Base();
+    Segment segment3 = new Base();
+    roadSystemController.addSegmentSelection(segment1);
+    roadSystemController.addSegmentSelection(segment2);
+    roadSystemController.putSegmentSelection(segment3);
+    Assertions.assertEquals(1, selectionBuffer.getSelectedSegments().size());
+    Assertions.assertTrue(selectionBuffer.isSegmentSelected(segment3));
   }
 
   @Test
   public void testSelectSegmentsInRectangle() {
-    AtomicReference<Boolean> called = new AtomicReference<>(false);
+    Base segmentInRange = (Base) roadSystem.createSegment(SegmentType.BASE);
+    roadSystem.createGroup(Set.of(segmentInRange));
+    segmentInRange.move(new Movement(10, 0));
+    Base segmentOutRange = (Base) roadSystem.createSegment(SegmentType.BASE);
+    segmentOutRange.move(new Movement(100, 100));
+    roadSystemController.selectSegmentsInRectangle(new Position(0, 0),
+                                                   new Position(15, 15));
 
-    //Configure segments that are in range
-    Connector segmentInRangeConnector = Mockito.mock(Connector.class);
-    Mockito.when(segmentInRangeConnector.getPosition())
-            .thenReturn(new Position(10, 10));
-    Segment segmentInRange = Mockito.mock(Segment.class);
-
-    Mockito.when(segmentInRange.getConnectors())
-        .thenReturn(new RoseBox<>(List.of(segmentInRangeConnector)));
-
-    Mockito.when(segmentInRange.getCenter()).thenReturn(new Position(10, 0));
-
-    //Configure segments that are out range
-    Connector segmentOutRangeConnector = Mockito.mock(Connector.class);
-    Mockito.when(segmentOutRangeConnector.getPosition())
-        .thenReturn(new Position(20, 20));
-    Segment segmentOutRange = Mockito.mock(Segment.class);
-
-    Mockito.when(segmentOutRange.getConnectors())
-        .thenReturn(new RoseBox<>(List.of(segmentOutRangeConnector)));
-
-    Mockito.when(segmentOutRange.getCenter()).thenReturn(new Position(20, 30));
-
-    //Configure selection buffer
-    Mockito.doAnswer(invocation ->  {
-      Assertions.assertEquals(segmentInRange, invocation.getArgument(0));
-      called.set(true);
-      return null;
-    }).when(selectionBuffer).addSegmentSelection(any(Segment.class));
-
-    //Configure getElements of Roadsystem
-    Mockito.when(roadSystem.getElements())
-        .thenReturn(new RoseBox<>(List.of(segmentInRange, segmentOutRange)));
-
-    roadSystemController.selectSegmentsInRectangle(
-        new Position(0, 0),
-        new Position(15, 15));
-
-    Assertions.assertTrue(called.get());
+    Assertions.assertTrue(selectionBuffer.isSegmentSelected(segmentInRange));
+    Assertions.assertFalse(selectionBuffer.isSegmentSelected(segmentOutRange));
   }
 
   @Test
+  public void testDeleteStreetSegments() {
+    Segment segmentInRange = roadSystem.createSegment(SegmentType.BASE);
+    selectionBuffer.addSegmentSelection(segmentInRange);
+    roadSystemController.deleteStreetSegments();
+    Assertions.assertEquals(0, roadSystem.getElements().getSize());
+  }
+
+  @Disabled("need to adjust to relative coordinates")
+  @Test
   public void testDragSegmentEnd() {
+    Base segment1 = (Base) roadSystem.createSegment(SegmentType.BASE);
+    Base segment2 = (Base) roadSystem.createSegment(SegmentType.BASE);
+    System.out.println(segment1.getEntry().getPosition().getX());
+    System.out.println(segment1.getEntry().getPosition().getY());
+    System.out.println(segment2.getExit().getPosition().getX());
+    System.out.println(segment2.getExit().getPosition().getY());
+    Position position1 = new Position(segment1.getEntry().getPosition().getX(),
+                            segment1.getEntry().getPosition().getY() + 17);
+    //Position position2 = new Position()
+    roadSystemController.beginDragSegmentEnd(segment1.getEntry(),
+            segment1.getEntry().getPosition());
+    roadSystemController.endDragSegmentEnd(position1);
+    roadSystemController.beginDragSegmentEnd(segment2.getExit(), segment2.getExit().getPosition());
+    roadSystemController.endDragSegmentEnd(position1);
+    Assertions.assertEquals(position1, segment1.getEntry().getPosition());
+    Assertions.assertEquals(position1, segment2.getExit().getPosition());
+    Assertions.assertTrue(roadSystem.getConnection(segment1.getEntry())
+            .getConnectors().contains(segment2.getExit()));
+  }
 
-    /*final Position initialPosition = new Position(10, 10);
-    final Position finalPosition = new Position(20, 20);
+  @Test
+  public void testNotifies() {
+    SetObserver<Segment, RoadSystemController> observer = mockObserver();
+    roadSystemController.addSubscriber(observer);
+    roadSystemController.notifySubscribers();
+    verify(observer, times(1)).notifyChange(roadSystemController);
+    roadSystemController.removeSubscriber(observer);
+    roadSystemController.notifySubscribers();
+    verify(observer, times(1)).notifyChange(roadSystemController);
+  }
 
-    Connector connector = Mockito.mock(Connector.class);
+  /**
+   * Helper method to extract the "unchecked" (but correct) cast of the observer mock.
+   */
+  @SuppressWarnings("unchecked")
+  private static SetObserver<Segment, RoadSystemController> mockObserver() {
+    return mock(SetObserver.class);
+  }
 
-    roadSystemController.beginDragSegmentEnd(connector, initialPosition);
-    roadSystemController.endDragSegmentEnd(finalPosition);
 
-    Assertions.assertEquals(10, connector.);*/
+  @Test
+  public void testGetThis() {
+    Assertions.assertSame(roadSystemController, roadSystemController.getThis());
+  }
+
+  @Test
+  public void testGetIntersectionDistance() {
+    Assertions.assertEquals(30, roadSystemController.getIntersectionDistance());
+  }
+
+  @Test
+  public void testRotateSegment() {
+    Segment segment = roadSystem.createSegment(SegmentType.BASE);
+    roadSystemController.addSegmentSelection(segment);
+    roadSystemController.rotateSegment();
+    Assertions.assertEquals(15, segment.getRotation());
   }
 }

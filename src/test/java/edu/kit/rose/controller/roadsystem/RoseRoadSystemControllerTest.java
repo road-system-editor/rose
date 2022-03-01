@@ -26,7 +26,6 @@ import edu.kit.rose.model.roadsystem.elements.Base;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicReference;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -79,7 +78,6 @@ public class RoseRoadSystemControllerTest {
   @Test
   public void testSetEditorPosition() {
     Position targetPosition = new Position(0, 0);
-    Mockito.when(project.getZoomSetting()).thenReturn(zoomSetting);
 
     roadSystemController.setEditorPosition(targetPosition);
     Assertions.assertEquals(targetPosition, zoomSetting.getCenterOfView());

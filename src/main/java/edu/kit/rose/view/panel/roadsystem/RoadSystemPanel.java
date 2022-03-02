@@ -132,32 +132,29 @@ public class RoadSystemPanel extends FxmlContainer
     var connector1 = unit.getConnectors().get(0);
     var connector2 = unit.getOther(connector1);
     var segmentViews = segmentViewMap.values();
-    var connectorView1 = getConnectorViewFromSegmentViews(connector1, segmentViews);
-    var connectorView2 = getConnectorViewFromSegmentViews(connector2, segmentViews);
-    var connector1Pos = getConnectorViewPosOnGrid(connectorView1);
-    var connector2Pos = getConnectorViewPosOnGrid(connectorView2);
-    var connectionView = new ConnectionView(connector1Pos, connector2Pos, unit);
+
+    var segment1 = getSegmentViewByConnector(segmentViews, connector1);
+    var segment2 = getSegmentViewByConnector(segmentViews, connector2);
+
+    if (segment1 == null || segment2 == null) {
+      return;
+    }
+
+    var connector1Pos = segment1.getSegment().getAbsoluteConnectorPosition(connector1);
+    var connector2Pos = segment2.getSegment().getAbsoluteConnectorPosition(connector2);
+
+    var connectionView = new ConnectionView(new Point2D(connector1Pos.getX(), connector1Pos.getY()),
+        new Point2D(connector2Pos.getX(), connector2Pos.getY()), unit);
     connectionViewMap.put(unit, connectionView);
     roadSystemGrid.getChildren().add(connectionView);
   }
 
-  private Point2D getConnectorViewPosOnGrid(ConnectorView connectorView) {
-    var segment = connectorView.getParent();
-    return segment.localToParent(connectorView.getCenterX(), connectorView.getCenterY());
-  }
-
-  private ConnectorView getConnectorViewFromSegmentViews(Connector connector,
-                                       Collection<SegmentView<?>> segmentViews) {
-    var connectorViewOptional =
-        segmentViews.stream()
-        .flatMap(segmentView -> segmentView.getConnectorViews().stream())
-        .filter(connectorView -> connectorView.getConnector() == connector)
-        .findFirst();
-    if (connectorViewOptional.isPresent()) {
-      return connectorViewOptional.get();
-    } else {
-      throw new IllegalStateException("unknown connector.");
-    }
+  private SegmentView<?> getSegmentViewByConnector(
+      Collection<SegmentView<?>> segmentViews, Connector connector) {
+    return segmentViews.stream()
+        .filter(segmentView -> segmentView.getSegment().getConnectors().contains(connector))
+        .findFirst()
+        .orElse(null);
   }
 
   @Override

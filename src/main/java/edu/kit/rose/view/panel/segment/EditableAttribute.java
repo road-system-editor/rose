@@ -52,7 +52,6 @@ abstract class EditableAttribute<T> extends FxmlContainer
     setupView();
     Node inputField = createInputField();
     layout.getChildren().add(inputField);
-    UnmountUtility.subscribeUntilUnmount(inputField, this, attribute);
 
     tooltip = new Tooltip();
     label.setTooltip(tooltip);

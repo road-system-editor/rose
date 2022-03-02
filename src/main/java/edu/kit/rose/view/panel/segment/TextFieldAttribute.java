@@ -78,7 +78,6 @@ public abstract class TextFieldAttribute<T> extends EditableAttribute<T> {
                                   String newVal) {
     if (!inhomogeneousInsertion) {
       if (this.validate(newVal)) {
-        //getController().setAttribute(getAttribute(), parse(newVal));
         this.consumer.accept(getAttribute(), parse(newVal));
       } else {
         inputField.setText(oldVal);

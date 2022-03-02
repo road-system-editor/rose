@@ -43,8 +43,8 @@ public abstract class HighwaySegment
   private final AttributeAccessor<String> commentAccessor;
   private int length = INITIAL_EXIT_DISTANCE_TO_CENTER + INITIAL_ENTRY_DISTANCE_TO_CENTER;
   private final AttributeAccessor<Integer> lengthAccessor;
-  private int pitch = 0;
-  private final AttributeAccessor<Integer> slopeAccessor;
+  private double pitch = 0.0;
+  private final AttributeAccessor<Double> slopeAccessor;
   private int laneCount = 1;
   private final AttributeAccessor<Integer> laneCountAccessor;
   private boolean conurbation = false;
@@ -249,14 +249,14 @@ public abstract class HighwaySegment
   /**
    * Returns the {@link AttributeType#SLOPE} of this highway segment.
    */
-  public Integer getSlope() {
+  public Double getSlope() {
     return this.pitch;
   }
 
   /**
    * Sets the {@link AttributeType#SLOPE} of this highway segment to the given {@code slope}.
    */
-  public void setSlope(Integer slope) {
+  public void setSlope(Double slope) {
     this.pitch = slope;
 
     this.slopeAccessor.notifySubscribers();

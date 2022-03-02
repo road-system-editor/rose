@@ -384,7 +384,7 @@ class SerializedProject {
     @JsonProperty("length")
     private Integer length;
     @JsonProperty("slope")
-    private Integer slope;
+    private Double slope;
     @JsonProperty("laneCount")
     private Integer laneCount;
     @JsonProperty("conurbation")

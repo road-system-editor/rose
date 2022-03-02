@@ -4,7 +4,6 @@ import edu.kit.rose.infrastructure.Box;
 import edu.kit.rose.infrastructure.RoseBox;
 import edu.kit.rose.infrastructure.RoseSetObservable;
 import edu.kit.rose.infrastructure.RoseSortedBox;
-import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.model.plausibility.criteria.validation.EqualsValidationStrategy;
 import edu.kit.rose.model.plausibility.criteria.validation.LessThanValidationStrategy;
@@ -25,7 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -52,6 +51,7 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
    * @param violationManager manager to which violations will be added
    */
   public CompatibilityCriterion(RoadSystem roadSystem, ViolationManager violationManager) {
+    Objects.requireNonNull(violationManager);
     this.name = "";
     this.discrepancy = 0;
     this.segmentTypes = new HashSet<>();
@@ -85,9 +85,11 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
    * @param attributeType the AttributeType that this Criterion is supposed to check.
    */
   public void setAttributeType(AttributeType attributeType) {
-    this.attributeType = attributeType;
-    checkAll();
-    notifySubscribers();
+    if (this.attributeType != attributeType) {
+      this.attributeType = attributeType;
+      checkAll();
+      notifySubscribers();
+    }
   }
 
   /**
@@ -141,9 +143,11 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
    *                    by this criterion.
    */
   public void setLegalDiscrepancy(double discrepancy) {
-    this.discrepancy = discrepancy;
-    checkAll();
-    notifySubscribers();
+    if (this.discrepancy != discrepancy) {
+      this.discrepancy = discrepancy;
+      checkAll();
+      notifySubscribers();
+    }
   }
 
   @Override
@@ -153,8 +157,10 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
 
   @Override
   public void setName(String name) {
-    this.name = name;
-    notifySubscribers();
+    if (!this.name.equals(name)) {
+      this.name = name;
+      notifySubscribers();
+    }
   }
 
   @Override
@@ -169,24 +175,34 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
 
   @Override
   public void setViolationManager(ViolationManager violationManager) {
-    this.violationManager = violationManager;
-    checkAll();
+    if (this.violationManager != violationManager) {
+      SortedBox<Violation> violations = this.violationManager.getViolations();
+      for (var violation : violations) {
+        if (violation.violatedCriterion() == this) {
+          this.violationManager.removeViolation(violation);
+        }
+      }
+      this.violationManager = violationManager;
+      checkAll();
+    }
   }
 
   @Override
   public void addSegmentType(SegmentType type) {
-    this.segmentTypes.add(type);
-    subscribers.forEach(s -> s.notifyAddition(type));
-    checkAll();
-    notifySubscribers();
+    if (this.segmentTypes.add(type)) {
+      subscribers.forEach(s -> s.notifyAddition(type));
+      checkAll();
+      notifySubscribers();
+    }
   }
 
   @Override
   public void removeSegmentType(SegmentType type) {
-    this.segmentTypes.remove(type);
-    subscribers.forEach(s -> s.notifyRemoval(type));
-    checkAll();
-    notifySubscribers();
+    if (this.segmentTypes.remove(type)) {
+      subscribers.forEach(s -> s.notifyRemoval(type));
+      checkAll();
+      notifySubscribers();
+    }
   }
 
   @Override
@@ -223,15 +239,9 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
       }
       if (!invalidSegments.isEmpty()
               && this.segmentTypes.contains(((Segment) unit).getSegmentType())) {
-        if (!(this.elementViolationMap.containsKey(unit)
-                && this.elementViolationMap.get(unit).offendingSegments().size()
-                == invalidSegments.size()
-                && this.elementViolationMap.get(unit).offendingSegments().containsAll(
-                invalidSegments
-        ))) {
+        if (!coveredByOtherSegments(invalidSegments, (Segment) unit)) {
           if (this.elementViolationMap.containsKey(unit)) {
-            this.violationManager.removeViolation(elementViolationMap.get(unit));
-            elementViolationMap.remove(unit);
+            notifyRemoval(unit);
           }
           invalidSegments.add((Segment) unit);
           Violation violation = new Violation(this, invalidSegments);
@@ -239,15 +249,47 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
           this.elementViolationMap.put(unit, violation);
         }
       } else if (elementViolationMap.containsKey(unit)) {
-        this.violationManager.removeViolation(elementViolationMap.get(unit));
-        elementViolationMap.remove(unit);
+        notifyRemoval(unit);
       }
     }
+  }
+
+
+  @Override
+  public void notifyAddition(Element unit) {
+    notifyChange(unit);
+  }
+
+  @Override
+  public void notifyRemoval(Element unit) {
+    this.violationManager.removeViolation(this.elementViolationMap.get(unit));
+    this.elementViolationMap.remove(unit);
   }
 
   @Override
   public PlausibilityCriterion getThis() {
     return this;
+  }
+
+  /**
+   * Checks if the segments, that the unit is not compatible with, did not already
+   * cause a violation where this unit is already invoked.
+   * Example: only 2 segments on the road. segment1 is not compatible with segment2.
+   * after the segment1 was checked a violation was created. When segment2 is being checked
+   * a new violation should not be created.
+   *
+   * @param invalidSegments the segments that are not compatible with the unit
+   * @param unit            the unit that is being checked
+   * @return true if the invalid segments already caused violation where the unit was invoked.
+   */
+  private boolean coveredByOtherSegments(ArrayList<Segment> invalidSegments, Segment unit) {
+    for (var segment : invalidSegments) {
+      if (!(elementViolationMap.containsKey(segment)
+              && elementViolationMap.get(segment).offendingSegments().contains(unit))) {
+        return false;
+      }
+    }
+    return true;
   }
 
   private ArrayList<Segment> getInvalidSegments(ValidationStrategy<?> strategy,
@@ -308,17 +350,7 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
     };
   }
 
-  @Override
-  public void notifyAddition(Element unit) {
-    notifyChange(unit);
-  }
-
-  @Override
-  public void notifyRemoval(Element unit) {
-    this.violationManager.removeViolation(this.elementViolationMap.get(unit));
-    this.elementViolationMap.remove(unit);
-  }
-
+  @SuppressWarnings("unchecked")
   private <T> boolean validateWithType(ValidationStrategy<?> strategy,
                                        AttributeAccessor<?> accessor1,
                                        AttributeAccessor<?> accessor2,

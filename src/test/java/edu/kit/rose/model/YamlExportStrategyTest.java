@@ -58,7 +58,7 @@ public class YamlExportStrategyTest {
     exit.setName("AusfahrtKarlsbadFRStuttgart");
     exit.setLength(250);
     exit.setLaneCount(2);
-    exit.setSlope(2);
+    exit.setSlope(2.0);
     exit.setConurbation(true);
     exit.setMaxSpeed(SpeedLimit.NONE);
     exit.setMaxSpeedRamp(SpeedLimit.SBA);
@@ -67,7 +67,7 @@ public class YamlExportStrategyTest {
     entrance.setName("EinfahrtKarlsbadFRStuttgart");
     entrance.setLength(250);
     entrance.setLaneCount(2);
-    entrance.setSlope(2);
+    entrance.setSlope(2.0);
     entrance.setConurbation(false);
     entrance.setMaxSpeed(SpeedLimit.NONE);
     entrance.setMaxSpeedRamp(SpeedLimit.SBA);

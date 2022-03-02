@@ -63,12 +63,6 @@ class CriterionFactory {
     valueCriteria.add(new ValueCriterion(this.violationManager, AttributeType.LENGTH,
         ValueCriterion.LENGTH_RANGE));
 
-    valueCriteria.add(new ValueCriterion(this.violationManager, AttributeType.MAX_SPEED,
-        ValueCriterion.MAX_SPEED_RANGE));
-
-    valueCriteria.add(new ValueCriterion(this.violationManager, AttributeType.MAX_SPEED_RAMP,
-        ValueCriterion.MAX_SPEED_RAMP_RANGE));
-
     valueCriteria.add(new ValueCriterion(this.violationManager, AttributeType.SLOPE,
         ValueCriterion.SLOPE_RANGE));
 

@@ -33,11 +33,13 @@ class CompletenessCriterion extends RoseSetObservable<SegmentType, PlausibilityC
 
   public CompletenessCriterion(ViolationManager violationManager) {
     this.name = "";
-    this.segmentTypes = new HashSet<>();
+    this.segmentTypes =
+            new HashSet<>(Set.of(SegmentType.values()));
     this.violationManager = violationManager;
-    this.necessaryAttributeTypes = new HashSet<>();
-    this.necessaryAttributeTypes.add(AttributeType.NAME);
-    this.necessaryAttributeTypes.add(AttributeType.LENGTH);
+    this.necessaryAttributeTypes = new HashSet<>(Set.of(AttributeType.NAME, AttributeType.SLOPE,
+            AttributeType.LENGTH, AttributeType.LANE_COUNT,
+            AttributeType.LANE_COUNT_RAMP, AttributeType.CONURBATION,
+            AttributeType.MAX_SPEED, AttributeType.MAX_SPEED_RAMP));
     this.elementViolationMap = new HashMap<>();
   }
 
@@ -96,12 +98,11 @@ class CompletenessCriterion extends RoseSetObservable<SegmentType, PlausibilityC
         if (this.necessaryAttributeTypes.contains(accessor.getAttributeType())) {
           if (accessor.getValue() == null) {
             violated = true;
-            if (segmentTypes.contains(segment.getSegmentType())) {
-              if (!this.elementViolationMap.containsKey(unit)) {
-                Violation violation = new Violation(this, List.of((Segment) unit));
-                this.violationManager.addViolation(violation);
-                this.elementViolationMap.put(unit, violation);
-              }
+            if (segmentTypes.contains(segment.getSegmentType())
+                    && !this.elementViolationMap.containsKey(unit)) {
+              Violation violation = new Violation(this, List.of((Segment) unit));
+              this.violationManager.addViolation(violation);
+              this.elementViolationMap.put(unit, violation);
             }
           }
         }

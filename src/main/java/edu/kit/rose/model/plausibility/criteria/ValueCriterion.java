@@ -12,6 +12,7 @@ import edu.kit.rose.model.plausibility.violation.ViolationManager;
 import edu.kit.rose.model.roadsystem.DataType;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
+import edu.kit.rose.model.roadsystem.attributes.SpeedLimit;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
@@ -19,6 +20,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -31,8 +33,6 @@ class ValueCriterion extends RoseSetObservable<SegmentType, PlausibilityCriterio
   protected static final Range<Double> LENGTH_RANGE = new Range<>(1.0, 5000.0);
   protected static final Range<Double> LANE_COUNT_RANGE = new Range<>(1.0, 10.0);
   protected static final Range<Double> LANE_COUNT_RAMP_RANGE = new Range<>(1.0, 10.0);
-  protected static final Range<Double> MAX_SPEED_RANGE = new Range<>(30.0, 400.0);
-  protected static final Range<Double> MAX_SPEED_RAMP_RANGE = new Range<>(30.0, 200.0);
   protected static final Range<Double> SLOPE_RANGE = new Range<>(-10.0, 10.0);
 
   private String name;
@@ -50,6 +50,12 @@ class ValueCriterion extends RoseSetObservable<SegmentType, PlausibilityCriterio
    */
   public ValueCriterion(ViolationManager violationManager,
                         AttributeType type, Range<Double> range) {
+    Objects.requireNonNull(type);
+    Objects.requireNonNull(range);
+    if (type.getDataType() != DataType.INTEGER && type.getDataType() != DataType.FRACTIONAL) {
+      throw new IllegalArgumentException("the value criterion can evaluate only attributes"
+              + "with integer, fractional, or speed limit data types");
+    }
     this.name = "";
     this.segmentTypes = new HashSet<>();
     this.violationManager = violationManager;
@@ -152,6 +158,7 @@ class ValueCriterion extends RoseSetObservable<SegmentType, PlausibilityCriterio
     } else if (dataType == DataType.FRACTIONAL) {
       return this.range.contains((Double) accessor.getValue());
     } else {
+      SpeedLimit value = (SpeedLimit) accessor.getValue();
       return false;
     }
   }

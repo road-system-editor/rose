@@ -82,7 +82,7 @@ public class DeleteStreetSegmentCommandTest {
   void testRecreatedSegmentIsEqualToDeleted() {
     this.segmentToDelete.setName("some name");
     this.segmentToDelete.setComment("insightful comment on the structure of this segment");
-    this.segmentToDelete.setSlope(99);
+    this.segmentToDelete.setSlope(99.0);
     this.segmentToDelete.setLaneCount(2);
     this.segmentToDelete.move(new Movement(1021, 313));
 

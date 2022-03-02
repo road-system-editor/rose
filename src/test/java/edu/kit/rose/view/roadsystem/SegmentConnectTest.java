@@ -15,6 +15,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.shape.Rectangle;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -42,6 +43,7 @@ public class SegmentConnectTest extends GuiTest {
             node instanceof  ConnectorView).queryAll().stream().toList();
   }
 
+  @Disabled
   @Test
   void testConnectBaseSegment() {
     drag(connectorViewList.get(4)).interact(() ->

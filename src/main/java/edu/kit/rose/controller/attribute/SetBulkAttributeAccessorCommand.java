@@ -42,11 +42,11 @@ public class SetBulkAttributeAccessorCommand<T> implements ChangeCommand {
     AttributeType type = accessor.getAttributeType();
     this.segmentToOldValueMap = new HashMap<>();
     for (Segment segment : segments) {
-      Optional<AttributeAccessor<?>> optionalAA =
+      Optional<AttributeAccessor<?>> optionalAttrAcc =
           segment.getAttributeAccessors().stream()
               .filter(acc -> acc.getAttributeType() == type).findFirst();
       //This cast is safe because the accessor is of type T. This is ensured in the stream.
-      optionalAA.ifPresent(attributeAccessor -> segmentToOldValueMap.put(segment,
+      optionalAttrAcc.ifPresent(attributeAccessor -> segmentToOldValueMap.put(segment,
               (T) attributeAccessor.getValue()));
     }
   }

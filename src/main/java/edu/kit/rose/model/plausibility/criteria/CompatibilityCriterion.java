@@ -218,6 +218,7 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
     //So here we check if it is still part of the RoadSystem and remove all Violations if it is not.
     if (!this.roadSystem.getElements().contains(segment)) {
       removeViolationsOfSegment(segment);
+      return;
     }
 
     if (this.operatorType != null) {

@@ -1,6 +1,7 @@
 package edu.kit.rose.view.panel.hierarchy;
 
 import edu.kit.rose.controller.hierarchy.HierarchyController;
+import edu.kit.rose.controller.roadsystem.RoadSystemController;
 import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.model.roadsystem.elements.Element;
@@ -33,6 +34,7 @@ public class ElementTreeCell extends TreeCell<Element>
 
   private final LocalizedTextProvider translator;
   private final HierarchyController hierarchyController;
+  private final RoadSystemController roadSystemController;
 
   private Element element;
 
@@ -45,7 +47,9 @@ public class ElementTreeCell extends TreeCell<Element>
    * @param translator          the translator
    */
   public ElementTreeCell(
+      RoadSystemController roadSystemController,
       HierarchyController hierarchyController, LocalizedTextProvider translator) {
+    this.roadSystemController = roadSystemController;
     this.hierarchyController = hierarchyController;
     this.translator = translator;
 
@@ -92,8 +96,8 @@ public class ElementTreeCell extends TreeCell<Element>
       this.currentGraphicElementView.onUnmount();
     }
 
-    this.currentGraphicElementView
-            = new SegmentView(translator, (Segment) element, hierarchyController);
+    this.currentGraphicElementView = new SegmentView(
+        translator, (Segment) element, hierarchyController, roadSystemController);
     setGraphic(this.currentGraphicElementView);
   }
 

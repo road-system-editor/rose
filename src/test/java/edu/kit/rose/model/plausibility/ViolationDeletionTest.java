@@ -19,6 +19,8 @@ import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.elements.Base;
 import edu.kit.rose.model.roadsystem.elements.Connection;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
@@ -36,9 +38,11 @@ public class ViolationDeletionTest {
   private PlausibilitySystem plausibilitySystem;
   private Base base1;
   private Connection connection;
+  private CompatibilityCriterion criterion;
 
   @BeforeEach
-  void beforeEach() {
+  void beforeEach() throws IOException {
+    Files.deleteIfExists(CONFIG_PATH);
     var modelFactory = new ModelFactory(CONFIG_PATH);
     Project project = modelFactory.createProject();
     this.roadSystem = project.getRoadSystem();
@@ -53,7 +57,7 @@ public class ViolationDeletionTest {
   void setupOneViolation() {
     CriteriaManager criteriaManager = plausibilitySystem.getCriteriaManager();
 
-    CompatibilityCriterion criterion = criteriaManager.createCompatibilityCriterion();
+    criterion = criteriaManager.createCompatibilityCriterion();
     controller.addSegmentTypeToCompatibilityCriterion(criterion, SegmentType.BASE);
     controller.setCompatibilityCriterionAttributeType(criterion, AttributeType.LANE_COUNT);
     controller.setCompatibilityCriterionValidationType(criterion, ValidationType.LESS_THAN);
@@ -115,6 +119,47 @@ public class ViolationDeletionTest {
     Assertions.assertEquals(2, violationManager.getViolations().getSize());
 
     roadSystem.removeElement(base1);
+    Assertions.assertEquals(0, violationManager.getViolations().getSize());
+  }
+
+  @Test
+  void testRemoveCriterionRemovesViolation() {
+    ViolationManager violationManager = plausibilitySystem.getViolationManager();
+    CriteriaManager criteriaManager = plausibilitySystem.getCriteriaManager();
+
+    setupOneViolation();
+    Assertions.assertEquals(1, violationManager.getViolations().getSize());
+
+    criteriaManager.removeCriterion(criterion);
+    Assertions.assertEquals(0, violationManager.getViolations().getSize());
+  }
+
+  @Test
+  void testRemoveCriterionRemovesMultipleViolations() {
+    ViolationManager violationManager = plausibilitySystem.getViolationManager();
+    CriteriaManager criteriaManager = plausibilitySystem.getCriteriaManager();
+
+    setupOneViolation();
+    Assertions.assertEquals(1, violationManager.getViolations().getSize());
+
+    Base base = (Base) roadSystem.createSegment(SegmentType.BASE);
+    connection = roadSystem.connectConnectors(base.getEntry(), base1.getExit());
+    Assertions.assertEquals(2, violationManager.getViolations().getSize());
+
+    criteriaManager.removeCriterion(criterion);
+    Assertions.assertEquals(0, violationManager.getViolations().getSize());
+  }
+
+  @Test
+  void testChangeCriterionRemovesViolation() {
+    ViolationManager violationManager = plausibilitySystem.getViolationManager();
+
+    setupOneViolation();
+    Assertions.assertEquals(1, violationManager.getViolations().getSize());
+
+    controller.setCompatibilityCriterionValidationType(criterion, ValidationType.EQUALS);
+    controller.setCompatibilityCriterionAttributeType(criterion, AttributeType.NAME);
+
     Assertions.assertEquals(0, violationManager.getViolations().getSize());
   }
 }

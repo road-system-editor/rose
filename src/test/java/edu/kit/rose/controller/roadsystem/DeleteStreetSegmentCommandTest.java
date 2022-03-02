@@ -48,6 +48,7 @@ public class DeleteStreetSegmentCommandTest {
   public void setUp() throws IOException {
     Files.deleteIfExists(CONFIG_PATH);
     var modelFactory = new ModelFactory(CONFIG_PATH);
+
     this.project = modelFactory.createProject();
     this.roadSystem = this.project.getRoadSystem();
     this.replacementLog = new ReplacementLog();

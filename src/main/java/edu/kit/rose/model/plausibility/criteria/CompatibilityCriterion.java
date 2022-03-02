@@ -59,7 +59,6 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
   private RoadSystem roadSystem;
   private ViolationManager violationManager;
 
-
   /**
    * Constructor.
    *

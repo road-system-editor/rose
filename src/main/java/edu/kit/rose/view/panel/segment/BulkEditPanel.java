@@ -49,7 +49,6 @@ public class BulkEditPanel extends FxmlContainer {
     super.init(injector);
     setAttributes(injector);
     updateTranslatableStrings(getTranslator().getSelectedLanguage());
-    //attributePanel.setAttributes(controller.getBulkEditAccessors());
   }
 
   private void setupView() {
@@ -60,7 +59,7 @@ public class BulkEditPanel extends FxmlContainer {
 
   private void setAttributes(Injector injector) {
     attributeList.getChildren().clear();
-    BulkEditableAttributeFactory factory = new BulkEditableAttributeFactory(controller);
+    EditableAttributeFactory factory = new EditableAttributeFactory(controller, true);
     for (AttributeAccessor<?> attribute : controller.getBulkEditAccessors()) {
       EditableAttribute<?> editable = factory.forAttribute(attribute);
       editable.init(injector);

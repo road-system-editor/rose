@@ -103,27 +103,24 @@ public class Grid extends Pane implements SetObserver<Segment, RoadSystemControl
   }
 
   private void buildEditorOnSegment(Segment segment) {
-    getChildren().removeAll(editors);
-    editors.clear();
     SegmentEditorPanel editor = new SegmentEditorPanel();
-    getChildren().add(editor);
-    editor.init(injector);
+
+    placeEditor(editor, segment);
     editor.setSegment(segment);
-    Platform.runLater(() -> {
-      var center = segment.getCenter();
-      var width = editor.getWidth();
-      var height = editor.getHeight();
-      editor.relocate(center.getX() - width / 2, center.getY() - height);
-    });
-    editors.add(editor);
   }
 
   private void buildBulkEditor(Segment segment) {
+    BulkEditPanel editor = new BulkEditPanel();
+    placeEditor(editor, segment);
+  }
+
+  private void placeEditor(FxmlContainer editor, Segment segment) {
     getChildren().removeAll(editors);
     editors.clear();
-    BulkEditPanel editor = new BulkEditPanel();
     getChildren().add(editor);
     editor.init(injector);
+
+
     Platform.runLater(() -> {
       var center = segment.getCenter();
       var width = editor.getWidth();

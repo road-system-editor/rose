@@ -10,7 +10,6 @@ import java.util.Objects;
  * and makes it changeable.
  *
  * @param <T> the type of the accessor's value
- * @author ROSE Team
  */
 public class SetAttributeAccessorCommand<T> implements ChangeCommand {
 

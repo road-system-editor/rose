@@ -45,13 +45,14 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
   private ViolationManager violationManager;
 
   /**
-   * Constructor.
+   * Creates a new compatibility criterion with default settings.
    *
-   * @param roadSystem       The Roadsystem this Criterion applied to.
-   * @param violationManager manager to which violations will be added
+   * @param roadSystem the road system this criterion applies to. This may be {@code null} but it
+   *     must be set before this criterion is able to receive notifications.
+   * @param violationManager manager to which violations will be added. This may be {@code null} but
+   *     it must be set before this criterion is able to receive notifications.
    */
   public CompatibilityCriterion(RoadSystem roadSystem, ViolationManager violationManager) {
-    Objects.requireNonNull(violationManager);
     this.name = "";
     this.discrepancy = 0;
     this.segmentTypes = new HashSet<>();
@@ -176,10 +177,12 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
   @Override
   public void setViolationManager(ViolationManager violationManager) {
     if (this.violationManager != violationManager) {
-      SortedBox<Violation> violations = this.violationManager.getViolations();
-      for (var violation : violations) {
-        if (violation.violatedCriterion() == this) {
-          this.violationManager.removeViolation(violation);
+      if (this.violationManager != null) {
+        SortedBox<Violation> violations = this.violationManager.getViolations();
+        for (var violation : violations) {
+          if (violation.violatedCriterion() == this) {
+            this.violationManager.removeViolation(violation);
+          }
         }
       }
       this.violationManager = violationManager;

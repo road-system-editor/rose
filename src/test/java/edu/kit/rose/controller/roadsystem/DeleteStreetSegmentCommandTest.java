@@ -20,6 +20,8 @@ import edu.kit.rose.model.roadsystem.elements.Base;
 import edu.kit.rose.model.roadsystem.elements.Group;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,7 +45,8 @@ public class DeleteStreetSegmentCommandTest {
    * Sets up all mock objects.
    */
   @BeforeEach
-  public void setUp() {
+  public void setUp() throws IOException {
+    Files.deleteIfExists(CONFIG_PATH);
     var modelFactory = new ModelFactory(CONFIG_PATH);
     this.project = modelFactory.createProject();
     this.roadSystem = this.project.getRoadSystem();

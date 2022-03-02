@@ -32,9 +32,10 @@ public class ConnectionCopier {
   }
 
   /**
+   * Copies a {@link Connection} and returns the copy.
    *
-   * @param connection
-   * @return
+   * @param connection the {@link Connection} to copy
+   * @return the copy of the {@link Connection}
    */
   public Connection copyConnection(Connection connection) {
 

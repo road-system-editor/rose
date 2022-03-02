@@ -159,6 +159,6 @@ class GroupView extends ElementView<Group> {
   @Override
   public void onUnmount() {
     super.onUnmount();
-    getTranslator().subscribeToOnLanguageChanged(this.languageChangedSubscription);
+    getTranslator().unsubscribeFromOnLanguageChanged(this.languageChangedSubscription);
   }
 }

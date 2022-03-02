@@ -51,7 +51,8 @@ public class ViolationDeletionTest {
     ApplicationDataSystem applicationDataSystem = modelFactory.createApplicationDataSystem();
     this.controller = new RosePlausibilityController(new RoseStorageLock(), navigator, project,
         new RoseSelectionBuffer(), applicationDataSystem);
-    this.plausibilitySystem.getCriteriaManager().removeAllCriteriaOfType(PlausibilityCriterionType.COMPATIBILITY);
+    this.plausibilitySystem.getCriteriaManager()
+        .removeAllCriteriaOfType(PlausibilityCriterionType.COMPATIBILITY);
   }
 
   void setupOneViolation() {
@@ -137,7 +138,6 @@ public class ViolationDeletionTest {
   @Test
   void testRemoveCriterionRemovesMultipleViolations() {
     ViolationManager violationManager = plausibilitySystem.getViolationManager();
-    CriteriaManager criteriaManager = plausibilitySystem.getCriteriaManager();
 
     setupOneViolation();
     Assertions.assertEquals(1, violationManager.getViolations().getSize());
@@ -146,6 +146,7 @@ public class ViolationDeletionTest {
     connection = roadSystem.connectConnectors(base.getEntry(), base1.getExit());
     Assertions.assertEquals(2, violationManager.getViolations().getSize());
 
+    CriteriaManager criteriaManager = plausibilitySystem.getCriteriaManager();
     criteriaManager.removeCriterion(criterion);
     Assertions.assertEquals(0, violationManager.getViolations().getSize());
   }

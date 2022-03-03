@@ -20,5 +20,10 @@
       "legalDiscrepancy" : 0
     } ]
   },
-  "language" : "GERMAN"
+  "language" : "GERMAN",
+  "recentProjectPaths": [
+    "file:///C:/Users/maxsc/Documents/ROSE/empty-example.rose.json",
+    "file:///C:/Users/maxsc/Documents/ROSE/small-example.rose.json",
+    "file:///C:/Users/maxsc/Documents/ROSE/huge-example.rose.json"
+  ]
 }

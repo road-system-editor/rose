@@ -123,7 +123,7 @@ class RoseApplicationDataSystem extends RoseDualSetObservable<AttributeType,
 
   @Override
   public void addRecentProjectPath(Path recentProjectPath) {
-    var absolute = Objects.requireNonNull(recentProjectPath).toAbsolutePath();
+    var absolute = Objects.requireNonNull(recentProjectPath).toAbsolutePath().normalize();
 
     if (this.recentProjectPaths.add(absolute)) {
       getSubscriberIterator().forEachRemaining(sub -> sub.notifyAdditionSecond(absolute));

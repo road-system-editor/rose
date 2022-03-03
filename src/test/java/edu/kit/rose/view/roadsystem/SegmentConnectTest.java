@@ -12,6 +12,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,8 +23,14 @@ import org.junit.jupiter.api.Test;
  * Tests if the Segments connect properly.
  */
 public class SegmentConnectTest extends GuiTest {
+  private static final Color COLOR_HOVER = Color.rgb(162, 34, 35)
+          .deriveColor(1, 1, 1, 0.5);
+  private static final Color COLOR_CONNECT = Color.rgb(140, 182, 60)
+          .deriveColor(1, 1, 1, 0.5);
   private List<Node> connectorViewList;
   private Grid grid;
+  private SegmentView segmentViewBase;
+  private SegmentView segmentViewEntry;
 
   @BeforeEach
   void setUp() {
@@ -36,18 +43,25 @@ public class SegmentConnectTest extends GuiTest {
     doubleClickOn(listCell.get(0));
     List<Node> segmentViewList = grid.getChildren()
             .stream().filter(e -> e instanceof SegmentView).toList();
+    segmentViewBase = (SegmentView) segmentViewList.get(1);
+    segmentViewEntry = (SegmentView) segmentViewList.get(0);
     drag(segmentViewList.get(1)).interact(() -> dropBy(-60, 80));
     connectorViewList = lookup((Node node) ->
             node instanceof  ConnectorView).queryAll().stream().toList();
   }
 
-  @Disabled("disabled till the pipeline will be adapted")
+  @Disabled("disabled until pipeline adapted")
   @Test
   void testConnectBaseSegment() {
     ConnectorView connectorView1 = (ConnectorView) connectorViewList.get(4);
+    drag(connectorView1);
+    Assertions.assertTrue(segmentViewBase.getDrawAsSelected());
+    Assertions.assertEquals(COLOR_HOVER, connectorView1.getFill());
     ConnectorView connectorView2 = (ConnectorView) connectorViewList.get(1);
-    drag(connectorView1).interact(() ->
-            moveTo(connectorView2).moveBy(-1, 17).drop());
+    interact(() -> moveTo(connectorView2).moveBy(-1, 10));
+    moveBy(0, 7);
+    Assertions.assertEquals(COLOR_CONNECT, connectorView1.getFill());
+    drop();
     List<Node> connectionViewList = grid.getChildren()
             .stream().filter(e -> e instanceof ConnectionView).toList();
     ConnectionView connectionView = (ConnectionView) connectionViewList.get(0);
@@ -64,13 +78,18 @@ public class SegmentConnectTest extends GuiTest {
     Assertions.assertEquals(distance, connection.getWidth());
   }
 
-  @Disabled("disabled till the pipeline will be adapted")
+  @Disabled("disabled until pipeline adapted")
   @Test
   void testConnectEntrySegment() {
-    ConnectorView connectorView1 = (ConnectorView) connectorViewList.get(4);
     ConnectorView connectorView2 = (ConnectorView) connectorViewList.get(1);
-    drag(connectorView2).interact(() ->
-            moveTo(connectorView1).moveBy(1, -17).drop());
+    drag(connectorView2);
+    Assertions.assertTrue(segmentViewEntry.getDrawAsSelected());
+    Assertions.assertEquals(COLOR_HOVER, connectorView2.getFill());
+    ConnectorView connectorView1 = (ConnectorView) connectorViewList.get(4);
+    interact(() -> moveTo(connectorView1).moveBy(1, -10));
+    moveBy(0, -7);
+    Assertions.assertEquals(COLOR_CONNECT, connectorView2.getFill());
+    drop();
     List<Node> connectionViewList = grid.getChildren()
             .stream().filter(e -> e instanceof ConnectionView).toList();
     ConnectionView connectionView = (ConnectionView) connectionViewList.get(0);

@@ -68,6 +68,14 @@ public interface HierarchyController {
   void clearSegmentSelection();
 
   /**
+   * Returns if a given {@link Segment} is selected.
+   *
+   * @param segment the {@link Segment} whose selection status is requested.
+   * @return the selection status of the {@link Segment}
+   */
+  boolean getIsSegmentSelected(Segment segment);
+
+  /**
    * Adds a biConsumer to the consumer list.
    *
    * @param consumer to be added

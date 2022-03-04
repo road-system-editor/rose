@@ -40,7 +40,8 @@ public class ElementTreeItem extends TreeItem<Element> {
 
     if (getValue() != null) { // Don't update preserveElement in root
       preserveElement = getValue() != null
-          && (getValue().getName().startsWith(filterText) || this.hasPreservedChildren());
+          && ((getValue().getName() != null && getValue().getName().startsWith(filterText))
+          || this.hasPreservedChildren());
     }
 
     filteredList.setPredicate((childElementTreeItem) -> {

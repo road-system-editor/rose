@@ -3,12 +3,12 @@ package edu.kit.rose.view.panel.hierarchy;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import edu.kit.rose.controller.hierarchy.HierarchyController;
+import edu.kit.rose.controller.roadsystem.RoadSystemController;
 import edu.kit.rose.infrastructure.DualSetObserver;
 import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.roadsystem.RoadSystem;
-import edu.kit.rose.model.roadsystem.elements.Base;
 import edu.kit.rose.model.roadsystem.elements.Connection;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Group;
@@ -34,7 +34,9 @@ public class HierarchyPanel extends FxmlContainer
                             implements DualSetObserver<Element, Connection, RoadSystem> {
 
   @Inject
-  private HierarchyController controller;
+  private HierarchyController hierarchyController;
+  @Inject
+  private RoadSystemController roadSystemController;
   @Inject
   private Project project;
 
@@ -68,7 +70,8 @@ public class HierarchyPanel extends FxmlContainer
     });
 
     elementsTreeView
-        .setCellFactory(elementsTree -> new ElementTreeCell(controller, getTranslator()));
+        .setCellFactory(elementsTree -> new ElementTreeCell(
+            roadSystemController, hierarchyController, getTranslator()));
     elementsTreeView.setShowRoot(false);
     elementsTreeView.setRoot(rootItem);
 
@@ -78,7 +81,7 @@ public class HierarchyPanel extends FxmlContainer
   }
 
   private void onCreateGroupButtonClicked(MouseEvent mouseEvent) {
-    this.controller.createGroup();
+    this.hierarchyController.createGroup();
   }
 
   private void onDragOver(DragEvent dragEvent) {
@@ -143,30 +146,31 @@ public class HierarchyPanel extends FxmlContainer
         deleteTreeItemsForElementsRecursive(rootItem, elements);
 
         ElementTreeItem groupRootItem = new ElementTreeItem(unit);
-        elements.forEach(element -> groupRootItem.getChildren().add(new ElementTreeItem(element)));
+        elements.forEach(element ->
+            groupRootItem.getInternalChildren().add(new ElementTreeItem(element)));
 
-        rootItem.getChildren().add(groupRootItem);
+        rootItem.getInternalChildren().add(groupRootItem);
       } else {
         ElementTreeItem treeItem = new ElementTreeItem(unit);
-        rootItem.getChildren().add(treeItem);
+        rootItem.getInternalChildren().add(treeItem);
       }
     });
   }
 
   private void deleteTreeItemsForElementsRecursive(
-      TreeItem<Element> currentTreeItem,
+      ElementTreeItem currentTreeItem,
       SortedBox<Element> elements) {
-    currentTreeItem.getChildren().removeIf(child -> elements.contains(child.getValue()));
+    currentTreeItem.getInternalChildren().removeIf(child -> elements.contains(child.getValue()));
 
     for (TreeItem<Element> treeItem : currentTreeItem.getChildren()) {
-      deleteTreeItemsForElementsRecursive(treeItem, elements);
+      deleteTreeItemsForElementsRecursive((ElementTreeItem) treeItem, elements);
     }
   }
 
   @Override
   public void notifyRemoval(Element unit) {
     Platform.runLater(() -> {
-      rootItem.getChildren().removeIf(child -> child.getValue() == unit);
+      rootItem.getInternalChildren().removeIf(child -> child.getValue() == unit);
     });
   }
 

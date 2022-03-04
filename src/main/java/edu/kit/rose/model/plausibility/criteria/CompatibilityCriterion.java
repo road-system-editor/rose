@@ -22,11 +22,14 @@ import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.apache.commons.collections4.MultiValuedMap;
+import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 
 /**
  * Modells a Compatiblity Criterion. See Pflichtenheft: "Kompatibilitätskriterium"
@@ -35,8 +38,20 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
         PlausibilityCriterion> implements PlausibilityCriterion {
   private static final boolean USE_DISCREPANCY = true;
   private static final boolean NOT_USE_DISCREPANCY = false;
+  private static final Map<ValidationType, ValidationStrategy<?>> TYPE_TO_STRATEGY_MAP =
+      Map.of(ValidationType.EQUALS, new EqualsValidationStrategy<>(),
+          ValidationType.NOT_EQUALS, new NotEqualsValidationStrategy<>(),
+          ValidationType.NOR, new NorValidationStrategy(),
+          ValidationType.OR, new OrValidationStrategy(),
+          ValidationType.LESS_THAN, new LessThanValidationStrategy<>());
+  private static final Map<ValidationType, Boolean> TYPE_TO_DISCREPANCY_MAP =
+      Map.of(ValidationType.EQUALS, NOT_USE_DISCREPANCY,
+          ValidationType.NOT_EQUALS, NOT_USE_DISCREPANCY,
+          ValidationType.NOR, NOT_USE_DISCREPANCY,
+          ValidationType.OR, NOT_USE_DISCREPANCY,
+          ValidationType.LESS_THAN, USE_DISCREPANCY);
   private final Set<SegmentType> segmentTypes;
-  private final HashMap<Element, Violation> elementViolationMap;
+  private final MultiValuedMap<Element, Violation> elementViolationMap;
   private String name;
   private AttributeType attributeType;
   private ValidationType operatorType;
@@ -58,7 +73,7 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
     this.segmentTypes = new HashSet<>();
     this.violationManager = violationManager;
     this.roadSystem = roadSystem;
-    this.elementViolationMap = new HashMap<>();
+    this.elementViolationMap = new HashSetValuedHashMap<>();
   }
 
   /**
@@ -213,86 +228,66 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
     if (this.roadSystem == null) {
       throw new IllegalStateException("can not check connections without set roadSystem.");
     }
-    ArrayList<Segment> invalidSegments;
-    if (this.operatorType != null && !unit.isContainer()) {
-      ValidationStrategy<?> strategy;
 
-      switch (this.operatorType) {
-        case EQUALS -> {
-          strategy = new EqualsValidationStrategy<>();
-          invalidSegments = getInvalidSegments(strategy, (Segment) unit, NOT_USE_DISCREPANCY);
-        }
-        case LESS_THAN -> {
-          strategy = new LessThanValidationStrategy<>();
-          invalidSegments = getInvalidSegments(strategy, (Segment) unit, USE_DISCREPANCY);
-        }
-        case NOR -> {
-          strategy = new NorValidationStrategy();
-          invalidSegments = getInvalidSegments(strategy, (Segment) unit, NOT_USE_DISCREPANCY);
-        }
-        case NOT_EQUALS -> {
-          strategy = new NotEqualsValidationStrategy<>();
-          invalidSegments = getInvalidSegments(strategy, (Segment) unit, NOT_USE_DISCREPANCY);
-        }
-        case OR -> {
-          strategy = new OrValidationStrategy();
-          invalidSegments = getInvalidSegments(strategy, (Segment) unit, NOT_USE_DISCREPANCY);
-        }
-        default -> throw new IllegalArgumentException("invalid operator type");
+    if (unit.isContainer()) {
+      return;
+    }
+    Segment segment = (Segment) unit;
+
+    //The Criterion does not know when a segment gets removed.
+    //So here we check if it is still part of the RoadSystem and remove all Violations if it is not.
+    if (!this.roadSystem.getElements().contains(segment)) {
+      removeViolationsOfSegment(segment);
+      return;
+    }
+
+    if (this.operatorType != null) {
+      ValidationStrategy<?> strategy = TYPE_TO_STRATEGY_MAP.get(this.operatorType);
+      Boolean useDiscrepancy = TYPE_TO_DISCREPANCY_MAP.get(this.operatorType);
+      ArrayList<Segment> invalidSegments = getInvalidSegments(strategy, segment, useDiscrepancy);
+
+      updateViolations(invalidSegments, segment);
+    }
+  }
+
+  private void removeViolationsOfSegment(Segment segment) {
+    HashSetValuedHashMap<Element, Violation> elementViolationMapCopy =
+        new HashSetValuedHashMap<>(elementViolationMap);
+    if (elementViolationMap.containsKey(segment)) {
+      for (Violation vio : elementViolationMapCopy.get(segment)) {
+        this.violationManager.removeViolation(vio);
+        elementViolationMap.removeMapping(segment, vio);
       }
-      if (!invalidSegments.isEmpty()
-              && this.segmentTypes.contains(((Segment) unit).getSegmentType())) {
-        if (!coveredByOtherSegments(invalidSegments, (Segment) unit)) {
-          if (this.elementViolationMap.containsKey(unit)) {
-            notifyRemoval(unit);
+    }
+  }
+
+  private void updateViolations(List<Segment> invalidSegments, Segment segment) {
+    HashSetValuedHashMap<Element, Violation> elementViolationMapCopy =
+        new HashSetValuedHashMap<>(elementViolationMap);
+    if (!invalidSegments.isEmpty()
+        && this.segmentTypes.contains((segment).getSegmentType())) {
+      if (elementViolationMapCopy.containsKey(segment)) {
+        for (Violation vio : elementViolationMapCopy.get(segment)) {
+          if (vio.offendingSegments().size() != invalidSegments.size()
+              || !vio.offendingSegments().containsAll(invalidSegments)) {
+
+            if (this.elementViolationMap.containsKey(segment)) {
+              this.violationManager.removeViolation(vio);
+              elementViolationMap.removeMapping(segment, vio);
+            }
           }
-          invalidSegments.add((Segment) unit);
-          Violation violation = new Violation(this, invalidSegments);
-          this.violationManager.addViolation(violation);
-          this.elementViolationMap.put(unit, violation);
         }
-      } else if (elementViolationMap.containsKey(unit)) {
-        notifyRemoval(unit);
       }
-    }
-  }
 
-
-  @Override
-  public void notifyAddition(Element unit) {
-    notifyChange(unit);
-  }
-
-  @Override
-  public void notifyRemoval(Element unit) {
-    this.violationManager.removeViolation(this.elementViolationMap.get(unit));
-    this.elementViolationMap.remove(unit);
-  }
-
-  @Override
-  public PlausibilityCriterion getThis() {
-    return this;
-  }
-
-  /**
-   * Checks if the segments, that the unit is not compatible with, did not already
-   * cause a violation where this unit is already invoked.
-   * Example: only 2 segments on the road. segment1 is not compatible with segment2.
-   * after the segment1 was checked a violation was created. When segment2 is being checked
-   * a new violation should not be created.
-   *
-   * @param invalidSegments the segments that are not compatible with the unit
-   * @param unit            the unit that is being checked
-   * @return true if the invalid segments already caused violation where the unit was invoked.
-   */
-  private boolean coveredByOtherSegments(ArrayList<Segment> invalidSegments, Segment unit) {
-    for (var segment : invalidSegments) {
-      if (!(elementViolationMap.containsKey(segment)
-              && elementViolationMap.get(segment).offendingSegments().contains(unit))) {
-        return false;
+      for (Segment seg : invalidSegments) {
+        Violation violation = new Violation(this, List.of(seg, segment));
+        this.violationManager.addViolation(violation);
+        this.elementViolationMap.put(segment, violation);
       }
+
+    } else {
+      removeViolationsOfSegment(segment);
     }
-    return true;
   }
 
   private ArrayList<Segment> getInvalidSegments(ValidationStrategy<?> strategy,
@@ -301,7 +296,6 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
     Box<Segment> adjacentSegments = this.roadSystem.getAdjacentSegments(segment);
     AttributeAccessor<?> segmentAccessor =
             getAccessorOfType(segment.getAttributeAccessors(), this.attributeType);
-
 
     for (Segment adjacentSegment : adjacentSegments) {
       if (this.segmentTypes.contains(adjacentSegment.getSegmentType())) {
@@ -313,6 +307,11 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
       }
     }
     return invalidSegments;
+  }
+
+  @Override
+  public PlausibilityCriterion getThis() {
+    return this;
   }
 
   private AttributeAccessor<?> getAccessorOfType(SortedBox<AttributeAccessor<?>> accessors,
@@ -351,6 +350,18 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
           useDiscrepancy));
       default -> throw new IllegalArgumentException("no such data type found");
     };
+  }
+
+  @Override
+  public void notifyAddition(Element unit) {
+    notifyChange(unit);
+  }
+
+  @Override
+  public void notifyRemoval(Element unit) {
+    if (!unit.isContainer()) {
+      removeViolationsOfSegment((Segment) unit);
+    }
   }
 
   @SuppressWarnings("unchecked")

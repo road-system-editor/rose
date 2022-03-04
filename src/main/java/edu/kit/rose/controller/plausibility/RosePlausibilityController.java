@@ -11,6 +11,7 @@ import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.model.ApplicationDataSystem;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.plausibility.criteria.CompatibilityCriterion;
+import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterionType;
 import edu.kit.rose.model.plausibility.criteria.validation.ValidationType;
 import edu.kit.rose.model.plausibility.violation.Violation;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
@@ -103,7 +104,8 @@ public class RosePlausibilityController extends Controller implements Plausibili
 
   @Override
   public void deleteAllCompatibilityCriteria() {
-    this.applicationDataSystem.getCriteriaManager().removeAllCriteria();
+    this.applicationDataSystem.getCriteriaManager()
+        .removeAllCriteriaOfType(PlausibilityCriterionType.COMPATIBILITY);
   }
 
   @Override

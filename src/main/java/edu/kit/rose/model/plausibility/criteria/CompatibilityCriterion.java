@@ -265,7 +265,7 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
         && this.segmentTypes.contains((segment).getSegmentType())) {
       if (elementViolationMapCopy.containsKey(segment)) {
         for (Violation vio : elementViolationMapCopy.get(segment)) {
-          if (!(vio.offendingSegments().size() == invalidSegments.size())
+          if (vio.offendingSegments().size() != invalidSegments.size()
               || !vio.offendingSegments().containsAll(invalidSegments)) {
 
             if (this.elementViolationMap.containsKey(segment)) {

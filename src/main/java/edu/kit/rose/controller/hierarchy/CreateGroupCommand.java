@@ -19,6 +19,10 @@ import java.util.Set;
  * and makes it changeable.
  */
 public class CreateGroupCommand implements ChangeCommand {
+
+  private static final String GROUP_NAME_TEMPLATE = "Group %s";
+  private static int CREATED_GROUP_COUNT = 0;
+
   private final ReplacementLog replacementLog;
   private final Project project;
   private final Set<Element> elements;
@@ -50,6 +54,10 @@ public class CreateGroupCommand implements ChangeCommand {
     this.group = this.project.getRoadSystem().createGroup(newElements);
     if (oldGroup != null) {
       this.replacementLog.replaceElement(oldGroup, this.group);
+      this.group.setName(oldGroup.getName());
+    } else {
+      CREATED_GROUP_COUNT++;
+      this.group.setName(String.format(GROUP_NAME_TEMPLATE, CREATED_GROUP_COUNT));
     }
   }
 

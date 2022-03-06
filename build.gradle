@@ -5,7 +5,9 @@ plugins {
     id 'org.beryx.jlink' version '2.24.1'
     id 'checkstyle'
     id 'jacoco'
+    id 'org.sonarqube' version '3.3'
 }
+
 
 group 'edu.kit.rose'
 version '1.0-SNAPSHOT'
@@ -91,4 +93,11 @@ jlink {
 
 jlinkZip {
     group = 'distribution'
+}
+
+sonarqube {
+    properties {
+        property "sonar.projectKey", "psege_rose_AX9hHSxrKw6c9ZNKKE-D"
+        property "sonar.qualitygate.wait", true
+    }
 }

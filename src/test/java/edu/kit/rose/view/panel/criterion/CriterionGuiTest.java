@@ -19,6 +19,8 @@ import javafx.scene.layout.VBox;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 
 /**
  * Include test scenarios for criteria.
@@ -47,6 +49,8 @@ public class CriterionGuiTest extends GuiTest {
             node instanceof ConnectorView).queryAll().stream().toList();
   }
 
+
+  @EnabledOnOs(OS.WINDOWS)
   @Test
   void testValidateCompatibilityCriterion() {
     drag(connectorViewList.get(0)).interact(()

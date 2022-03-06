@@ -20,6 +20,7 @@ ext {
 
 sourceCompatibility = '17'
 targetCompatibility = '17'
+
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
@@ -65,6 +66,7 @@ test {
 
 jacocoTestReport {
     dependsOn test
+
     reports {
         xml.required = true
     }

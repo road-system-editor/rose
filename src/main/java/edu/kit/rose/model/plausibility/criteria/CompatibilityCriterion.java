@@ -67,6 +67,7 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
    * @param violationManager manager to which violations will be added. This may be {@code null} but
    *     it must be set before this criterion is able to receive notifications.
    */
+
   public CompatibilityCriterion(RoadSystem roadSystem, ViolationManager violationManager) {
     this.name = "";
     this.discrepancy = 0;

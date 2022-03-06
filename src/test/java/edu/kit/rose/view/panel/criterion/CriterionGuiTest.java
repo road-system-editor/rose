@@ -8,6 +8,9 @@ import edu.kit.rose.view.panel.roadsystem.Grid;
 import edu.kit.rose.view.panel.segmentbox.SegmentBlueprint;
 import edu.kit.rose.view.panel.segmentbox.SegmentBoxListCell;
 import edu.kit.rose.view.panel.violation.ViolationHandle;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.util.List;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -26,33 +29,56 @@ import org.junit.jupiter.api.condition.OS;
  * Include test scenarios for criteria.
  */
 public class CriterionGuiTest extends GuiTest {
+  private static final String CRITERION_NAME = "testCriterion";
+  private static final String FILE_NAME = "tesCriteriaConfiguration";
   private static final String VIOLATION_MESSAGE = "B1ASE and B0ASE are incompatible";
   private Grid grid;
-  private List<Node> connectorViewList;
   private List<Node> segmentViewList;
 
   @BeforeEach
   void setUp() {
-    putSegmentsOnGrid();
-    configureCriterion();
-    doubleClickOn(segmentViewList.get(1));
-    clickOn(lookup("#attributeList").<VBox>query().getChildren().get(0));
-    type(KeyCode.DIGIT1);
-    clickOn(lookup("#attributeList").<VBox>query().getChildren().get(4));
-    type(KeyCode.DIGIT0);
-    clickOn(grid);
-    doubleClickOn(segmentViewList.get(0));
-    clickOn(lookup("#attributeList").<VBox>query().getChildren().get(0));
-    type(KeyCode.DIGIT0);
-    clickOn(grid);
-    connectorViewList = lookup((Node node) ->
-            node instanceof ConnectorView).queryAll().stream().toList();
+
   }
 
+  @EnabledOnOs(OS.WINDOWS)
+  @Test
+  void testImportExportCriterion() {
+    configureLessThan();
+    clickOn("#newButton").clickOn("#newButton")
+            .clickOn("#newButton").clickOn("#newButton");
+    List<Node> criteriaListCell = getCriteriaListCell();
+    enterNameOfCriterion(criteriaListCell, 0);
+    enterNameOfCriterion(criteriaListCell, 1);
+    enterNameOfCriterion(criteriaListCell, 2);
+    enterNameOfCriterion(criteriaListCell, 3);
+    clickOn("#exportButton");
+    selectTestConfiguration();
+    push(KeyCode.LEFT);
+    push(KeyCode.ENTER);
+    clickOn("#deleteAllButton");
+    clickOn("#importButton");
+    selectTestConfiguration();
+    criteriaListCell = getCriteriaListCell();
+    clickOn(criteriaListCell.get(0));
+    Assertions.assertEquals(CRITERION_NAME + 4, lookup("#nameField").<TextField>query().getText());
+    clickOn(criteriaListCell.get(1));
+    Assertions.assertEquals(CRITERION_NAME + 3, lookup("#nameField").<TextField>query().getText());
+    clickOn(criteriaListCell.get(2));
+    Assertions.assertEquals(CRITERION_NAME + 2, lookup("#nameField").<TextField>query().getText());
+    clickOn(criteriaListCell.get(3));
+    Assertions.assertEquals(CRITERION_NAME + 1, lookup("#nameField").<TextField>query().getText());
+    clickOn(criteriaListCell.get(4));
+    Assertions.assertEquals(CRITERION_NAME + 0, lookup("#nameField").<TextField>query().getText());
+  }
 
   @EnabledOnOs(OS.WINDOWS)
   @Test
   void testValidateCompatibilityCriterion() {
+    putSegmentsOnGrid();
+    List<Node> connectorViewList = lookup((Node node) ->
+            node instanceof ConnectorView).queryAll().stream().toList();
+    configureCriterion();
+    configureAttributes();
     drag(connectorViewList.get(0)).interact(()
             -> moveTo(connectorViewList.get(2)).moveBy(16, 13).drop());
     List<ViolationHandle> violationHandleList =
@@ -94,18 +120,25 @@ public class CriterionGuiTest extends GuiTest {
   }
 
   private void configureCriterion() {
+    configureLessThan();
+    closeCurrentWindow();
+  }
+
+  private void configureLessThan() {
     clickOn("#validation");
     clickOn("#criteria");
     clickOn("#deleteAllButton");
     clickOn("#newButton");
-    List<SegmentBlueprint> criteriaListCell =
+    List<Node> criteriaListCell =
             from(lookup("#criteriaList").queryListView()).lookup((Node node)
                             -> node.getParent() instanceof CriterionListCell)
-                    .<SegmentBlueprint>queryAll().stream().toList();
-    clickOn(criteriaListCell.get(9));
-    List<ListCell> typeCell = from(lookup("#typeSelector").queryListView()).lookup((Node node)
+                    .queryAll().stream()
+                    .filter(e -> !((ListCell) e.getParent()).isEmpty()).toList();
+    clickOn(criteriaListCell.get(0));
+    lookup("#nameField").<TextField>query().setText(CRITERION_NAME + 4);
+    List<Node> typeCell = from(lookup("#typeSelector").queryListView()).lookup((Node node)
                     -> node.getParent() instanceof ListCell)
-            .<ListCell>queryAll().stream().toList();
+            .queryAll().stream().toList();
     clickOn(typeCell.get(0));
     clickOn("#attributeSelector");
     for (int i = 0; i < 3; i++) {
@@ -118,6 +151,39 @@ public class CriterionGuiTest extends GuiTest {
     }
     type(KeyCode.ENTER);
     lookup("#valueField").<TextField>query().setText("1");
-    closeCurrentWindow();
+  }
+
+
+  private void configureAttributes() {
+    doubleClickOn(segmentViewList.get(1));
+    clickOn(lookup("#attributeList").<VBox>query().getChildren().get(0));
+    type(KeyCode.DIGIT1);
+    clickOn(lookup("#attributeList").<VBox>query().getChildren().get(4));
+    type(KeyCode.DIGIT0);
+    clickOn(grid);
+    doubleClickOn(segmentViewList.get(0));
+    clickOn(lookup("#attributeList").<VBox>query().getChildren().get(0));
+    type(KeyCode.DIGIT0);
+    clickOn(grid);
+  }
+
+  private void selectTestConfiguration() {
+    Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+    StringSelection stringSelection = new StringSelection(FILE_NAME);
+    clipboard.setContents(stringSelection, stringSelection);
+    press(KeyCode.CONTROL).press(KeyCode.V).release(KeyCode.V).release(KeyCode.CONTROL);
+    push(KeyCode.ENTER);
+  }
+
+  private List<Node> getCriteriaListCell() {
+    return from(lookup("#criteriaList").queryListView()).lookup((Node node)
+                            -> node.getParent() instanceof CriterionListCell)
+                    .queryAll().stream()
+                    .filter(e -> !((ListCell) e.getParent()).isEmpty()).toList();
+  }
+
+  private void enterNameOfCriterion(List<Node> criteriaListCell, int id) {
+    clickOn(criteriaListCell.get(id));
+    lookup("#nameField").<TextField>query().setText(CRITERION_NAME + id);
   }
 }

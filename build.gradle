@@ -45,14 +45,22 @@ dependencies {
     implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.13.1'
 
     implementation('org.jgrapht:jgrapht-core:1.5.1')
+    implementation 'junit:junit:4.13.1'
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
     testImplementation('org.mockito:mockito-core:4.3.1')
+    testImplementation ('org.testfx:testfx-junit5:4.0.15-alpha')
 }
 
 test {
     useJUnitPlatform()
+    //Options for TestFX
+    jvmArgs = [
+            '--add-opens', "$moduleName/edu.kit.rose=org.testfx.junit5",
+            '--add-opens', "$moduleName/edu.kit.rose.view.panel.segmentbox=org.testfx.junit5",
+            '--add-opens', 'javafx.graphics/com.sun.javafx.application=org.testfx'
+    ]
     finalizedBy jacocoTestReport
 }
 

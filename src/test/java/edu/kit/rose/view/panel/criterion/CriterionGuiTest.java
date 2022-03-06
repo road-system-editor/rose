@@ -59,6 +59,7 @@ public class CriterionGuiTest extends GuiTest {
     clickOn("#importButton");
     selectTestConfiguration();
     criteriaListCell = getCriteriaListCell();
+    Assertions.assertEquals(5, criteriaListCell.size());
     clickOn(criteriaListCell.get(0));
     Assertions.assertEquals(CRITERION_NAME + 4, lookup("#nameField").<TextField>query().getText());
     clickOn(criteriaListCell.get(1));
@@ -97,6 +98,36 @@ public class CriterionGuiTest extends GuiTest {
             .stream().filter(e -> !((ListCell) e.getParent()).isEmpty()).toList();
 
     Assertions.assertEquals(1, violationHandleList.size());
+  }
+
+  @EnabledOnOs(OS.WINDOWS)
+  @Test
+  void testEditCriteria() {
+    putSegmentsOnGrid();
+    configureAttributes();
+    List<Node> connectorViewList = lookup((Node node) ->
+            node instanceof ConnectorView).queryAll().stream().toList();
+    drag(connectorViewList.get(0)).interact(()
+            -> moveTo(connectorViewList.get(2)).moveBy(16, 13).drop());
+    configureCriterion();
+    List<ViolationHandle> violationHandleList =
+            from(lookup("#violationList").queryListView()).lookup((Node node) ->
+                            node instanceof ViolationHandle).<ViolationHandle>queryAll()
+                    .stream().filter(e -> !((ListCell) e.getParent()).isEmpty()).toList();
+
+    Assertions.assertEquals(1, violationHandleList.size());
+    Assertions.assertEquals(VIOLATION_MESSAGE, from(violationHandleList.get(0)).lookup((Node node)
+            -> node instanceof Label).<Label>queryAll().stream().toList().get(1).getText());
+
+    clickOn("#validation");
+    clickOn("#criteria");
+    clickOn("#deleteAllButton");
+
+    violationHandleList =
+            from(lookup("#violationList").queryListView()).lookup((Node node) ->
+                            node instanceof ViolationHandle).<ViolationHandle>queryAll()
+                    .stream().filter(e -> !((ListCell) e.getParent()).isEmpty()).toList();
+    Assertions.assertEquals(0, violationHandleList.size());
   }
 
   private void putSegmentsOnGrid() {

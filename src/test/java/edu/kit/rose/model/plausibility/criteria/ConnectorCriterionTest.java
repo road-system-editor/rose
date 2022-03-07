@@ -13,10 +13,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+/**
+ * Tests for the ConnectorCriterion Class.
+ */
 public class ConnectorCriterionTest {
   private RoadSystem roadSystem;
   private ViolationManager violationManager;
 
+  /**
+   * setup.
+   */
   @BeforeEach
   public void setUp() {
     CriteriaManager criteriaManager = new CriteriaManager();
@@ -28,7 +34,7 @@ public class ConnectorCriterionTest {
   }
 
   @Test
-  public void EntryViolationTest() {
+  void entryViolationTest() {
     Segment segment1 = roadSystem.createSegment(SegmentType.ENTRANCE);
     Segment segment2 = roadSystem.createSegment(SegmentType.ENTRANCE);
 
@@ -47,7 +53,7 @@ public class ConnectorCriterionTest {
   }
 
   @Test
-  public void BaseViolationTest() {
+  void baseViolationTest() {
     Segment segment1 = roadSystem.createSegment(SegmentType.BASE);
     Segment segment2 = roadSystem.createSegment(SegmentType.BASE);
 
@@ -66,7 +72,7 @@ public class ConnectorCriterionTest {
   }
 
   @Test
-  public void BaseRampViolationTest() {
+  void baseRampViolationTest() {
     Segment segment1 = roadSystem.createSegment(SegmentType.BASE);
     Segment segment2 = roadSystem.createSegment(SegmentType.ENTRANCE);
 
@@ -85,7 +91,7 @@ public class ConnectorCriterionTest {
   }
 
   @Test
-  public void BaseRampNoViolationTest() {
+  void baseRampNoViolationTest() {
     Segment segment1 = roadSystem.createSegment(SegmentType.BASE);
     Segment segment2 = roadSystem.createSegment(SegmentType.ENTRANCE);
 

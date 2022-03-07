@@ -32,20 +32,26 @@ import org.junit.jupiter.api.Test;
 /**
  * Unit tests for {@link RoseExportStrategy}.
  */
-public class RoseExportStrategyTest {
+class RoseExportStrategyTest {
+  /**
+   * Threshold to use for double equality comparisons.
+   */
+  private static final double THRESHOLD = 0.0001;
   private static final Path INVALID_PATH =
       Path.of("build", "tmp", "invalid-directory", "invalid-import.rose.json");
   private static final Path EXPORT_FILE =
       Path.of("build", "tmp", "rose-export-strategy-test.rose.json");
   private static final Position ZOOM_CENTER_POSITION = new Position(420, 69);
   private static final int ZOOM_LEVEL = 10;
-  private static final Position BASE_CENTER = new Position(12, 34);
   private static final int BASE_ROTATION = 31;
   private static final Position EXIT_CENTER = new Position(56, 78);
   private static final int EXIT_ROTATION = 93;
   private static final Position ENTRANCE_CENTER = new Position(910, 1112);
   private static final int ENTRANCE_ROTATION = 359;
 
+  Position originalBaseEntrancePosition;
+  Position originalBaseExitPosition;
+  Position originalBaseCenterPosition;
   Project project;
 
   @BeforeEach
@@ -59,13 +65,18 @@ public class RoseExportStrategyTest {
     );
 
     Base base = (Base) rs.createSegment(SegmentType.BASE);
-    base.move(toMovement(BASE_CENTER));
     base.rotate(BASE_ROTATION);
     base.setName("GWBFRStuttgart");
     base.setLength(3000);
     base.setLaneCount(2);
     base.setConurbation(true);
     base.setMaxSpeed(SpeedLimit.NONE);
+    base.move(new Movement(12, 34));
+    base.getEntry().move(new Movement(30, -60));
+    base.getExit().move(new Movement(-40, 15));
+    this.originalBaseEntrancePosition = base.getEntry().getPosition();
+    this.originalBaseExitPosition = base.getExit().getPosition();
+    this.originalBaseCenterPosition = base.getCenter();
 
     Exit exit = (Exit) rs.createSegment(SegmentType.EXIT);
     exit.move(toMovement(EXIT_CENTER));
@@ -148,26 +159,29 @@ public class RoseExportStrategyTest {
     assertNotNull(baseSegment);
     assertEquals("GWBFRStuttgart", baseSegment.getName());
     assertEquals(3000, baseSegment.getLength());
-    assertEquals(BASE_CENTER, baseSegment.getCenter());
     assertEquals(BASE_ROTATION, baseSegment.getRotation());
-    // TODO assert movable connector positions once that is merged into main
+    assertEqualPositionWithThreshold(this.originalBaseCenterPosition, baseSegment.getCenter());
+    assertEqualPositionWithThreshold(
+        this.originalBaseEntrancePosition, baseSegment.getEntry().getPosition());
+    assertEqualPositionWithThreshold(
+        this.originalBaseExitPosition, baseSegment.getExit().getPosition());
 
 
     assertNotNull(exitSegment);
     assertEquals("AusfahrtKarlsbadFRStuttgart", exitSegment.getName());
     assertEquals(250, exitSegment.getLength());
-    assertEquals(2, exitSegment.getSlope());
+    assertEquals(2, exitSegment.getSlope(), THRESHOLD);
     assertEquals(SpeedLimit.SBA, exitSegment.getMaxSpeedRamp());
-    assertEquals(EXIT_CENTER, exitSegment.getCenter());
+    assertEqualPositionWithThreshold(EXIT_CENTER, exitSegment.getCenter());
     assertEquals(EXIT_ROTATION, exitSegment.getRotation());
 
 
     assertNotNull(entranceSegment);
     assertEquals("EinfahrtKarlsbadFRStuttgart", entranceSegment.getName());
     assertEquals(250, entranceSegment.getLength());
-    assertEquals(2, entranceSegment.getSlope());
+    assertEquals(2, entranceSegment.getSlope(), THRESHOLD);
     assertEquals(SpeedLimit.SBA, entranceSegment.getMaxSpeedRamp());
-    assertEquals(ENTRANCE_CENTER, entranceSegment.getCenter());
+    assertEqualPositionWithThreshold(ENTRANCE_CENTER, entranceSegment.getCenter());
     assertEquals(ENTRANCE_ROTATION, entranceSegment.getRotation());
 
     assertNotNull(group);
@@ -181,7 +195,7 @@ public class RoseExportStrategyTest {
     // TODO check whether connection is between the correct ends
 
     assertEquals(ZOOM_CENTER_POSITION, imported.getZoomSetting().getCenterOfView());
-    assertEquals(ZOOM_LEVEL, imported.getZoomSetting().getZoomLevel());
+    assertEquals(ZOOM_LEVEL, imported.getZoomSetting().getZoomLevel(), THRESHOLD);
   }
 
   @Test
@@ -192,5 +206,10 @@ public class RoseExportStrategyTest {
 
   private static Movement toMovement(Position position) {
     return new Movement(position.getX(), position.getY());
+  }
+
+  private static void assertEqualPositionWithThreshold(Position expected, Position actual) {
+    assertEquals(expected.getX(), actual.getX(), THRESHOLD);
+    assertEquals(expected.getY(), actual.getY(), THRESHOLD);
   }
 }

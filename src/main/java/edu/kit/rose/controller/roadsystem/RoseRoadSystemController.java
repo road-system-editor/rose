@@ -123,20 +123,21 @@ public class RoseRoadSystemController extends Controller
 
   @Override
   public void deleteStreetSegment(Segment segment) {
+    List<Segment> segments = List.of(segment);
     DeleteStreetSegmentCommand deleteStreetSegmentCommand
-        = new DeleteStreetSegmentCommand(this.replacementLog, this.project, segment);
+        = new DeleteStreetSegmentCommand(this.replacementLog, this.project, segments);
 
     selectionBuffer.removeSegmentSelection(segment);
     changeCommandBuffer.addAndExecuteCommand(deleteStreetSegmentCommand);
   }
 
   @Override
-  public void deleteStreetSegments() { //TODO: can only delete on segment at a time
-    var selectedSegments = selectionBuffer.getSelectedSegments();
-    if (selectedSegments.size() == 1) {
-      var segment = selectedSegments.get(0);
-      deleteStreetSegment(segment);
-    }
+  public void deleteStreetSegments() {
+    DeleteStreetSegmentCommand deleteStreetSegmentCommand = new DeleteStreetSegmentCommand(
+        this.replacementLog, this.project, selectionBuffer.getSelectedSegments());
+
+    selectionBuffer.removeAllSelections();
+    changeCommandBuffer.addAndExecuteCommand(deleteStreetSegmentCommand);
   }
 
   @Override

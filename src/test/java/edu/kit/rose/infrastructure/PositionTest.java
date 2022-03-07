@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Unit Tests for the {@link Position} class.
  */
-public class PositionTest {
+class PositionTest {
   private static final double POSITION_X = 7;
   private static final double POSITION_Y = 9;
 
@@ -23,7 +23,7 @@ public class PositionTest {
   }
 
   @Test
-  public void testGetCoordinates() {
+  void testGetCoordinates() {
     assertEquals(POSITION_X, position.getX());
     assertEquals(POSITION_Y, position.getY());
   }
@@ -48,9 +48,9 @@ public class PositionTest {
 
   @Test
   void testDistanceTo() {
-    Position position1 = new Position(POSITION_X, POSITION_X);
-    Position position2 = new Position(POSITION_X, POSITION_Y);
-    assertEquals(2, position1.distanceTo(position2));
+    Position position1 = new Position(2, 2);
+    Position position2 = new Position(5, 6);
+    assertEquals(5, position1.distanceTo(position2), 0.001);
   }
 
   @Test
@@ -67,14 +67,23 @@ public class PositionTest {
     assertEquals(equalPosition.hashCode(), this.position.hashCode());
   }
 
+
+  @SuppressWarnings({"ConstantConditions", "SimplifiableAssertion", "java:S5785"})
   @Test
-  void testEqualsWithUnequalObjects() {
-    //noinspection ConstantConditions,SimplifiableAssertion <-- that's what we're testing
+  void testPositionUnequalToNull() {
+    // we can't use assertNotEquals because that would not test the "equals" method for null
     assertFalse(this.position.equals(null));
+  }
 
-    //noinspection SimplifiableAssertion,EqualsBetweenInconvertibleTypes
+  @SuppressWarnings({"EqualsBetweenInconvertibleTypes", "SimplifiableAssertion", "java:S5785"})
+  @Test
+  void testPositionUnequalToObjectOfOtherType() {
+    // we can't use assertNotEquals it does not guarantee that equals is called on the position
     assertFalse(this.position.equals(new Movement(POSITION_X, POSITION_Y)));
+  }
 
+  @Test
+  void testPositionUnequalToOtherPositions() {
     assertNotEquals(new Position(POSITION_X + 1, POSITION_Y), this.position);
     assertNotEquals(new Position(POSITION_X, POSITION_Y + 1), this.position);
     assertNotEquals(new Position(POSITION_X + 1, POSITION_Y + 1), this.position);

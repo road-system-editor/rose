@@ -5,16 +5,15 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
  * Unit Tests for the {@link Movement} Class.
  */
-public class MovementTest {
-  private static final int MOVEMENT_X = 7;
-  private static final int MOVEMENT_Y = 9;
+class MovementTest {
+  private static final double MOVEMENT_X = 7;
+  private static final double MOVEMENT_Y = 9;
 
   private Movement movement;
 
@@ -44,16 +43,31 @@ public class MovementTest {
     assertEquals(equalMovement.hashCode(), movement.hashCode());
   }
 
+  @SuppressWarnings({"ConstantConditions", "SimplifiableAssertion", "java:S5785"})
   @Test
-  void testEqualsWithUnequalObjects() {
-    //noinspection ConstantConditions,SimplifiableAssertion <-- that's what we're testing
-    assertFalse(movement.equals(null));
+  void testMovementUnequalToNull() {
+    // we can't use assertNotEquals because that would not test the "equals" method for null
+    assertFalse(this.movement.equals(null));
+  }
 
-    //noinspection SimplifiableAssertion,EqualsBetweenInconvertibleTypes
-    assertFalse(movement.equals(new Position(MOVEMENT_X, MOVEMENT_Y)));
+  @SuppressWarnings({"EqualsBetweenInconvertibleTypes", "SimplifiableAssertion", "java:S5785"})
+  @Test
+  void testMovementUnequalToObjectOfOtherType() {
+    // we can't use assertNotEquals it does not guarantee that equals is called on the movement
+    assertFalse(this.movement.equals(new Position(MOVEMENT_X, MOVEMENT_Y)));
+  }
 
+  @Test
+  void testMovementUnequalToOtherMovements() {
     assertNotEquals(new Movement(MOVEMENT_X + 1, MOVEMENT_Y), movement);
     assertNotEquals(new Movement(MOVEMENT_X, MOVEMENT_Y + 1), movement);
     assertNotEquals(new Movement(MOVEMENT_X + 1, MOVEMENT_Y + 1), movement);
+  }
+
+  @Test
+  void testToString() {
+    String movementString = this.movement.toString();
+    assertTrue(movementString.contains(String.format("%f", MOVEMENT_X)));
+    assertTrue(movementString.contains(String.format("%f", MOVEMENT_Y)));
   }
 }

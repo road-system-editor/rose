@@ -1,6 +1,7 @@
 package edu.kit.rose.controller.commons;
 
 import edu.kit.rose.infrastructure.Movement;
+import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
@@ -24,11 +25,11 @@ public class HierarchyCopier {
   private final boolean makeReplacement;
 
   /**
-   *  Constructor.
+   * Constructor.
    *
    * @param replacementLog the log that stores the replacement. Can be null if the copy methods
    *                       should not make a replacement.
-   * @param target the roadSystem where the copies will be created.
+   * @param target         the roadSystem where the copies will be created.
    */
   public HierarchyCopier(ReplacementLog replacementLog, RoadSystem target) {
     this.replacementLog = replacementLog;
@@ -88,12 +89,35 @@ public class HierarchyCopier {
 
   private void copyPositionData(Segment source, Segment target) {
     target.rotate(source.getRotation());
-    target.move(new Movement(source.getCenter().getX(), source.getCenter().getY()));
+
+    Movement centerMovement;
+
     if (source.getSegmentType() == SegmentType.BASE) {
       Base castedSource = (Base) source;
       Base castedTarget = (Base) target;
-      // TODO move connectors
+
+      Movement connectorDifference = getTranslationMovement(
+          castedSource.getEntry().getPosition(), castedSource.getExit().getPosition());
+
+      Position targetExitConnectorPosition = castedTarget.getEntry()
+          .getPosition().add(connectorDifference);
+
+      Movement exitConnectorMovement = getTranslationMovement(
+          castedTarget.getExit().getPosition(),
+          targetExitConnectorPosition);
+
+      castedTarget.getExit().move(exitConnectorMovement);
     }
+
+    centerMovement = getTranslationMovement(
+        target.getCenter(), source.getCenter());
+
+    target.move(centerMovement);
+  }
+
+  private Movement getTranslationMovement(Position sourcePosition, Position targetPosition) {
+    return new Movement(targetPosition.getX() - sourcePosition.getX(),
+                        targetPosition.getY() - sourcePosition.getY());
   }
 
   private void copyAccessors(Element source, Element target) {

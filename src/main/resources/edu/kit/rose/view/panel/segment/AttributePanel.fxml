@@ -2,6 +2,7 @@
 <?import javafx.scene.layout.VBox?>
 <fx:root xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml" type="Pane"
+         prefWidth="350"
             fx:id="parentContainer">
     <VBox fx:id="attributeList"
           prefWidth="${parentContainer.width}"

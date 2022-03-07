@@ -107,12 +107,10 @@ public class HierarchyCopier {
           targetExitConnectorPosition);
 
       castedTarget.getExit().move(exitConnectorMovement);
-
-      centerMovement = getTranslationMovement(
-          castedTarget.getCenter(), castedSource.getCenter());
-    } else {
-      centerMovement = new Movement(source.getCenter().getX(), source.getCenter().getY());
     }
+
+    centerMovement = getTranslationMovement(
+        target.getCenter(), source.getCenter());
 
     target.move(centerMovement);
   }

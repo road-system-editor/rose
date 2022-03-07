@@ -40,16 +40,16 @@ public class SetBulkAttributeAccessorCommandTest {
     //This cast is safe because the stream filters it by Type to ensure it is <T>.
     @SuppressWarnings("unchecked")
     AttributeAccessor<Integer> currentAccessor = (AttributeAccessor<Integer>)
-        segment1.getAttributeAccessors().stream().
-            filter(acc -> acc.getAttributeType() == AttributeType.LANE_COUNT)
+        segment1.getAttributeAccessors().stream()
+            .filter(acc -> acc.getAttributeType() == AttributeType.LANE_COUNT)
             .findAny().orElseThrow();
     accessor = currentAccessor;
 
     //This cast is safe because the stream filters it by Type to ensure it is <T>.
     @SuppressWarnings("unchecked")
     AttributeAccessor<Integer> currentAccessor2 = (AttributeAccessor<Integer>)
-        segment2.getAttributeAccessors().stream().
-            filter(acc -> acc.getAttributeType() == AttributeType.LANE_COUNT)
+        segment2.getAttributeAccessors().stream()
+            .filter(acc -> acc.getAttributeType() == AttributeType.LANE_COUNT)
             .findAny().orElseThrow();
     accessor2 = currentAccessor2;
 

@@ -71,8 +71,8 @@ public class BaseSegmentView extends SegmentView<Base> {
     setupEffectCurve();
     setupArrowImage();
 
-    this.getChildren().addAll(this.effectCurve, this.curve,
-        this.entryConnectorView, this.exitConnectorView, this.arrow);
+    this.getChildren().addAll(this.effectCurve, this.curve, this.arrow,
+        this.entryConnectorView, this.exitConnectorView);
 
     setupConnectorViewDragging(entryConnectorView, this.getSegment().getEntry());
     setupConnectorViewDragging(exitConnectorView, this.getSegment().getExit());
@@ -138,6 +138,8 @@ public class BaseSegmentView extends SegmentView<Base> {
     var entryPos = new Point2D(entryConnectorView.getCenterX(), entryConnectorView.getCenterY());
     var exitPos = new Point2D(exitConnectorView.getCenterX(), exitConnectorView.getCenterY());
     var thirdPoint = new Point2D(exitPos.getX(), entryPos.getY());
+    //calculate angle needed for current orientation of the arrow.
+    // the arrow should always point from entryPos towards endPos
     var angle = entryPos.angle(thirdPoint, exitPos);
     if (entryPos.getY() <= exitPos.getY()) {
       if (entryPos.getX() <= exitPos.getX()) {

@@ -35,6 +35,7 @@ public class CriteriaManager extends RoseSetObservable<PlausibilityCriterion, Cr
     this.criteria = new ArrayList<>();
     this.criterionFactory = new CriterionFactory();
     this.criteria.addAll(this.criterionFactory.createValueCriteria());
+    this.criteria.addAll(this.criterionFactory.createConnectorCriteria());
     this.criteria.add(this.criterionFactory.createCompletenessCriterion());
   }
 
@@ -48,8 +49,9 @@ public class CriteriaManager extends RoseSetObservable<PlausibilityCriterion, Cr
     this.roadSystem = roadSystem;
     this.criterionFactory.setRoadSystem(roadSystem);
     this.criteria.stream()
-        .filter(c -> c.getType() == PlausibilityCriterionType.COMPATIBILITY)
-        .map(c -> (CompatibilityCriterion) c)
+        .filter(c -> c.getType() == PlausibilityCriterionType.COMPATIBILITY
+            || c.getType() == PlausibilityCriterionType.CONNECTOR)
+        .map(c -> (AbstractCompatibilityCriterion) c)
         .forEach(c -> c.setRoadSystem(roadSystem));
     var elements = roadSystem.getElements();
     var segments = elements.stream()

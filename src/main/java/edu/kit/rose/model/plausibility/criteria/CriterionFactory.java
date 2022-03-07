@@ -73,11 +73,13 @@ class CriterionFactory {
     return valueCriteria;
   }
 
-  public List<CompatibilityCriterion> createCompatibilityCriteria() {
-    ArrayList<CompatibilityCriterion> compatibilityCriteria = new ArrayList<>();
-    compatibilityCriteria.add(new CompatibilityCriterion(roadSystem, violationManager,
-        AttributeType.))
-
+  public List<ConnectorCriterion> createConnectorCriteria() {
+    ArrayList<ConnectorCriterion> connectorCriteria = new ArrayList<>();
+    connectorCriteria.add(new ConnectorCriterion(roadSystem, violationManager));
+    for (var criterion : connectorCriteria) {
+      subscribeAndCheckSegmentsIfPossible(criterion);
+    }
+    return connectorCriteria;
   }
 
   /**

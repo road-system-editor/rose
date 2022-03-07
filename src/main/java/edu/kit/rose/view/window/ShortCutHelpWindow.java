@@ -33,7 +33,8 @@ public class ShortCutHelpWindow extends RoseWindow {
           "view.window.shortCutHelp.createGroup.",
           "view.window.shortCutHelp.search.",
           "view.window.shortCutHelp.delete.",
-          "view.window.shortCutHelp.rotate."
+          "view.window.shortCutHelp.rotate.",
+          "view.window.shortCutHelp.bulkEdit."
       );
   private Consumer<Language> languageConsumer;
 

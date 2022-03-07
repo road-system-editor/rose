@@ -1,5 +1,6 @@
 package edu.kit.rose.controller.attribute;
 
+import com.google.common.util.concurrent.UncheckedExecutionException;
 import edu.kit.rose.controller.command.ChangeCommand;
 import edu.kit.rose.controller.commons.ReplacementLog;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
@@ -28,26 +29,20 @@ public class SetBulkAttributeAccessorCommand<T> implements ChangeCommand {
    * Creates a {@link SetBulkAttributeAccessorCommand} that sets an accessor's value to a new value.
    *
    * @param accessor the accessor with the value to be set
-   * @param oldValue the previous value of the accessor
    * @param newValue the value to set on the accessor
    */
   public SetBulkAttributeAccessorCommand(ReplacementLog replacementLog,
                                      AttributeAccessor<T> accessor,
-                                     T oldValue,
                                      T newValue, Collection<Segment> segments) {
 
     this.replacementLog = Objects.requireNonNull(replacementLog);
     this.accessor = Objects.requireNonNull(accessor);
     this.newValue = newValue;
-    AttributeType type = accessor.getAttributeType();
     this.segmentToOldValueMap = new HashMap<>();
+
     for (Segment segment : segments) {
-      Optional<AttributeAccessor<?>> optionalAttrAcc =
-          segment.getAttributeAccessors().stream()
-              .filter(acc -> acc.getAttributeType() == type).findFirst();
-      //This cast is safe because the accessor is of type T. This is ensured in the stream.
-      optionalAttrAcc.ifPresent(attributeAccessor -> segmentToOldValueMap.put(segment,
-              (T) attributeAccessor.getValue()));
+      AttributeAccessor<T> currentAccessor = getCurrentAccessor(segment);
+      segmentToOldValueMap.put(segment, currentAccessor.getValue());
     }
   }
 
@@ -76,6 +71,8 @@ public class SetBulkAttributeAccessorCommand<T> implements ChangeCommand {
             -> acc.getAttributeType() == accessor.getAttributeType()).findAny().orElseThrow();
 
     //This cast is safe because the stream filters it by Type to ensure it is <T>.
-    return (AttributeAccessor<T>) currentAccessor;
+    @SuppressWarnings("unchecked")
+    AttributeAccessor<T> castedAccessor = (AttributeAccessor<T>) currentAccessor;
+    return castedAccessor;
   }
 }

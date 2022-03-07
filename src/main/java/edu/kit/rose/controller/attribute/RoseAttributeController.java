@@ -74,7 +74,7 @@ public class RoseAttributeController extends Controller implements AttributeCont
     }
 
     var command  = new SetBulkAttributeAccessorCommand<>(replacementLog, accessor,
-        accessor.getValue(), value, selectionBuffer.getSelectedSegments());
+        value, selectionBuffer.getSelectedSegments());
     changeCommandBuffer.addAndExecuteCommand(command);
   }
 
@@ -139,7 +139,7 @@ public class RoseAttributeController extends Controller implements AttributeCont
   }
 
   private static <T> T bulkGet(List<AttributeAccessor<T>> containedAccessors) {
-    T value = containedAccessors.stream().findAny().get().getValue();
+    T value = containedAccessors.stream().findAny().orElseThrow().getValue();
 
     for (var accessor : containedAccessors) {
       if (!Objects.equals(accessor.getValue(), value)) {

@@ -105,15 +105,16 @@ class CriteriaManagerTest {
   @Test
   void testSetRoadSystem() {
     CriteriaManager criteriaManager1 = new CriteriaManager();
+    ViolationManager violationManager = new ViolationManager();
+    criteriaManager1.setViolationManager(violationManager);
     GraphRoadSystem roadSystem =
             new GraphRoadSystem(criteriaManager1, Mockito.mock(TimeSliceSetting.class));
     criteriaManager1.setRoadSystem(roadSystem);
-    ViolationManager violationManager = new ViolationManager();
-    criteriaManager1.setViolationManager(violationManager);
+
     HighwaySegment segment1 = (HighwaySegment) roadSystem.createSegment(SegmentType.BASE);
     HighwaySegment segment2 = (HighwaySegment) roadSystem.createSegment(SegmentType.BASE);
-    roadSystem.connectConnectors(segment1.getConnectors().iterator().next(),
-            segment2.getConnectors().iterator().next());
+    roadSystem.connectConnectors(segment1.getExit(),
+            segment2.getEntry());
     segment1.setLength(3);
     segment2.setLength(1);
 

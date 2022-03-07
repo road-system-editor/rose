@@ -6,9 +6,8 @@ import java.util.Objects;
  * A movement in form of a 2D Vector.
  */
 public class Movement {
-
-  private final double xvalue;
-  private final double yvalue;
+  private final double deltaX;
+  private final double deltaY;
 
   /**
    * Standard Constructor.
@@ -21,31 +20,31 @@ public class Movement {
   /**
    * Constructor.
    *
-   * @param xvalue the x value of the Vector.
-   * @param yvalue the y value of the Vector.
+   * @param deltaX the x value of the Vector.
+   * @param deltaY the y value of the Vector.
    */
-  public Movement(double xvalue, double yvalue) {
-    this.xvalue = xvalue;
-    this.yvalue = yvalue;
+  public Movement(double deltaX, double deltaY) {
+    this.deltaX = deltaX;
+    this.deltaY = deltaY;
   }
 
   /**
-   * Gives the x axis value of the Vector.
+   * Gives the x-axis value of the Vector.
    *
-   * @return The x axis value of the Vector.
+   * @return The x-axis value of the Vector.
    */
   public double getX() {
-    return xvalue;
+    return deltaX;
   }
 
 
   /**
-   * Gives the y axis value of the Vector.
+   * Gives the y-axis value of the Vector.
    *
-   * @return The y axis value of the Vector.
+   * @return The y-axis value of the Vector.
    */
   public double getY() {
-    return yvalue;
+    return deltaY;
   }
 
   @Override
@@ -59,5 +58,10 @@ public class Movement {
   @Override
   public int hashCode() {
     return Objects.hash(getX(), getY());
+  }
+
+  @Override
+  public String toString() {
+    return String.format("Movement [dx=%f, dy=%f]", getX(), getY());
   }
 }

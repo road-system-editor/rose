@@ -8,8 +8,6 @@ import edu.kit.rose.infrastructure.Movement;
 import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.TimeSliceSetting;
-import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
-import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.attributes.SpeedLimit;
 import edu.kit.rose.model.roadsystem.elements.Base;
 import edu.kit.rose.model.roadsystem.elements.Connector;
@@ -383,14 +381,14 @@ class SerializedProject {
     SerializedSegment(int index, T sourceSegment) {
       super(index, sourceSegment);
 
-      this.populateAttributes();
+      this.storeHighwaySegmentData();
     }
 
     SerializedSegment() {
       super();
     }
 
-    private void populateAttributes() {
+    private void storeHighwaySegmentData() {
       this.length = this.roseElement.getLength();
       this.slope = this.roseElement.getSlope();
       this.laneCount = this.roseElement.getLaneCount();
@@ -407,13 +405,18 @@ class SerializedProject {
     public void linkRoseElement(SerializedRoadSystem source, RoadSystem target) {
       super.linkRoseElement(source, target);
 
+      // restore HighwaySegment attributes
       this.roseElement.setLength(this.length);
       this.roseElement.setSlope(this.slope);
       this.roseElement.setLaneCount(this.laneCount);
       this.roseElement.setConurbation(this.conurbation);
       this.roseElement.setMaxSpeed(this.maxSpeed);
 
-      this.getRoseElement().move(this.centerPosition.createMovement());
+      // restore positioning
+      var movement = new Movement(// centerPosition - currentPosition
+          this.centerPosition.coordinateX - this.roseElement.getCenter().getX(),
+          this.centerPosition.coordinateY - this.roseElement.getCenter().getY());
+      this.getRoseElement().move(movement);
       this.getRoseElement().rotate(this.rotation);
     }
 
@@ -483,9 +486,20 @@ class SerializedProject {
     @Override
     public void createRoseElement(RoadSystem target) {
       this.roseElement = (Base) target.createSegment(SegmentType.BASE);
-      /* TODO uncomment once movable connectors are merged
-      this.roseElement.getEntry().move(this.entrancePosition.createMovement());
-      this.roseElement.getExit().move(this.exitPosition.createMovement());*/
+
+      // restore relative position of connectors (but not the position of the segment in general)
+      var targetConnectorDifference = new Movement(// exit - entrance
+          this.exitPosition.coordinateX - this.entrancePosition.coordinateX,
+          this.exitPosition.coordinateY - this.entrancePosition.coordinateY);
+
+      Position targetExitPosition = this.roseElement.getEntry()
+          .getPosition().add(targetConnectorDifference); // entrance + (exit - entrance)
+
+      Movement exitConnectorMovement = new Movement(// exitTarget - exitPos
+          targetExitPosition.getX() - this.roseElement.getExit().getPosition().getX(),
+          targetExitPosition.getY() - this.roseElement.getExit().getPosition().getY());
+
+      this.roseElement.getExit().move(exitConnectorMovement);
     }
 
     @Override

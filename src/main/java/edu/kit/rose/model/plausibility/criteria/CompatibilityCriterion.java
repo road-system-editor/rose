@@ -53,29 +53,10 @@ public class CompatibilityCriterion extends AbstractCompatibilityCriterion {
    * @param violationManager manager to which violations will be added. This may be {@code null} but
    *     it must be set before this criterion is able to receive notifications.
    */
-
   public CompatibilityCriterion(RoadSystem roadSystem, ViolationManager violationManager) {
     super(roadSystem, violationManager);
     this.discrepancy = 0;
-    this.violationManager = violationManager;
-    this.roadSystem = roadSystem;
-
   }
-
-  /**
-   * Constructor.
-   *
-   * @param roadSystem       The Roadsystem this Criterion applied to.
-   * @param violationManager manager to which violations will be added
-   */
-  public CompatibilityCriterion(RoadSystem roadSystem, ViolationManager violationManager,
-                                AttributeType attributeType, ValidationType validationType) {
-    this(roadSystem, violationManager);
-    this.attributeType = attributeType;
-    this.operatorType = validationType;
-  }
-
-
 
   /**
    * Provides the AttributeType that this Criterion is checking.
@@ -172,12 +153,12 @@ public class CompatibilityCriterion extends AbstractCompatibilityCriterion {
   private ArrayList<Segment> getInvalidSegments(ValidationStrategy<?> strategy,
                                                 Segment segment, boolean useDiscrepancy) {
     ArrayList<Segment> invalidSegments = new ArrayList<>();
-    Box<Segment> adjacentSegments = this.roadSystem.getAdjacentSegments(segment);
+    Box<Segment> adjacentSegments = this.getRoadSystem().getAdjacentSegments(segment);
     AttributeAccessor<?> segmentAccessor =
             getAccessorOfType(segment.getAttributeAccessors(), this.attributeType);
 
     for (Segment adjacentSegment : adjacentSegments) {
-      if (this.segmentTypes.contains(adjacentSegment.getSegmentType())) {
+      if (this.getSegmentTypes().contains(adjacentSegment.getSegmentType())) {
         AttributeAccessor<?> adjacentAccessor =
                 getAccessorOfType(adjacentSegment.getAttributeAccessors(), this.attributeType);
         if (!checkValid(strategy, segmentAccessor, adjacentAccessor, useDiscrepancy)) {
@@ -186,11 +167,6 @@ public class CompatibilityCriterion extends AbstractCompatibilityCriterion {
       }
     }
     return invalidSegments;
-  }
-
-  @Override
-  public PlausibilityCriterion getThis() {
-    return this;
   }
 
   private AttributeAccessor<?> getAccessorOfType(SortedBox<AttributeAccessor<?>> accessors,
@@ -248,9 +224,15 @@ public class CompatibilityCriterion extends AbstractCompatibilityCriterion {
     return auxStrategy.validate(auxAccessor1.getValue(), auxAccessor2.getValue());
   }
 
+  @Override
   protected void checkAll() {
-    if (this.roadSystem != null && this.attributeType != null && this.operatorType != null) {
-      roadSystem.getElements().forEach(this::notifyChange);
+    if (this.getRoadSystem() != null && this.attributeType != null && this.operatorType != null) {
+      this.getRoadSystem().getElements().forEach(this::notifyChange);
     }
+  }
+
+  @Override
+  public PlausibilityCriterionType getType() {
+    return PlausibilityCriterionType.COMPATIBILITY;
   }
 }

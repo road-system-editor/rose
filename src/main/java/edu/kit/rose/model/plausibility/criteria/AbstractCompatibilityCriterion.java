@@ -23,11 +23,11 @@ import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 public abstract class AbstractCompatibilityCriterion extends RoseSetObservable<SegmentType,
     PlausibilityCriterion> implements PlausibilityCriterion {
 
-  protected final MultiValuedMap<Element, Violation> elementViolationMap;
-  protected final Set<SegmentType> segmentTypes;
-  protected String name;
-  protected RoadSystem roadSystem;
-  protected ViolationManager violationManager;
+  private final MultiValuedMap<Element, Violation> elementViolationMap;
+  private final Set<SegmentType> segmentTypes;
+  private String name;
+  private RoadSystem roadSystem;
+  private ViolationManager violationManager;
 
   /**
    * Constructor.
@@ -37,7 +37,8 @@ public abstract class AbstractCompatibilityCriterion extends RoseSetObservable<S
    * @param violationManager manager to which violations will be added. This may be {@code null} but
    *     it must be set before this criterion is able to receive notifications.
    */
-  public AbstractCompatibilityCriterion(RoadSystem roadSystem, ViolationManager violationManager) {
+  protected AbstractCompatibilityCriterion(RoadSystem roadSystem,
+                                           ViolationManager violationManager) {
     this.name = "";
     this.roadSystem = roadSystem;
     this.violationManager = violationManager;
@@ -71,11 +72,6 @@ public abstract class AbstractCompatibilityCriterion extends RoseSetObservable<S
   @Override
   public Box<SegmentType> getSegmentTypes() {
     return new RoseBox<>(this.segmentTypes);
-  }
-
-  @Override
-  public PlausibilityCriterionType getType() {
-    return PlausibilityCriterionType.COMPATIBILITY;
   }
 
   @Override
@@ -191,4 +187,18 @@ public abstract class AbstractCompatibilityCriterion extends RoseSetObservable<S
   }
 
   protected abstract void checkAll();
+
+  /**
+   * Returns the road system to use for connection lookups.
+   *
+   * @return the road system to use for connection lookups.
+   */
+  protected RoadSystem getRoadSystem() {
+    return this.roadSystem;
+  }
+
+  @Override
+  public PlausibilityCriterion getThis() {
+    return this;
+  }
 }

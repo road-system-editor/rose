@@ -35,20 +35,15 @@ public class ConnectorCriterion extends AbstractCompatibilityCriterion {
    */
   public ConnectorCriterion(RoadSystem roadSystem, ViolationManager violationManager) {
     super(roadSystem, violationManager);
-    this.segmentTypes.addAll(List.of(SegmentType.values()));
+
+    for (var type : SegmentType.values()) {
+      this.addSegmentType(type);
+    }
   }
-
-  @Override
-  public PlausibilityCriterion getThis() {
-    return this;
-  }
-
-
 
   @Override
   protected void checkCriterion(Segment segment) {
-
-    Box<Connection> connections = roadSystem.getConnections(segment);
+    Box<Connection> connections = getRoadSystem().getConnections(segment);
     for (Connection connection : connections) {
       if (!checkConnection(connection)) {
         List<Segment> invalidSegments = getSegmentsOfConnection(connection);
@@ -72,11 +67,12 @@ public class ConnectorCriterion extends AbstractCompatibilityCriterion {
 
   private List<Segment> getSegmentsOfConnection(Connection connection) {
     ArrayList<Segment> segments = new ArrayList<>();
-    for (Element element : roadSystem.getElements()) {
+    for (Element element : getRoadSystem().getElements()) {
       if (!element.isContainer()) {
-        for (Connection currentConnection : roadSystem.getConnections((Segment) element)) {
+        var segment = (Segment) element;
+        for (Connection currentConnection : this.getRoadSystem().getConnections(segment)) {
           if (currentConnection == connection) {
-            segments.add((Segment) element);
+            segments.add(segment);
           }
         }
       }
@@ -84,9 +80,10 @@ public class ConnectorCriterion extends AbstractCompatibilityCriterion {
     return segments;
   }
 
+  @Override
   protected void checkAll() {
-    if (this.roadSystem != null) {
-      roadSystem.getElements().forEach(this::notifyChange);
+    if (this.getRoadSystem() != null) {
+      this.getRoadSystem().getElements().forEach(this::notifyChange);
     }
   }
 

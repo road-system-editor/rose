@@ -32,6 +32,10 @@ import org.junit.jupiter.api.Test;
  * Unit tests for {@link RoseExportStrategy}.
  */
 class RoseExportStrategyTest {
+  /**
+   * Threshold to use for double equality comparisons.
+   */
+  private static final double THRESHOLD = 0.0001;
   private static final Path INVALID_PATH =
       Path.of("build", "tmp", "invalid-directory", "invalid-import.rose.json");
   private static final Path EXPORT_FILE =
@@ -154,26 +158,28 @@ class RoseExportStrategyTest {
     assertEquals("GWBFRStuttgart", baseSegment.getName());
     assertEquals(3000, baseSegment.getLength());
     assertEquals(BASE_ROTATION, baseSegment.getRotation());
-    assertEquals(this.originalBaseCenterPosition, baseSegment.getCenter());
-    assertEquals(this.originalBaseEntrancePosition, baseSegment.getEntry().getPosition());
-    assertEquals(this.originalBaseExitPosition, baseSegment.getExit().getPosition());
+    assertEqualPositionWithThreshold(this.originalBaseCenterPosition, baseSegment.getCenter());
+    assertEqualPositionWithThreshold(
+        this.originalBaseEntrancePosition, baseSegment.getEntry().getPosition());
+    assertEqualPositionWithThreshold(
+        this.originalBaseExitPosition, baseSegment.getExit().getPosition());
 
 
     assertNotNull(exitSegment);
     assertEquals("AusfahrtKarlsbadFRStuttgart", exitSegment.getName());
     assertEquals(250, exitSegment.getLength());
-    assertEquals(2, exitSegment.getSlope());
+    assertEquals(2, exitSegment.getSlope(), THRESHOLD);
     assertEquals(SpeedLimit.SBA, exitSegment.getMaxSpeedRamp());
-    assertEquals(EXIT_CENTER, exitSegment.getCenter());
+    assertEqualPositionWithThreshold(EXIT_CENTER, exitSegment.getCenter());
     assertEquals(EXIT_ROTATION, exitSegment.getRotation());
 
 
     assertNotNull(entranceSegment);
     assertEquals("EinfahrtKarlsbadFRStuttgart", entranceSegment.getName());
     assertEquals(250, entranceSegment.getLength());
-    assertEquals(2, entranceSegment.getSlope());
+    assertEquals(2, entranceSegment.getSlope(), THRESHOLD);
     assertEquals(SpeedLimit.SBA, entranceSegment.getMaxSpeedRamp());
-    assertEquals(ENTRANCE_CENTER, entranceSegment.getCenter());
+    assertEqualPositionWithThreshold(ENTRANCE_CENTER, entranceSegment.getCenter());
     assertEquals(ENTRANCE_ROTATION, entranceSegment.getRotation());
 
     assertNotNull(group);
@@ -187,7 +193,7 @@ class RoseExportStrategyTest {
     // TODO check whether connection is between the correct ends
 
     assertEquals(ZOOM_CENTER_POSITION, imported.getZoomSetting().getCenterOfView());
-    assertEquals(ZOOM_LEVEL, imported.getZoomSetting().getZoomLevel());
+    assertEquals(ZOOM_LEVEL, imported.getZoomSetting().getZoomLevel(), THRESHOLD);
   }
 
   @Test
@@ -198,5 +204,10 @@ class RoseExportStrategyTest {
 
   private static Movement toMovement(Position position) {
     return new Movement(position.getX(), position.getY());
+  }
+
+  private static void assertEqualPositionWithThreshold(Position expected, Position actual) {
+    assertEquals(expected.getX(), actual.getX(), THRESHOLD);
+    assertEquals(expected.getY(), actual.getY(), THRESHOLD);
   }
 }

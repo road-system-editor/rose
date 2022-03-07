@@ -41,7 +41,7 @@ public enum AttributeType {
   /**
    * The speed limit on the ramp of a highway entrance or exit segment, in kilometers per hour.
    */
-  MAX_SPEED_RAMP(DataType.INTEGER, true),
+  MAX_SPEED_RAMP(DataType.SPEED_LIMIT, true),
   /**
    * A note for an element by the user.
    */

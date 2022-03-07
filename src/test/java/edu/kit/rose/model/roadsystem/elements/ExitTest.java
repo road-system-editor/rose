@@ -2,10 +2,12 @@ package edu.kit.rose.model.roadsystem.elements;
 
 import edu.kit.rose.infrastructure.Box;
 import edu.kit.rose.infrastructure.Movement;
+import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -170,4 +172,70 @@ public class ExitTest {
 
   //TODO: Tests for subscribers.
 
+  @Test
+  void rotationTest() {
+    var funnyNumber = 69;
+    Assertions.assertEquals(0, testExit.getRotation());
+
+    testExit.rotate(funnyNumber);
+    Assertions.assertEquals(funnyNumber, testExit.getRotation());
+
+    testExit.rotate(-360);
+    Assertions.assertEquals(funnyNumber, testExit.getRotation());
+
+    testExit.rotate(360);
+    Assertions.assertEquals(funnyNumber, testExit.getRotation());
+
+    var evenFunnierNumber = 420;
+
+    testExit.rotate(evenFunnierNumber);
+    Assertions.assertEquals(129, testExit.getRotation());
+
+    testExit.rotate(-evenFunnierNumber);
+    Assertions.assertEquals(funnyNumber, testExit.getRotation());
+  }
+
+  @Test
+  void testRotationEntryConnector() {
+    var oldEntryPos = testExit.getAbsoluteConnectorPosition(testExit.getEntry());
+    testExit.rotate(90);
+    Assertions.assertEquals(oldEntryPos.getX(),
+        testExit.getAbsoluteConnectorPosition(testExit.getEntry()).getY());
+    Assertions.assertEquals(-oldEntryPos.getY(),
+        testExit.getAbsoluteConnectorPosition(testExit.getEntry()).getX());
+  }
+
+  @Test
+  void testRotationExitConnector() {
+    var oldExitPos = testExit.getAbsoluteConnectorPosition(testExit.getExit());
+    testExit.rotate(90);
+    Assertions.assertEquals(oldExitPos.getX(),
+        testExit.getAbsoluteConnectorPosition(testExit.getExit()).getY());
+    Assertions.assertEquals(-oldExitPos.getY(),
+        testExit.getAbsoluteConnectorPosition(testExit.getExit()).getX());
+  }
+
+  @Test
+  void testRotationExitConnectorWithMovement() {
+    var moveX = 69;
+    var moveY = 420;
+    testExit.move(new Movement(moveX, moveY));
+    var exitPos = testExit.getAbsoluteConnectorPosition(testExit.getExit());
+    var oldPositionExitOrigin = new Position(exitPos.getX() - moveX,
+        exitPos.getY() - moveY);
+    testExit.rotate(90);
+    Assertions.assertEquals(moveY + oldPositionExitOrigin.getX(),
+        testExit.getAbsoluteConnectorPosition(testExit.getExit()).getY());
+    Assertions.assertEquals(moveX - oldPositionExitOrigin.getY(),
+        testExit.getAbsoluteConnectorPosition(testExit.getExit()).getX());
+  }
+
+  @Test
+  void testRotationCenter() {
+    var oldCenter = new Position(testExit.getCenter().getX(), testExit.getCenter().getX());
+    testExit.rotate(90);
+    Assertions.assertEquals(oldCenter.getX(), testExit.getCenter().getX());
+    Assertions.assertEquals(oldCenter.getY(), testExit.getCenter().getY());
+  }
+  
 }

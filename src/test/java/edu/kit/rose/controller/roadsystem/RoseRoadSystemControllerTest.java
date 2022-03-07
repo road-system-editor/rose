@@ -268,7 +268,7 @@ public class RoseRoadSystemControllerTest {
 
   @Test
   public void testRotateSegment() {
-    Segment segment = roadSystem.createSegment(SegmentType.BASE);
+    Segment segment = roadSystem.createSegment(SegmentType.ENTRANCE);
     roadSystemController.addSegmentSelection(segment);
     roadSystemController.rotateSegment();
     Assertions.assertEquals(15, segment.getRotation());

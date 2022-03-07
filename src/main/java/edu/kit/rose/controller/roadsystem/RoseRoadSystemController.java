@@ -105,6 +105,14 @@ public class RoseRoadSystemController extends Controller
   }
 
   @Override
+  public void createStreetSegment(SegmentType segmentType, Position position) {
+    CreateStreetSegmentCommand createStreetSegmentCommand
+        = new CreateStreetSegmentCommand(this.replacementLog, this.project, segmentType, position);
+
+    changeCommandBuffer.addAndExecuteCommand(createStreetSegmentCommand);
+  }
+
+  @Override
   public void duplicateStreetSegment() {
     ArrayList<Segment> toDuplicateSegments
             = new ArrayList<>(this.selectionBuffer.getSelectedSegments());
@@ -144,6 +152,12 @@ public class RoseRoadSystemController extends Controller
 
   @Override
   public void endDragStreetSegment(Position segmentPosition) {
+
+    if (initialSegmentDragPosition == null) {
+      //TODO: remove after implementing hit box event translucency
+      return;
+    }
+
     Movement draggingTransition = new Movement(
         segmentPosition.getX() - initialSegmentDragPosition.getX(),
         segmentPosition.getY() - initialSegmentDragPosition.getY());

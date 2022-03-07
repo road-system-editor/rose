@@ -31,7 +31,7 @@ public class CreateStreetSegmentCommand implements ChangeCommand {
    */
   public CreateStreetSegmentCommand(ReplacementLog replacementLog, Project project,
                                     SegmentType segmentType) {
-    this(replacementLog, project, segmentType, null);
+    this(replacementLog, project, segmentType, project.getZoomSetting().getCenterOfView());
   }
 
   /**
@@ -39,6 +39,7 @@ public class CreateStreetSegmentCommand implements ChangeCommand {
    *
    * @param project     the model facade to execute {@link CreateStreetSegmentCommand} on
    * @param segmentType the type of the segment to create
+   * @param position the initial position of the segment
    */
   public CreateStreetSegmentCommand(ReplacementLog replacementLog, Project project,
                                     SegmentType segmentType, Position position) {
@@ -53,13 +54,7 @@ public class CreateStreetSegmentCommand implements ChangeCommand {
     final var oldSegment = this.segment;
     this.segment = project.getRoadSystem().createSegment(this.segmentType);
 
-    Movement segmentMovement;
-    if (this.position != null) {
-      segmentMovement = new Movement(this.position.getX(), this.position.getY());
-    } else {
-      segmentMovement = new Movement(this.project.getZoomSetting().getCenterOfView().getX(),
-          this.project.getZoomSetting().getCenterOfView().getY());
-    }
+    Movement segmentMovement = new Movement(this.position.getX(), this.position.getY());
     this.segment.move(segmentMovement);
 
     this.segment.rotate(DEFAULT_ROTATION);

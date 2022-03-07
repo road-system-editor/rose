@@ -62,7 +62,7 @@ public class ConnectorCriterion extends AbstractCompatibilityCriterion {
     Box<Connector> connectorBox = connection.getConnectors();
     boolean isCompatible = true;
     for (Connector connector : connectorBox) {
-      if (COMPATIBLE_CONNECTOR_TYPE_MAP.get(connector.getType())
+      if (!COMPATIBLE_CONNECTOR_TYPE_MAP.get(connector.getType())
           .contains(connection.getOther(connector).getType())) {
         isCompatible = false;
       }

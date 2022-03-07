@@ -19,6 +19,7 @@ import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.ZoomSetting;
 import edu.kit.rose.model.plausibility.criteria.CriteriaManager;
+import edu.kit.rose.model.plausibility.violation.ViolationManager;
 import edu.kit.rose.model.roadsystem.GraphRoadSystem;
 import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.TimeSliceSetting;
@@ -56,6 +57,7 @@ public class RoseRoadSystemControllerTest {
     zoomSetting = new ZoomSetting(new Position(0, 0));
     final ReplacementLog replacementLog = new ReplacementLog();
     criteriaManager.setRoadSystem(roadSystem);
+    criteriaManager.setViolationManager(new ViolationManager());
 
     Mockito.when(project.getZoomSetting()).thenReturn(zoomSetting);
     Mockito.when(project.getRoadSystem()).thenReturn(roadSystem);

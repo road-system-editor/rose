@@ -40,7 +40,7 @@ public class RoseProjectTest {
     this.criteriaManager = new CriteriaManager();
     this.project = new RoseProject(criteriaManager);
     criteriaManager.setRoadSystem(project.getRoadSystem());
-
+    criteriaManager.setViolationManager(project.getPlausibilitySystem().getViolationManager());
     Files.deleteIfExists(EXPORT_PATH);
   }
 

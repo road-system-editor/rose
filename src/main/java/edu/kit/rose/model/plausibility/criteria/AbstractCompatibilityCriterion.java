@@ -159,6 +159,9 @@ public abstract class AbstractCompatibilityCriterion extends RoseSetObservable<S
   protected abstract void checkCriterion(Segment segment);
 
   protected void updateViolations(List<Segment> invalidSegments, Segment segment) {
+    if (this.violationManager == null) {
+      return;
+    }
     HashSetValuedHashMap<Element, Violation> elementViolationMapCopy =
         new HashSetValuedHashMap<>(elementViolationMap);
     if (!invalidSegments.isEmpty()

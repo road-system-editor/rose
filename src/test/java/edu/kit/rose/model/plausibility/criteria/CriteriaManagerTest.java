@@ -21,10 +21,10 @@ class CriteriaManagerTest {
   @BeforeEach
   public void setUp() {
     this.criteriaManager = new CriteriaManager();
-    this.criteriaManager.setViolationManager(new ViolationManager());
     RoadSystem roadSystem = new GraphRoadSystem(criteriaManager,
         Mockito.mock(TimeSliceSetting.class));
     this.criteriaManager.setRoadSystem(roadSystem);
+    this.criteriaManager.setViolationManager(new ViolationManager());
   }
 
 

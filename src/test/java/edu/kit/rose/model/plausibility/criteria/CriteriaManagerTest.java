@@ -108,20 +108,20 @@ class CriteriaManagerTest {
     GraphRoadSystem roadSystem =
             new GraphRoadSystem(criteriaManager1, Mockito.mock(TimeSliceSetting.class));
     criteriaManager1.setRoadSystem(roadSystem);
+    ViolationManager violationManager = new ViolationManager();
+    criteriaManager1.setViolationManager(violationManager);
     HighwaySegment segment1 = (HighwaySegment) roadSystem.createSegment(SegmentType.BASE);
     HighwaySegment segment2 = (HighwaySegment) roadSystem.createSegment(SegmentType.BASE);
     roadSystem.connectConnectors(segment1.getConnectors().iterator().next(),
             segment2.getConnectors().iterator().next());
     segment1.setLength(3);
     segment2.setLength(1);
-    ViolationManager violationManager = new ViolationManager();
-    criteriaManager1.setViolationManager(violationManager);
+
     CompatibilityCriterion criterion = criteriaManager1.createCompatibilityCriterion();
     criterion.setLegalDiscrepancy(1);
     criterion.setAttributeType(AttributeType.LENGTH);
     criterion.setOperatorType(ValidationType.LESS_THAN);
     criterion.addSegmentType(SegmentType.BASE);
-    criteriaManager1.setRoadSystem(roadSystem);
 
     Assertions.assertEquals(1, violationManager.getViolations().getSize());
   }

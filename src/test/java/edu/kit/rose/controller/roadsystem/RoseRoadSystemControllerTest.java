@@ -54,7 +54,7 @@ public class RoseRoadSystemControllerTest {
     CriteriaManager criteriaManager = new CriteriaManager();
     roadSystem = new GraphRoadSystem(criteriaManager, mock(TimeSliceSetting.class));
     zoomSetting = new ZoomSetting(new Position(0, 0));
-    ReplacementLog replacementLog = new ReplacementLog();
+    final ReplacementLog replacementLog = new ReplacementLog();
     criteriaManager.setRoadSystem(roadSystem);
 
     Mockito.when(project.getZoomSetting()).thenReturn(zoomSetting);

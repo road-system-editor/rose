@@ -1,7 +1,6 @@
 package edu.kit.rose.controller.roadsystem;
 
 import edu.kit.rose.controller.command.ChangeCommand;
-import edu.kit.rose.controller.commons.ConnectionCopier;
 import edu.kit.rose.controller.commons.HierarchyCopier;
 import edu.kit.rose.controller.commons.ReplacementLog;
 import edu.kit.rose.infrastructure.Box;
@@ -13,9 +12,7 @@ import edu.kit.rose.model.roadsystem.elements.ConnectorType;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.SortedSet;
 
 /**
  * Encapsulates the functionality of creating a copy of a segment.

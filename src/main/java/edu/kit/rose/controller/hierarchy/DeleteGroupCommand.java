@@ -3,14 +3,15 @@ package edu.kit.rose.controller.hierarchy;
 import edu.kit.rose.controller.command.ChangeCommand;
 import edu.kit.rose.controller.commons.HierarchyCopier;
 import edu.kit.rose.controller.commons.ReplacementLog;
-import edu.kit.rose.infrastructure.SortedBox;
+import edu.kit.rose.infrastructure.Box;
 import edu.kit.rose.model.Project;
-import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
+import edu.kit.rose.model.roadsystem.elements.Connection;
+import edu.kit.rose.model.roadsystem.elements.Connector;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Group;
-import java.util.ArrayList;
+import edu.kit.rose.model.roadsystem.elements.Segment;
 import java.util.HashSet;
-import java.util.Iterator;
+import java.util.Set;
 
 /**
  * Encapsulates the functionality of deleting a group
@@ -21,6 +22,7 @@ public class DeleteGroupCommand implements ChangeCommand {
   private final Project project;
   private Group group;
   private Group parent;
+  private final Set<Connection> storedConnections;
 
   /**
    * Creates a {@link DeleteGroupCommand} that deletes the given group.
@@ -32,6 +34,7 @@ public class DeleteGroupCommand implements ChangeCommand {
     this.replacementLog = replacementLog;
     this.project = project;
     this.group = group;
+    this.storedConnections = new HashSet<>();
   }
 
   @Override
@@ -44,11 +47,37 @@ public class DeleteGroupCommand implements ChangeCommand {
         .filter(container -> container.contains(groupToDelete))
         .findAny().orElse(null);
 
+    Set<Connection> storedConnections = new HashSet<>();
+    this.saveSegmentConnections(groupToDelete, storedConnections);
+    this.storedConnections.clear();
+    this.storedConnections.addAll(storedConnections);
+
     if (this.parent != null) {
-      this.parent.removeElement(groupToDelete);
+      var currentParent = this.replacementLog.getCurrentVersion(this.parent);
+      currentParent.removeElement(groupToDelete);
     }
 
     this.project.getRoadSystem().removeElement(groupToDelete);
+  }
+
+  private void saveSegmentConnections(Element targetElement, Set<Connection> connections) {
+    if (targetElement.isContainer()) {
+      Group targetGroup = (Group) targetElement;
+      for (Element targetGroupChild : targetGroup.getElements()) {
+        saveSegmentConnections(targetGroupChild, connections);
+      }
+    } else {
+      Segment targetSegment = (Segment) targetElement;
+      for (Segment connectedSegment
+          : this.project.getRoadSystem().getAdjacentSegments(targetSegment)) {
+        Box<Connection> targetSegmentConnections = this.project.getRoadSystem().getConnections(
+            targetSegment, connectedSegment);
+
+        if (targetSegmentConnections.getSize() > 0) {
+          targetSegmentConnections.stream().findFirst().ifPresent(connections::add);
+        }
+      }
+    }
   }
 
   @Override
@@ -59,7 +88,21 @@ public class DeleteGroupCommand implements ChangeCommand {
     this.group = copier.copyGroup(groupToCopy);
 
     // assign parent
-    var currentParent = this.replacementLog.getCurrentVersion(this.parent);
-    currentParent.addElement(this.group);
+    if (this.parent != null) {
+      var currentParent = this.replacementLog.getCurrentVersion(this.parent);
+      currentParent.addElement(this.group);
+    }
+
+    restoreStoredConnections();
+  }
+
+  private void restoreStoredConnections() {
+    for (Connection connection : this.storedConnections) {
+      Connector currentConnector1 = this.replacementLog.getCurrentConnectorVersion(
+          connection.getConnectors().get(0));
+      Connector currentConnector2 = this.replacementLog.getCurrentConnectorVersion(
+          connection.getConnectors().get(1));
+      this.project.getRoadSystem().connectConnectors(currentConnector1, currentConnector2);
+    }
   }
 }

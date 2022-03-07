@@ -10,7 +10,6 @@ import java.util.Objects;
  * and makes it changeable.
  *
  * @param <T> the type of the accessor's value
- * @author ROSE Team
  */
 public class SetAttributeAccessorCommand<T> implements ChangeCommand {
 
@@ -44,6 +43,5 @@ public class SetAttributeAccessorCommand<T> implements ChangeCommand {
   @Override
   public void unexecute() {
     this.replacementLog.getCurrentAccessorVersion(accessor).setValue(oldValue);
-    //TODO: bulk edit has to be supported. New Type of AttributeAccessor?
   }
 }

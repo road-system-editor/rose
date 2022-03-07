@@ -4,6 +4,8 @@ import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.elements.Element;
+import edu.kit.rose.model.roadsystem.elements.Segment;
+import java.util.Collection;
 
 
 /**
@@ -21,6 +23,15 @@ public interface AttributeController {
    * @param <T>      generic type of the accessor parameter and the value parameter
    */
   <T> void setAttribute(AttributeAccessor<T> accessor, T value);
+
+  /**
+   * Sets the value of a given bulk accessor to another given value.
+   *
+   * @param accessor accessor whose value gets set
+   * @param value    value to apply to the accessor
+   * @param <T>      generic type of the accessor parameter and the value parameter
+   */
+  <T> void setBulkAttribute(AttributeAccessor<T> accessor, T value);
 
   /**
    * Adds an attribute type to the list of attribute types, that are displayed on street segments.

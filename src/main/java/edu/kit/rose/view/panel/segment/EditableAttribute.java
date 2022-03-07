@@ -6,7 +6,9 @@ import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.view.commons.EnumLocalizationUtility;
 import edu.kit.rose.view.commons.FxmlContainer;
+import edu.kit.rose.view.commons.UnmountUtility;
 import java.util.Objects;
+import java.util.function.BiConsumer;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
@@ -36,17 +38,21 @@ abstract class EditableAttribute<T> extends FxmlContainer
   @FXML
   private Label label;
 
+  protected final BiConsumer<AttributeAccessor<T>, T> consumer;
+
   /**
    * Creates an editable attribute component for a given attribute accessor.
    */
-  protected EditableAttribute(AttributeAccessor<T> attribute, AttributeController controller) {
+  protected EditableAttribute(AttributeAccessor<T> attribute, AttributeController controller,
+                              BiConsumer<AttributeAccessor<T>, T> consumer) {
     super("EditableAttribute.fxml");
     this.attribute = Objects.requireNonNull(attribute);
     this.controller = Objects.requireNonNull(controller);
-    //UnmountUtility.subscribeUntilUnmount(this, this, attribute); TODO run later bc this is not
-    // mounted yet
+    this.consumer = consumer;
     setupView();
-    layout.getChildren().add(createInputField());
+    Node inputField = createInputField();
+    layout.getChildren().add(inputField);
+
     tooltip = new Tooltip();
     label.setTooltip(tooltip);
   }

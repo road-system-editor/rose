@@ -73,13 +73,15 @@ class CriterionFactory {
     return valueCriteria;
   }
 
-  public List<ConnectorCriterion> createConnectorCriteria() {
-    ArrayList<ConnectorCriterion> connectorCriteria = new ArrayList<>();
-    connectorCriteria.add(new ConnectorCriterion(roadSystem, violationManager));
-    for (var criterion : connectorCriteria) {
-      subscribeAndCheckSegmentsIfPossible(criterion);
-    }
-    return connectorCriteria;
+  /**
+   * Creates the connector criterion.
+   *
+   * @return the connector criterion.
+   */
+  public ConnectorCriterion createConnectorCriterion() {
+    var criterion = new ConnectorCriterion(roadSystem, violationManager);
+    subscribeAndCheckSegmentsIfPossible(criterion);
+    return criterion;
   }
 
   /**

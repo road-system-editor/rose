@@ -35,7 +35,7 @@ public class CriteriaManager extends RoseSetObservable<PlausibilityCriterion, Cr
     this.criteria = new ArrayList<>();
     this.criterionFactory = new CriterionFactory();
     this.criteria.addAll(this.criterionFactory.createValueCriteria());
-    this.criteria.addAll(this.criterionFactory.createConnectorCriteria());
+    this.criteria.add(this.criterionFactory.createConnectorCriterion());
     this.criteria.add(this.criterionFactory.createCompletenessCriterion());
   }
 

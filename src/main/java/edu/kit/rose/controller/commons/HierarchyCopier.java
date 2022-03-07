@@ -14,7 +14,6 @@ import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javafx.geometry.Pos;
 
 /**
  * Utility class that helps with copying a hierarchy of {@link Element}s to a road system while
@@ -91,6 +90,8 @@ public class HierarchyCopier {
   private void copyPositionData(Segment source, Segment target) {
     target.rotate(source.getRotation());
 
+    Movement centerMovement;
+
     if (source.getSegmentType() == SegmentType.BASE) {
       Base castedSource = (Base) source;
       Base castedTarget = (Base) target;
@@ -107,14 +108,13 @@ public class HierarchyCopier {
 
       castedTarget.getExit().move(exitConnectorMovement);
 
-      Movement centerMovement = getTranslationMovement(
+      centerMovement = getTranslationMovement(
           castedTarget.getCenter(), castedSource.getCenter());
-
-      castedTarget.move(centerMovement);
-
     } else {
-      target.move(new Movement(source.getCenter().getX(), source.getCenter().getY()));
+      centerMovement = new Movement(source.getCenter().getX(), source.getCenter().getY());
     }
+
+    target.move(centerMovement);
   }
 
   private Movement getTranslationMovement(Position sourcePosition, Position targetPosition) {

@@ -1,11 +1,8 @@
 package edu.kit.rose.controller.commons;
 
-import edu.kit.rose.infrastructure.Movement;
 import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.elements.Connection;
 import edu.kit.rose.model.roadsystem.elements.Connector;
-import edu.kit.rose.model.roadsystem.elements.Element;
-import edu.kit.rose.model.roadsystem.elements.Segment;
 import java.util.Objects;
 
 /**
@@ -14,6 +11,10 @@ import java.util.Objects;
  * to a road system while considering replacements from a {@link ReplacementLog}.
  */
 public class ConnectionCopier {
+
+  private static final String INVALID_CONNECTOR_COUNT_ERROR_MESSAGE
+      = "Connection has invalid number of Connectors.";
+
   private final ReplacementLog replacementLog;
   private final RoadSystem target;
   private final boolean makeReplacement;
@@ -40,11 +41,11 @@ public class ConnectionCopier {
   public Connection copyConnection(Connection connection) {
 
     if (connection.getConnectors().getSize() != 2) {
-      return null;
+      throw new IllegalArgumentException(INVALID_CONNECTOR_COUNT_ERROR_MESSAGE);
     }
 
-    Connector segment1Connector = null;
-    Connector segment2Connector = null;
+    Connector segment1Connector;
+    Connector segment2Connector;
     if (makeReplacement) {
       segment1Connector = this.replacementLog.getCurrentConnectorVersion(
           connection.getConnectors().get(0));

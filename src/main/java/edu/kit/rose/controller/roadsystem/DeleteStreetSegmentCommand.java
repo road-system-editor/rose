@@ -6,15 +6,12 @@ import edu.kit.rose.controller.commons.HierarchyCopier;
 import edu.kit.rose.controller.commons.ReplacementLog;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.roadsystem.elements.Connection;
-import edu.kit.rose.model.roadsystem.elements.Connector;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Group;
 import edu.kit.rose.model.roadsystem.elements.Segment;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -30,9 +27,7 @@ public class DeleteStreetSegmentCommand implements ChangeCommand {
   private final ReplacementLog replacementLog;
   private final Project project;
   private final HashMap<Segment, Group> segmentParentGroups = new HashMap<>();
-  private final List<Connection> connections = new ArrayList<>();
-  //private Segment segment;
-  //private Group segmentParentGroup;
+  private final Set<Connection> connections = new HashSet<>();
 
   /**
    * Creates a {@link DeleteStreetSegmentCommand} that deletes a street segment.
@@ -54,7 +49,10 @@ public class DeleteStreetSegmentCommand implements ChangeCommand {
   public void execute() {
     this.connections.clear();
 
-    for (Segment segment : segmentParentGroups.keySet()) {
+    Set<Segment> segments = new HashSet<>(segmentParentGroups.keySet());
+    this.segmentParentGroups.clear();
+
+    for (Segment segment : segments) {
       Segment currentSegment = this.replacementLog.getCurrentVersion(segment);
 
       saveConnectionsForSegment(currentSegment);
@@ -103,14 +101,10 @@ public class DeleteStreetSegmentCommand implements ChangeCommand {
       this.segmentParentGroups.put(newSegment, this.segmentParentGroups.get(oldSegment));
       this.segmentParentGroups.remove(oldSegment);
 
-      this.replacementLog.replaceElement(oldSegment, newSegment);
       insertSegmentIntoParentGroup(newSegment);
     }
 
     restoreSegmentConnections();
-
-
-
   }
 
   private void insertSegmentIntoParentGroup(Segment segment) {

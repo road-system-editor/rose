@@ -10,7 +10,7 @@ plugins {
 
 
 group 'edu.kit.rose'
-version '1.0-SNAPSHOT'
+version '1.0'
 
 repositories {
     mavenCentral()
@@ -28,7 +28,7 @@ tasks.withType(JavaCompile) {
 }
 
 application {
-    mainModule = 'edu.kit.rose.view'
+    mainModule = 'edu.kit.rose'
     mainClass = 'edu.kit.rose.view.RoseApplication'
 }
 

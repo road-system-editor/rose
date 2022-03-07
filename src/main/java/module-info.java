@@ -1,4 +1,4 @@
-module edu.kit.rose.entwurf {
+module edu.kit.rose {
   requires javafx.controls;
   requires javafx.fxml;
   requires javafx.graphics;

@@ -32,7 +32,6 @@ import javafx.scene.shape.Line;
 
 /**
  * Represents a background surface that shows a grid, on which segment views can be drawn.
- * Represents a background surface that shows a grid, on which segment views can be drawn.
  */
 public class Grid extends Pane implements SetObserver<Segment, RoadSystemController> {
 

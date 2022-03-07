@@ -175,7 +175,7 @@ public class ExitTest {
   @Test
   void rotationTest() {
     var funnyNumber = 69;
-    Assumptions.assumeTrue(testExit.getRotation() == 0);
+    Assertions.assertEquals(0, testExit.getRotation());
 
     testExit.rotate(funnyNumber);
     Assertions.assertEquals(funnyNumber, testExit.getRotation());
@@ -196,7 +196,7 @@ public class ExitTest {
   }
 
   @Test
-  void rotationTest2() {
+  void testRotationEntryConnector() {
     var oldEntryPos = testExit.getAbsoluteConnectorPosition(testExit.getEntry());
     testExit.rotate(90);
     Assertions.assertEquals(oldEntryPos.getX(),
@@ -206,7 +206,7 @@ public class ExitTest {
   }
 
   @Test
-  void rotationTest3() {
+  void testRotationExitConnector() {
     var oldExitPos = testExit.getAbsoluteConnectorPosition(testExit.getExit());
     testExit.rotate(90);
     Assertions.assertEquals(oldExitPos.getX(),
@@ -216,7 +216,7 @@ public class ExitTest {
   }
 
   @Test
-  void rotationTest4() {
+  void testRotationExitConnectorWithMovement() {
     var moveX = 69;
     var moveY = 420;
     testExit.move(new Movement(moveX, moveY));
@@ -231,7 +231,7 @@ public class ExitTest {
   }
 
   @Test
-  void rotationTest5() {
+  void testRotationCenter() {
     var oldCenter = new Position(testExit.getCenter().getX(), testExit.getCenter().getX());
     testExit.rotate(90);
     Assertions.assertEquals(oldCenter.getX(), testExit.getCenter().getX());

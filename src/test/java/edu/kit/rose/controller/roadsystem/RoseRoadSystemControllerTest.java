@@ -51,9 +51,11 @@ public class RoseRoadSystemControllerTest {
   void setUp() {
     selectionBuffer = new RoseSelectionBuffer();
     project = mock(Project.class);
-    roadSystem = new GraphRoadSystem(new CriteriaManager(), mock(TimeSliceSetting.class));
+    CriteriaManager criteriaManager = new CriteriaManager();
+    roadSystem = new GraphRoadSystem(criteriaManager, mock(TimeSliceSetting.class));
     zoomSetting = new ZoomSetting(new Position(0, 0));
     ReplacementLog replacementLog = new ReplacementLog();
+    criteriaManager.setRoadSystem(roadSystem);
 
     Mockito.when(project.getZoomSetting()).thenReturn(zoomSetting);
     Mockito.when(project.getRoadSystem()).thenReturn(roadSystem);

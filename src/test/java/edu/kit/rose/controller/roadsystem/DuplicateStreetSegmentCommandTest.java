@@ -23,11 +23,13 @@ class DuplicateStreetSegmentCommandTest {
 
   @BeforeEach
   void setUp() {
-    this.roadSystem = new GraphRoadSystem(new CriteriaManager(),
+    CriteriaManager criteriaManager = new CriteriaManager();
+    this.roadSystem = new GraphRoadSystem(criteriaManager,
             Mockito.mock(TimeSliceSetting.class));
     Project project = Mockito.mock(Project.class);
     this.replacementLog = new ReplacementLog();
     Segment segment = new Base();
+    criteriaManager.setRoadSystem(roadSystem);
 
     when(project.getRoadSystem()).thenReturn(this.roadSystem);
 

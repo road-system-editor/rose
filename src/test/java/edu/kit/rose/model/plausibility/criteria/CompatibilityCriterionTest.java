@@ -25,10 +25,12 @@ class CompatibilityCriterionTest {
 
   @BeforeEach
   public void setUp() {
-    this.roadSystem = new GraphRoadSystem(new CriteriaManager(),
+    CriteriaManager criteriaManager = new CriteriaManager();
+    this.roadSystem = new GraphRoadSystem(criteriaManager,
             Mockito.mock(TimeSliceSetting.class));
     this.violationManager = new ViolationManager();
     this.criterion = new CompatibilityCriterion(null, this.violationManager);
+    criteriaManager.setRoadSystem(roadSystem);
     this.criterion.setRoadSystem(this.roadSystem);
   }
 

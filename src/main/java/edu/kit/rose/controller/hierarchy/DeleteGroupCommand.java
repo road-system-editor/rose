@@ -1,6 +1,7 @@
 package edu.kit.rose.controller.hierarchy;
 
 import edu.kit.rose.controller.command.ChangeCommand;
+import edu.kit.rose.controller.commons.ConnectionCopier;
 import edu.kit.rose.controller.commons.HierarchyCopier;
 import edu.kit.rose.controller.commons.ReplacementLog;
 import edu.kit.rose.infrastructure.Box;
@@ -72,10 +73,7 @@ public class DeleteGroupCommand implements ChangeCommand {
           : this.project.getRoadSystem().getAdjacentSegments(targetSegment)) {
         Box<Connection> targetSegmentConnections = this.project.getRoadSystem().getConnections(
             targetSegment, connectedSegment);
-
-        if (targetSegmentConnections.getSize() > 0) {
-          targetSegmentConnections.stream().findFirst().ifPresent(connections::add);
-        }
+        targetSegmentConnections.forEach(connections::add);
       }
     }
   }
@@ -97,12 +95,11 @@ public class DeleteGroupCommand implements ChangeCommand {
   }
 
   private void restoreStoredConnections() {
+    ConnectionCopier copier
+        = new ConnectionCopier(this.replacementLog, this.project.getRoadSystem());
+
     for (Connection connection : this.storedConnections) {
-      Connector currentConnector1 = this.replacementLog.getCurrentConnectorVersion(
-          connection.getConnectors().get(0));
-      Connector currentConnector2 = this.replacementLog.getCurrentConnectorVersion(
-          connection.getConnectors().get(1));
-      this.project.getRoadSystem().connectConnectors(currentConnector1, currentConnector2);
+      copier.copyConnection(connection);
     }
   }
 }

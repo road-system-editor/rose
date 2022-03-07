@@ -93,8 +93,7 @@ public class DuplicateStreetSegmentCommand implements ChangeCommand {
     Box<Connection> connections
         = project.getRoadSystem().getConnections(currentSourceSegment, currentTargetSegment);
 
-    if (connections.getSize() > 0) {
-      Connection connection = connections.stream().findFirst().orElse(null);
+    connections.forEach(connection -> {
       if (connection == null) {
         return;
       }
@@ -112,7 +111,7 @@ public class DuplicateStreetSegmentCommand implements ChangeCommand {
 
       this.project.getRoadSystem().connectConnectors(
           duplicateSourceConnector, duplicateTargetConnector);
-    }
+    });
   }
 
 

@@ -4,9 +4,9 @@ import edu.kit.rose.model.plausibility.violation.ViolationManager;
 import edu.kit.rose.model.roadsystem.GraphRoadSystem;
 import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.TimeSliceSetting;
+import edu.kit.rose.model.roadsystem.elements.Base;
 import edu.kit.rose.model.roadsystem.elements.Connector;
-import edu.kit.rose.model.roadsystem.elements.ConnectorType;
-import edu.kit.rose.model.roadsystem.elements.Segment;
+import edu.kit.rose.model.roadsystem.elements.Entrance;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,9 +14,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 /**
- * Tests for the ConnectorCriterion Class.
+ * Unit tests for the {@link ConnectorCriterion} Class.
  */
-public class ConnectorCriterionTest {
+class ConnectorCriterionTest {
   private RoadSystem roadSystem;
   private ViolationManager violationManager;
 
@@ -35,76 +35,52 @@ public class ConnectorCriterionTest {
 
   @Test
   void entryViolationTest() {
-    Segment segment1 = roadSystem.createSegment(SegmentType.ENTRANCE);
-    Segment segment2 = roadSystem.createSegment(SegmentType.ENTRANCE);
+    var segment1 = (Entrance) roadSystem.createSegment(SegmentType.ENTRANCE);
+    var segment2 = (Entrance) roadSystem.createSegment(SegmentType.ENTRANCE);
 
-    Connector exitConnector =
-        segment1.getConnectors().stream()
-            .filter(connector -> connector.getType() == ConnectorType.EXIT)
-            .findAny().orElseThrow();
-    Connector exitConnector2 =
-        segment2.getConnectors().stream()
-            .filter(connector -> connector.getType() == ConnectorType.EXIT)
-            .findAny().orElseThrow();
+    Connector connector1 = segment1.getExit();
+    Connector connector2 = segment2.getExit();
 
-    roadSystem.connectConnectors(exitConnector, exitConnector2);
+    roadSystem.connectConnectors(connector1, connector2);
 
     Assertions.assertEquals(1, violationManager.getViolations().getSize());
   }
 
   @Test
   void baseViolationTest() {
-    Segment segment1 = roadSystem.createSegment(SegmentType.BASE);
-    Segment segment2 = roadSystem.createSegment(SegmentType.BASE);
+    var segment1 = (Base) roadSystem.createSegment(SegmentType.BASE);
+    var segment2 = (Base) roadSystem.createSegment(SegmentType.BASE);
 
-    Connector exitConnector =
-        segment1.getConnectors().stream()
-            .filter(connector -> connector.getType() == ConnectorType.ENTRY)
-            .findAny().orElseThrow();
-    Connector exitConnector2 =
-        segment2.getConnectors().stream()
-            .filter(connector -> connector.getType() == ConnectorType.ENTRY)
-            .findAny().orElseThrow();
+    Connector connector1 = segment1.getEntry();
+    Connector connector2 = segment2.getEntry();
 
-    roadSystem.connectConnectors(exitConnector, exitConnector2);
+    roadSystem.connectConnectors(connector1, connector2);
 
     Assertions.assertEquals(1, violationManager.getViolations().getSize());
   }
 
   @Test
   void baseRampViolationTest() {
-    Segment segment1 = roadSystem.createSegment(SegmentType.BASE);
-    Segment segment2 = roadSystem.createSegment(SegmentType.ENTRANCE);
+    var segment1 = (Base) roadSystem.createSegment(SegmentType.BASE);
+    var segment2 = (Entrance) roadSystem.createSegment(SegmentType.ENTRANCE);
 
-    Connector exitConnector =
-        segment1.getConnectors().stream()
-            .filter(connector -> connector.getType() == ConnectorType.ENTRY)
-            .findAny().orElseThrow();
-    Connector exitConnector2 =
-        segment2.getConnectors().stream()
-            .filter(connector -> connector.getType() == ConnectorType.RAMP_ENTRY)
-            .findAny().orElseThrow();
+    Connector connector1 = segment1.getEntry();
+    Connector connector2 = segment2.getRamp();
 
-    roadSystem.connectConnectors(exitConnector, exitConnector2);
+    roadSystem.connectConnectors(connector1, connector2);
 
     Assertions.assertEquals(1, violationManager.getViolations().getSize());
   }
 
   @Test
   void baseRampNoViolationTest() {
-    Segment segment1 = roadSystem.createSegment(SegmentType.BASE);
-    Segment segment2 = roadSystem.createSegment(SegmentType.ENTRANCE);
+    var segment1 = (Base) roadSystem.createSegment(SegmentType.BASE);
+    var segment2 = (Entrance) roadSystem.createSegment(SegmentType.ENTRANCE);
 
-    Connector exitConnector =
-        segment1.getConnectors().stream()
-            .filter(connector -> connector.getType() == ConnectorType.EXIT)
-            .findAny().orElseThrow();
-    Connector exitConnector2 =
-        segment2.getConnectors().stream()
-            .filter(connector -> connector.getType() == ConnectorType.RAMP_ENTRY)
-            .findAny().orElseThrow();
+    Connector connector1 = segment1.getExit();
+    Connector connector2 = segment2.getRamp();
 
-    roadSystem.connectConnectors(exitConnector, exitConnector2);
+    roadSystem.connectConnectors(connector1, connector2);
 
     Assertions.assertEquals(0, violationManager.getViolations().getSize());
   }

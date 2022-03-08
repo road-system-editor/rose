@@ -37,6 +37,8 @@ import javafx.application.Application;
 import javafx.scene.control.Alert;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class is the entry point to the ROSE application.
@@ -46,6 +48,7 @@ import javafx.stage.Stage;
  * {@link edu.kit.rose.model} packages.
  */
 public class RoseApplication extends Application implements Navigator {
+  private static final Logger LOG = LoggerFactory.getLogger(RoseApplication.class);
   private static final Path CONFIG_PATH = Path.of("./rose-config.json");
 
   private static final String ROSE_EXTENSION_FILTER_NAME = "ROSE";
@@ -203,7 +206,14 @@ public class RoseApplication extends Application implements Navigator {
    * @param args an array of command line arguments provided by the caller.
    */
   public static void main(String[] args) {
+    Thread.setDefaultUncaughtExceptionHandler(RoseApplication::logUncaughtException);
+    LOG.info("Launching ROSE...");
     launch(args);
+  }
+
+  private static void logUncaughtException(Thread thread, Throwable exception) {
+    String message = String.format("Uncaught exception in thread %s", thread);
+    LOG.error(message, exception);
   }
 
   /**

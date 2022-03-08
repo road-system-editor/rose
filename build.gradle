@@ -47,7 +47,8 @@ dependencies {
     implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.13.1'
 
     implementation('org.jgrapht:jgrapht-core:1.5.1')
-    implementation 'junit:junit:4.13.1'
+    implementation 'junit:junit:4.13.2'
+    implementation('ch.qos.logback:logback-classic:1.2.10')
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
@@ -87,6 +88,7 @@ jlink {
     imageZip = project.file("${buildDir}/distributions/ROSE-${javafx.platform.classifier}.zip")
     jpackage {
         icon = file("src/main/resources/logo.ico")
+        imageOptions = ['--win-console']
     }
     options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
     launcher {

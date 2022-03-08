@@ -7,6 +7,8 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
 import java.io.File;
 import java.io.IOException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Implements the export for the {@link edu.kit.rose.model.roadsystem.RoadSystem} into the
@@ -14,6 +16,7 @@ import java.io.IOException;
  * This Format allows the Project to be reopened a Program supporting the YAML-Format.
  */
 class YamlExportStrategy extends ExportStrategy {
+  private static final Logger LOG = LoggerFactory.getLogger(YamlExportStrategy.class);
   private final Project project;
 
   YamlExportStrategy(Project project) {
@@ -35,7 +38,8 @@ class YamlExportStrategy extends ExportStrategy {
       mapper.writeValue(file, yamlProject);
       return true;
     } catch (IOException e) {
-      e.printStackTrace();
+      String message = String.format("Could not export project to file %s", file.toPath());
+      LOG.error(message, e);
       return false;
     }
   }

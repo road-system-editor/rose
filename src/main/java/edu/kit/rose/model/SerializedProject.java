@@ -507,7 +507,7 @@ class SerializedProject {
       super.linkRoseElement(source, target);
 
       createRoseConnection(source, target, entranceConnectedSegmentId, this.roseElement.getEntry());
-      createRoseConnection(source, target, exitConnectedSegmentId, this.roseElement.getEntry());
+      createRoseConnection(source, target, exitConnectedSegmentId, this.roseElement.getExit());
     }
 
     @Override

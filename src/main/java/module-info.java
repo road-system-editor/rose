@@ -1,4 +1,4 @@
-module edu.kit.rose.entwurf {
+module edu.kit.rose {
   requires javafx.controls;
   requires javafx.fxml;
   requires javafx.graphics;
@@ -8,6 +8,7 @@ module edu.kit.rose.entwurf {
   requires org.jgrapht.core;
   requires com.google.common;
   requires org.apache.commons.collections4;
+  requires org.slf4j;
 
   opens edu.kit.rose.model to com.fasterxml.jackson.databind;
   opens edu.kit.rose.model.plausibility.criteria to com.fasterxml.jackson.databind;

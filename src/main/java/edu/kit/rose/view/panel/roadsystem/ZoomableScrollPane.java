@@ -21,8 +21,8 @@ import javafx.scene.layout.VBox;
  */
 public class ZoomableScrollPane extends ScrollPane implements UnitObserver<ZoomSetting> {
 
-  private static final int MAX_ZOOM_IN = 3;
-  private static final int MAX_ZOOM_OUT = 1;
+  private static final double MAX_ZOOM_IN = 3;
+  private static final double MAX_ZOOM_OUT = 0.25;
   private static final double ZOOM_SPEED = .02;
   private static final double BASE_MOVE_SPEED = 0.1;
   private static final int BUTTON_ZOOM_STRENGTH = 1;

@@ -37,8 +37,8 @@ import javafx.scene.shape.Line;
  */
 public class Grid extends Pane implements SetObserver<Segment, RoadSystemController> {
 
-  private static final int HEIGHT = 3000;
-  private static final int WIDTH = 3000;
+  private static final int HEIGHT = 30000;
+  private static final int WIDTH = 30000;
   private static final int HORIZONTAL_LINE_SPACING = 5;
   private static final int VERTICAL_LINE_SPACING = 5;
   private static final Color BACKGROUND_COLOR = Color.gray(0.95);

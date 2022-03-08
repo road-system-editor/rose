@@ -125,13 +125,6 @@ public abstract class AbstractCompatibilityCriterion extends RoseSetObservable<S
         elementViolationMap.removeMapping(segment, vio);
       }
     }
-    /*for (Element element : elementViolationMapCopy.keySet()) {
-      for (Violation violation : elementViolationMap.get(element)) {
-        if (violation.offendingSegments().contains(segment)) {
-          elementViolationMap.remove(element);
-        }
-      }
-    }*/
   }
 
   @Override

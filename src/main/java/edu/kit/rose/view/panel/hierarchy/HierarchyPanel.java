@@ -5,6 +5,7 @@ import com.google.inject.Injector;
 import edu.kit.rose.controller.hierarchy.HierarchyController;
 import edu.kit.rose.controller.roadsystem.RoadSystemController;
 import edu.kit.rose.infrastructure.DualSetObserver;
+import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.model.Project;
@@ -31,7 +32,7 @@ import javafx.scene.layout.BorderPane;
  * The hierarchy panel shows the hierarchical order of the elements contained in the road system.
  */
 public class HierarchyPanel extends FxmlContainer
-                            implements DualSetObserver<Element, Connection, RoadSystem> {
+                            implements SetObserver<Element, Element> {
 
   @Inject
   private HierarchyController hierarchyController;
@@ -101,11 +102,15 @@ public class HierarchyPanel extends FxmlContainer
       return;
     }
 
-    TreeItem<Element> draggedItemParent = ElementTreeCell.dragItem.getParent();
+    /*TreeItem<Element> draggedItemParent = ElementTreeCell.dragItem.getParent();
     draggedItemParent.getChildren().remove(ElementTreeCell.dragItem);
 
     rootItem.getChildren().add(ElementTreeCell.dragItem);
-    ElementTreeCell.dragItem = null;
+    ElementTreeCell.dragItem = null;*/
+    if (ElementTreeCell.dragItem != null && ElementTreeCell.dragItem.getValue() != null) {
+      this.hierarchyController.addElementToGroup(
+          ElementTreeCell.dragItem.getValue(), this.project.getRoadSystem().getRootGroup());
+    }
 
     dragEvent.setDropCompleted(true);
     dragEvent.consume();
@@ -126,16 +131,10 @@ public class HierarchyPanel extends FxmlContainer
   @Override
   public void init(Injector injector) {
     super.init(injector);
-    this.project.getRoadSystem().addSubscriber(this);
+    //this.project.getRoadSystem().addSubscriber(this);
+    this.project.getRoadSystem().getRootGroup().addSubscriber(this);
   }
 
-  @Override
-  public void notifyAdditionSecond(Connection unit) {
-  }
-
-  @Override
-  public void notifyRemovalSecond(Connection unit) {
-  }
 
   @Override
   public void notifyAddition(Element unit) {
@@ -174,8 +173,9 @@ public class HierarchyPanel extends FxmlContainer
     });
   }
 
+
   @Override
-  public void notifyChange(RoadSystem unit) {
+  public void notifyChange(Element unit) {
 
   }
 }

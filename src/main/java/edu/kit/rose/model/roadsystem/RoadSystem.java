@@ -151,4 +151,12 @@ public interface RoadSystem
    * Clears the RoadSystem. Resets {@link TimeSliceSetting}.
    */
   void clear();
+
+  /**
+   * Returns the root {@link Group} that contains
+   * all {@link Group}s and {@link Segment}s indirectly.
+   *
+   * @return the root {@link Group}
+   */
+  Group getRootGroup();
 }

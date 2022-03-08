@@ -174,7 +174,7 @@ public class ElementTreeCell extends TreeCell<Element>
   @Override
   public void notifyRemoval(Element unit) {
     Platform.runLater(() -> {
-      ElementTreeItem treeItem = (ElementTreeItem) getTreeItem().getParent();
+      ElementTreeItem treeItem = (ElementTreeItem) getTreeItem();
       if (treeItem != null) {
         treeItem.getInternalChildren().removeIf(child -> child.getValue() == unit);
         unit.removeSubscriber(this);

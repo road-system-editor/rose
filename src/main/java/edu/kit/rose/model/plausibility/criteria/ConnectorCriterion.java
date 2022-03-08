@@ -43,16 +43,16 @@ public class ConnectorCriterion extends AbstractCompatibilityCriterion {
 
   @Override
   protected void checkCriterion(Segment segment) {
-    updateViolations(List.of(), segment);
     Box<Connection> connections = getRoadSystem().getConnections(segment);
+    List<Segment> invalidSegments = new ArrayList<>();
     for (Connection connection : connections) {
-      List<Segment> invalidSegments = new ArrayList<>();
       if (!checkConnection(connection)) {
-        invalidSegments = getSegmentsOfConnection(connection);
+        invalidSegments.addAll(getSegmentsOfConnection(connection));
         invalidSegments.remove(segment);
       }
-      updateViolations(invalidSegments, segment);
+
     }
+    updateViolations(invalidSegments, segment);
   }
 
   private boolean checkConnection(Connection connection) {

@@ -52,11 +52,20 @@ public class AddElementToGroupCommand implements ChangeCommand {
   }
 
   private Group getParentGroup(Element currentElement) {
-    return (Group) this.project.getRoadSystem().getElements()
+    Group parentGroup = (Group) this.project.getRoadSystem().getElements()
         .stream()
         .filter(element -> element.isContainer() && ((Group) element).contains(currentElement))
         .findFirst()
         .orElse(null);
+
+    if (parentGroup == null) {
+      Group rootGroup = this.project.getRoadSystem().getRootGroup();
+      if (rootGroup.contains(currentElement)) {
+        parentGroup = rootGroup;
+      }
+    }
+
+    return  parentGroup;
   }
 
   @Override

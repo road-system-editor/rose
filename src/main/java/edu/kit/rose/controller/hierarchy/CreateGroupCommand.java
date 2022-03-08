@@ -80,19 +80,29 @@ public class CreateGroupCommand implements ChangeCommand {
       for (Element roadElement : auxElements) {
         if (roadElement.isContainer()) {
           Group auxGroup = (Group) roadElement;
-          ArrayList<Element> child = new ArrayList<>();
-          for (Element element : this.elements) {
-            if (auxGroup.getElements().contains(element)) {
-              child.add(element);
-            }
-          }
-          if (!child.isEmpty()) {
-            this.parentMap.put(auxGroup, new ArrayList<>(child));
-          }
+          addGroupToChildrenMapping(auxGroup);
         }
       }
     }
+
+    Group auxGroup = this.project.getRoadSystem().getRootGroup();
+    addGroupToChildrenMapping(auxGroup);
   }
+
+  private void addGroupToChildrenMapping(Group auxGroup) {
+    if (auxGroup != null) {
+      ArrayList<Element> child = new ArrayList<>();
+      for (Element element : this.elements) {
+        if (auxGroup.getElements().contains(element)) {
+          child.add(element);
+        }
+      }
+      if (!child.isEmpty()) {
+        this.parentMap.put(auxGroup, new ArrayList<>(child));
+      }
+    }
+  }
+
 
   /**
    * Goes Throw the parentMap and adds elements back

@@ -66,10 +66,7 @@ public class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, 
     this.elements = new LinkedList<>();
     this.connectorSegmentMap = new HashMap<>();
     this.connectorConnectionMap = new HashMap<>();
-
     this.rootGroup = new Group();
-    this.elements.add(rootGroup);
-    this.groups.add(rootGroup);
   }
 
   @Override

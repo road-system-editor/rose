@@ -147,7 +147,8 @@ class CompatibilityCriterionTest {
     this.criterion.setOperatorType(ValidationType.NOT_EQUALS);
     this.criterion.addSegmentType(SegmentType.BASE);
 
-    this.criterion.notifyRemoval(segment1);
+    this.roadSystem.removeElement(segment1);
+    this.criterion.notifyChange(segment1);
 
     // all violations removed after the segment is removed
     Assertions.assertEquals(0, this.violationManager.getViolations().getSize());
@@ -164,7 +165,8 @@ class CompatibilityCriterionTest {
             segment2.getEntry());
     segment1.setConurbation(true);
     segment2.setConurbation(true);
-    this.criterion.notifyAddition(segment1);
+    //this.criterion.notifyAddition(segment1);
+    this.criterion.notifyChange(segment1);
 
     Assertions.assertEquals(1, this.violationManager.getViolations().getSize());
   }

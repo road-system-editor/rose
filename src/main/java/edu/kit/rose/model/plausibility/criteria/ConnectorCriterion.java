@@ -35,7 +35,7 @@ public class ConnectorCriterion extends AbstractCompatibilityCriterion {
    */
   public ConnectorCriterion(RoadSystem roadSystem, ViolationManager violationManager) {
     super(roadSystem, violationManager);
-
+    this.setName("Direction");
     for (var type : SegmentType.values()) {
       this.addSegmentType(type);
     }
@@ -43,13 +43,15 @@ public class ConnectorCriterion extends AbstractCompatibilityCriterion {
 
   @Override
   protected void checkCriterion(Segment segment) {
+    updateViolations(List.of(), segment);
     Box<Connection> connections = getRoadSystem().getConnections(segment);
     for (Connection connection : connections) {
+      List<Segment> invalidSegments = new ArrayList<>();
       if (!checkConnection(connection)) {
-        List<Segment> invalidSegments = getSegmentsOfConnection(connection);
+        invalidSegments = getSegmentsOfConnection(connection);
         invalidSegments.remove(segment);
-        updateViolations(invalidSegments, segment);
       }
+      updateViolations(invalidSegments, segment);
     }
   }
 

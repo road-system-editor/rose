@@ -46,6 +46,8 @@ class CompatibilityCriterionPanel
       + ".compatibilityCriterionPanel.notEqualsExplanation";
   private static final String LESS_THAN_TRANSLATION_KEY = "view.panel.criterion"
       + ".compatibilityCriterionPanel.lessThanExplanation";
+  private static final String LESS_THAN_SPEEDLIMIT_TRANSLATION_KEY = "view.panel.criterion"
+      + ".compatibilityCriterionPanel.lessThanSpeedlimitExplanation";
 
   private static final String VALUE_REGEX = "[0-9]{1,13}(\\.[0-9]+)?";
   private static final String VALID_VALUE_STYLE = "-fx-text-fill: black;";
@@ -321,6 +323,7 @@ class CompatibilityCriterionPanel
             case EQUALS -> tooltipKey = EQUALS_TRANSLATION_KEY;
             case LESS_THAN -> tooltipKey = LESS_THAN_TRANSLATION_KEY;
             case NOT_EQUALS -> tooltipKey = NOT_EQUALS_TRANSLATION_KEY;
+            case LESS_THAN_SPEEDLIMIT -> tooltipKey = LESS_THAN_SPEEDLIMIT_TRANSLATION_KEY;
             default -> throw new IllegalArgumentException("unknown Item");
           }
           Tooltip tooltip = new Tooltip();

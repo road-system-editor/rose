@@ -9,6 +9,10 @@ public enum SpeedLimit {
    */
   NONE(0),
   /**
+   * 60km/h.
+   */
+  T60(60),
+  /**
    * 80 km/h.
    */
   T80(80),

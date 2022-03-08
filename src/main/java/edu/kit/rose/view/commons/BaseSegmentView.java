@@ -9,12 +9,14 @@ import edu.kit.rose.model.roadsystem.elements.Connector;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.MovableConnector;
 import java.util.List;
-import javafx.event.Event;
 import javafx.geometry.Point2D;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.Shadow;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.QuadCurve;
+import javafx.scene.transform.Rotate;
 
 /**
  * A base segment view is the visual representation of a base street segment.
@@ -22,6 +24,9 @@ import javafx.scene.shape.QuadCurve;
  */
 public class BaseSegmentView extends SegmentView<Base> {
 
+  private static final String ARROW_IMAGE_RESOURCE = "arrow.png";
+  private static final double ARROW_WIDTH = 13;
+  private static final double ARROW_HEIGHT = 22;
   private static final Color SELECTION_EFFECT_COLOR = Color.rgb(0, 150, 130);
   private static final double SELECTION_EFFECT_RADIUS = 5;
   private static final double EFFECT_CURVE_RADIUS = 6;
@@ -31,6 +36,9 @@ public class BaseSegmentView extends SegmentView<Base> {
 
   private QuadCurve curve;
   private QuadCurve effectCurve;
+  private ImageView arrow;
+  private Rotate arrowRotation;
+
 
   private Point2D startPoint;
 
@@ -61,8 +69,9 @@ public class BaseSegmentView extends SegmentView<Base> {
     exitConnectorObserver.setOnConnectorPositionChangedCallback(this::draw);
 
     setupEffectCurve();
+    setupArrowImage();
 
-    this.getChildren().addAll(this.effectCurve, this.curve,
+    this.getChildren().addAll(this.effectCurve, this.curve, this.arrow,
         this.entryConnectorView, this.exitConnectorView);
 
     setupConnectorViewDragging(entryConnectorView, this.getSegment().getEntry());
@@ -84,6 +93,64 @@ public class BaseSegmentView extends SegmentView<Base> {
     var selectionEffect = new Shadow(BlurType.GAUSSIAN, SELECTION_EFFECT_COLOR,
         SELECTION_EFFECT_RADIUS);
     this.effectCurve.setEffect(selectionEffect);
+  }
+
+  private void setupArrowImage() {
+    var imageUrl = getClass().getResource(ARROW_IMAGE_RESOURCE);
+    Image arrowImage;
+    if (imageUrl != null) {
+      arrowImage = new Image(imageUrl.toString());
+    } else {
+      throw new IllegalStateException("image not found.");
+    }
+
+    arrow = new ImageView(arrowImage);
+    arrow.setPreserveRatio(true);
+    arrow.setFitWidth(ARROW_WIDTH);
+    arrow.setFitHeight(ARROW_HEIGHT);
+    setupArrowImageRotation();
+  }
+
+  private void updateArrow() {
+    moveArrowToCenter();
+    updateArrowRotation();
+  }
+
+  private void moveArrowToCenter() {
+    var center = getInnerCenter();
+    var arrowCenterOffsetX = ARROW_WIDTH / 2;
+    var arrowCenterOffsetY = ARROW_HEIGHT / 2;
+    arrow.relocate(center.getX() - arrowCenterOffsetX, center.getY() - arrowCenterOffsetY);
+  }
+
+  private void updateArrowRotation() {
+    arrowRotation.setAngle(getAngleBetweenEndpoints());
+  }
+
+  private void setupArrowImageRotation() {
+    arrowRotation = new Rotate(getAngleBetweenEndpoints());
+    arrowRotation.setPivotX(ARROW_WIDTH / 2);
+    arrowRotation.setPivotY(ARROW_HEIGHT / 2);
+    arrow.getTransforms().add(arrowRotation);
+  }
+
+  private double getAngleBetweenEndpoints() {
+    var entryPos = new Point2D(entryConnectorView.getCenterX(), entryConnectorView.getCenterY());
+    var exitPos = new Point2D(exitConnectorView.getCenterX(), exitConnectorView.getCenterY());
+    var thirdPoint = new Point2D(exitPos.getX(), entryPos.getY());
+    //calculate angle needed for current orientation of the arrow.
+    // the arrow should always point from entryPos towards endPos
+    var angle = entryPos.angle(thirdPoint, exitPos);
+    if (entryPos.getY() <= exitPos.getY()) {
+      if (entryPos.getX() <= exitPos.getX()) {
+        angle = -angle;
+      } else {
+        angle -= 180;
+      }
+    } else if (entryPos.getX() > exitPos.getX()) {
+      angle = 180 - angle;
+    }
+    return 90 - angle;
   }
 
   private void setupConnectorViewDragging(ConnectorView targetView, Connector targetConnector) {
@@ -220,6 +287,7 @@ public class BaseSegmentView extends SegmentView<Base> {
     updateBaseSegmentViewBounds();
     updateConnectorViewPositions();
     redrawCurve();
+    updateArrow();
   }
 
   @Override

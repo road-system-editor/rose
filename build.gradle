@@ -49,6 +49,7 @@ dependencies {
     implementation('org.jgrapht:jgrapht-core:1.5.1')
     implementation 'junit:junit:4.13.2'
     implementation('ch.qos.logback:logback-classic:1.2.10')
+    implementation 'javax.servlet:javax.servlet-api:4.0.1' // required for logback
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")

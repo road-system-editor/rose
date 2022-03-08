@@ -16,8 +16,8 @@ import java.util.Objects;
  * A standard implementation for {@link Project}.
  */
 class RoseProject implements Project {
-  private static final int CENTER_OF_VIEW_X = 1500;
-  private static final int CENTER_OF_VIEW_Y = 1500;
+  private static final int CENTER_OF_VIEW_X = 15000;
+  private static final int CENTER_OF_VIEW_Y = 15000;
 
   private final Map<ProjectFormat, ExportStrategy> exportStrategies;
   private final RoadSystem roadSystem;

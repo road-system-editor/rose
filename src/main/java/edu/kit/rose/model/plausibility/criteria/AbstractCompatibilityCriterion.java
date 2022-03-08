@@ -110,15 +110,10 @@ public abstract class AbstractCompatibilityCriterion extends RoseSetObservable<S
 
   @Override
   public void notifyAddition(Element unit) {
-    notifyChange(unit);
   }
 
   @Override
   public void notifyRemoval(Element unit) {
-    /*if (!unit.isContainer()) {
-      removeViolationsOfSegment((Segment) unit);
-    }*/
-    notifyChange(unit);
   }
 
   protected void removeViolationsOfSegment(Segment segment) {

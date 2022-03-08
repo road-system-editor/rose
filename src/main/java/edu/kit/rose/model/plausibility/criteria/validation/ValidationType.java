@@ -10,7 +10,7 @@ import java.util.List;
  */
 public enum ValidationType {
 
-  LESS_THAN(true, DataType.INTEGER, DataType.FRACTIONAL),
+  LESS_THAN(true, DataType.INTEGER, DataType.FRACTIONAL, DataType.SPEED_LIMIT),
   EQUALS(false, DataType.INTEGER, DataType.FRACTIONAL, DataType.STRING,
       DataType.BOOLEAN, DataType.SPEED_LIMIT, DataType.SPEED_LIMIT),
   NOT_EQUALS(false, DataType.INTEGER, DataType.FRACTIONAL, DataType.STRING,

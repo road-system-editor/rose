@@ -134,6 +134,9 @@ public class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, 
   }
 
   private void removeGroup(Group group) {
+    if (rootGroup.equals(group)) {
+      throw new IllegalArgumentException("Can not remove root group from road-system.");
+    }
     group.getElements().forEach(this::removeElement);
     elements.remove(group);
     groups.remove(group);

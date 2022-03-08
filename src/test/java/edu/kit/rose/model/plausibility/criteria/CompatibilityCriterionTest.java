@@ -25,10 +25,13 @@ class CompatibilityCriterionTest {
 
   @BeforeEach
   public void setUp() {
-    this.roadSystem = new GraphRoadSystem(new CriteriaManager(),
+    CriteriaManager criteriaManager = new CriteriaManager();
+    this.roadSystem = new GraphRoadSystem(criteriaManager,
             Mockito.mock(TimeSliceSetting.class));
     this.violationManager = new ViolationManager();
     this.criterion = new CompatibilityCriterion(null, this.violationManager);
+    criteriaManager.setRoadSystem(this.roadSystem);
+    criteriaManager.setViolationManager(this.violationManager);
     this.criterion.setRoadSystem(this.roadSystem);
   }
 
@@ -102,8 +105,8 @@ class CompatibilityCriterionTest {
     HighwaySegment segment1 = (HighwaySegment) roadSystem.createSegment(SegmentType.BASE);
     HighwaySegment segment2 = (HighwaySegment) roadSystem.createSegment(SegmentType.BASE);
 
-    roadSystem.connectConnectors(segment1.getConnectors().iterator().next(),
-            segment2.getConnectors().iterator().next());
+    roadSystem.connectConnectors(segment1.getEntry(),
+            segment2.getExit());
 
     segment1.setName("str");
     segment2.setName("str");
@@ -135,9 +138,8 @@ class CompatibilityCriterionTest {
     HighwaySegment segment1 = (HighwaySegment) roadSystem.createSegment(SegmentType.BASE);
     HighwaySegment segment2 = (HighwaySegment) roadSystem.createSegment(SegmentType.BASE);
 
-    roadSystem.connectConnectors(segment1.getConnectors().iterator().next(),
-            segment2.getConnectors().iterator().next());
-
+    roadSystem.connectConnectors(segment1.getEntry(),
+            segment2.getExit());
 
     segment1.setSlope(3.0);
     segment2.setSlope(3.0);
@@ -145,7 +147,8 @@ class CompatibilityCriterionTest {
     this.criterion.setOperatorType(ValidationType.NOT_EQUALS);
     this.criterion.addSegmentType(SegmentType.BASE);
 
-    this.criterion.notifyRemoval(segment1);
+    this.roadSystem.removeElement(segment1);
+    this.criterion.notifyChange(segment1);
 
     // all violations removed after the segment is removed
     Assertions.assertEquals(0, this.violationManager.getViolations().getSize());
@@ -158,11 +161,12 @@ class CompatibilityCriterionTest {
     this.criterion.addSegmentType(SegmentType.BASE);
     HighwaySegment segment1 = (HighwaySegment) roadSystem.createSegment(SegmentType.BASE);
     HighwaySegment segment2 = (HighwaySegment) roadSystem.createSegment(SegmentType.BASE);
-    roadSystem.connectConnectors(segment1.getConnectors().iterator().next(),
-            segment2.getConnectors().iterator().next());
+    roadSystem.connectConnectors(segment1.getExit(),
+            segment2.getEntry());
     segment1.setConurbation(true);
     segment2.setConurbation(true);
-    this.criterion.notifyAddition(segment1);
+    //this.criterion.notifyAddition(segment1);
+    this.criterion.notifyChange(segment1);
 
     Assertions.assertEquals(1, this.violationManager.getViolations().getSize());
   }

@@ -1,21 +1,24 @@
 package edu.kit.rose.model.plausibility.criteria;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import edu.kit.rose.infrastructure.RoseBox;
 import edu.kit.rose.infrastructure.RoseSortedBox;
 import edu.kit.rose.model.plausibility.violation.ViolationManager;
 import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.elements.Base;
+import edu.kit.rose.model.roadsystem.elements.Connection;
 import edu.kit.rose.model.roadsystem.elements.Element;
-import edu.kit.rose.model.roadsystem.elements.Segment;
 import java.util.List;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
- * Unit test for {@link CriterionFactory}.
+ * Unit tests for {@link CriterionFactory}.
  */
 class CriterionFactoryTest {
   private CriterionFactory factory;
@@ -25,34 +28,42 @@ class CriterionFactoryTest {
     RoadSystem roadSystem = mock(RoadSystem.class);
     Element element = new Base();
     when(roadSystem.getElements()).thenReturn(new RoseSortedBox<>(List.of(element)));
+    when(roadSystem.getConnections(any())).thenReturn(new RoseBox<>());
     this.factory = new CriterionFactory();
     this.factory.setRoadSystem(roadSystem);
     this.factory.setViolationManager(mock(ViolationManager.class));
   }
 
   @Test
-  void createCompletenessCriterionTest() {
+  void testCreateCompletenessCriterion() {
     PlausibilityCriterion criteria = this.factory.createCompletenessCriterion();
 
-    Assertions.assertNotNull(criteria);
-    Assertions.assertEquals(criteria.getType(), (PlausibilityCriterionType.COMPLETENESS));
+    assertNotNull(criteria);
+    assertSame(PlausibilityCriterionType.COMPLETENESS, criteria.getType());
   }
 
   @Test
-  void createValueCriterionTest() {
+  void testCreateValueCriteria() {
     List<ValueCriterion> criterion = this.factory.createValueCriteria();
 
     for (ValueCriterion criteria : criterion) {
-      Assertions.assertNotNull(criteria);
-      Assertions.assertEquals(criteria.getType(), (PlausibilityCriterionType.VALUE));
+      assertNotNull(criteria);
+      assertSame(PlausibilityCriterionType.VALUE, criteria.getType());
     }
   }
 
   @Test
-  void createCompatibilityCriterionTest() {
-    PlausibilityCriterion criteria = this.factory.createCompatibilityCriterion();
+  void testCreateCompatibilityCriterion() {
+    PlausibilityCriterion criterion = this.factory.createCompatibilityCriterion();
 
-    Assertions.assertNotNull(criteria);
-    Assertions.assertEquals(criteria.getType(), (PlausibilityCriterionType.COMPATIBILITY));
+    assertNotNull(criterion);
+    assertSame(PlausibilityCriterionType.COMPATIBILITY, criterion.getType());
+  }
+
+  @Test
+  void testCreateConnectorCriterion() {
+    ConnectorCriterion criterion = this.factory.createConnectorCriterion();
+    assertNotNull(criterion);
+    assertSame(PlausibilityCriterionType.CONNECTOR, criterion.getType());
   }
 }

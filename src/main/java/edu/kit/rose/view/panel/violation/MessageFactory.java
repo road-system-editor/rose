@@ -34,7 +34,7 @@ public record MessageFactory(LocalizedTextProvider translator) {
       case VALUE, COMPLETENESS -> { // criteria with one offending segment
         return String.format(shortDescription(type), segmentNames.get(0));
       }
-      case COMPATIBILITY -> { // criteria with two offending segments
+      case COMPATIBILITY, CONNECTOR -> { // criteria with two offending segments
         return String.format(shortDescription(type), segmentNames.get(0), segmentNames.get(1));
       }
       default -> throw new IllegalArgumentException("unknown criterion type");
@@ -59,7 +59,7 @@ public record MessageFactory(LocalizedTextProvider translator) {
       case VALUE, COMPLETENESS -> {
         return String.format(detailedDescription(type), segmentNames.get(0));
       }
-      case COMPATIBILITY -> {
+      case COMPATIBILITY, CONNECTOR -> {
         return String.format(detailedDescription(type),
             segmentNames.get(0),
             segmentNames.get(1),

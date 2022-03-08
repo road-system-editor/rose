@@ -68,6 +68,7 @@ public class ViolationHandle extends FxmlContainer implements SetObserver<Segmen
     extendedMessage.setText(messageFactory.generateDetailedDescription(violation));
 
     segments.setOnMouseClicked(this::handleMouseClicked);
+    criterion.setOnMouseClicked(this::handleMouseClicked);
 
     Tooltip.install(segments, extendedMessage);
     Tooltip.install(criterion, extendedMessage);

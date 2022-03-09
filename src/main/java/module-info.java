@@ -10,7 +10,6 @@ module edu.kit.rose {
   requires org.apache.commons.collections4;
   requires java.desktop;
   requires org.slf4j;
-  requires java.desktop;
 
   opens edu.kit.rose.model to com.fasterxml.jackson.databind;
   opens edu.kit.rose.model.plausibility.criteria to com.fasterxml.jackson.databind;

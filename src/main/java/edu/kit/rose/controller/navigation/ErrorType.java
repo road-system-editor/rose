@@ -10,6 +10,8 @@ import edu.kit.rose.controller.commons.Controller;
 public enum ErrorType {
   SAVE_ERROR,
   LOAD_ERROR,
-  IMPORT_ERROR,
-  EXPORT_ERROR
+  PROJECT_IMPORT_ERROR,
+  PROJECT_EXPORT_ERROR,
+  CRITERIA_IMPORT_ERROR,
+  CRITERIA_EXPORT_ERROR
 }

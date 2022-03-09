@@ -30,7 +30,6 @@ import edu.kit.rose.view.window.ShortCutHelpWindow;
 import edu.kit.rose.view.window.WindowState;
 import java.io.File;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import javafx.application.Application;
@@ -173,10 +172,14 @@ public class RoseApplication extends Application implements Navigator {
           translator.getLocalizedText("view.roseapplication.error.save"));
       case LOAD_ERROR -> alertDialog.setContentText(
           translator.getLocalizedText("view.roseapplication.error.load"));
-      case IMPORT_ERROR -> alertDialog.setContentText(
-          translator.getLocalizedText("view.roseapplication.error.import"));
-      case EXPORT_ERROR -> alertDialog.setContentText(
-          translator.getLocalizedText("view.roseapplication.error.export"));
+      case PROJECT_IMPORT_ERROR -> alertDialog.setContentText(
+          translator.getLocalizedText("view.roseapplication.error.project.import"));
+      case PROJECT_EXPORT_ERROR -> alertDialog.setContentText(
+          translator.getLocalizedText("view.roseapplication.error.project.export"));
+      case CRITERIA_IMPORT_ERROR -> alertDialog.setContentText(
+          translator.getLocalizedText("view.roseapplication.error.criteria.import"));
+      case CRITERIA_EXPORT_ERROR -> alertDialog.setContentText(
+          translator.getLocalizedText("view.roseapplication.error.criteria.export"));
       default -> throw new IllegalStateException(errorType.toString());
     }
 

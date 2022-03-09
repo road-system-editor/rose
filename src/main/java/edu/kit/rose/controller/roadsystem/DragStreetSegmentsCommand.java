@@ -29,11 +29,11 @@ public class DragStreetSegmentsCommand implements ChangeCommand {
    * Creates a {@link DragStreetSegmentsCommand}
    * that drags a given set of segments by a specified movement.
    *
-   * @param replacementLog   the replacement log to look up current segment versions in.
-   * @param project          the model facade to execute {@link DragStreetSegmentsCommand on}
-   * @param segments         the segments to drag
-   * @param movement         the translation of the segments
-   * @param dragConnector    the connector that is used to drag the segments of null
+   * @param replacementLog the replacement log to look up current segment versions in.
+   * @param project        the model facade to execute {@link DragStreetSegmentsCommand on}
+   * @param segments       the segments to drag
+   * @param movement       the translation of the segments
+   * @param dragConnector  the connector that is used to drag the segments of null
    */
   public DragStreetSegmentsCommand(ReplacementLog replacementLog, Project project,
                                    List<Segment> segments, Movement movement,
@@ -48,14 +48,12 @@ public class DragStreetSegmentsCommand implements ChangeCommand {
   @Override
   public void execute() {
     this.project.getRoadSystem().moveSegments(getCurrentSegments(), movement);
-    if (isExecuteFirstCall) {
-      if (this.segments.size() == 1) {
-        this.connection = ConnectionBuilder.buildConnection(
-            this.project.getRoadSystem(), this.dragConnector);
-      }
+    if (isExecuteFirstCall && this.segments.size() == 1 && this.dragConnector != null) {
+      this.connection = ConnectionBuilder.buildConnection(
+          this.project.getRoadSystem(), this.dragConnector);
       isExecuteFirstCall = false;
     } else {
-      if (this.segments.size() == 1) {
+      if (this.segments.size() == 1 && this.dragConnector != null) {
         ConnectionCopier copier = new ConnectionCopier(
             this.replacementLog, this.project.getRoadSystem());
         copier.copyConnection(connection);

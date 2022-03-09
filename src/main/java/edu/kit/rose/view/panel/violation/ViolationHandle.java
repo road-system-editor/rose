@@ -8,6 +8,7 @@ import edu.kit.rose.model.plausibility.violation.Violation;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import edu.kit.rose.view.commons.FxmlContainer;
 import java.util.Collection;
+import java.util.Objects;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
@@ -20,6 +21,8 @@ import javafx.scene.input.MouseEvent;
  */
 public class ViolationHandle extends FxmlContainer implements SetObserver<SegmentType,
     PlausibilityCriterion> {
+  private static final String VIOLATION_CSS_FILE = "/edu/kit/rose/view/panel/violation/Violation"
+      + ".css";
   private static final int DOUBLE_CLICK = 2;
 
   /**
@@ -61,6 +64,7 @@ public class ViolationHandle extends FxmlContainer implements SetObserver<Segmen
     this.violation = violation;
 
     violation.violatedCriterion().addSubscriber(this);
+    setupView();
 
     segments.setText(messageFactory.generateShortDescription(violation));
     criterion.setText(violation.violatedCriterion().getName());
@@ -72,6 +76,12 @@ public class ViolationHandle extends FxmlContainer implements SetObserver<Segmen
 
     Tooltip.install(segments, extendedMessage);
     Tooltip.install(criterion, extendedMessage);
+  }
+
+  private void setupView() {
+    String violationStyleSheetUrl =
+        Objects.requireNonNull(getClass().getResource(VIOLATION_CSS_FILE)).toExternalForm();
+    this.getStylesheets().add(violationStyleSheetUrl);
   }
 
   private void handleMouseClicked(MouseEvent event) {

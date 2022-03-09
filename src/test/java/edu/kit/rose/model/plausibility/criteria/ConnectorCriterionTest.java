@@ -4,10 +4,8 @@ import edu.kit.rose.model.plausibility.violation.ViolationManager;
 import edu.kit.rose.model.roadsystem.GraphRoadSystem;
 import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.TimeSliceSetting;
-import edu.kit.rose.model.roadsystem.elements.Base;
 import edu.kit.rose.model.roadsystem.elements.Connector;
-import edu.kit.rose.model.roadsystem.elements.Entrance;
-import edu.kit.rose.model.roadsystem.elements.SegmentType;
+import edu.kit.rose.util.RoadSystemUtility;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,8 +33,8 @@ class ConnectorCriterionTest {
 
   @Test
   void entryViolationTest() {
-    var segment1 = (Entrance) roadSystem.createSegment(SegmentType.ENTRANCE);
-    var segment2 = (Entrance) roadSystem.createSegment(SegmentType.ENTRANCE);
+    var segment1 = RoadSystemUtility.createDefaultEntrance(this.roadSystem);
+    var segment2 = RoadSystemUtility.createDefaultEntrance(this.roadSystem);
 
     Connector connector1 = segment1.getExit();
     Connector connector2 = segment2.getExit();
@@ -48,8 +46,8 @@ class ConnectorCriterionTest {
 
   @Test
   void baseViolationTest() {
-    var segment1 = (Base) roadSystem.createSegment(SegmentType.BASE);
-    var segment2 = (Base) roadSystem.createSegment(SegmentType.BASE);
+    var segment1 = RoadSystemUtility.createDefaultBase(this.roadSystem);
+    var segment2 = RoadSystemUtility.createDefaultBase(this.roadSystem);
 
     Connector connector1 = segment1.getEntry();
     Connector connector2 = segment2.getEntry();
@@ -61,8 +59,8 @@ class ConnectorCriterionTest {
 
   @Test
   void baseRampViolationTest() {
-    var segment1 = (Base) roadSystem.createSegment(SegmentType.BASE);
-    var segment2 = (Entrance) roadSystem.createSegment(SegmentType.ENTRANCE);
+    var segment1 = RoadSystemUtility.createDefaultBase(this.roadSystem);
+    var segment2 = RoadSystemUtility.createDefaultEntrance(this.roadSystem);
 
     Connector connector1 = segment1.getEntry();
     Connector connector2 = segment2.getRamp();
@@ -74,8 +72,8 @@ class ConnectorCriterionTest {
 
   @Test
   void baseRampNoViolationTest() {
-    var segment1 = (Base) roadSystem.createSegment(SegmentType.BASE);
-    var segment2 = (Entrance) roadSystem.createSegment(SegmentType.ENTRANCE);
+    var segment1 = RoadSystemUtility.createDefaultBase(this.roadSystem);
+    var segment2 = RoadSystemUtility.createDefaultEntrance(this.roadSystem);
 
     Connector connector1 = segment1.getExit();
     Connector connector2 = segment2.getRamp();

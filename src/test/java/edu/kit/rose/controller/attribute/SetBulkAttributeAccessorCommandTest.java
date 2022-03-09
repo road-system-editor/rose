@@ -18,8 +18,8 @@ import org.junit.jupiter.api.Test;
 /**
  * Tests the {@link SetBulkAttributeAccessorCommand} class.
  */
-public class SetBulkAttributeAccessorCommandTest {
-  private static final int INITIAL_VALUE = 1;
+class SetBulkAttributeAccessorCommandTest {
+  private static final Integer INITIAL_VALUE = null;
   private static final int SECOND_INITIAL_VALUE = 2;
   private static final int SET_VALUE = 3;
 

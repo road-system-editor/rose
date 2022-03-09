@@ -8,6 +8,7 @@ import edu.kit.rose.model.roadsystem.attributes.SpeedLimit;
 import edu.kit.rose.model.roadsystem.elements.Base;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
+import edu.kit.rose.util.RoadSystemUtility;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -55,7 +56,7 @@ class CompletenessCriterionTest {
 
   @Test
   void testNotifyChange() {
-    Base segment = new Base();
+    Base segment = RoadSystemUtility.createDefaultBase(null);
 
     segment.setName(null);
 

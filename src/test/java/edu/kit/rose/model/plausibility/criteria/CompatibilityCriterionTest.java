@@ -10,6 +10,7 @@ import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.elements.Base;
 import edu.kit.rose.model.roadsystem.elements.HighwaySegment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
+import edu.kit.rose.util.RoadSystemUtility;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -102,8 +103,8 @@ class CompatibilityCriterionTest {
 
   @Test
   void testNotifyChange() {
-    HighwaySegment segment1 = (HighwaySegment) roadSystem.createSegment(SegmentType.BASE);
-    HighwaySegment segment2 = (HighwaySegment) roadSystem.createSegment(SegmentType.BASE);
+    HighwaySegment segment1 = RoadSystemUtility.createDefaultBase(this.roadSystem);
+    HighwaySegment segment2 = RoadSystemUtility.createDefaultBase(this.roadSystem);
 
     roadSystem.connectConnectors(segment1.getEntry(),
             segment2.getExit());
@@ -135,8 +136,8 @@ class CompatibilityCriterionTest {
 
   @Test
   void testNotifyRemoval() {
-    HighwaySegment segment1 = (HighwaySegment) roadSystem.createSegment(SegmentType.BASE);
-    HighwaySegment segment2 = (HighwaySegment) roadSystem.createSegment(SegmentType.BASE);
+    HighwaySegment segment1 = RoadSystemUtility.createDefaultBase(this.roadSystem);
+    HighwaySegment segment2 = RoadSystemUtility.createDefaultBase(this.roadSystem);
 
     roadSystem.connectConnectors(segment1.getEntry(),
             segment2.getExit());
@@ -159,8 +160,8 @@ class CompatibilityCriterionTest {
     this.criterion.setValidationType(ValidationType.NOR);
     this.criterion.setAttributeType(AttributeType.CONURBATION);
     this.criterion.addSegmentType(SegmentType.BASE);
-    HighwaySegment segment1 = (HighwaySegment) roadSystem.createSegment(SegmentType.BASE);
-    HighwaySegment segment2 = (HighwaySegment) roadSystem.createSegment(SegmentType.BASE);
+    HighwaySegment segment1 = RoadSystemUtility.createDefaultBase(this.roadSystem);
+    HighwaySegment segment2 = RoadSystemUtility.createDefaultBase(this.roadSystem);
     roadSystem.connectConnectors(segment1.getExit(),
             segment2.getEntry());
     segment1.setConurbation(true);
@@ -195,7 +196,8 @@ class CompatibilityCriterionTest {
   void testThrowsException() {
     this.criterion = new CompatibilityCriterion(null, this.violationManager);
 
+    Base someBase = new Base();
     Assertions.assertThrows(IllegalStateException.class,
-            () -> this.criterion.notifyChange(new Base()));
+            () -> this.criterion.notifyChange(someBase));
   }
 }

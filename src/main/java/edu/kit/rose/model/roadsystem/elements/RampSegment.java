@@ -13,9 +13,9 @@ import java.util.List;
 public abstract class RampSegment extends HighwaySegment {
   protected static final int INITIAL_RAMP_DISTANCE_TO_CENTER_Y = -14;
 
-  private int laneCountRamp = 1;
+  private Integer laneCountRamp;
   private final AttributeAccessor<Integer> laneCountRampAccessor;
-  private SpeedLimit rampSpeedLimit = SpeedLimit.NONE;
+  private SpeedLimit rampSpeedLimit;
   private final AttributeAccessor<SpeedLimit> maxSpeedRampAccessor;
   private String junctionName;
   private final AttributeAccessor<String> junctionNameAccessor;
@@ -89,14 +89,14 @@ public abstract class RampSegment extends HighwaySegment {
   /**
    * Returns the {@link AttributeType#LANE_COUNT} for the ramp connector.
    */
-  public int getLaneCountRamp() {
+  public Integer getLaneCountRamp() {
     return this.laneCountRamp;
   }
 
   /**
    * Sets the {@link AttributeType#LANE_COUNT} for the ramp connector to the given value.
    */
-  public void setLaneCountRamp(int laneCountRamp) {
+  public void setLaneCountRamp(Integer laneCountRamp) {
     this.laneCountRamp = laneCountRamp;
 
     this.laneCountRampAccessor.notifySubscribers();

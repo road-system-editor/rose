@@ -1,20 +1,16 @@
 package edu.kit.rose.model.roadsystem.elements;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
 
-import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
+import edu.kit.rose.model.roadsystem.attributes.SpeedLimit;
 import edu.kit.rose.util.AccessorUtility;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -37,20 +33,11 @@ class RampSegmentTest {
 
   private static final SegmentType TEST_SEGMENT_TYPE = SegmentType.ENTRANCE;
 
-  SetObserver<Element, Element> mockObserver;
   RampSegment testSegment;
 
   @BeforeEach
   void beforeEach() {
     this.testSegment = new RampSegmentImplementation(TEST_SEGMENT_TYPE);
-
-    this.mockObserver = createMockObserver();
-    this.testSegment.addSubscriber(mockObserver);
-  }
-
-  @SuppressWarnings("unchecked") // this is how mocking generics in
-  private SetObserver<Element, Element> createMockObserver() {
-    return mock(SetObserver.class);
   }
 
   /**
@@ -76,28 +63,44 @@ class RampSegmentTest {
   }
 
   @Test
-  void testJunctionNameAttribute() {
-    AttributeAccessor<String> accessor = AccessorUtility.findAccessorOfType(
-        this.testSegment, AttributeType.JUNCTION);
-    assertNotNull(accessor);
-
-    // default: junction name not configured
-    assertNull(this.testSegment.getJunctionName());
-    assertNull(accessor.getValue());
-    verifyNoInteractions(mockObserver);
-
-    // test normal setter
-    var junctionName = "central junction";
-    this.testSegment.setJunctionName(junctionName);
-    assertEquals(junctionName, this.testSegment.getJunctionName());
-    assertEquals(junctionName, accessor.getValue());
-    verify(this.mockObserver, times(1)).notifyChange(this.testSegment);
-
-    // test attribute accessor setter
-    junctionName = "actually, it is another junction";
-    accessor.setValue(junctionName);
-    assertEquals(junctionName, this.testSegment.getJunctionName());
-    assertEquals(junctionName, accessor.getValue());
-    verify(this.mockObserver, times(2)).notifyChange(this.testSegment);
+  void testLaneCountRampAttribute() {
+    assertAccessorCorrectness(
+        AttributeType.LANE_COUNT_RAMP,
+        this.testSegment::getLaneCountRamp,
+        this.testSegment::setLaneCountRamp,
+        3
+    );
   }
+
+  @Test
+  void testMaxSpeedRampAttribute() {
+    assertAccessorCorrectness(
+        AttributeType.MAX_SPEED_RAMP,
+        this.testSegment::getMaxSpeedRamp,
+        this.testSegment::setMaxSpeedRamp,
+        SpeedLimit.T90
+    );
+  }
+
+  @Test
+  void testJunctionNameAttribute() {
+    assertAccessorCorrectness(
+        AttributeType.JUNCTION,
+        this.testSegment::getJunctionName,
+        this.testSegment::setJunctionName,
+        "central junction"
+    );
+  }
+
+  private <T> void assertAccessorCorrectness(AttributeType attribute, Supplier<T> getter,
+                                             Consumer<T> setter, T testValue) {
+    AccessorUtility.testAccessorCorrectness(
+        this.testSegment,
+        attribute,
+        getter,
+        setter,
+        testValue
+    );
+  }
+
 }

@@ -323,7 +323,7 @@ class CompatibilityCriterionPanel
             case EQUALS -> tooltipKey = EQUALS_TRANSLATION_KEY;
             case LESS_THAN -> tooltipKey = LESS_THAN_TRANSLATION_KEY;
             case NOT_EQUALS -> tooltipKey = NOT_EQUALS_TRANSLATION_KEY;
-            case LESS_THAN_SPEEDLIMIT -> tooltipKey = LESS_THAN_SPEEDLIMIT_TRANSLATION_KEY;
+            case LESS_THAN_SPEED_LIMIT -> tooltipKey = LESS_THAN_SPEEDLIMIT_TRANSLATION_KEY;
             default -> throw new IllegalArgumentException("unknown Item");
           }
           Tooltip tooltip = new Tooltip();

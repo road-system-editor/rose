@@ -17,6 +17,10 @@ public enum SpeedLimit {
    */
   T80(80),
   /**
+   * 90 km/h.
+   */
+  T90(90),
+  /**
    * 100 km/h.
    */
   T100(100),
@@ -24,6 +28,10 @@ public enum SpeedLimit {
    * 120 km/h.
    */
   T120(120),
+  /**
+   * 130 km/h.
+   */
+  T130(130),
   /**
    * route control system - because that's a speed limit too.
    */
@@ -39,6 +47,11 @@ public enum SpeedLimit {
     this.value = value;
   }
 
+  /**
+   * Provides the Speedlimit as an integer in km/h.
+   *
+   * @return the Speed limit in km/h. 0 in case the speed limit does not have a fixed value.
+   */
   public int getValue() {
     return this.value;
   }

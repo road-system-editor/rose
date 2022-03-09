@@ -52,7 +52,7 @@ public class ValidationTypeTest {
   public void testValueCriterionEquals() {
     Collection<DataType> compatible =
         equalsValidationStrategy.getValidationType().getCompatible();
-    Assertions.assertEquals(6, compatible.size());
+    Assertions.assertEquals(5, compatible.size());
     Assertions.assertTrue(compatible.contains(DataType.BOOLEAN));
     Assertions.assertTrue(compatible.contains(DataType.STRING));
     Assertions.assertTrue(compatible.contains(DataType.INTEGER));
@@ -64,7 +64,7 @@ public class ValidationTypeTest {
   public void testValueCriterionNotEquals() {
     Collection<DataType> compatible =
         notEqualsValidationStrategy.getValidationType().getCompatible();
-    Assertions.assertEquals(6, compatible.size());
+    Assertions.assertEquals(5, compatible.size());
     Assertions.assertTrue(compatible.contains(DataType.BOOLEAN));
     Assertions.assertTrue(compatible.contains(DataType.STRING));
     Assertions.assertTrue(compatible.contains(DataType.INTEGER));

@@ -34,14 +34,14 @@ public class CompatibilityCriterion extends AbstractCompatibilityCriterion {
           ValidationType.NOR, new NorValidationStrategy(),
           ValidationType.OR, new OrValidationStrategy(),
           ValidationType.LESS_THAN, new LessThanValidationStrategy<>(),
-          ValidationType.LESS_THAN_SPEEDLIMIT, new SpeedLessThanValidationStrategy());
+          ValidationType.LESS_THAN_SPEED_LIMIT, new SpeedLessThanValidationStrategy());
   private static final Map<ValidationType, Boolean> TYPE_TO_DISCREPANCY_MAP =
       Map.of(ValidationType.EQUALS, NOT_USE_DISCREPANCY,
           ValidationType.NOT_EQUALS, NOT_USE_DISCREPANCY,
           ValidationType.NOR, NOT_USE_DISCREPANCY,
           ValidationType.OR, NOT_USE_DISCREPANCY,
           ValidationType.LESS_THAN, USE_DISCREPANCY,
-          ValidationType.LESS_THAN_SPEEDLIMIT, USE_DISCREPANCY);
+          ValidationType.LESS_THAN_SPEED_LIMIT, USE_DISCREPANCY);
 
 
   private AttributeType attributeType;

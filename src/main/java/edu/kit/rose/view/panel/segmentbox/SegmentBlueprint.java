@@ -22,7 +22,7 @@ import javafx.scene.layout.StackPane;
  * could look like.
  * Clicking a blueprint will create a segment of the selected type in the editor.
  */
-class SegmentBlueprint extends StackPane {
+public class SegmentBlueprint extends StackPane {
   private static final int HEIGHT = 120;
   private static final int WIDTH = 200;
   private static final int TRANSLATE_X = 10;

@@ -17,6 +17,8 @@ public abstract class RampSegment extends HighwaySegment {
   private final AttributeAccessor<Integer> laneCountRampAccessor;
   private SpeedLimit rampSpeedLimit = SpeedLimit.NONE;
   private final AttributeAccessor<SpeedLimit> maxSpeedRampAccessor;
+  private String junctionName;
+  private final AttributeAccessor<String> junctionNameAccessor;
 
   protected Connector rampConnector;
 
@@ -42,7 +44,10 @@ public abstract class RampSegment extends HighwaySegment {
         AttributeType.LANE_COUNT_RAMP, this::getLaneCountRamp, this::setLaneCountRamp);
     this.maxSpeedRampAccessor = new AttributeAccessor<>(
         AttributeType.MAX_SPEED_RAMP, this::getMaxSpeedRamp, this::setMaxSpeedRamp);
-    super.attributeAccessors.addAll(List.of(this.laneCountRampAccessor, this.maxSpeedRampAccessor));
+    this.junctionNameAccessor = new AttributeAccessor<>(
+        AttributeType.JUNCTION, this::getJunctionName, this::setJunctionName);
+    super.attributeAccessors.addAll(
+        List.of(this.laneCountRampAccessor, this.junctionNameAccessor, this.maxSpeedRampAccessor));
 
     initRamp();
     connectors.add(rampConnector);
@@ -95,6 +100,23 @@ public abstract class RampSegment extends HighwaySegment {
     this.laneCountRamp = laneCountRamp;
 
     this.laneCountRampAccessor.notifySubscribers();
+    this.notifySubscribers();
+  }
+
+  /**
+   * Returns the {@link AttributeType#JUNCTION} for the ramp connector.
+   */
+  public String getJunctionName() {
+    return this.junctionName;
+  }
+
+  /**
+   * Sets the {@link AttributeType#JUNCTION} for the ramp connector to the given value.
+   */
+  public void setJunctionName(String junctionName) {
+    this.junctionName = junctionName;
+
+    this.junctionNameAccessor.notifySubscribers();
     this.notifySubscribers();
   }
 

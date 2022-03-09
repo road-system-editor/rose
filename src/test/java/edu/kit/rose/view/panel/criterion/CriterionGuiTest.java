@@ -34,6 +34,9 @@ public class CriterionGuiTest extends GuiTest {
   private Grid grid;
   private List<Node> segmentViewList;
 
+  /**
+   * Represents T24.
+   */
   @EnabledOnOs(OS.WINDOWS)
   @Test
   void testImportExportCriterion() {
@@ -66,6 +69,9 @@ public class CriterionGuiTest extends GuiTest {
     Assertions.assertEquals(CRITERION_NAME + 0, lookup("#nameField").<TextField>query().getText());
   }
 
+  /**
+   * Represents T17.
+   */
   @EnabledOnOs(OS.WINDOWS)
   @Test
   void testValidateCompatibilityCriterion() {
@@ -94,6 +100,9 @@ public class CriterionGuiTest extends GuiTest {
     Assertions.assertEquals(1, violationHandleList.size());
   }
 
+  /**
+   * Represents T23.
+   */
   @EnabledOnOs(OS.WINDOWS)
   @Test
   void testEditCriteria() {

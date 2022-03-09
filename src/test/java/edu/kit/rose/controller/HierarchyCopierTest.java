@@ -10,7 +10,6 @@ import static org.mockito.Mockito.mock;
 import edu.kit.rose.controller.commons.HierarchyCopier;
 import edu.kit.rose.controller.commons.ReplacementLog;
 import edu.kit.rose.infrastructure.Movement;
-import edu.kit.rose.model.plausibility.criteria.CriteriaManager;
 import edu.kit.rose.model.roadsystem.GraphRoadSystem;
 import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.TimeSliceSetting;
@@ -21,22 +20,22 @@ import edu.kit.rose.model.roadsystem.elements.Entrance;
 import edu.kit.rose.model.roadsystem.elements.Group;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
+import edu.kit.rose.util.MockingUtility;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
  * Unit tests for {@link HierarchyCopier}.
  */
-public class HierarchyCopierTest {
+class HierarchyCopierTest {
   private ReplacementLog replacementLog;
   private HierarchyCopier copier;
 
   @BeforeEach
   void beforeEach() {
-    var criteriaManager = new CriteriaManager();
+    var criteriaManager = MockingUtility.mockCriteriaManager();
     var timeSliceSetting = mock(TimeSliceSetting.class);
     RoadSystem roadSystem = new GraphRoadSystem(criteriaManager, timeSliceSetting);
-    criteriaManager.setRoadSystem(roadSystem);
 
     this.replacementLog = new ReplacementLog();
     this.copier = new HierarchyCopier(this.replacementLog, roadSystem);

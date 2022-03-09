@@ -4,12 +4,12 @@ import static org.mockito.Mockito.when;
 
 import edu.kit.rose.controller.commons.ReplacementLog;
 import edu.kit.rose.model.Project;
-import edu.kit.rose.model.plausibility.criteria.CriteriaManager;
 import edu.kit.rose.model.roadsystem.GraphRoadSystem;
 import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.TimeSliceSetting;
 import edu.kit.rose.model.roadsystem.elements.Base;
 import edu.kit.rose.model.roadsystem.elements.Segment;
+import edu.kit.rose.util.MockingUtility;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,13 +23,13 @@ class DuplicateStreetSegmentCommandTest {
 
   @BeforeEach
   void setUp() {
-    CriteriaManager criteriaManager = new CriteriaManager();
-    this.roadSystem = new GraphRoadSystem(criteriaManager,
-            Mockito.mock(TimeSliceSetting.class));
+    this.roadSystem = new GraphRoadSystem(
+        MockingUtility.mockCriteriaManager(),
+        Mockito.mock(TimeSliceSetting.class)
+    );
     Project project = Mockito.mock(Project.class);
     this.replacementLog = new ReplacementLog();
     Segment segment = new Base();
-    criteriaManager.setRoadSystem(roadSystem);
 
     when(project.getRoadSystem()).thenReturn(this.roadSystem);
 
@@ -38,7 +38,7 @@ class DuplicateStreetSegmentCommandTest {
   }
 
   @Test
-  public void testExecute() {
+  void testExecute() {
     command.execute();
     Assertions.assertEquals(1, this.roadSystem.getElements().getSize());
     Segment segment = (Segment)  this.roadSystem.getElements().iterator().next();
@@ -47,7 +47,7 @@ class DuplicateStreetSegmentCommandTest {
   }
 
   @Test
-  public void testUnExecute() {
+  void testUnExecute() {
     command.execute();
     command.unexecute();
 
@@ -55,7 +55,7 @@ class DuplicateStreetSegmentCommandTest {
   }
 
   @Test
-  public void testReplacement() {
+  void testReplacement() {
     command.execute();
     Segment segment = (Segment) this.roadSystem.getElements().iterator().next();
     command.unexecute();

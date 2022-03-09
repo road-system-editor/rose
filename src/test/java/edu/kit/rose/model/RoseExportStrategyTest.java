@@ -9,8 +9,6 @@ import static org.mockito.Mockito.when;
 
 import edu.kit.rose.infrastructure.Movement;
 import edu.kit.rose.infrastructure.Position;
-import edu.kit.rose.infrastructure.RoseSortedBox;
-import edu.kit.rose.model.plausibility.criteria.CriteriaManager;
 import edu.kit.rose.model.roadsystem.GraphRoadSystem;
 import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.TimeSliceSetting;
@@ -21,9 +19,9 @@ import edu.kit.rose.model.roadsystem.elements.Exit;
 import edu.kit.rose.model.roadsystem.elements.Group;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
+import edu.kit.rose.util.MockingUtility;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -56,11 +54,8 @@ class RoseExportStrategyTest {
 
   @BeforeEach
   void beforeEach() {
-    var criteriaManager = mock(CriteriaManager.class);
-    when(criteriaManager.getCriteria()).thenReturn(new RoseSortedBox<>(List.of()));
-
     RoadSystem rs = new GraphRoadSystem(
-        criteriaManager,
+        MockingUtility.mockCriteriaManager(),
         new TimeSliceSetting(15, 10)
     );
 
@@ -124,10 +119,7 @@ class RoseExportStrategyTest {
 
     assertTrue(Files.exists(EXPORT_FILE));
 
-    var criteriaManager = mock(CriteriaManager.class);
-    when(criteriaManager.getCriteria()).thenReturn(new RoseSortedBox<>());
-
-
+    var criteriaManager = MockingUtility.mockCriteriaManager();
     Project imported = mock(Project.class);
     var roadSystem = new GraphRoadSystem(criteriaManager, new TimeSliceSetting());
     when(imported.getRoadSystem()).thenReturn(roadSystem);

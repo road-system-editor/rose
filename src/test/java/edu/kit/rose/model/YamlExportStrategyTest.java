@@ -4,8 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import edu.kit.rose.infrastructure.RoseSortedBox;
-import edu.kit.rose.model.plausibility.criteria.CriteriaManager;
 import edu.kit.rose.model.roadsystem.GraphRoadSystem;
 import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.TimeSliceSetting;
@@ -15,10 +13,10 @@ import edu.kit.rose.model.roadsystem.elements.Entrance;
 import edu.kit.rose.model.roadsystem.elements.Exit;
 import edu.kit.rose.model.roadsystem.elements.Group;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
+import edu.kit.rose.util.MockingUtility;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,18 +24,15 @@ import org.junit.jupiter.api.Test;
 /**
  * Unit tests for {@link YamlExportStrategy}.
  */
-public class YamlExportStrategyTest {
+class YamlExportStrategyTest {
   private static final Path EXPORT_FILE = Path.of("build/tmp/yaml-export.yml");
 
   Project project;
 
   @BeforeEach
   void beforeEach() {
-    var criteriaManager = mock(CriteriaManager.class);
-    when(criteriaManager.getCriteria()).thenReturn(new RoseSortedBox<>(List.of()));
-
     RoadSystem rs = new GraphRoadSystem(
-        criteriaManager,
+        MockingUtility.mockCriteriaManager(),
         new TimeSliceSetting(15, 10)
     );
 

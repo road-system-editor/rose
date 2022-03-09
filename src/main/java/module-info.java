@@ -6,7 +6,6 @@ module edu.kit.rose {
   requires com.fasterxml.jackson.databind;
   requires com.fasterxml.jackson.dataformat.yaml;
   requires org.jgrapht.core;
-  requires com.google.common;
   requires org.apache.commons.collections4;
   requires org.slf4j;
 

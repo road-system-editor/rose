@@ -56,7 +56,7 @@ public class DragStreetSegmentsCommandTest {
 
     this.replacementLog = new ReplacementLog();
     this.command = new DragStreetSegmentsCommand(this.replacementLog, project, this.segments,
-        MOVEMENT);
+        MOVEMENT, null);
   }
 
   @Test

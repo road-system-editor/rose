@@ -32,9 +32,9 @@ public class CreateGroupCommand implements ChangeCommand {
   /**
    * Creates a {@link CreateGroupCommand} that creates a group out of a list of segments.
    *
-   * @param replacementLog  the log that stores the replacements of elements
-   * @param project         the model facade to execute the {@link CreateGroupCommand} on
-   * @param elements        the elements that will be in the group
+   * @param replacementLog the log that stores the replacements of elements
+   * @param project        the model facade to execute the {@link CreateGroupCommand} on
+   * @param elements       the elements that will be in the group
    */
   public CreateGroupCommand(ReplacementLog replacementLog,
                             Project project,
@@ -90,16 +90,14 @@ public class CreateGroupCommand implements ChangeCommand {
   }
 
   private void addGroupToChildrenMapping(Group auxGroup) {
-    if (auxGroup != null) {
-      ArrayList<Element> children = new ArrayList<>();
-      for (Element element : this.elements) {
-        if (auxGroup.getElements().contains(element)) {
-          children.add(element);
-        }
+    ArrayList<Element> children = new ArrayList<>();
+    for (Element element : this.elements) {
+      if (auxGroup.getElements().contains(element)) {
+        children.add(element);
       }
-      if (!children.isEmpty()) {
-        this.parentMap.put(auxGroup, new ArrayList<>(children));
-      }
+    }
+    if (!children.isEmpty()) {
+      this.parentMap.put(auxGroup, new ArrayList<>(children));
     }
   }
 

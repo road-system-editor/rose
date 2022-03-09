@@ -42,9 +42,7 @@ public class AddElementToGroupCommand implements ChangeCommand {
 
     // find parent and remove element
     this.parent = getParentGroup(currentElement);
-    if (this.parent != null) {
-      this.parent.removeElement(currentElement);
-    }
+    this.parent.removeElement(currentElement);
 
     // add element to new group
     var currentGroup = this.replacementLog.getCurrentVersion(this.group);

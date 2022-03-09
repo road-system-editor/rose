@@ -40,6 +40,12 @@ class CreateGroupCommandTest {
    */
   private Group parent1;
   private Group parent2;
+
+  /**
+   * The root group of the roadsystem.
+   */
+  private Group rootGroup;
+
   /**
    * The elements that the roadsystem contains.
    */
@@ -62,6 +68,7 @@ class CreateGroupCommandTest {
     this.group = new Group();
     this.parent1 = new Group();
     this.parent2 = new Group();
+    this.rootGroup = new Group();
 
     this.element1 = new Base();
     this.element2 = new Exit();
@@ -73,6 +80,7 @@ class CreateGroupCommandTest {
     RoadSystem roadSystem = mock(RoadSystem.class);
     when(project.getRoadSystem()).thenReturn(roadSystem);
     when(roadSystem.getElements()).thenReturn(new RoseBox<>(this.roadElements));
+    when(roadSystem.getRootGroup()).thenReturn(this.rootGroup);
 
     this.parent1.addElement(this.element1);
     this.parent2.addElement(this.element2);

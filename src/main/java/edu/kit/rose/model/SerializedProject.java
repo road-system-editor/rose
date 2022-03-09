@@ -21,6 +21,7 @@ import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Set;
 
@@ -121,13 +122,6 @@ class SerializedProject {
      */
     public Position createPosition() {
       return new Position(this.coordinateX, this.coordinateY);
-    }
-
-    /**
-     * Creates a new ROSE {@link Movement} object with this object's data.
-     */
-    public Movement createMovement() {
-      return new Movement(this.coordinateX, this.coordinateY);
     }
   }
 
@@ -301,6 +295,14 @@ class SerializedProject {
 
     public abstract void createRoseElement(RoadSystem target);
 
+    /**
+     * Fills the rose element that was created through {@link #createRoseElement(RoadSystem)} with
+     * the data of this object restores relations to other elements (e.g. segment connections
+     * and group content).
+     *
+     * @param source the serialized road system to use for looking up other elements.
+     * @param target the road system that the relations should be created in.
+     */
     public void linkRoseElement(SerializedRoadSystem source, RoadSystem target) {
       this.roseElement.setName(this.name);
       this.roseElement.setComment(this.comment);
@@ -399,6 +401,14 @@ class SerializedProject {
       this.rotation = getRoseElement().getRotation();
     }
 
+    /**
+     * Finds the connector in this segment that is connected to the segment of the given index.
+     *
+     * @param connectedIndex the index of the other segment that this segment is connected to.
+     * @return the connector.
+     * @throws NoSuchElementException if no connector of this segment is connected to the other
+     *     segment.
+     */
     public abstract Connector getConnectorForConnectionTo(int connectedIndex);
 
     @Override
@@ -519,7 +529,7 @@ class SerializedProject {
           && connectedIndex == this.exitConnectedSegmentId) {
         return this.roseElement.getExit();
       } else {
-        throw new RuntimeException("this segment is not connected to the given index");
+        throw new NoSuchElementException("this segment is not connected to the given index");
       }
     }
   }
@@ -561,7 +571,7 @@ class SerializedProject {
     }
 
     private void populateAttributes() {
-      this.laneCountRamp = this.roseElement.getNrOfRampLanes();
+      this.laneCountRamp = this.roseElement.getLaneCountRamp();
       this.maxSpeedRamp = this.roseElement.getMaxSpeedRamp();
     }
 
@@ -582,7 +592,7 @@ class SerializedProject {
     public void linkRoseElement(SerializedRoadSystem source, RoadSystem target) {
       super.linkRoseElement(source, target);
 
-      this.roseElement.setNrOfRampLanes(this.laneCountRamp);
+      this.roseElement.setLaneCountRamp(this.laneCountRamp);
       this.roseElement.setMaxSpeedRamp(this.maxSpeedRamp);
 
       createRoseConnection(source, target, entranceConnectedSegmentId, roseElement.getEntry());
@@ -602,7 +612,7 @@ class SerializedProject {
           && connectedIndex == this.rampConnectedSegmentId) {
         return this.roseElement.getRamp();
       } else {
-        throw new RuntimeException("this segment is not connected to the given index");
+        throw new NoSuchElementException("this segment is not connected to the given index");
       }
     }
   }

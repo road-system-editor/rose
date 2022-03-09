@@ -11,16 +11,21 @@ import java.util.List;
  * A {@link Base} segment with a ramp {@link Connector}.
  */
 public abstract class RampSegment extends HighwaySegment {
-
   protected static final int INITIAL_RAMP_DISTANCE_TO_CENTER_Y = -14;
-  private int nrOfRampLanes = 1;
-  private final AttributeAccessor<Integer> nrOfRampLanesAccessor;
+
+  private int laneCountRamp = 1;
+  private final AttributeAccessor<Integer> laneCountRampAccessor;
   private SpeedLimit rampSpeedLimit = SpeedLimit.NONE;
   private final AttributeAccessor<SpeedLimit> maxSpeedRampAccessor;
 
   protected Connector rampConnector;
 
-  public RampSegment(SegmentType segmentType) {
+  /**
+   * Creates a ramp segment with the given segment type and uses the type name as the segment name.
+   *
+   * @param segmentType the type enum value the subclass of this class represents.
+   */
+  protected RampSegment(SegmentType segmentType) {
     this(segmentType, segmentType.name());
   }
 
@@ -30,23 +35,22 @@ public abstract class RampSegment extends HighwaySegment {
    * @param segmentType the type of ramp segment this is
    * @param name the name this ramp segment is to have
    */
-  public RampSegment(SegmentType segmentType, String name) {
+  protected RampSegment(SegmentType segmentType, String name) {
     super(segmentType, name);
 
-    this.nrOfRampLanesAccessor = new AttributeAccessor<>(
-        AttributeType.LANE_COUNT_RAMP, this::getNrOfRampLanes, this::setNrOfRampLanes);
+    this.laneCountRampAccessor = new AttributeAccessor<>(
+        AttributeType.LANE_COUNT_RAMP, this::getLaneCountRamp, this::setLaneCountRamp);
     this.maxSpeedRampAccessor = new AttributeAccessor<>(
         AttributeType.MAX_SPEED_RAMP, this::getMaxSpeedRamp, this::setMaxSpeedRamp);
-    super.attributeAccessors.addAll(List.of(this.nrOfRampLanesAccessor, this.maxSpeedRampAccessor));
+    super.attributeAccessors.addAll(List.of(this.laneCountRampAccessor, this.maxSpeedRampAccessor));
 
     initRamp();
     connectors.add(rampConnector);
   }
 
-
   private void initRamp() {
     List<AttributeAccessor<?>> rampAttributesList =
-        Arrays.asList(nrOfRampLanesAccessor, this.maxSpeedRampAccessor);
+        Arrays.asList(laneCountRampAccessor, this.maxSpeedRampAccessor);
 
     initRampConnector(rampAttributesList);
 
@@ -80,17 +84,17 @@ public abstract class RampSegment extends HighwaySegment {
   /**
    * Returns the {@link AttributeType#LANE_COUNT} for the ramp connector.
    */
-  public int getNrOfRampLanes() {
-    return this.nrOfRampLanes;
+  public int getLaneCountRamp() {
+    return this.laneCountRamp;
   }
 
   /**
    * Sets the {@link AttributeType#LANE_COUNT} for the ramp connector to the given value.
    */
-  public void setNrOfRampLanes(int nrOfRampLanes) {
-    this.nrOfRampLanes = nrOfRampLanes;
+  public void setLaneCountRamp(int laneCountRamp) {
+    this.laneCountRamp = laneCountRamp;
 
-    this.nrOfRampLanesAccessor.notifySubscribers();
+    this.laneCountRampAccessor.notifySubscribers();
     this.notifySubscribers();
   }
 

@@ -91,14 +91,14 @@ public class CreateGroupCommand implements ChangeCommand {
 
   private void addGroupToChildrenMapping(Group auxGroup) {
     if (auxGroup != null) {
-      ArrayList<Element> child = new ArrayList<>();
+      ArrayList<Element> children = new ArrayList<>();
       for (Element element : this.elements) {
         if (auxGroup.getElements().contains(element)) {
-          child.add(element);
+          children.add(element);
         }
       }
-      if (!child.isEmpty()) {
-        this.parentMap.put(auxGroup, new ArrayList<>(child));
+      if (!children.isEmpty()) {
+        this.parentMap.put(auxGroup, new ArrayList<>(children));
       }
     }
   }

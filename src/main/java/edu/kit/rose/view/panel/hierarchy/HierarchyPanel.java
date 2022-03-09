@@ -102,11 +102,6 @@ public class HierarchyPanel extends FxmlContainer
       return;
     }
 
-    /*TreeItem<Element> draggedItemParent = ElementTreeCell.dragItem.getParent();
-    draggedItemParent.getChildren().remove(ElementTreeCell.dragItem);
-
-    rootItem.getChildren().add(ElementTreeCell.dragItem);
-    ElementTreeCell.dragItem = null;*/
     if (ElementTreeCell.dragItem != null && ElementTreeCell.dragItem.getValue() != null) {
       this.hierarchyController.addElementToGroup(
           ElementTreeCell.dragItem.getValue(), this.project.getRoadSystem().getRootGroup());
@@ -131,7 +126,6 @@ public class HierarchyPanel extends FxmlContainer
   @Override
   public void init(Injector injector) {
     super.init(injector);
-    //this.project.getRoadSystem().addSubscriber(this);
     this.project.getRoadSystem().getRootGroup().addSubscriber(this);
   }
 

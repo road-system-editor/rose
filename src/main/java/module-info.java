@@ -8,6 +8,7 @@ module edu.kit.rose {
   requires org.jgrapht.core;
   requires com.google.common;
   requires org.apache.commons.collections4;
+  requires java.desktop;
   requires org.slf4j;
   requires java.desktop;
 

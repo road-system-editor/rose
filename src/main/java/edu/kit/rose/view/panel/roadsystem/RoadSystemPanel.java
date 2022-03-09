@@ -204,4 +204,13 @@ public class RoadSystemPanel extends FxmlContainer
       default -> () -> {};
     };
   }
+
+  /**
+   * Getter for The RoadSystem of the project.
+   *
+   * @return the RoadSystem of the project.
+   */
+  public RoadSystem getRoadSystem() {
+    return this.project.getRoadSystem();
+  }
 }

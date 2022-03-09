@@ -8,12 +8,14 @@ import edu.kit.rose.model.plausibility.criteria.validation.LessThanValidationStr
 import edu.kit.rose.model.plausibility.criteria.validation.NorValidationStrategy;
 import edu.kit.rose.model.plausibility.criteria.validation.NotEqualsValidationStrategy;
 import edu.kit.rose.model.plausibility.criteria.validation.OrValidationStrategy;
+import edu.kit.rose.model.plausibility.criteria.validation.SpeedLessThanValidationStrategy;
 import edu.kit.rose.model.plausibility.criteria.validation.ValidationStrategy;
 import edu.kit.rose.model.plausibility.criteria.validation.ValidationType;
 import edu.kit.rose.model.plausibility.violation.ViolationManager;
 import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
+import edu.kit.rose.model.roadsystem.attributes.SpeedLimit;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,13 +33,15 @@ public class CompatibilityCriterion extends AbstractCompatibilityCriterion {
           ValidationType.NOT_EQUALS, new NotEqualsValidationStrategy<>(),
           ValidationType.NOR, new NorValidationStrategy(),
           ValidationType.OR, new OrValidationStrategy(),
-          ValidationType.LESS_THAN, new LessThanValidationStrategy<>());
+          ValidationType.LESS_THAN, new LessThanValidationStrategy<>(),
+          ValidationType.LESS_THAN_SPEED_LIMIT, new SpeedLessThanValidationStrategy());
   private static final Map<ValidationType, Boolean> TYPE_TO_DISCREPANCY_MAP =
       Map.of(ValidationType.EQUALS, NOT_USE_DISCREPANCY,
           ValidationType.NOT_EQUALS, NOT_USE_DISCREPANCY,
           ValidationType.NOR, NOT_USE_DISCREPANCY,
           ValidationType.OR, NOT_USE_DISCREPANCY,
-          ValidationType.LESS_THAN, USE_DISCREPANCY);
+          ValidationType.LESS_THAN, USE_DISCREPANCY,
+          ValidationType.LESS_THAN_SPEED_LIMIT, USE_DISCREPANCY);
 
 
   private AttributeType attributeType;
@@ -203,7 +207,8 @@ public class CompatibilityCriterion extends AbstractCompatibilityCriterion {
           useDiscrepancy));
       case FRACTIONAL -> (this.<Double>validateWithType(strategy, accessor1, accessor2,
           useDiscrepancy));
-      default -> throw new IllegalArgumentException("no such data type found");
+      case SPEED_LIMIT -> (this.<SpeedLimit>validateWithType(strategy, accessor1, accessor2,
+          useDiscrepancy));
     };
   }
 

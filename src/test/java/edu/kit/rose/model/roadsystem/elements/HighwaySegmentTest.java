@@ -7,17 +7,21 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import edu.kit.rose.infrastructure.Box;
 import edu.kit.rose.infrastructure.Position;
+import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
+import edu.kit.rose.model.roadsystem.attributes.AttributeType;
+import edu.kit.rose.model.roadsystem.attributes.SpeedLimit;
 import edu.kit.rose.model.roadsystem.measurements.Measurement;
 import edu.kit.rose.model.roadsystem.measurements.MeasurementType;
+import edu.kit.rose.util.AccessorUtility;
 import java.util.List;
 import java.util.Objects;
-import org.junit.jupiter.api.Assumptions;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -25,7 +29,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Unit tests for {@link HighwaySegment}.
  */
-public class HighwaySegmentTest {
+class HighwaySegmentTest {
   private static class HighwaySegmentImplementation extends HighwaySegment {
     HighwaySegmentImplementation(SegmentType segmentType, String name, Connector testConnector) {
       super(segmentType, name);
@@ -116,5 +120,108 @@ public class HighwaySegmentTest {
 
     assumeTrue(other.compareTo(this.testSegment) > 0);
     assertTrue(this.testSegment.compareTo(other) < 0);
+  }
+
+  /**
+   * Tests whether the attribute accessors have the correct attribute types and are arranged in
+   * the correct order.
+   */
+  @Test
+  void testGetAttributeAccessors() {
+    SortedBox<AttributeAccessor<?>> attributeAccessors = this.testSegment.getAttributeAccessors();
+
+    assertEquals(7, attributeAccessors.getSize());
+
+    assertSame(AttributeType.NAME, attributeAccessors.get(0).getAttributeType());
+    assertSame(AttributeType.COMMENT, attributeAccessors.get(1).getAttributeType());
+    assertSame(AttributeType.LENGTH, attributeAccessors.get(2).getAttributeType());
+    assertSame(AttributeType.SLOPE, attributeAccessors.get(3).getAttributeType());
+    assertSame(AttributeType.LANE_COUNT, attributeAccessors.get(4).getAttributeType());
+    assertSame(AttributeType.CONURBATION, attributeAccessors.get(5).getAttributeType());
+    assertSame(AttributeType.MAX_SPEED, attributeAccessors.get(6).getAttributeType()
+    );
+  }
+
+  @Test
+  void testNameAttribute() {
+    this.testSegment.setName(null);
+
+    testAccessorCorrectness(
+        AttributeType.NAME,
+        this.testSegment::getName,
+        this.testSegment::setName,
+        "highway segment name"
+    );
+  }
+
+  @Test
+  void testCommentAttribute() {
+    testAccessorCorrectness(
+        AttributeType.COMMENT,
+        this.testSegment::getComment,
+        this.testSegment::setComment,
+        "highly informative and insightful comment"
+    );
+  }
+
+  @Test
+  void testLengthAttribute() {
+    testAccessorCorrectness(
+        AttributeType.LENGTH,
+        this.testSegment::getLength,
+        this.testSegment::setLength,
+        489
+    );
+  }
+
+  @Test
+  void testSlopeAttribute() {
+    testAccessorCorrectness(
+        AttributeType.SLOPE,
+        this.testSegment::getSlope,
+        this.testSegment::setSlope,
+        12.34
+    );
+  }
+
+  @Test
+  void testLaneCountAttribute() {
+    testAccessorCorrectness(
+        AttributeType.LANE_COUNT,
+        this.testSegment::getLaneCount,
+        this.testSegment::setLaneCount,
+        2
+    );
+  }
+
+  @Test
+  void testConurbationAttribute() {
+    testAccessorCorrectness(
+        AttributeType.CONURBATION,
+        this.testSegment::getConurbation,
+        this.testSegment::setConurbation,
+        false
+    );
+  }
+
+  @Test
+  void testMaxSpeedAttribute() {
+    testAccessorCorrectness(
+        AttributeType.MAX_SPEED,
+        this.testSegment::getMaxSpeed,
+        this.testSegment::setMaxSpeed,
+        SpeedLimit.TUNNEL
+    );
+  }
+
+  private <T> void testAccessorCorrectness(AttributeType attribute, Supplier<T> getter,
+                                           Consumer<T> setter, T testValue) {
+    AccessorUtility.testAccessorCorrectness(
+        this.testSegment,
+        attribute,
+        getter,
+        setter,
+        testValue
+    );
   }
 }

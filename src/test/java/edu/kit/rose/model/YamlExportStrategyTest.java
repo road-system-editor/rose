@@ -40,6 +40,7 @@ class YamlExportStrategyTest {
     segment1.setName("GWBFRStuttgart");
     segment1.setLength(3000);
     segment1.setLaneCount(2);
+    segment1.setSlope(2.0);
     segment1.setConurbation(true);
     segment1.setMaxSpeed(SpeedLimit.NONE);
 

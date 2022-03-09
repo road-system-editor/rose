@@ -123,6 +123,7 @@ class CriteriaManagerTest {
     criterion.setValidationType(ValidationType.LESS_THAN);
     criterion.addSegmentType(SegmentType.BASE);
 
-    Assertions.assertEquals(1, violationManager.getViolations().getSize());
+    // two completeness violations and one compatibility violation
+    Assertions.assertEquals(3, violationManager.getViolations().getSize());
   }
 }

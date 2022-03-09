@@ -41,7 +41,7 @@ public class CompatibilityCriterion extends AbstractCompatibilityCriterion {
 
 
   private AttributeType attributeType;
-  private ValidationType operatorType;
+  private ValidationType validationType;
   private double discrepancy;
 
 
@@ -81,22 +81,22 @@ public class CompatibilityCriterion extends AbstractCompatibilityCriterion {
   }
 
   /**
-   * Provides the type of Operator this Criterion is using.
+   * Provides the type of Validation this Criterion is using.
    *
-   * @return the type of Operator this Criterion is using.
+   * @return the type of Validation this Criterion is using.
    */
-  public ValidationType getOperatorType() {
-    return this.operatorType;
+  public ValidationType getValidationType() {
+    return this.validationType;
   }
 
   /**
-   * Sets the Type of Operator this Criterion is supposed to use.
+   * Sets the Type of Validation this Criterion is supposed to use.
    *
-   * @param operatorType the Type of Operator this Criterion is supposed to use.
+   * @param validationType the Type of Validation this Criterion is supposed to use.
    */
-  public void setOperatorType(ValidationType operatorType) {
-    if (this.operatorType != operatorType) {
-      this.operatorType = operatorType;
+  public void setValidationType(ValidationType validationType) {
+    if (this.validationType != validationType) {
+      this.validationType = validationType;
       checkAll();
       notifySubscribers();
     }
@@ -109,7 +109,7 @@ public class CompatibilityCriterion extends AbstractCompatibilityCriterion {
    *
    * @return containing all {@link ValidationType}s that are compatible with this criterion.
    */
-  public SortedBox<ValidationType> getCompatibleOperatorTypes() {
+  public SortedBox<ValidationType> getCompatibleValidationTypes() {
     return new RoseSortedBox<>(Arrays.stream(ValidationType.values()).filter(e -> e.getCompatible()
             .contains(this.attributeType.getDataType())).collect(Collectors.toList()));
   }
@@ -141,9 +141,9 @@ public class CompatibilityCriterion extends AbstractCompatibilityCriterion {
 
   @Override
   protected void checkCriterion(Segment segment) {
-    if (this.operatorType != null) {
-      ValidationStrategy<?> strategy = TYPE_TO_STRATEGY_MAP.get(this.operatorType);
-      Boolean useDiscrepancy = TYPE_TO_DISCREPANCY_MAP.get(this.operatorType);
+    if (this.validationType != null) {
+      ValidationStrategy<?> strategy = TYPE_TO_STRATEGY_MAP.get(this.validationType);
+      Boolean useDiscrepancy = TYPE_TO_DISCREPANCY_MAP.get(this.validationType);
       ArrayList<Segment> invalidSegments = getInvalidSegments(strategy, segment, useDiscrepancy);
 
       updateViolations(invalidSegments, segment);
@@ -226,7 +226,7 @@ public class CompatibilityCriterion extends AbstractCompatibilityCriterion {
 
   @Override
   protected void checkAll() {
-    if (this.getRoadSystem() != null && this.attributeType != null && this.operatorType != null) {
+    if (this.getRoadSystem() != null && this.attributeType != null && this.validationType != null) {
       this.getRoadSystem().getElements().forEach(this::notifyChange);
     }
   }

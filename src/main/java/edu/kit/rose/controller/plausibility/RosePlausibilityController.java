@@ -88,7 +88,7 @@ public class RosePlausibilityController extends Controller implements Plausibili
   @Override
   public void setCompatibilityCriterionValidationType(CompatibilityCriterion criterion,
                                                     ValidationType operatorType) {
-    criterion.setOperatorType(operatorType);
+    criterion.setValidationType(operatorType);
   }
 
   @Override

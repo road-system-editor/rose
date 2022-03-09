@@ -45,15 +45,15 @@ class CompatibilityCriterionTest {
 
   @Test
   void testGetAndSetOperatorType() {
-    criterion.setOperatorType(ValidationType.EQUALS);
+    criterion.setValidationType(ValidationType.EQUALS);
 
-    Assertions.assertEquals(ValidationType.EQUALS, this.criterion.getOperatorType());
+    Assertions.assertEquals(ValidationType.EQUALS, this.criterion.getValidationType());
   }
 
   @Test
   void testGetCompatibleOperatorTypes() {
     criterion.setAttributeType(AttributeType.NAME);
-    SortedBox<ValidationType> box = criterion.getCompatibleOperatorTypes();
+    SortedBox<ValidationType> box = criterion.getCompatibleValidationTypes();
 
     Assertions.assertTrue(box.contains(ValidationType.EQUALS));
     Assertions.assertTrue(box.contains(ValidationType.NOT_EQUALS));
@@ -111,7 +111,7 @@ class CompatibilityCriterionTest {
     segment1.setName("str");
     segment2.setName("str");
 
-    this.criterion.setOperatorType(ValidationType.EQUALS);
+    this.criterion.setValidationType(ValidationType.EQUALS);
     this.criterion.setAttributeType(AttributeType.NAME);
     this.criterion.addSegmentType(SegmentType.BASE);
 
@@ -121,7 +121,7 @@ class CompatibilityCriterionTest {
     segment2.setLength(1);
     this.criterion.setLegalDiscrepancy(1);
     this.criterion.setAttributeType(AttributeType.LENGTH);
-    this.criterion.setOperatorType(ValidationType.LESS_THAN);
+    this.criterion.setValidationType(ValidationType.LESS_THAN);
 
 
     Assertions.assertEquals(1, this.violationManager.getViolations().getSize());
@@ -144,7 +144,7 @@ class CompatibilityCriterionTest {
     segment1.setSlope(3.0);
     segment2.setSlope(3.0);
     this.criterion.setAttributeType(AttributeType.SLOPE);
-    this.criterion.setOperatorType(ValidationType.NOT_EQUALS);
+    this.criterion.setValidationType(ValidationType.NOT_EQUALS);
     this.criterion.addSegmentType(SegmentType.BASE);
 
     this.roadSystem.removeElement(segment1);
@@ -156,7 +156,7 @@ class CompatibilityCriterionTest {
 
   @Test
   void testNotifyAddition() {
-    this.criterion.setOperatorType(ValidationType.NOR);
+    this.criterion.setValidationType(ValidationType.NOR);
     this.criterion.setAttributeType(AttributeType.CONURBATION);
     this.criterion.addSegmentType(SegmentType.BASE);
     HighwaySegment segment1 = (HighwaySegment) roadSystem.createSegment(SegmentType.BASE);
@@ -187,7 +187,7 @@ class CompatibilityCriterionTest {
 
     this.criterion.setAttributeType(AttributeType.CONURBATION);
     this.criterion.addSegmentType(SegmentType.BASE);
-    this.criterion.setOperatorType(ValidationType.OR);
+    this.criterion.setValidationType(ValidationType.OR);
     Assertions.assertEquals(1, violationManager2.getViolations().getSize());
   }
 

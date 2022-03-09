@@ -147,7 +147,7 @@ class SerializedCriteria {
       super(source);
 
       this.attributeType = source.getAttributeType();
-      this.operatorType = source.getOperatorType();
+      this.operatorType = source.getValidationType();
       this.legalDiscrepancy = source.getLegalDiscrepancy();
     }
 
@@ -164,7 +164,7 @@ class SerializedCriteria {
       super.populateCriterion(criterion);
 
       criterion.setAttributeType(this.attributeType);
-      criterion.setOperatorType(this.operatorType);
+      criterion.setValidationType(this.operatorType);
       criterion.setLegalDiscrepancy(this.legalDiscrepancy);
     }
 

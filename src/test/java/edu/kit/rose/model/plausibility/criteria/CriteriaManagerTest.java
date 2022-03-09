@@ -8,7 +8,6 @@ import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.TimeSliceSetting;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.elements.HighwaySegment;
-import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -121,7 +120,7 @@ class CriteriaManagerTest {
     CompatibilityCriterion criterion = criteriaManager1.createCompatibilityCriterion();
     criterion.setLegalDiscrepancy(1);
     criterion.setAttributeType(AttributeType.LENGTH);
-    criterion.setOperatorType(ValidationType.LESS_THAN);
+    criterion.setValidationType(ValidationType.LESS_THAN);
     criterion.addSegmentType(SegmentType.BASE);
 
     Assertions.assertEquals(1, violationManager.getViolations().getSize());

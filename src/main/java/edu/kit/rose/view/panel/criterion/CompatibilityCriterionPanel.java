@@ -160,8 +160,8 @@ class CompatibilityCriterionPanel
         clearValidationSelector();
 
         this.validationSelector.getItems().removeIf(type ->
-            !getCriterion().getCompatibleOperatorTypes().contains(type));
-        for (var validationType : getCriterion().getCompatibleOperatorTypes()) {
+            !getCriterion().getCompatibleValidationTypes().contains(type));
+        for (var validationType : getCriterion().getCompatibleValidationTypes()) {
           if (!validationSelector.getItems().contains(validationType)) {
             this.validationSelector.getItems().add(validationType);
           }
@@ -171,7 +171,7 @@ class CompatibilityCriterionPanel
   }
 
   private void clearValidationSelector() {
-    SortedBox<ValidationType> compatibleTypes = getCriterion().getCompatibleOperatorTypes();
+    SortedBox<ValidationType> compatibleTypes = getCriterion().getCompatibleValidationTypes();
     ValidationType selectedType = validationSelector.getSelectionModel().getSelectedItem();
 
     if (!compatibleTypes.contains(selectedType)) {
@@ -247,7 +247,7 @@ class CompatibilityCriterionPanel
   public void notifyChange(PlausibilityCriterion unit) {
     this.nameField.setText(getCriterion().getName());
     this.attributeSelector.getSelectionModel().select(getCriterion().getAttributeType());
-    this.validationSelector.getSelectionModel().select(getCriterion().getOperatorType());
+    this.validationSelector.getSelectionModel().select(getCriterion().getValidationType());
     this.valueField.setText(valueFormat.format(getCriterion().getLegalDiscrepancy()));
     this.valueField.setStyle(VALID_VALUE_STYLE);
   }

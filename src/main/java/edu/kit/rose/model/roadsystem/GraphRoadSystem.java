@@ -205,16 +205,6 @@ public class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, 
   }
 
   @Override
-  public Box<Element> getRootElements() {
-    return new RoseBox<>(
-        elements.stream()
-            .filter(e -> groups.stream()
-                .noneMatch(g -> g.contains(e)))
-            .collect(Collectors.toList())
-    );
-  }
-
-  @Override
   public Box<Connection> getConnections(Segment segment) {
     if (!elements.contains(segment)) {
       throw new IllegalArgumentException("unknown segment");
@@ -319,7 +309,8 @@ public class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, 
   @Override
   public void clear() {
     var roots = new LinkedList<Element>();
-    getRootElements().forEach(roots::add);
+    this.rootGroup.getElements().forEach(roots::add);
+    roots.forEach(this.rootGroup::removeElement);
     roots.forEach(this::removeElement);
     this.timeSliceSetting.reset();
   }

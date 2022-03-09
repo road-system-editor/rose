@@ -186,9 +186,12 @@ public class GraphRoadSystemTestge {
   @Test
   void getRootElementsTest() {
     var entrance = testRoadSystem.createSegment(SegmentType.ENTRANCE);
+    // Remove from root group, because it can only in one group at the same time.
+    testRoadSystem.getRootGroup().removeElement(entrance);
     var group = testRoadSystem.createGroup(Set.of(entrance));
+
     var roots = new LinkedList<Element>();
-    testRoadSystem.getRootElements().forEach(roots::add);
+    testRoadSystem.getRootGroup().getElements().forEach(roots::add);
     Assertions.assertEquals(List.of(initialSegment, group), roots);
   }
 

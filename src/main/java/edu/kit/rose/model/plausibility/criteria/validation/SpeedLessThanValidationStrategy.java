@@ -24,7 +24,7 @@ public class SpeedLessThanValidationStrategy extends ValidationStrategy<SpeedLim
   @Override
   public boolean validate(SpeedLimit first, SpeedLimit second, double legalDiscrepancy) {
     //Ignore if the values have not been configured by the user (null).
-    //That case is handled by valueCriteria.
+    //That case is handled by CompletenessCriterion.
     if (first == null || second == null
         || first.getValue() == 0 || second.getValue() == 0) {
       return true;

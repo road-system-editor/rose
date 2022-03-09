@@ -6,11 +6,13 @@ import edu.kit.rose.controller.commons.ReplacementLog;
 import edu.kit.rose.controller.commons.StorageLock;
 import edu.kit.rose.controller.navigation.Navigator;
 import edu.kit.rose.controller.selection.SelectionBuffer;
+import edu.kit.rose.infrastructure.Box;
 import edu.kit.rose.infrastructure.Movement;
 import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.roadsystem.RoadSystem;
+import edu.kit.rose.model.roadsystem.elements.Connection;
 import edu.kit.rose.model.roadsystem.elements.Connector;
 import edu.kit.rose.model.roadsystem.elements.MovableConnector;
 import edu.kit.rose.model.roadsystem.elements.Segment;
@@ -55,6 +57,7 @@ public class RoseRoadSystemController extends Controller
   private Position initialSegmentDragPosition;
   private Connector dragConnector;
   private Position initialConnectorDragPosition;
+  private Set<Connection> draggedSegmentConnections;
 
 
   private final Set<SetObserver<Segment, RoadSystemController>> observers;
@@ -80,7 +83,7 @@ public class RoseRoadSystemController extends Controller
     this.project = project;
     this.roadSystem = project.getRoadSystem();
     this.replacementLog = replacementLog;
-
+    this.draggedSegmentConnections = new HashSet<>();
 
     observers = new HashSet<>();
   }
@@ -142,6 +145,18 @@ public class RoseRoadSystemController extends Controller
   @Override
   public void beginDragStreetSegment(Position segmentPosition) {
     this.initialSegmentDragPosition = segmentPosition;
+
+    saveSelectedSegmentsConnections();
+  }
+
+  private void saveSelectedSegmentsConnections() {
+    for (Segment segment : this.selectionBuffer.getSelectedSegments()) {
+      for (Segment adjacentSegment : this.project.getRoadSystem().getAdjacentSegments(segment)) {
+        Box<Connection> connections
+            = this.project.getRoadSystem().getConnections(segment, adjacentSegment);
+        connections.forEach(connection -> this.draggedSegmentConnections.add(connection));
+      }
+    }
   }
 
   @Override
@@ -170,12 +185,14 @@ public class RoseRoadSystemController extends Controller
         this.project,
         this.selectionBuffer.getSelectedSegments(),
         draggingTransition,
+        this.draggedSegmentConnections,
         draggedConnector);
 
     dragStreetSegmentsCommand.unexecute();
     changeCommandBuffer.addAndExecuteCommand(dragStreetSegmentsCommand);
 
-    initialSegmentDragPosition = null;
+    this.initialSegmentDragPosition = null;
+    this.draggedSegmentConnections.clear();
   }
 
   @Override

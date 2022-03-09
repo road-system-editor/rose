@@ -1,9 +1,12 @@
 package edu.kit.rose.view.panel.segment;
 
+import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import edu.kit.rose.view.GuiTest;
+import edu.kit.rose.view.commons.ConnectorView;
 import edu.kit.rose.view.commons.SegmentView;
 import edu.kit.rose.view.panel.roadsystem.Grid;
+import edu.kit.rose.view.panel.roadsystem.RoadSystemPanel;
 import edu.kit.rose.view.panel.segmentbox.SegmentBlueprint;
 import edu.kit.rose.view.panel.segmentbox.SegmentBoxListCell;
 import java.util.List;
@@ -62,18 +65,34 @@ public class TestSegmentManipulation extends GuiTest {
             ((HBox) lengthAttribute1.getChildren().get(0)).getChildren().get(1)).setText(LENGTH));
     moveBy(-50, 0);
     press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
-    clickOn(segmentViewList.get(0));
+    List<Node> connectorViewList = lookup((Node node) ->
+            node instanceof ConnectorView).queryAll().stream().toList();
+    drag(connectorViewList.get(0)).interact(() ->
+            moveTo(connectorViewList.get(4)).moveBy(-30, 0).drop());
+    press(KeyCode.CONTROL).clickOn(segmentViewList.get(0)).clickOn(segmentViewList.get(1));
     press(KeyCode.CONTROL).press(KeyCode.D).release(KeyCode.D).release(KeyCode.CONTROL);
     segmentViewList = getSegmentViewList();
-    Assertions.assertEquals(3, segmentViewList.size());
+
+    Assertions.assertEquals(4, segmentViewList.size());
+
     doubleClickOn(segmentViewList.get(2));
     attributeList = lookup("#attributeList").query();
     EditableAttribute nameAttribute2 = (EditableAttribute) attributeList.getChildren().get(0);
     EditableAttribute lengthAttribute2 = (EditableAttribute) attributeList.getChildren().get(3);
+
     Assertions.assertEquals(NAME, ((TextField)
             ((HBox) nameAttribute2.getChildren().get(0)).getChildren().get(1)).getText());
     Assertions.assertEquals(LENGTH, ((TextField)
             ((HBox) lengthAttribute2.getChildren().get(0)).getChildren().get(1)).getText());
+
+    moveBy(-50, 0);
+    press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
+
+    Assertions.assertTrue(lookup("#roadSystemPanel")
+            .<RoadSystemPanel>query().getRoadSystem().getConnections(
+                    segmentViewList.get(2).getSegment()).iterator().next()
+            .getConnectors().contains(
+                    segmentViewList.get(3).getSegment().getConnectors().stream().toList().get(0)));
   }
 
   /**
@@ -82,7 +101,70 @@ public class TestSegmentManipulation extends GuiTest {
   @EnabledOnOs(OS.WINDOWS)
   @Test
   void testDeleteSegment() {
-    //clickOn()
+    clickOn(segmentViewList.get(0));
+    push(KeyCode.DELETE);
+    segmentViewList = getSegmentViewList();
+    Assertions.assertEquals(1, segmentViewList.size());
+    clickOn(segmentViewList.get(0));
+    push(KeyCode.DELETE);
+    segmentViewList = getSegmentViewList();
+    Assertions.assertEquals(0, segmentViewList.size());
+  }
+
+  @EnabledOnOs(OS.WINDOWS)
+  @Test
+  void testMoveSelectedSegments() {
+    doubleClickOn(segmentBoxListCell.get(1));
+    segmentViewList = getSegmentViewList();
+    moveTo(grid).moveBy(-50, -130);
+    press(KeyCode.CONTROL).press(MouseButton.PRIMARY).moveBy(90, 170)
+            .release(MouseButton.PRIMARY).release(KeyCode.CONTROL);
+    Position initialPosition1 = new Position(segmentViewList.get(0).getSegment().getCenter().getX(),
+            segmentViewList.get(0).getSegment().getCenter().getY());
+    Position initialPosition2 = new Position(segmentViewList.get(1).getSegment().getCenter().getX(),
+            segmentViewList.get(1).getSegment().getCenter().getY());
+    Position initialPosition3 = new Position(segmentViewList.get(2).getSegment().getCenter().getX(),
+            segmentViewList.get(2).getSegment().getCenter().getY());
+
+    drag(segmentViewList.get(2)).interact(() -> dropBy(10, 30));
+    segmentViewList = getSegmentViewList();
+    Position auxInitialPosition2 = initialPosition2; // fix weird checkstyle warning
+    Position auxInitialPosition3 = initialPosition3; // fix weird checkstyle warning
+
+    Assertions.assertEquals(initialPosition1.getX(),
+            segmentViewList.get(0).getSegment().getCenter().getX());
+    Assertions.assertEquals(initialPosition1.getY(),
+            segmentViewList.get(0).getSegment().getCenter().getY());
+    Assertions.assertEquals(auxInitialPosition2.getX() + 10,
+            segmentViewList.get(1).getSegment().getCenter().getX());
+    Assertions.assertEquals(auxInitialPosition2.getY() + 30,
+            segmentViewList.get(1).getSegment().getCenter().getY());
+    Assertions.assertEquals(auxInitialPosition3.getX() + 10,
+            segmentViewList.get(2).getSegment().getCenter().getX());
+    Assertions.assertEquals(auxInitialPosition3.getY() + 30,
+            segmentViewList.get(2).getSegment().getCenter().getY());
+  }
+
+  @EnabledOnOs(OS.WINDOWS)
+  @Test
+  void testRotateSegment() {
+    clickOn(segmentViewList.get(0));
+    push(KeyCode.R).push(KeyCode.R).push(KeyCode.R)
+            .push(KeyCode.R).push(KeyCode.R).push(KeyCode.R);
+    List<Node> connectorViewList = lookup((Node node) ->
+            node instanceof ConnectorView).queryAll().stream().toList();
+    Assertions.assertEquals(22,
+            connectorViewList.get(0).localToParent(
+                    connectorViewList.get(0).getBoundsInLocal()).getCenterX());
+    Assertions.assertEquals(5,
+            connectorViewList.get(0).localToParent(
+                    connectorViewList.get(0).getBoundsInLocal()).getCenterY());
+    Assertions.assertEquals(22,
+            connectorViewList.get(1).localToParent(
+                    connectorViewList.get(1).getBoundsInLocal()).getCenterX());
+    Assertions.assertEquals(65,
+            connectorViewList.get(1).localToParent(
+                    connectorViewList.get(1).getBoundsInLocal()).getCenterY());
   }
 
   private List<SegmentView> getSegmentViewList() {

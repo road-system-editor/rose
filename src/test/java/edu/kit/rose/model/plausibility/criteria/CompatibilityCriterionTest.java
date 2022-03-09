@@ -10,6 +10,7 @@ import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.elements.Base;
 import edu.kit.rose.model.roadsystem.elements.HighwaySegment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
+import edu.kit.rose.util.MockingUtility;
 import edu.kit.rose.util.RoadSystemUtility;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,13 +27,11 @@ class CompatibilityCriterionTest {
 
   @BeforeEach
   public void setUp() {
-    CriteriaManager criteriaManager = new CriteriaManager();
+    CriteriaManager criteriaManager = MockingUtility.mockCriteriaManager();
     this.roadSystem = new GraphRoadSystem(criteriaManager,
             Mockito.mock(TimeSliceSetting.class));
     this.violationManager = new ViolationManager();
     this.criterion = new CompatibilityCriterion(null, this.violationManager);
-    criteriaManager.setRoadSystem(this.roadSystem);
-    criteriaManager.setViolationManager(this.violationManager);
     this.criterion.setRoadSystem(this.roadSystem);
   }
 
@@ -199,5 +198,24 @@ class CompatibilityCriterionTest {
     Base someBase = new Base();
     Assertions.assertThrows(IllegalStateException.class,
             () -> this.criterion.notifyChange(someBase));
+  }
+
+  @Test
+  void testIgnoresAttributesWithoutValues() {
+    HighwaySegment segment1 = (HighwaySegment) this.roadSystem.createSegment(SegmentType.BASE);
+    HighwaySegment segment2 = (HighwaySegment) this.roadSystem.createSegment(SegmentType.BASE);
+
+    roadSystem.connectConnectors(segment1.getEntry(),
+        segment2.getExit());
+
+    segment1.setName(null);
+    segment2.setName("str");
+
+    this.criterion.setOperatorType(ValidationType.EQUALS);
+    this.criterion.setAttributeType(AttributeType.NAME);
+    this.criterion.addSegmentType(SegmentType.BASE);
+
+    // there should be no violation since the name of segment 1 is unconfigured
+    Assertions.assertEquals(0, this.violationManager.getViolations().getSize());
   }
 }

@@ -92,10 +92,10 @@ class SegmentView extends ElementView<Segment> {
   private void onSegmentSelectionChanged(Segment segment, boolean isSelected) {
     if (segment == getElement()) {
       if (isSelected) {
-        segmentViewSurface.getStyleClass().remove(UNSELECTED_STYLE_CLASS);
+        segmentViewSurface.getStyleClass().removeIf(style -> style.equals(UNSELECTED_STYLE_CLASS));
         segmentViewSurface.getStyleClass().add(SELECTED_STYLE_CLASS);
       } else {
-        segmentViewSurface.getStyleClass().remove(SELECTED_STYLE_CLASS);
+        segmentViewSurface.getStyleClass().removeIf(style -> style.equals(SELECTED_STYLE_CLASS));
         segmentViewSurface.getStyleClass().add(UNSELECTED_STYLE_CLASS);
       }
     }

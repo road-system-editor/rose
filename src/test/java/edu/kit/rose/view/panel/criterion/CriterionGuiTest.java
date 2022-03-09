@@ -20,7 +20,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.OS;
@@ -34,11 +33,6 @@ public class CriterionGuiTest extends GuiTest {
   private static final String VIOLATION_MESSAGE = "B1ASE and B0ASE are incompatible";
   private Grid grid;
   private List<Node> segmentViewList;
-
-  @BeforeEach
-  void setUp() {
-
-  }
 
   @EnabledOnOs(OS.WINDOWS)
   @Test

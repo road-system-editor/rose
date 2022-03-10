@@ -18,6 +18,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 
 /**
  * Tests if the Segments connect properly.
@@ -50,7 +52,10 @@ public class SegmentConnectTest extends GuiTest {
             node instanceof  ConnectorView).queryAll().stream().toList();
   }
 
-  @Disabled("disabled until pipeline adapted")
+  /**
+   * Represents T5.
+   */
+  @EnabledOnOs(OS.WINDOWS)
   @Test
   void testConnectBaseSegment() {
     ConnectorView connectorView1 = (ConnectorView) connectorViewList.get(4);
@@ -78,7 +83,10 @@ public class SegmentConnectTest extends GuiTest {
     Assertions.assertEquals(distance, connection.getWidth());
   }
 
-  @Disabled("disabled until pipeline adapted")
+  /**
+   * Represents T10.
+   */
+  @EnabledOnOs(OS.WINDOWS)
   @Test
   void testConnectEntrySegment() {
     ConnectorView connectorView2 = (ConnectorView) connectorViewList.get(1);

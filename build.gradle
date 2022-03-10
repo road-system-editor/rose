@@ -3,16 +3,14 @@ plugins {
     id 'application'
     id 'org.openjfx.javafxplugin' version '0.0.10'
     id 'org.beryx.jlink' version '2.24.1'
-    id "org.javamodularity.moduleplugin" version "1.5.0"
     id 'checkstyle'
     id 'jacoco'
+    id 'org.sonarqube' version '3.3'
 }
+
+
 group 'edu.kit.rose'
-version '1.0-SNAPSHOT'
-
-sourceCompatibility = 1.12
-
-mainClassName = "$moduleName/com.sample.Main"
+version '1.0'
 
 repositories {
     mavenCentral()
@@ -30,7 +28,7 @@ tasks.withType(JavaCompile) {
 }
 
 application {
-    mainModule = 'edu.kit.rose.view'
+    mainModule = 'edu.kit.rose'
     mainClass = 'edu.kit.rose.view.RoseApplication'
 }
 
@@ -47,24 +45,28 @@ dependencies {
     implementation('com.google.inject:guice:5.1.0')
     implementation 'org.apache.commons:commons-collections4:4.4'
     implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.13.1'
+
     implementation('org.jgrapht:jgrapht-core:1.5.1')
+    implementation 'junit:junit:4.13.2'
+    implementation('ch.qos.logback:logback-classic:1.2.10')
+    implementation 'javax.servlet:javax.servlet-api:4.0.1' // required for logback
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
-    testImplementation ("org.junit.jupiter:junit-jupiter-params:${junitVersion}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
     testImplementation('org.mockito:mockito-core:4.3.1')
-    testImplementation group: 'org.testfx', name: 'testfx-junit5', version: '4.0.15-alpha'
+    testImplementation ('org.testfx:testfx-junit5:4.0.15-alpha')
 }
 
 test {
     useJUnitPlatform()
-    testLogging {
-        events "passed", "skipped", "failed"
-    }
     //Options for TestFX
     jvmArgs = [
-            '--add-opens', "$moduleName/com.sample.foo=org.testfx.junit5",
-            '--add-opens', 'javafx.graphics/com.sun.javafx.application=org.testfx'
+            '--add-opens', "$moduleName/edu.kit.rose=org.testfx.junit5",
+            '--add-opens', "$moduleName/edu.kit.rose.view.panel.segmentbox=org.testfx.junit5",
+            '--add-opens', "javafx.graphics/com.sun.javafx.application=org.testfx",
+            '--add-exports', "$moduleName/edu.kit.rose=org.junit.platform.engine",
+            '--add-exports', "$moduleName/edu.kit.rose.model.roadsystem.attributes" +
+                    "=org.junit.platform.engine"
     ]
     finalizedBy jacocoTestReport
 }
@@ -87,13 +89,24 @@ jacocoTestReport {
 }
 
 jlink {
-    imageZip = project.file("${buildDir}/distributions/app-${javafx.platform.classifier}.zip")
+    imageZip = project.file("${buildDir}/distributions/ROSE-${javafx.platform.classifier}.zip")
+    jpackage {
+        icon = file("src/main/resources/logo.ico")
+        imageOptions = ['--win-console']
+    }
     options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
     launcher {
-        name = 'app'
+        name = 'ROSE'
     }
 }
 
 jlinkZip {
     group = 'distribution'
+}
+
+sonarqube {
+    properties {
+        property "sonar.projectKey", "psege_rose_AX9hHSxrKw6c9ZNKKE-D"
+        property "sonar.qualitygate.wait", true
+    }
 }

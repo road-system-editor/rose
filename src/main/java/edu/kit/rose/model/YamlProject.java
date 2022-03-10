@@ -133,7 +133,7 @@ class YamlProject {
     private int laneCount;
     @SuppressWarnings("unused")
     @JsonProperty("Steigung")
-    private double slope;
+    private int slope;
     @SuppressWarnings("unused")
     @JsonProperty("Ballungsraum")
     private String conurbation;
@@ -166,7 +166,7 @@ class YamlProject {
       this.name = segment.getName();
       this.length = segment.getLength();
       this.laneCount = segment.getLaneCount();
-      this.slope = segment.getSlope();
+      this.slope = convertSlope(segment.getSlope());
       this.conurbation = convertConurbation(segment.getConurbation());
       this.speedLimit = convertSpeedLimit(segment.getMaxSpeed());
     }
@@ -209,6 +209,10 @@ class YamlProject {
           .filter(adjacent -> adjacent.getConnectors().contains(otherConnector))
           .findFirst()
           .orElseThrow();
+    }
+
+    static int convertSlope(double slope) {
+      return (int) Math.round(slope);
     }
 
     static String convertConurbation(boolean attributeValue) {

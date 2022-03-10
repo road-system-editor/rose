@@ -2,17 +2,14 @@ package edu.kit.rose.model.roadsystem.elements;
 
 import edu.kit.rose.infrastructure.Box;
 import edu.kit.rose.infrastructure.Movement;
-import edu.kit.rose.infrastructure.SortedBox;
-import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
-import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
- * Test for the Entrance Class.
+ * Unit tests for the {@link Entrance} class.
  */
-public class EntranceTest {
+class EntranceTest {
   Entrance testEntrance;
   private static final int xStartCenter = 0;
   private static final int yStartCenter = 0;
@@ -26,7 +23,7 @@ public class EntranceTest {
    * Tests if the getPosition function returns the initial location (0,0).
    */
   @Test
-  public void testGetPosition() {
+  void testGetPosition() {
     Assertions.assertEquals(0, testEntrance.getCenter().getX());
     Assertions.assertEquals(0, testEntrance.getCenter().getY());
   }
@@ -35,7 +32,7 @@ public class EntranceTest {
    * Tests if the Connector.getPosition function returns the initial location.
    */
   @Test
-  public void testGetConnectorPosition() {
+  void testGetConnectorPosition() {
     Assertions.assertEquals(0, testEntrance.getEntry().getPosition().getX());
     Assertions.assertEquals(27, testEntrance.getEntry().getPosition().getY());
     Assertions.assertEquals(0, testEntrance.getExit().getPosition().getX());
@@ -45,36 +42,15 @@ public class EntranceTest {
   }
 
   @Test
-  public void testGetName() {
+  void testGetName() {
     Assertions.assertEquals("testEntrance", testEntrance.getName());
-  }
-
-  /**
-   * Tests if the AttributeAccessors are of the correct Type and in the right Order.
-   */
-  @Test
-  public void testAttributeAccessors() {
-    SortedBox<AttributeAccessor<?>> attributeAccessors = testEntrance.getAttributeAccessors();
-    Assertions.assertEquals(9, attributeAccessors.getSize());
-    Assertions.assertEquals(AttributeType.NAME, attributeAccessors.get(0).getAttributeType());
-    Assertions.assertEquals(AttributeType.COMMENT, attributeAccessors.get(1).getAttributeType());
-    Assertions.assertEquals(AttributeType.LENGTH, attributeAccessors.get(2).getAttributeType());
-    Assertions.assertEquals(AttributeType.SLOPE, attributeAccessors.get(3).getAttributeType());
-    Assertions.assertEquals(AttributeType.LANE_COUNT, attributeAccessors.get(4).getAttributeType());
-    Assertions.assertEquals(AttributeType.CONURBATION,
-        attributeAccessors.get(5).getAttributeType());
-    Assertions.assertEquals(AttributeType.MAX_SPEED, attributeAccessors.get(6).getAttributeType());
-    Assertions.assertEquals(AttributeType.LANE_COUNT_RAMP,
-        attributeAccessors.get(7).getAttributeType());
-    Assertions.assertEquals(AttributeType.MAX_SPEED_RAMP,
-        attributeAccessors.get(8).getAttributeType());
   }
 
   /**
    * Tests if the getSegmentType returns Entrance.
    */
   @Test
-  public void testGetSegmentType() {
+  void testGetSegmentType() {
     Assertions.assertSame(SegmentType.ENTRANCE, testEntrance.getSegmentType());
   }
 
@@ -82,7 +58,7 @@ public class EntranceTest {
    * Tests if isContainer returns false.
    */
   @Test
-  public void testIsContainer() {
+  void testIsContainer() {
     Assertions.assertFalse(testEntrance.isContainer());
   }
 
@@ -91,7 +67,7 @@ public class EntranceTest {
    * than the new One.
    */
   @Test
-  public void testCompareTo() {
+  void testCompareTo() {
     Entrance secondTestEntrance = new Entrance("secondTestEntrance");
     Assertions.assertTrue(testEntrance.compareTo(secondTestEntrance) < 0);
   }
@@ -100,7 +76,7 @@ public class EntranceTest {
    * Tests the move function by moving the Entrance and checking the new center Position.
    */
   @Test
-  public void testMove() {
+  void testMove() {
     int startX = 0;
     int startY = 0;
     int movementX = 50;
@@ -117,7 +93,7 @@ public class EntranceTest {
    * Tests the move function by moving it and checking the Positions of the Connectors.
    */
   @Test
-  public void testMoveConnectors() {
+  void testMoveConnectors() {
     final double startEntryX = 0;
     final double startEntryY = 27;
     final double startExitX = 0;
@@ -148,7 +124,7 @@ public class EntranceTest {
    * Tests the Standard Constructor.
    */
   @Test
-  public void testStandardConstructor() {
+  void testStandardConstructor() {
     testEntrance = new Entrance();
     Assertions.assertEquals(xStartCenter, testEntrance.getCenter().getX());
     Assertions.assertEquals(yStartCenter, testEntrance.getCenter().getY());
@@ -159,7 +135,7 @@ public class EntranceTest {
    * Tests the GetConnectors function.
    */
   @Test
-  public void testGetConnectors() {
+  void testGetConnectors() {
     Box<Connector> connectors = testEntrance.getConnectors();
     Assertions.assertEquals(3, connectors.getSize());
   }
@@ -168,7 +144,7 @@ public class EntranceTest {
    * Tests the getThis function.
    */
   @Test
-  public void testGetThis() {
+  void testGetThis() {
     Assertions.assertEquals(testEntrance, testEntrance.getThis());
   }
 

@@ -19,6 +19,7 @@ import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.elements.Base;
 import edu.kit.rose.model.roadsystem.elements.Connection;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
+import edu.kit.rose.util.RoadSystemUtility;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -31,7 +32,7 @@ import org.mockito.Mockito;
 /**
  * Unit Tests for Violations and Criteria.
  */
-public class ViolationDeletionTest {
+class ViolationDeletionTest {
   private static final Path CONFIG_PATH = Path.of("build/tmp/no-config.json");
   private RoadSystem roadSystem;
   private PlausibilityController controller;
@@ -64,9 +65,10 @@ public class ViolationDeletionTest {
     controller.setCompatibilityCriterionValidationType(criterion, ValidationType.LESS_THAN);
     controller.setCompatibilityCriterionLegalDiscrepancy(criterion, 2);
 
-    base1 = (Base) roadSystem.createSegment(SegmentType.BASE);
-    Base base2 = (Base) roadSystem.createSegment(SegmentType.BASE);
+    base1 = RoadSystemUtility.createDefaultBase(roadSystem);
+    Base base2 = RoadSystemUtility.createDefaultBase(roadSystem);
     base1.setLaneCount(10);
+    base2.setLaneCount(1);
     connection = roadSystem.connectConnectors(base1.getEntry(), base2.getExit());
   }
 
@@ -113,7 +115,7 @@ public class ViolationDeletionTest {
     setupOneViolation();
     Assertions.assertEquals(1, violationManager.getViolations().getSize());
 
-    Base base = (Base) roadSystem.createSegment(SegmentType.BASE);
+    Base base = RoadSystemUtility.createDefaultBase(this.roadSystem);
 
     connection = roadSystem.connectConnectors(base.getEntry(), base1.getExit());
 
@@ -142,7 +144,7 @@ public class ViolationDeletionTest {
     setupOneViolation();
     Assertions.assertEquals(1, violationManager.getViolations().getSize());
 
-    Base base = (Base) roadSystem.createSegment(SegmentType.BASE);
+    Base base = RoadSystemUtility.createDefaultBase(this.roadSystem);
     connection = roadSystem.connectConnectors(base.getEntry(), base1.getExit());
     Assertions.assertEquals(2, violationManager.getViolations().getSize());
 

@@ -20,10 +20,9 @@ import edu.kit.rose.model.roadsystem.elements.Segment;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
- * Modells a Compatiblity Criterion. See Pflichtenheft: "Kompatibilitätskriterium"
+ * Models a compatibility criterion. See Pflichtenheft: "Kompatibilitätskriterium"
  */
 public class CompatibilityCriterion extends AbstractCompatibilityCriterion {
   private static final boolean USE_DISCREPANCY = true;
@@ -115,7 +114,7 @@ public class CompatibilityCriterion extends AbstractCompatibilityCriterion {
    */
   public SortedBox<ValidationType> getCompatibleValidationTypes() {
     return new RoseSortedBox<>(Arrays.stream(ValidationType.values()).filter(e -> e.getCompatible()
-            .contains(this.attributeType.getDataType())).collect(Collectors.toList()));
+            .contains(this.attributeType.getDataType())).toList());
   }
 
   /**
@@ -222,6 +221,12 @@ public class CompatibilityCriterion extends AbstractCompatibilityCriterion {
     AttributeAccessor<T> auxAccessor1 = (AttributeAccessor<T>) accessor1;
     AttributeAccessor<T> auxAccessor2 = (AttributeAccessor<T>) accessor2;
     ValidationStrategy<T> auxStrategy = (ValidationStrategy<T>) strategy;
+
+    // ignore if either of the attribute values is unconfigured
+    if (auxAccessor1.getValue() == null || auxAccessor2.getValue() == null) {
+      return true;
+    }
+
     if (useDiscrepancy) {
       return auxStrategy.validate(auxAccessor1.getValue(),
               auxAccessor2.getValue(), this.discrepancy);

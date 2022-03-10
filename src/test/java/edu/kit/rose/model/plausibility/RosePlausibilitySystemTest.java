@@ -7,6 +7,7 @@ import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterion;
 import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.elements.Group;
 import edu.kit.rose.model.roadsystem.elements.Segment;
+import edu.kit.rose.util.MockingUtility;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,13 +17,13 @@ import org.mockito.Mockito;
 /**
  * Unit tests for {@link RosePlausibilitySystem}.
  */
-public class RosePlausibilitySystemTest {
+class RosePlausibilitySystemTest {
   private CriteriaManager criteriaManager;
   private RoadSystem roadSystem;
 
   @BeforeEach
   void beforeEach() {
-    this.criteriaManager = Mockito.mock(CriteriaManager.class);
+    this.criteriaManager = MockingUtility.mockCriteriaManager();
     this.roadSystem = Mockito.mock(RoadSystem.class);
   }
 

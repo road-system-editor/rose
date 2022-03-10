@@ -45,7 +45,11 @@ public enum AttributeType {
   /**
    * A note for an element by the user.
    */
-  COMMENT(DataType.STRING, false);
+  COMMENT(DataType.STRING, false),
+  /**
+   * An identifier for junctions.
+   */
+  JUNCTION(DataType.STRING, true);
 
   private final DataType dataType;
   private final boolean isBulkable;

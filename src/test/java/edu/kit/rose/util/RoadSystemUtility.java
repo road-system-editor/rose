@@ -1,16 +1,71 @@
 package edu.kit.rose.util;
 
 import edu.kit.rose.model.roadsystem.RoadSystem;
+import edu.kit.rose.model.roadsystem.attributes.SpeedLimit;
+import edu.kit.rose.model.roadsystem.elements.Base;
 import edu.kit.rose.model.roadsystem.elements.Element;
+import edu.kit.rose.model.roadsystem.elements.Entrance;
+import edu.kit.rose.model.roadsystem.elements.Exit;
 import edu.kit.rose.model.roadsystem.elements.Group;
+import edu.kit.rose.model.roadsystem.elements.HighwaySegment;
+import edu.kit.rose.model.roadsystem.elements.RampSegment;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import java.util.Objects;
 
 /**
- * Utility methods that assist with verifying the correctness of {@link RoadSystem}s.
+ * Utility methods that assist with verifying the correctness of {@link RoadSystem}s and creating
+ * sensible road system sample data.
  */
 public final class RoadSystemUtility {
+  /**
+   * Creates a base segment in the given {@code roadSystem} with sensible default attribute values.
+   */
+  public static Base createDefaultBase(RoadSystem roadSystem) {
+    var base = roadSystem == null ? new Base() : (Base) roadSystem.createSegment(SegmentType.BASE);
+    assignDefaultHighwaySegmentValues(base);
+    return base;
+  }
+
+  /**
+   * Creates an entrance segment in the given {@code roadSystem} with sensible default attribute
+   * values.
+   */
+  public static Entrance createDefaultEntrance(RoadSystem roadSystem) {
+    var entrance = roadSystem == null
+        ? new Entrance() : (Entrance) roadSystem.createSegment(SegmentType.ENTRANCE);
+    assignDefaultHighwaySegmentValues(entrance);
+    assignDefaultRampValues(entrance);
+    return entrance;
+  }
+
+  /**
+   * Creates an exit segment in the given {@code roadSystem} with sensible default attribute
+   * values.
+   */
+  public static Exit createDefaultExit(RoadSystem roadSystem) {
+    var exit = roadSystem == null
+        ? new Exit() : (Exit) roadSystem.createSegment(SegmentType.EXIT);
+    assignDefaultHighwaySegmentValues(exit);
+    assignDefaultRampValues(exit);
+    return exit;
+  }
+
+  private static void assignDefaultHighwaySegmentValues(HighwaySegment highwaySegment) {
+    highwaySegment.setName("base with default values");
+    highwaySegment.setLaneCount(1);
+    highwaySegment.setLength(120);
+    highwaySegment.setSlope(0.0);
+    highwaySegment.setMaxSpeed(SpeedLimit.NONE);
+    highwaySegment.setConurbation(false);
+  }
+
+  private static void assignDefaultRampValues(RampSegment rampSegment) {
+    rampSegment.setMaxSpeedRamp(SpeedLimit.T60);
+    rampSegment.setLaneCountRamp(1);
+    rampSegment.setJunctionName("default junction name");
+  }
+
   /**
    * Finds any group in a road system.
    *

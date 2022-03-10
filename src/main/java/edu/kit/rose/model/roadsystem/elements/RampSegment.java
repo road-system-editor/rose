@@ -13,10 +13,12 @@ import java.util.List;
 public abstract class RampSegment extends HighwaySegment {
   protected static final int INITIAL_RAMP_DISTANCE_TO_CENTER_Y = -14;
 
-  private int laneCountRamp = 1;
+  private Integer laneCountRamp;
   private final AttributeAccessor<Integer> laneCountRampAccessor;
-  private SpeedLimit rampSpeedLimit = SpeedLimit.NONE;
+  private SpeedLimit rampSpeedLimit;
   private final AttributeAccessor<SpeedLimit> maxSpeedRampAccessor;
+  private String junctionName;
+  private final AttributeAccessor<String> junctionNameAccessor;
 
   protected Connector rampConnector;
 
@@ -42,7 +44,10 @@ public abstract class RampSegment extends HighwaySegment {
         AttributeType.LANE_COUNT_RAMP, this::getLaneCountRamp, this::setLaneCountRamp);
     this.maxSpeedRampAccessor = new AttributeAccessor<>(
         AttributeType.MAX_SPEED_RAMP, this::getMaxSpeedRamp, this::setMaxSpeedRamp);
-    super.attributeAccessors.addAll(List.of(this.laneCountRampAccessor, this.maxSpeedRampAccessor));
+    this.junctionNameAccessor = new AttributeAccessor<>(
+        AttributeType.JUNCTION, this::getJunctionName, this::setJunctionName);
+    super.attributeAccessors.addAll(
+        List.of(this.laneCountRampAccessor, this.junctionNameAccessor, this.maxSpeedRampAccessor));
 
     initRamp();
     connectors.add(rampConnector);
@@ -84,17 +89,34 @@ public abstract class RampSegment extends HighwaySegment {
   /**
    * Returns the {@link AttributeType#LANE_COUNT} for the ramp connector.
    */
-  public int getLaneCountRamp() {
+  public Integer getLaneCountRamp() {
     return this.laneCountRamp;
   }
 
   /**
    * Sets the {@link AttributeType#LANE_COUNT} for the ramp connector to the given value.
    */
-  public void setLaneCountRamp(int laneCountRamp) {
+  public void setLaneCountRamp(Integer laneCountRamp) {
     this.laneCountRamp = laneCountRamp;
 
     this.laneCountRampAccessor.notifySubscribers();
+    this.notifySubscribers();
+  }
+
+  /**
+   * Returns the {@link AttributeType#JUNCTION} for the ramp connector.
+   */
+  public String getJunctionName() {
+    return this.junctionName;
+  }
+
+  /**
+   * Sets the {@link AttributeType#JUNCTION} for the ramp connector to the given value.
+   */
+  public void setJunctionName(String junctionName) {
+    this.junctionName = junctionName;
+
+    this.junctionNameAccessor.notifySubscribers();
     this.notifySubscribers();
   }
 

@@ -550,6 +550,8 @@ class SerializedProject {
     private Integer exitConnectedSegmentId;
     @JsonProperty("rampConnectedSegmentId")
     private Integer rampConnectedSegmentId;
+    @JsonProperty("junctionName")
+    private String junctionName;
 
     /**
      * Creates a new serialized ramp segment with the data from the given ROSE ramp segment.
@@ -559,7 +561,7 @@ class SerializedProject {
     SerializedRampSegment(int index, T roseEntrance) {
       super(index, roseEntrance);
 
-      this.populateAttributes();
+      this.storeRampAttributes();
     }
 
     /**
@@ -570,9 +572,10 @@ class SerializedProject {
       super();
     }
 
-    private void populateAttributes() {
+    private void storeRampAttributes() {
       this.laneCountRamp = this.roseElement.getLaneCountRamp();
       this.maxSpeedRamp = this.roseElement.getMaxSpeedRamp();
+      this.junctionName = this.roseElement.getJunctionName();
     }
 
     @Override
@@ -594,6 +597,7 @@ class SerializedProject {
 
       this.roseElement.setLaneCountRamp(this.laneCountRamp);
       this.roseElement.setMaxSpeedRamp(this.maxSpeedRamp);
+      this.roseElement.setJunctionName(this.junctionName);
 
       createRoseConnection(source, target, entranceConnectedSegmentId, roseElement.getEntry());
       createRoseConnection(source, target, exitConnectedSegmentId, roseElement.getExit());

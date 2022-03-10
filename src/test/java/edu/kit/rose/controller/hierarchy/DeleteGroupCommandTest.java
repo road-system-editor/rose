@@ -13,7 +13,6 @@ import static org.mockito.Mockito.when;
 
 import edu.kit.rose.controller.commons.ReplacementLog;
 import edu.kit.rose.model.Project;
-import edu.kit.rose.model.plausibility.criteria.CriteriaManager;
 import edu.kit.rose.model.roadsystem.GraphRoadSystem;
 import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.TimeSliceSetting;
@@ -23,6 +22,7 @@ import edu.kit.rose.model.roadsystem.elements.Entrance;
 import edu.kit.rose.model.roadsystem.elements.Group;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
+import edu.kit.rose.util.MockingUtility;
 import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -44,9 +44,10 @@ class DeleteGroupCommandTest {
 
   @BeforeEach
   public void setUp() {
-    var criteriaManager = new CriteriaManager();
-    this.roadSystem = new GraphRoadSystem(criteriaManager, mock(TimeSliceSetting.class));
-    criteriaManager.setRoadSystem(this.roadSystem);
+    this.roadSystem = new GraphRoadSystem(
+        MockingUtility.mockCriteriaManager(),
+        mock(TimeSliceSetting.class)
+    );
 
     var element1 = roadSystem.createSegment(SegmentType.BASE);
     element1.setName(ELEMENT_1_NAME);

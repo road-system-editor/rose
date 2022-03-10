@@ -15,6 +15,8 @@ import javafx.scene.Node;
 import javafx.scene.control.ListView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 import org.testfx.api.FxRobotInterface;
 
 /**
@@ -40,12 +42,13 @@ class SaveProjectGlobalTestCase extends GuiTest {
   }
 
   @Test
+  @EnabledOnOs(OS.WINDOWS)
   void testSaveProject() {
     FxRobotInterface robot = clickOn("#project");
     clickOn("#saveProject");
 
     assertFalse(Files.exists(TEST_SAVE_PATH));
-    FileChooserTestUtility.enterPathToFileChooser(robot, TEST_SAVE_PATH.toString());
+    FileChooserTestUtility.enterPathToFileChooser(robot, TEST_SAVE_PATH);
     assertTrue(Files.exists(TEST_SAVE_PATH));
   }
 }

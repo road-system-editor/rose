@@ -23,6 +23,8 @@ import edu.kit.rose.model.roadsystem.elements.Group;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import edu.kit.rose.util.RoadSystemUtility;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Set;
 import java.util.function.BiConsumer;
@@ -46,7 +48,8 @@ class RoseHierarchyControllerTest {
   private RoseHierarchyController controller;
 
   @BeforeEach
-  public void setUp() {
+  public void setUp() throws IOException {
+    Files.deleteIfExists(CONFIG_PATH);
     var modelFactory = new ModelFactory(CONFIG_PATH);
     Project project = modelFactory.createProject();
     this.roadSystem = project.getRoadSystem();

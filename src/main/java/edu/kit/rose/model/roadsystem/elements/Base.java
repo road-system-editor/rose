@@ -36,10 +36,10 @@ public class Base extends HighwaySegment implements UnitObserver<Connector> {
   protected void initConnectors(List<AttributeAccessor<?>> entryAttributesList,
                                 List<AttributeAccessor<?>> exitAttributesList) {
     this.entryConnector = new MovableConnector(ConnectorType.ENTRY,
-        new Position(0, INITIAL_ENTRY_DISTANCE_TO_CENTER), entryAttributesList);
+        new Position(-INITIAL_ENTRY_DISTANCE_TO_CENTER, 0), entryAttributesList);
     this.entryConnector.addSubscriber(this);
     this.exitConnector = new MovableConnector(ConnectorType.EXIT,
-        new Position(0, -INITIAL_EXIT_DISTANCE_TO_CENTER), exitAttributesList);
+        new Position(INITIAL_EXIT_DISTANCE_TO_CENTER, 0), exitAttributesList);
     this.exitConnector.addSubscriber(this);
     connectors.add(entryConnector);
     connectors.add(exitConnector);
@@ -93,5 +93,9 @@ public class Base extends HighwaySegment implements UnitObserver<Connector> {
     return (MovableConnector) exitConnector;
   }
 
+  @Override
+  public void rotate(int degrees) {
+    // :)
+  }
 
 }

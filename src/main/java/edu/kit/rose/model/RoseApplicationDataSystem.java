@@ -18,6 +18,8 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A standard implementation for the {@link ApplicationDataSystem}.
@@ -46,6 +48,8 @@ class RoseApplicationDataSystem extends RoseDualSetObservable<AttributeType,
           RoseApplicationDataSystem.this.save();
         }
       };
+
+  private final Logger logger = LoggerFactory.getLogger(getClass());
 
   private final Path configFilePath;
   private final ObjectMapper serializationObjectMapper = new ObjectMapper(new JsonFactory())
@@ -123,7 +127,7 @@ class RoseApplicationDataSystem extends RoseDualSetObservable<AttributeType,
 
   @Override
   public void addRecentProjectPath(Path recentProjectPath) {
-    var absolute = Objects.requireNonNull(recentProjectPath).toAbsolutePath();
+    var absolute = Objects.requireNonNull(recentProjectPath).toAbsolutePath().normalize();
 
     if (this.recentProjectPaths.add(absolute)) {
       getSubscriberIterator().forEachRemaining(sub -> sub.notifyAdditionSecond(absolute));
@@ -137,7 +141,8 @@ class RoseApplicationDataSystem extends RoseDualSetObservable<AttributeType,
     try {
       export = serializationObjectMapper.readValue(path.toFile(), SerializedCriteria.class);
     } catch (IOException e) {
-      e.printStackTrace();
+      String message = String.format("Could not import criteria from file %s", path);
+      logger.error(message, e);
       return false;
     }
 
@@ -152,7 +157,8 @@ class RoseApplicationDataSystem extends RoseDualSetObservable<AttributeType,
       serializationObjectMapper.writeValue(path.toFile(), export);
       return true;
     } catch (IOException e) {
-      e.printStackTrace();
+      String message = String.format("Could not export criteria to file %s", path);
+      logger.error(message, e);
       return false;
     }
   }
@@ -187,6 +193,7 @@ class RoseApplicationDataSystem extends RoseDualSetObservable<AttributeType,
     try {
       serializationObjectMapper.writeValue(this.configFilePath.toFile(), serialized);
     } catch (IOException e) {
+      logger.error("Could not save application data to disk", e);
       throw new RuntimeException("could not save application data to disk", e);
     }
   }
@@ -200,6 +207,7 @@ class RoseApplicationDataSystem extends RoseDualSetObservable<AttributeType,
       serialized = serializationObjectMapper
           .readValue(this.configFilePath.toFile(), SerializedApplicationData.class);
     } catch (IOException e) {
+      logger.error("Could not load application data from disk", e);
       throw new RuntimeException("could not load application data from disk", e);
     }
 

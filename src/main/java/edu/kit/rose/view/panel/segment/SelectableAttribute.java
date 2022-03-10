@@ -7,6 +7,9 @@ import edu.kit.rose.view.commons.FxmlContainer;
 import edu.kit.rose.view.commons.LocalizedComboBox;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.function.BiConsumer;
+import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
 import javafx.scene.Node;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -25,15 +28,19 @@ abstract class SelectableAttribute<T> extends EditableAttribute<T> {
 
   private LocalizedComboBox<T> inputField;
 
+  private ChangeListener<T> listener;
+
   /**
    * Creates a new selectable attribute editor for the given {@code attribute} with the given
    * {@code options}.
    */
   SelectableAttribute(AttributeAccessor<T> attribute, AttributeController controller,
-                      Collection<T> options) {
-    super(attribute, controller);
+                      Collection<T> options, BiConsumer<AttributeAccessor<T>, T> consumer) {
+    super(attribute, controller, consumer);
     setupView();
     this.inputField.getItems().addAll(Objects.requireNonNull(options));
+
+    selectWithoutListener(attribute.getValue());
   }
 
   private void setupView() {
@@ -42,8 +49,13 @@ abstract class SelectableAttribute<T> extends EditableAttribute<T> {
     this.getStylesheets().add(attributeStyleSheetUrl);
   }
 
+  private void setupListener() {
+    this.listener = (observable, oldValue, newValue) -> consumer.accept(getAttribute(), newValue);
+  }
+
   @Override
   protected Node createInputField() {
+    setupListener();
     this.inputField = new LocalizedComboBox<>();
 
     this.inputField.setPromptText(INHOMOGENEOUS_VALUE_PLACEHOLDER);
@@ -54,11 +66,14 @@ abstract class SelectableAttribute<T> extends EditableAttribute<T> {
     inputField.setButtonCell(this.createListCell(null));
     inputField.setCellFactory(this::createListCell);
 
-    inputField.getSelectionModel().selectedItemProperty().addListener(
-        (options, old, newVal) -> getController().setAttribute(getAttribute(), newVal));
+    inputField.getSelectionModel().selectedItemProperty().addListener(getListener());
 
     this.inputField.init(INHOMOGENEOUS_VALUE_PLACEHOLDER, this::localizeOption);
     return inputField;
+  }
+
+  private ChangeListener<T> getListener() {
+    return this.listener;
   }
 
   private ListCell<T> createListCell(ListView<T> listView) {
@@ -92,7 +107,17 @@ abstract class SelectableAttribute<T> extends EditableAttribute<T> {
 
   @Override
   public void notifyChange(AttributeAccessor<T> unit) {
+    if (inputField.getSelectionModel().getSelectedItem() != unit.getValue()) {
+      selectWithoutListener(unit.getValue());
+    }
+  }
 
+  private void selectWithoutListener(T value) {
+    inputField.getSelectionModel().selectedItemProperty().removeListener(getListener());
+    Platform.runLater(() -> {
+      inputField.getSelectionModel().select(value);
+      inputField.getSelectionModel().selectedItemProperty().addListener(getListener());
+    });
   }
 
   /**

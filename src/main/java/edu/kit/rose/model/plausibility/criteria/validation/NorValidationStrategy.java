@@ -1,7 +1,7 @@
 package edu.kit.rose.model.plausibility.criteria.validation;
 
 /**
- * An Operator describing the logical NOR function for two booleans.
+ * A validation strategy describing the logical NOR function for two booleans.
  */
 public class NorValidationStrategy extends ValidationStrategy<Boolean> {
 

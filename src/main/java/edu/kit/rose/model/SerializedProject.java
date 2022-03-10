@@ -8,8 +8,6 @@ import edu.kit.rose.infrastructure.Movement;
 import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.TimeSliceSetting;
-import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
-import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.attributes.SpeedLimit;
 import edu.kit.rose.model.roadsystem.elements.Base;
 import edu.kit.rose.model.roadsystem.elements.Connector;
@@ -18,10 +16,12 @@ import edu.kit.rose.model.roadsystem.elements.Entrance;
 import edu.kit.rose.model.roadsystem.elements.Exit;
 import edu.kit.rose.model.roadsystem.elements.Group;
 import edu.kit.rose.model.roadsystem.elements.HighwaySegment;
+import edu.kit.rose.model.roadsystem.elements.RampSegment;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Set;
 
@@ -122,13 +122,6 @@ class SerializedProject {
      */
     public Position createPosition() {
       return new Position(this.coordinateX, this.coordinateY);
-    }
-
-    /**
-     * Creates a new ROSE {@link Movement} object with this object's data.
-     */
-    public Movement createMovement() {
-      return new Movement(this.coordinateX, this.coordinateY);
     }
   }
 
@@ -233,17 +226,11 @@ class SerializedProject {
       }
       var otherConnector = connection.getOther(connector);
 
-      for (var adjacent : this.roadSystem.getAdjacentSegments(segment)) {
-        for (var adjConnector : adjacent.getConnectors()) {
-          if (adjConnector == otherConnector) {
-            return adjacent;
-          }
-        }
-      }
-
-      throw new RuntimeException("couldn't find adjacent segment");
+      return this.roadSystem.getAdjacentSegments(segment).stream()
+          .filter(adjacent -> adjacent.getConnectors().contains(otherConnector))
+          .findAny()
+          .orElseThrow(); // this should never happen if the road system is consistent
     }
-
   }
 
   /**
@@ -304,22 +291,18 @@ class SerializedProject {
       this.comment = this.roseElement.getComment();
     }
 
-    @SuppressWarnings("unchecked")
-    protected <V> void setAttributeValue(AttributeType type, V value) {
-      for (var accessor : this.roseElement.getAttributeAccessors()) {
-        if (accessor.getAttributeType() == type) {
-          ((AttributeAccessor<V>) accessor).setValue(value);
-          return;
-        }
-      }
-
-      throw new RuntimeException("element does not have an attribute of the given type");
-    }
-
     public abstract void link(SerializedRoadSystem serializedRoadSystem);
 
     public abstract void createRoseElement(RoadSystem target);
 
+    /**
+     * Fills the rose element that was created through {@link #createRoseElement(RoadSystem)} with
+     * the data of this object restores relations to other elements (e.g. segment connections
+     * and group content).
+     *
+     * @param source the serialized road system to use for looking up other elements.
+     * @param target the road system that the relations should be created in.
+     */
     public void linkRoseElement(SerializedRoadSystem source, RoadSystem target) {
       this.roseElement.setName(this.name);
       this.roseElement.setComment(this.comment);
@@ -400,14 +383,14 @@ class SerializedProject {
     SerializedSegment(int index, T sourceSegment) {
       super(index, sourceSegment);
 
-      this.populateAttributes();
+      this.storeHighwaySegmentData();
     }
 
     SerializedSegment() {
       super();
     }
 
-    private void populateAttributes() {
+    private void storeHighwaySegmentData() {
       this.length = this.roseElement.getLength();
       this.slope = this.roseElement.getSlope();
       this.laneCount = this.roseElement.getLaneCount();
@@ -418,20 +401,54 @@ class SerializedProject {
       this.rotation = getRoseElement().getRotation();
     }
 
+    /**
+     * Finds the connector in this segment that is connected to the segment of the given index.
+     *
+     * @param connectedIndex the index of the other segment that this segment is connected to.
+     * @return the connector.
+     * @throws NoSuchElementException if no connector of this segment is connected to the other
+     *     segment.
+     */
     public abstract Connector getConnectorForConnectionTo(int connectedIndex);
 
     @Override
     public void linkRoseElement(SerializedRoadSystem source, RoadSystem target) {
       super.linkRoseElement(source, target);
 
-      this.setAttributeValue(AttributeType.LENGTH, this.length);
-      this.setAttributeValue(AttributeType.SLOPE, this.slope);
-      this.setAttributeValue(AttributeType.LANE_COUNT, this.laneCount);
-      this.setAttributeValue(AttributeType.CONURBATION, this.conurbation);
-      this.setAttributeValue(AttributeType.MAX_SPEED, this.maxSpeed);
+      // restore HighwaySegment attributes
+      this.roseElement.setLength(this.length);
+      this.roseElement.setSlope(this.slope);
+      this.roseElement.setLaneCount(this.laneCount);
+      this.roseElement.setConurbation(this.conurbation);
+      this.roseElement.setMaxSpeed(this.maxSpeed);
 
-      this.getRoseElement().move(this.centerPosition.createMovement());
+      // restore positioning
+      var movement = new Movement(// centerPosition - currentPosition
+          this.centerPosition.coordinateX - this.roseElement.getCenter().getX(),
+          this.centerPosition.coordinateY - this.roseElement.getCenter().getY());
+      this.getRoseElement().move(movement);
       this.getRoseElement().rotate(this.rotation);
+    }
+
+    /**
+     * Adds a {@link edu.kit.rose.model.roadsystem.elements.Connection} to the given
+     * {@link RoadSystem}, connecting this segment with another segment.
+     *
+     * @param source the serialized road system to find the other segment in.
+     * @param target the road system to create the connection in.
+     * @param otherSegmentIndex the index of the segment to connect this segment with.
+     * @param connector the connector from this segment that should be used for the connection.
+     */
+    protected void createRoseConnection(SerializedRoadSystem source, RoadSystem target,
+                                        Integer otherSegmentIndex, Connector connector) {
+      if (otherSegmentIndex != null) {
+        SerializedSegment<? extends HighwaySegment> connectedSegment =
+            (SerializedSegment<? extends HighwaySegment>) source.getElementById(otherSegmentIndex);
+
+        Connector otherConnector = connectedSegment.getConnectorForConnectionTo(this.getIndex());
+
+        target.connectConnectors(connector, otherConnector);
+      }
     }
   }
 
@@ -479,34 +496,28 @@ class SerializedProject {
     @Override
     public void createRoseElement(RoadSystem target) {
       this.roseElement = (Base) target.createSegment(SegmentType.BASE);
-      /* TODO uncomment once movable connectors are merged
-      this.roseElement.getEntry().move(this.entrancePosition.createMovement());
-      this.roseElement.getExit().move(this.exitPosition.createMovement());*/
+
+      // restore relative position of connectors (but not the position of the segment in general)
+      var targetConnectorDifference = new Movement(// exit - entrance
+          this.exitPosition.coordinateX - this.entrancePosition.coordinateX,
+          this.exitPosition.coordinateY - this.entrancePosition.coordinateY);
+
+      Position targetExitPosition = this.roseElement.getEntry()
+          .getPosition().add(targetConnectorDifference); // entrance + (exit - entrance)
+
+      Movement exitConnectorMovement = new Movement(// exitTarget - exitPos
+          targetExitPosition.getX() - this.roseElement.getExit().getPosition().getX(),
+          targetExitPosition.getY() - this.roseElement.getExit().getPosition().getY());
+
+      this.roseElement.getExit().move(exitConnectorMovement);
     }
 
     @Override
     public void linkRoseElement(SerializedRoadSystem source, RoadSystem target) {
       super.linkRoseElement(source, target);
 
-      if (entranceConnectedSegmentId != null) {
-        SerializedSegment<? extends HighwaySegment> connectedSegment =
-            (SerializedSegment<? extends HighwaySegment>)
-                source.getElementById(entranceConnectedSegmentId);
-        Connector connectedConnector =
-            connectedSegment.getConnectorForConnectionTo(this.getIndex());
-
-        target.connectConnectors(connectedConnector, this.roseElement.getEntry());
-      }
-
-      if (exitConnectedSegmentId != null) {
-        SerializedSegment<? extends HighwaySegment> connectedSegment =
-            (SerializedSegment<? extends HighwaySegment>)
-                source.getElementById(exitConnectedSegmentId);
-        Connector connectedConnector =
-            connectedSegment.getConnectorForConnectionTo(this.getIndex());
-
-        target.connectConnectors(connectedConnector, this.roseElement.getExit());
-      }
+      createRoseConnection(source, target, entranceConnectedSegmentId, this.roseElement.getEntry());
+      createRoseConnection(source, target, exitConnectedSegmentId, this.roseElement.getExit());
     }
 
     @Override
@@ -518,15 +529,17 @@ class SerializedProject {
           && connectedIndex == this.exitConnectedSegmentId) {
         return this.roseElement.getExit();
       } else {
-        throw new RuntimeException("this segment is not connected to the given index");
+        throw new NoSuchElementException("this segment is not connected to the given index");
       }
     }
   }
 
   /**
-   * Serializable data model for {@link Entrance}s.
+   * Serializable data model for {@link RampSegment}s.
    */
-  private static class SerializedEntranceSegment extends SerializedSegment<Entrance> {
+  private abstract static class SerializedRampSegment<T extends RampSegment>
+      extends SerializedSegment<T> {
+
     @JsonProperty("laneCountRamp")
     private Integer laneCountRamp;
     @JsonProperty("maxSpeedRamp")
@@ -537,24 +550,32 @@ class SerializedProject {
     private Integer exitConnectedSegmentId;
     @JsonProperty("rampConnectedSegmentId")
     private Integer rampConnectedSegmentId;
+    @JsonProperty("junctionName")
+    private String junctionName;
 
-    SerializedEntranceSegment(int index, Entrance roseEntrance) {
+    /**
+     * Creates a new serialized ramp segment with the data from the given ROSE ramp segment.
+     *
+     * @param index the index of this element in the containing {@link SerializedRoadSystem}.
+     */
+    SerializedRampSegment(int index, T roseEntrance) {
       super(index, roseEntrance);
 
-      this.populateAttributes();
+      this.storeRampAttributes();
     }
 
     /**
      * Empty constructor to be used by Jackson when de-serializing a file into this model.
      */
     @SuppressWarnings("unused")
-    private SerializedEntranceSegment() {
+    private SerializedRampSegment() {
       super();
     }
 
-    private void populateAttributes() {
-      this.laneCountRamp = this.roseElement.getNrOfRampLanes();
+    private void storeRampAttributes() {
+      this.laneCountRamp = this.roseElement.getLaneCountRamp();
       this.maxSpeedRamp = this.roseElement.getMaxSpeedRamp();
+      this.junctionName = this.roseElement.getJunctionName();
     }
 
     @Override
@@ -571,46 +592,16 @@ class SerializedProject {
     }
 
     @Override
-    public void createRoseElement(RoadSystem target) {
-      this.roseElement = (Entrance) target.createSegment(SegmentType.ENTRANCE);
-    }
-
-    @Override
     public void linkRoseElement(SerializedRoadSystem source, RoadSystem target) {
       super.linkRoseElement(source, target);
 
-      this.setAttributeValue(AttributeType.LANE_COUNT_RAMP, this.laneCountRamp);
-      this.setAttributeValue(AttributeType.MAX_SPEED_RAMP, this.maxSpeedRamp);
+      this.roseElement.setLaneCountRamp(this.laneCountRamp);
+      this.roseElement.setMaxSpeedRamp(this.maxSpeedRamp);
+      this.roseElement.setJunctionName(this.junctionName);
 
-      if (entranceConnectedSegmentId != null) {
-        SerializedSegment<? extends HighwaySegment> connectedSegment =
-            (SerializedSegment<? extends HighwaySegment>)
-                source.getElementById(entranceConnectedSegmentId);
-        Connector connectedConnector =
-            connectedSegment.getConnectorForConnectionTo(this.getIndex());
-
-        target.connectConnectors(connectedConnector, this.roseElement.getEntry());
-      }
-
-      if (exitConnectedSegmentId != null) {
-        SerializedSegment<? extends HighwaySegment> connectedSegment =
-            (SerializedSegment<? extends HighwaySegment>)
-                source.getElementById(exitConnectedSegmentId);
-        Connector connectedConnector =
-            connectedSegment.getConnectorForConnectionTo(this.getIndex());
-
-        target.connectConnectors(connectedConnector, this.roseElement.getExit());
-      }
-
-      if (rampConnectedSegmentId != null) {
-        SerializedSegment<? extends HighwaySegment> connectedSegment =
-            (SerializedSegment<? extends HighwaySegment>)
-                source.getElementById(rampConnectedSegmentId);
-        Connector connectedConnector =
-            connectedSegment.getConnectorForConnectionTo(this.getIndex());
-
-        target.connectConnectors(connectedConnector, this.roseElement.getRamp());
-      }
+      createRoseConnection(source, target, entranceConnectedSegmentId, roseElement.getEntry());
+      createRoseConnection(source, target, exitConnectedSegmentId, roseElement.getExit());
+      createRoseConnection(source, target, rampConnectedSegmentId, roseElement.getRamp());
     }
 
     @Override
@@ -625,30 +616,49 @@ class SerializedProject {
           && connectedIndex == this.rampConnectedSegmentId) {
         return this.roseElement.getRamp();
       } else {
-        throw new RuntimeException("this segment is not connected to the given index");
+        throw new NoSuchElementException("this segment is not connected to the given index");
       }
+    }
+  }
+
+  /**
+   * Serializable data model for {@link Entrance}s.
+   */
+  private static class SerializedEntranceSegment extends SerializedRampSegment<Entrance> {
+    /**
+     * Creates a new serialized entrance segment with the data from the given ROSE entrance segment.
+     *
+     * @param index the index of this element in the containing {@link SerializedRoadSystem}.
+     */
+    SerializedEntranceSegment(int index, Entrance roseEntrance) {
+      super(index, roseEntrance);
+    }
+
+    /**
+     * Empty constructor to be used by Jackson when de-serializing a file into this model.
+     */
+    @SuppressWarnings("unused")
+    private SerializedEntranceSegment() {
+      super();
+    }
+
+    @Override
+    public void createRoseElement(RoadSystem target) {
+      this.roseElement = (Entrance) target.createSegment(SegmentType.ENTRANCE);
     }
   }
 
   /**
    * Serializable data model for {@link Exit}s.
    */
-  private static class SerializedExitSegment extends SerializedSegment<Exit> {
-    @JsonProperty("laneCountRamp")
-    private Integer laneCountRamp;
-    @JsonProperty("maxSpeedRamp")
-    private SpeedLimit maxSpeedRamp;
-    @JsonProperty("entranceConnectedSegmentId")
-    private Integer entranceConnectedSegmentId;
-    @JsonProperty("exitConnectedSegmentId")
-    private Integer exitConnectedSegmentId;
-    @JsonProperty("rampConnectedSegmentId")
-    private Integer rampConnectedSegmentId;
-
+  private static class SerializedExitSegment extends SerializedRampSegment<Exit> {
+    /**
+     * Creates a new serialized exit segment with the data from the given ROSE exit segment.
+     *
+     * @param index the index of this element in the containing {@link SerializedRoadSystem}.
+     */
     SerializedExitSegment(int index, Exit roseExit) {
       super(index, roseExit);
-
-      this.populateAttributes();
     }
 
     /**
@@ -659,78 +669,9 @@ class SerializedProject {
       super();
     }
 
-    private void populateAttributes() {
-      this.laneCountRamp = this.roseElement.getNrOfRampLanes();
-      this.maxSpeedRamp = this.roseElement.getMaxSpeedRamp();
-    }
-
-    @Override
-    public void link(SerializedRoadSystem serializedRoadSystem) {
-      this.entranceConnectedSegmentId = serializedRoadSystem.getElementId(
-          serializedRoadSystem.getConnectedSegment(this.roseElement, this.roseElement.getEntry()));
-      this.exitConnectedSegmentId = serializedRoadSystem.getElementId(
-          serializedRoadSystem.getConnectedSegment(this.roseElement, this.roseElement.getExit()));
-      this.rampConnectedSegmentId = serializedRoadSystem.getElementId(
-          serializedRoadSystem.getConnectedSegment(this.roseElement, this.roseElement.getRamp()));
-    }
-
     @Override
     public void createRoseElement(RoadSystem target) {
       this.roseElement = (Exit) target.createSegment(SegmentType.EXIT);
-    }
-
-    @Override
-    public void linkRoseElement(SerializedRoadSystem source, RoadSystem target) {
-      super.linkRoseElement(source, target);
-
-      this.setAttributeValue(AttributeType.LANE_COUNT_RAMP, this.laneCountRamp);
-      this.setAttributeValue(AttributeType.MAX_SPEED_RAMP, this.maxSpeedRamp);
-
-      if (entranceConnectedSegmentId != null) {
-        SerializedSegment<? extends HighwaySegment> connectedSegment =
-            (SerializedSegment<? extends HighwaySegment>)
-                source.getElementById(entranceConnectedSegmentId);
-        Connector connectedConnector =
-            connectedSegment.getConnectorForConnectionTo(this.getIndex());
-
-        target.connectConnectors(connectedConnector, this.roseElement.getEntry());
-      }
-
-      if (exitConnectedSegmentId != null) {
-        SerializedSegment<? extends HighwaySegment> connectedSegment =
-            (SerializedSegment<? extends HighwaySegment>)
-                source.getElementById(exitConnectedSegmentId);
-        Connector connectedConnector =
-            connectedSegment.getConnectorForConnectionTo(this.getIndex());
-
-        target.connectConnectors(connectedConnector, this.roseElement.getExit());
-      }
-
-      if (rampConnectedSegmentId != null) {
-        SerializedSegment<? extends HighwaySegment> connectedSegment =
-            (SerializedSegment<? extends HighwaySegment>)
-                source.getElementById(rampConnectedSegmentId);
-        Connector connectedConnector =
-            connectedSegment.getConnectorForConnectionTo(this.getIndex());
-
-        target.connectConnectors(connectedConnector, this.roseElement.getRamp());
-      }
-    }
-
-    @Override
-    public Connector getConnectorForConnectionTo(int connectedIndex) {
-      if (this.entranceConnectedSegmentId != null
-          && connectedIndex == this.entranceConnectedSegmentId) {
-        return this.roseElement.getEntry();
-      } else if (this.exitConnectedSegmentId != null
-          && connectedIndex == this.exitConnectedSegmentId) {
-        return this.roseElement.getExit();
-      } else if (this.rampConnectedSegmentId != null
-          && connectedIndex == this.rampConnectedSegmentId) {
-        return this.roseElement.getRamp();
-      } else {
-        throw new RuntimeException("this segment is not connected to the given index");
-      }
     }
   }
 

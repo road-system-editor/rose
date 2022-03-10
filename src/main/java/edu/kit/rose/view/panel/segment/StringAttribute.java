@@ -2,6 +2,7 @@ package edu.kit.rose.view.panel.segment;
 
 import edu.kit.rose.controller.attribute.AttributeController;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
+import java.util.function.BiConsumer;
 
 /**
  * This is the {@link EditableAttribute} implementation for the
@@ -15,8 +16,9 @@ class StringAttribute extends TextFieldAttribute<String> {
    * @param attribute the attribute to display.
    * @param controller the controller that should handle attribute value updates.
    */
-  StringAttribute(AttributeAccessor<String> attribute, AttributeController controller) {
-    super(attribute, controller);
+  StringAttribute(AttributeAccessor<String> attribute, AttributeController controller,
+                  BiConsumer<AttributeAccessor<String>, String> consumer) {
+    super(attribute, controller, consumer);
   }
 
   @Override

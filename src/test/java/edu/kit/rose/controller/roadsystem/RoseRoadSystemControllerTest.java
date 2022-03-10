@@ -19,6 +19,7 @@ import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.ZoomSetting;
 import edu.kit.rose.model.plausibility.criteria.CriteriaManager;
+import edu.kit.rose.model.plausibility.violation.ViolationManager;
 import edu.kit.rose.model.roadsystem.GraphRoadSystem;
 import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.TimeSliceSetting;
@@ -51,9 +52,12 @@ public class RoseRoadSystemControllerTest {
   void setUp() {
     selectionBuffer = new RoseSelectionBuffer();
     project = mock(Project.class);
-    roadSystem = new GraphRoadSystem(new CriteriaManager(), mock(TimeSliceSetting.class));
+    CriteriaManager criteriaManager = new CriteriaManager();
+    roadSystem = new GraphRoadSystem(criteriaManager, mock(TimeSliceSetting.class));
     zoomSetting = new ZoomSetting(new Position(0, 0));
-    ReplacementLog replacementLog = new ReplacementLog();
+    final ReplacementLog replacementLog = new ReplacementLog();
+    criteriaManager.setRoadSystem(roadSystem);
+    criteriaManager.setViolationManager(new ViolationManager());
 
     Mockito.when(project.getZoomSetting()).thenReturn(zoomSetting);
     Mockito.when(project.getRoadSystem()).thenReturn(roadSystem);
@@ -268,7 +272,7 @@ public class RoseRoadSystemControllerTest {
 
   @Test
   public void testRotateSegment() {
-    Segment segment = roadSystem.createSegment(SegmentType.BASE);
+    Segment segment = roadSystem.createSegment(SegmentType.ENTRANCE);
     roadSystemController.addSegmentSelection(segment);
     roadSystemController.rotateSegment();
     Assertions.assertEquals(15, segment.getRotation());

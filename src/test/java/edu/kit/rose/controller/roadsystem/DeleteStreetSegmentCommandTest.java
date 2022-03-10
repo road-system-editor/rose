@@ -20,7 +20,10 @@ import edu.kit.rose.model.roadsystem.elements.Base;
 import edu.kit.rose.model.roadsystem.elements.Group;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,23 +46,25 @@ public class DeleteStreetSegmentCommandTest {
    * Sets up all mock objects.
    */
   @BeforeEach
-  public void setUp() {
+  public void setUp() throws IOException {
+    Files.deleteIfExists(CONFIG_PATH);
     var modelFactory = new ModelFactory(CONFIG_PATH);
+
     this.project = modelFactory.createProject();
     this.roadSystem = this.project.getRoadSystem();
     this.replacementLog = new ReplacementLog();
     this.segmentToDelete = (Base) this.roadSystem.createSegment(SegmentType.BASE);
 
     this.command = new DeleteStreetSegmentCommand(this.replacementLog, this.project,
-        this.segmentToDelete);
+        List.of(this.segmentToDelete));
   }
 
   @Test
   public void testConstructor() {
     assertThrows(NullPointerException.class, () -> new DeleteStreetSegmentCommand(
-        null, this.project, this.segmentToDelete));
+        null, this.project, List.of(this.segmentToDelete)));
     assertThrows(NullPointerException.class, () -> new DeleteStreetSegmentCommand(
-        this.replacementLog, null, this.segmentToDelete));
+        this.replacementLog, null, List.of(this.segmentToDelete)));
     assertThrows(NullPointerException.class, () -> new DeleteStreetSegmentCommand(
         this.replacementLog, this.project, null));
     assertThrows(NullPointerException.class, () -> new DeleteStreetSegmentCommand(

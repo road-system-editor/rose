@@ -22,6 +22,8 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Provides functionality to save, load and
@@ -32,6 +34,8 @@ public class RoseProjectController extends Controller implements ProjectControll
   private static final String BACKUP_FILENAME_TEMPLATE = "Backup%d.rose.json";
   private static final int MAX_BACKUP_COUNT = 4;
   private static final long BACKUP_DELAY_MILLISECONDS = 300000;
+
+  private final Logger logger = LoggerFactory.getLogger(getClass());
 
   private final Project project;
   private final ApplicationDataSystem applicationDataSystem;
@@ -106,7 +110,7 @@ public class RoseProjectController extends Controller implements ProjectControll
       if (targetFilePath != null) {
         boolean exportSucceeded = project.exportToFile(targetFormat, targetFilePath);
         if (!exportSucceeded) {
-          getNavigator().showErrorDialog(ErrorType.EXPORT_ERROR);
+          getNavigator().showErrorDialog(ErrorType.PROJECT_EXPORT_ERROR);
         }
       }
       this.onProjectIoActionEndCallbacks.forEach(Runnable::run);
@@ -266,7 +270,7 @@ public class RoseProjectController extends Controller implements ProjectControll
       try {
         Files.newDirectoryStream(this.backupDirectoryPath).forEach(backupPaths::add);
       } catch (IOException e) {
-        e.printStackTrace();
+        logger.error("Could not create backup path list", e);
         return new RoseBox<>();
       }
 

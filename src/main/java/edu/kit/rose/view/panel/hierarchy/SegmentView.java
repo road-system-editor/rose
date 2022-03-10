@@ -1,6 +1,7 @@
 package edu.kit.rose.view.panel.hierarchy;
 
 import edu.kit.rose.controller.hierarchy.HierarchyController;
+import edu.kit.rose.controller.roadsystem.RoadSystemController;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.model.roadsystem.elements.Element;
@@ -34,6 +35,8 @@ class SegmentView extends ElementView<Segment> {
   private final BiConsumer<Segment, Boolean> segmentSubscription
           = this::onSegmentSelectionChanged;
 
+  private final RoadSystemController roadSystemController;
+
   /**
    * Creates a new segment view for a given {@code segment}.
    *
@@ -41,8 +44,10 @@ class SegmentView extends ElementView<Segment> {
    * @param segment    the {@link Segment} to show.
    * @param controller the {@link HierarchyController} to use.
    */
-  SegmentView(LocalizedTextProvider translator, Segment segment, HierarchyController controller) {
+  SegmentView(LocalizedTextProvider translator, Segment segment, HierarchyController controller,
+              RoadSystemController roadSystemController) {
     super(translator, "SegmentView.fxml", segment, controller);
+    this.roadSystemController = roadSystemController;
 
     setupView();
     setupListeners();
@@ -57,6 +62,7 @@ class SegmentView extends ElementView<Segment> {
     String deleteButtonImageUrl = Objects.requireNonNull(
             getClass().getResource(DELETE_BUTTON_IMAGE_URL)).toExternalForm();
     deleteGroupButtonImageView.setImage(new Image(deleteButtonImageUrl));
+    onSegmentSelectionChanged(getElement(), getController().getIsSegmentSelected(getElement()));
   }
 
   private void setupListeners() {
@@ -71,7 +77,7 @@ class SegmentView extends ElementView<Segment> {
   }
 
   private void onDeleteSegmentButtonClicked(MouseEvent mouseEvent) {
-    //TODO: delete element
+    this.roadSystemController.deleteStreetSegment(this.getElement());
   }
 
   @Override
@@ -86,10 +92,10 @@ class SegmentView extends ElementView<Segment> {
   private void onSegmentSelectionChanged(Segment segment, boolean isSelected) {
     if (segment == getElement()) {
       if (isSelected) {
-        segmentViewSurface.getStyleClass().remove(UNSELECTED_STYLE_CLASS);
+        segmentViewSurface.getStyleClass().removeIf(style -> style.equals(UNSELECTED_STYLE_CLASS));
         segmentViewSurface.getStyleClass().add(SELECTED_STYLE_CLASS);
       } else {
-        segmentViewSurface.getStyleClass().remove(SELECTED_STYLE_CLASS);
+        segmentViewSurface.getStyleClass().removeIf(style -> style.equals(SELECTED_STYLE_CLASS));
         segmentViewSurface.getStyleClass().add(UNSELECTED_STYLE_CLASS);
       }
     }

@@ -116,7 +116,7 @@ public class RoseProjectControllerTest {
 
     this.controller.export(ProjectFormat.ROSE);
     verifyStorageLockWasUsed(1);
-    verify(this.navigator, times(1)).showErrorDialog(ErrorType.EXPORT_ERROR);
+    verify(this.navigator, times(1)).showErrorDialog(ErrorType.PROJECT_EXPORT_ERROR);
   }
 
   @Test

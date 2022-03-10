@@ -7,6 +7,7 @@ import edu.kit.rose.view.commons.EnumLocalizationUtility;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.BiConsumer;
 
 /**
  * This is the {@link EditableAttribute} implementation for the
@@ -20,8 +21,9 @@ class SpeedLimitAttribute extends SelectableAttribute<SpeedLimit> {
    * @param controller the controller that should handle attribute value updates.
    */
   SpeedLimitAttribute(AttributeAccessor<SpeedLimit> attribute,
-                   AttributeController controller) {
-    super(attribute, controller, Arrays.asList(SpeedLimit.values()));
+                   AttributeController controller,
+                      BiConsumer<AttributeAccessor<SpeedLimit>, SpeedLimit> consumer) {
+    super(attribute, controller, Arrays.asList(SpeedLimit.values()), consumer);
   }
 
   @Override

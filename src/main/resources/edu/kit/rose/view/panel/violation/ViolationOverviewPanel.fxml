@@ -27,7 +27,8 @@
                    alignment="CENTER"
                    styleClass="violationLabel"/>
         </HBox>
-        <ListView fx:id="violationList" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+        <ListView fx:id="violationList" GridPane.columnIndex="0" GridPane.rowIndex="1"
+                  styleClass="custom-list-view"/>
     </GridPane>
 
 </fx:root>

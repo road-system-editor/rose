@@ -7,5 +7,6 @@ package edu.kit.rose.model.plausibility.criteria;
 public enum PlausibilityCriterionType {
   COMPLETENESS,
   VALUE,
-  COMPATIBILITY
+  COMPATIBILITY,
+  CONNECTOR
 }

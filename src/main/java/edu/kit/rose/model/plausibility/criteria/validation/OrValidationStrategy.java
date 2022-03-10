@@ -1,7 +1,7 @@
 package edu.kit.rose.model.plausibility.criteria.validation;
 
 /**
- * An Operator describing the logical OR function for two booleans.
+ * A validation strategy describing the logical OR function for two booleans.
  */
 public class OrValidationStrategy extends ValidationStrategy<Boolean> {
 

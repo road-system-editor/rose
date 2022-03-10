@@ -38,6 +38,7 @@ public class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, 
   private final TimeSliceSetting timeSliceSetting;
   private final Graph<Segment, Connection> segmentConnectionGraph;
   private final List<Group> groups; //all groups.
+  private final Group rootGroup;
 
   // stored for easy and performant access.
   private final List<Element> elements; //all elements (including groups).
@@ -65,6 +66,7 @@ public class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, 
     this.elements = new LinkedList<>();
     this.connectorSegmentMap = new HashMap<>();
     this.connectorConnectionMap = new HashMap<>();
+    this.rootGroup = new Group();
   }
 
   @Override
@@ -85,6 +87,7 @@ public class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, 
       connectorConnectionMap.put(c, null);
       c.addSubscriber(this);
     });
+    this.rootGroup.addElement(segment);
     return segment;
   }
 
@@ -98,6 +101,7 @@ public class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, 
     elements.add(group);
     groups.add(group);
     subscribers.forEach(s -> s.notifyAddition(group));
+    this.rootGroup.addElement(group);
     return group;
   }
 
@@ -114,11 +118,10 @@ public class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, 
   }
 
   private void removeSegment(Segment segment) {
+    disconnectFromAll(segment);
     elements.remove(segment);
-    var connectionsToSegment = new LinkedList<>(segmentConnectionGraph.edgesOf(segment));
     segment.getConnectors().forEach(connectorSegmentMap::remove);
     segmentConnectionGraph.removeVertex(segment);
-    subscribers.forEach(s -> connectionsToSegment.forEach(s::notifyRemovalSecond));
     criteriaManager.getCriteria().forEach(segment::removeSubscriber);
     subscribers.forEach(s -> s.notifyRemoval(segment));
     segment.getConnectors().forEach(c -> {
@@ -128,6 +131,9 @@ public class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, 
   }
 
   private void removeGroup(Group group) {
+    if (rootGroup.equals(group)) {
+      throw new IllegalArgumentException("Can not remove root group from road-system.");
+    }
     group.getElements().forEach(this::removeElement);
     elements.remove(group);
     groups.remove(group);
@@ -196,16 +202,6 @@ public class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, 
       throw new IllegalArgumentException("unknown segment");
     }
     return new RoseBox<>(Graphs.neighborListOf(segmentConnectionGraph, segment));
-  }
-
-  @Override
-  public Box<Element> getRootElements() {
-    return new RoseBox<>(
-        elements.stream()
-            .filter(e -> groups.stream()
-                .noneMatch(g -> g.contains(e)))
-            .collect(Collectors.toList())
-    );
   }
 
   @Override
@@ -313,9 +309,15 @@ public class GraphRoadSystem extends RoseDualSetObservable<Element, Connection, 
   @Override
   public void clear() {
     var roots = new LinkedList<Element>();
-    getRootElements().forEach(roots::add);
+    this.rootGroup.getElements().forEach(roots::add);
+    roots.forEach(this.rootGroup::removeElement);
     roots.forEach(this::removeElement);
     this.timeSliceSetting.reset();
+  }
+
+  @Override
+  public Group getRootGroup() {
+    return rootGroup;
   }
 
   @Override

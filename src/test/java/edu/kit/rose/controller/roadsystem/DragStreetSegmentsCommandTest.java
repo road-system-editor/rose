@@ -13,6 +13,7 @@ import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.elements.Base;
 import edu.kit.rose.model.roadsystem.elements.Exit;
 import edu.kit.rose.model.roadsystem.elements.Segment;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -56,7 +57,7 @@ public class DragStreetSegmentsCommandTest {
 
     this.replacementLog = new ReplacementLog();
     this.command = new DragStreetSegmentsCommand(this.replacementLog, project, this.segments,
-        MOVEMENT);
+        MOVEMENT, new HashSet<>(), null);
   }
 
   @Test

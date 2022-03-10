@@ -8,6 +8,7 @@ import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import javafx.event.Event;
@@ -55,10 +56,14 @@ public abstract class SegmentView<T extends Segment> extends Pane
 
   protected Consumer<ConnectorView> onConnectorViewDragged;
   protected Consumer<ConnectorView> onConnectorViewDragEnd;
+  protected BiConsumer<MouseEvent, Segment> onMouseClick;
+  protected Runnable onDragged;
+  protected Runnable onDragEnd;
 
   private Position initialPos;
   private Point2D startPoint;
 
+  private boolean isInDraggingProcess = false;
 
   /**
    * Creates a new segment view that acts as visual representation of a given segment.
@@ -76,6 +81,7 @@ public abstract class SegmentView<T extends Segment> extends Pane
 
     setupSelection();
     setupDrag();
+    setupClicked();
   }
 
   protected boolean canBeMoved(Node target, Movement movement) {
@@ -131,6 +137,18 @@ public abstract class SegmentView<T extends Segment> extends Pane
     this.onConnectorViewDragEnd = onConnectorViewDragEnd;
   }
 
+  public void setOnDragged(Runnable onDragged) {
+    this.onDragged = onDragged;
+  }
+
+  public void setOnDragEnd(Runnable onDragEnd) {
+    this.onDragEnd = onDragEnd;
+  }
+
+  public void setOnMouseClick(BiConsumer<MouseEvent, Segment> onMouseClick) {
+    this.onMouseClick = onMouseClick;
+  }
+
   /**
    * Returns the localized text provider instance of the segment view.
    *
@@ -157,12 +175,22 @@ public abstract class SegmentView<T extends Segment> extends Pane
     }
   }
 
+
+
   protected void onDragDetected(MouseEvent mouseEvent) {
+    onDragged.run();
     controller.beginDragStreetSegment(this.initialPos);
+    this.isInDraggingProcess = true;
     startFullDrag();
   }
 
   protected void onMouseDragged(MouseEvent mouseEvent) {
+    if (!isInDraggingProcess) {
+      // Enforce correct call order of RoadSystemController.beginDragStreetSegment
+      // and RoadSystemController.dragStreetSegments, because JavaFx calls onMouseDragged
+      // sometimes before onDragDetected.
+      return;
+    }
     var currentPos = localToParent(mouseEvent.getX(), mouseEvent.getY());
     var movement = new Movement(currentPos.getX() - startPoint.getX(),
         currentPos.getY() - startPoint.getY());
@@ -190,6 +218,8 @@ public abstract class SegmentView<T extends Segment> extends Pane
       controller.endDragStreetSegment(releasePosition);
     }
     this.draggedConnectorView = null;
+    this.isInDraggingProcess = false;
+    onDragEnd.run();
   }
 
   /**
@@ -198,6 +228,13 @@ public abstract class SegmentView<T extends Segment> extends Pane
    * instantiated differently.
    */
   protected abstract void setupDrag();
+
+  /**
+   * Sets up the clicking of this segment view.
+   * Left to child classes as dragging events might be
+   * instantiated differently.
+   */
+  protected abstract void setupClicked();
 
   /**
    * Sets up how to trigger the selection of a segment view.

@@ -1,6 +1,7 @@
 package edu.kit.rose.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import edu.kit.rose.infrastructure.Position;
@@ -64,5 +65,10 @@ class ZoomSettingTest {
     zoomSetting.reset();
     assertEquals(defaultCenterOfView, zoomSetting.getCenterOfView());
     assertEquals(DEFAULT_ZOOM_LEVEL, zoomSetting.getZoomLevel());
+  }
+
+  @Test
+  void testGetThis() {
+    assertSame(zoomSetting, zoomSetting.getThis());
   }
 }

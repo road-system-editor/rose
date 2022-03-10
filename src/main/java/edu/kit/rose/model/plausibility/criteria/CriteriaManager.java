@@ -9,6 +9,8 @@ import edu.kit.rose.model.plausibility.violation.ViolationManager;
 import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 
 /**
@@ -33,6 +35,7 @@ public class CriteriaManager extends RoseSetObservable<PlausibilityCriterion, Cr
     this.criteria = new ArrayList<>();
     this.criterionFactory = new CriterionFactory();
     this.criteria.addAll(this.criterionFactory.createValueCriteria());
+    this.criteria.add(this.criterionFactory.createConnectorCriterion());
     this.criteria.add(this.criterionFactory.createCompletenessCriterion());
   }
 
@@ -46,8 +49,9 @@ public class CriteriaManager extends RoseSetObservable<PlausibilityCriterion, Cr
     this.roadSystem = roadSystem;
     this.criterionFactory.setRoadSystem(roadSystem);
     this.criteria.stream()
-        .filter(c -> c.getType() == PlausibilityCriterionType.COMPATIBILITY)
-        .map(c -> (CompatibilityCriterion) c)
+        .filter(c -> c.getType() == PlausibilityCriterionType.COMPATIBILITY
+            || c.getType() == PlausibilityCriterionType.CONNECTOR)
+        .map(c -> (AbstractCompatibilityCriterion) c)
         .forEach(c -> c.setRoadSystem(roadSystem));
     var elements = roadSystem.getElements();
     var segments = elements.stream()
@@ -131,12 +135,17 @@ public class CriteriaManager extends RoseSetObservable<PlausibilityCriterion, Cr
     violationsToRemove.forEach(violationManager::removeViolation);
   }
 
+  private void removeCriteria(Collection<PlausibilityCriterion> criteriaToRemove) {
+    criteriaToRemove.forEach(this::removeCriterion);
+    criteriaToRemove.forEach(this::notifyRemovalToSubscribers);
+  }
+
   /**
    * Removes all {@link PlausibilityCriterion} from this CriterionManager.
    */
   public void removeAllCriteria() {
-    this.criteria.forEach(this::notifyRemovalToSubscribers);
-    this.criteria.clear();
+    List<PlausibilityCriterion> criteriaToRemove = new ArrayList<>(criteria);
+    removeCriteria(criteriaToRemove);
   }
 
   /**
@@ -146,14 +155,9 @@ public class CriteriaManager extends RoseSetObservable<PlausibilityCriterion, Cr
    * @param type the type of {@link PlausibilityCriterion} to remove.
    */
   public void removeAllCriteriaOfType(PlausibilityCriterionType type) {
-    ArrayList<PlausibilityCriterion> toRemove = new ArrayList<>();
-    for (PlausibilityCriterion criteria : this.criteria) {
-      if (criteria.getType() == type) {
-        notifyRemovalToSubscribers(criteria);
-        toRemove.add(criteria);
-      }
-    }
-    this.criteria.removeAll(toRemove);
+    List<PlausibilityCriterion> criteriaToRemove = criteria.stream().filter(criterion ->
+        criterion.getType() == type).toList();
+    removeCriteria(criteriaToRemove);
   }
 
   @Override

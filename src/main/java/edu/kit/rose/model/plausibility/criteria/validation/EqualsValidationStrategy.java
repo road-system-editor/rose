@@ -1,7 +1,8 @@
 package edu.kit.rose.model.plausibility.criteria.validation;
 
 /**
- * Describes an equals operator for different Objects. Uses the java.util.equals function.
+ * Describes an equals validation strategy for different Objects. Uses the java.util.equals
+ * function.
  *
  * @param <T> The Type that this ValidationStrategy is applied to.
  */

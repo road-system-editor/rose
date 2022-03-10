@@ -4,81 +4,88 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import edu.kit.rose.infrastructure.RoseSortedBox;
-import edu.kit.rose.model.plausibility.criteria.CriteriaManager;
 import edu.kit.rose.model.roadsystem.GraphRoadSystem;
 import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.TimeSliceSetting;
-import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
-import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.attributes.SpeedLimit;
 import edu.kit.rose.model.roadsystem.elements.Base;
-import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Entrance;
 import edu.kit.rose.model.roadsystem.elements.Exit;
 import edu.kit.rose.model.roadsystem.elements.Group;
-import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
-import java.io.File;
+import edu.kit.rose.util.MockingUtility;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 import java.util.Set;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
  * Unit tests for {@link YamlExportStrategy}.
  */
-public class YamlExportStrategyTest {
+class YamlExportStrategyTest {
   private static final Path EXPORT_FILE = Path.of("build/tmp/yaml-export.yml");
 
   Project project;
 
   @BeforeEach
   void beforeEach() {
-    var criteriaManager = mock(CriteriaManager.class);
-    when(criteriaManager.getCriteria()).thenReturn(new RoseSortedBox<>(List.of()));
-
     RoadSystem rs = new GraphRoadSystem(
-        criteriaManager,
+        MockingUtility.mockCriteriaManager(),
         new TimeSliceSetting(15, 10)
     );
 
-    Base base = (Base) rs.createSegment(SegmentType.BASE);
-    base.setName("GWBFRStuttgart");
-    base.setLength(3000);
-    base.setLaneCount(2);
-    base.setConurbation(true);
-    base.setMaxSpeed(SpeedLimit.NONE);
+    Base segment1 = (Base) rs.createSegment(SegmentType.BASE);
+    segment1.setName("GWBFRStuttgart");
+    segment1.setLength(3000);
+    segment1.setLaneCount(2);
+    segment1.setSlope(2.0);
+    segment1.setConurbation(true);
+    segment1.setMaxSpeed(SpeedLimit.NONE);
 
-    Exit exit = (Exit) rs.createSegment(SegmentType.EXIT);
-    exit.setName("AusfahrtKarlsbadFRStuttgart");
-    exit.setLength(250);
-    exit.setLaneCount(2);
-    exit.setSlope(2.0);
-    exit.setConurbation(true);
-    exit.setMaxSpeed(SpeedLimit.NONE);
-    exit.setMaxSpeedRamp(SpeedLimit.SBA);
+    Exit segment2 = (Exit) rs.createSegment(SegmentType.EXIT);
+    segment2.setName("AusfahrtKarlsbadFRStuttgart");
+    segment2.setLength(250);
+    segment2.setLaneCount(2);
+    segment2.setSlope(2.0);
+    segment2.setConurbation(true);
+    segment2.setMaxSpeed(SpeedLimit.NONE);
+    segment2.setMaxSpeedRamp(SpeedLimit.SBA); // sample file said 60 but we don't support that
 
-    Entrance entrance = (Entrance) rs.createSegment(SegmentType.ENTRANCE);
-    entrance.setName("EinfahrtKarlsbadFRStuttgart");
-    entrance.setLength(250);
-    entrance.setLaneCount(2);
-    entrance.setSlope(2.0);
-    entrance.setConurbation(false);
-    entrance.setMaxSpeed(SpeedLimit.NONE);
-    entrance.setMaxSpeedRamp(SpeedLimit.SBA);
+    Base segment3 = (Base) rs.createSegment(SegmentType.BASE);
+    segment3.setName("KarlsbadFRStuttgart");
+    segment3.setLength(500);
+    segment3.setLaneCount(2);
+    segment3.setSlope(2.0);
+    segment3.setConurbation(true);
+    segment3.setMaxSpeed(SpeedLimit.NONE);
 
-    Group g = rs.createGroup(Set.of(entrance, exit));
-    setAttributeValue(g, AttributeType.NAME, "Autobahnkreuz");
+    Entrance segment4 = (Entrance) rs.createSegment(SegmentType.ENTRANCE);
+    segment4.setName("EinfahrtKarlsbadFRStuttgart");
+    segment4.setLength(250);
+    segment4.setLaneCount(2);
+    segment4.setSlope(2.0);
+    segment4.setConurbation(true);
+    segment4.setMaxSpeed(SpeedLimit.NONE);
+    segment4.setMaxSpeedRamp(SpeedLimit.TUNNEL); // sample file said 60 but we don't support that
 
-    rs.connectConnectors(base.getExit(), exit.getEntry());
-    rs.connectConnectors(base.getEntry(), entrance.getExit());
-    rs.connectConnectors(exit.getExit(), entrance.getEntry());
-    rs.connectConnectors(entrance.getRamp(), exit.getRamp());
+    Base segment5 = (Base) rs.createSegment(SegmentType.BASE);
+    segment5.setLength(3000);
+    segment5.setLaneCount(2);
+    segment5.setSlope(2.0);
+    segment5.setConurbation(false); // changed to 'false' to test this value
+    segment5.setMaxSpeed(SpeedLimit.NONE);
+
+    rs.connectConnectors(segment1.getEntry(), segment2.getEntry());
+    rs.connectConnectors(segment2.getExit(), segment3.getEntry());
+    // segment6 does not exist rs.connectConnectors(segment2.getRamp(), segment6.getEntry());
+    rs.connectConnectors(segment3.getExit(), segment4.getEntry());
+    rs.connectConnectors(segment4.getExit(), segment5.getEntry());
+    // segment7 does not exist rs.connectConnectors(segment7.getExit(), segment4.getRamp());
+
+    Group g = rs.createGroup(Set.of(segment4, segment2)); // not part of the sample file
+    g.setName("Autobahnkreuz KarlsbadFRStuttgart");
 
     project = mock(Project.class);
     when(project.getRoadSystem()).thenReturn(rs);
@@ -97,16 +104,5 @@ public class YamlExportStrategyTest {
     assertTrue(contents.contains("Segmente:\n"));
     assertTrue(contents.contains("\n    Name: AusfahrtKarlsbadFRStuttgart"));
     assertTrue(contents.contains("\n  Zeitintervall: 10"));
-  }
-
-  @SuppressWarnings("unchecked")
-  static <T> void setAttributeValue(Element element, AttributeType type, T value) {
-    for (var acc : element.getAttributeAccessors()) {
-      if (acc.getAttributeType() == type) {
-        ((AttributeAccessor<T>) acc).setValue(value);
-        return;
-      }
-    }
-    throw new RuntimeException();
   }
 }

@@ -6,11 +6,15 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import edu.kit.rose.controller.commons.ReplacementLog;
 import edu.kit.rose.infrastructure.Movement;
 import edu.kit.rose.infrastructure.Position;
+import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.elements.Base;
+import edu.kit.rose.model.roadsystem.elements.Connection;
 import edu.kit.rose.model.roadsystem.elements.MovableConnector;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
+import org.mockito.Mockito;
 
 /**
  * Tests the {@link DragSegmentEndCommand} class.
@@ -36,8 +40,13 @@ public class DragSegmentEndCommandTest {
     connector = this.segment.getEntry();
     connector.move(new Movement(ORIGINAL_POSITION.getX(), ORIGINAL_POSITION.getY()));
 
+    RoadSystem roadSystem = Mockito.mock(RoadSystem.class);
+    Mockito.when(roadSystem.connectConnectors(ArgumentMatchers.any(), ArgumentMatchers.any()))
+        .thenReturn(Mockito.mock(Connection.class));
+
     this.replacementLog = new ReplacementLog();
-    this.command = new DragSegmentEndCommand(this.replacementLog, this.connector, MOVEMENT);
+    this.command = new DragSegmentEndCommand(roadSystem,
+        this.replacementLog, this.connector, MOVEMENT);
   }
 
   @Test

@@ -11,6 +11,7 @@ import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.model.ApplicationDataSystem;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.plausibility.criteria.CompatibilityCriterion;
+import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterionType;
 import edu.kit.rose.model.plausibility.criteria.validation.ValidationType;
 import edu.kit.rose.model.plausibility.violation.Violation;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
@@ -86,8 +87,8 @@ public class RosePlausibilityController extends Controller implements Plausibili
 
   @Override
   public void setCompatibilityCriterionValidationType(CompatibilityCriterion criterion,
-                                                    ValidationType operatorType) {
-    criterion.setOperatorType(operatorType);
+                                                    ValidationType validationType) {
+    criterion.setValidationType(validationType);
   }
 
   @Override
@@ -103,7 +104,8 @@ public class RosePlausibilityController extends Controller implements Plausibili
 
   @Override
   public void deleteAllCompatibilityCriteria() {
-    this.applicationDataSystem.getCriteriaManager().removeAllCriteria();
+    this.applicationDataSystem.getCriteriaManager()
+        .removeAllCriteriaOfType(PlausibilityCriterionType.COMPATIBILITY);
   }
 
   @Override
@@ -115,7 +117,7 @@ public class RosePlausibilityController extends Controller implements Plausibili
       if (importPath != null) {
         boolean success = this.applicationDataSystem.importCriteriaFromFile(importPath);
         if (!success) {
-          this.navigator.showErrorDialog(ErrorType.IMPORT_ERROR);
+          this.navigator.showErrorDialog(ErrorType.CRITERIA_IMPORT_ERROR);
         }
       }
       this.onDoneSubscribers.forEach(Runnable::run);
@@ -132,7 +134,7 @@ public class RosePlausibilityController extends Controller implements Plausibili
       if (exportPath != null) {
         boolean success = this.applicationDataSystem.exportCriteriaToFile(exportPath);
         if (!success) {
-          this.navigator.showErrorDialog(ErrorType.EXPORT_ERROR);
+          this.navigator.showErrorDialog(ErrorType.CRITERIA_EXPORT_ERROR);
         }
       }
       this.onDoneSubscribers.forEach(Runnable::run);

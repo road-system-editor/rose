@@ -4,3 +4,22 @@
     -fx-font-weight: bold;
     -fx-background-radius: 2
 }
+
+.custom-list-view .scroll-bar:horizontal {
+    -fx-scale-y: 0;
+    -fx-padding: -10;
+    -fx-opacity: 0;
+}
+
+.criterionLabel {
+    -fx-font-family: Arial;
+    -fx-font-size: 14;
+    -fx-wrap-text: true;
+    -fx-label-padding: 0 5 0 0
+}
+
+.segmentLabel {
+    -fx-wrap-text: true;
+    -fx-font-family: Arial;
+    -fx-font-size: 14;
+}

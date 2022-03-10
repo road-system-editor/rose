@@ -1,8 +1,6 @@
 package edu.kit.rose.model.plausibility.criteria;
 
 import edu.kit.rose.infrastructure.Box;
-import edu.kit.rose.infrastructure.RoseBox;
-import edu.kit.rose.infrastructure.RoseSetObservable;
 import edu.kit.rose.infrastructure.RoseSortedBox;
 import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.model.plausibility.criteria.validation.EqualsValidationStrategy;
@@ -10,64 +8,57 @@ import edu.kit.rose.model.plausibility.criteria.validation.LessThanValidationStr
 import edu.kit.rose.model.plausibility.criteria.validation.NorValidationStrategy;
 import edu.kit.rose.model.plausibility.criteria.validation.NotEqualsValidationStrategy;
 import edu.kit.rose.model.plausibility.criteria.validation.OrValidationStrategy;
+import edu.kit.rose.model.plausibility.criteria.validation.SpeedLessThanValidationStrategy;
 import edu.kit.rose.model.plausibility.criteria.validation.ValidationStrategy;
 import edu.kit.rose.model.plausibility.criteria.validation.ValidationType;
-import edu.kit.rose.model.plausibility.violation.Violation;
 import edu.kit.rose.model.plausibility.violation.ViolationManager;
 import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
-import edu.kit.rose.model.roadsystem.elements.Element;
+import edu.kit.rose.model.roadsystem.attributes.SpeedLimit;
 import edu.kit.rose.model.roadsystem.elements.Segment;
-import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 /**
- * Modells a Compatiblity Criterion. See Pflichtenheft: "Kompatibilitätskriterium"
+ * Models a compatibility criterion. See Pflichtenheft: "Kompatibilitätskriterium"
  */
-public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
-        PlausibilityCriterion> implements PlausibilityCriterion {
+public class CompatibilityCriterion extends AbstractCompatibilityCriterion {
   private static final boolean USE_DISCREPANCY = true;
   private static final boolean NOT_USE_DISCREPANCY = false;
-  private final Set<SegmentType> segmentTypes;
-  private final HashMap<Element, Violation> elementViolationMap;
-  private String name;
+  private static final Map<ValidationType, ValidationStrategy<?>> TYPE_TO_STRATEGY_MAP =
+      Map.of(ValidationType.EQUALS, new EqualsValidationStrategy<>(),
+          ValidationType.NOT_EQUALS, new NotEqualsValidationStrategy<>(),
+          ValidationType.NOR, new NorValidationStrategy(),
+          ValidationType.OR, new OrValidationStrategy(),
+          ValidationType.LESS_THAN, new LessThanValidationStrategy<>(),
+          ValidationType.LESS_THAN_SPEED_LIMIT, new SpeedLessThanValidationStrategy());
+  private static final Map<ValidationType, Boolean> TYPE_TO_DISCREPANCY_MAP =
+      Map.of(ValidationType.EQUALS, NOT_USE_DISCREPANCY,
+          ValidationType.NOT_EQUALS, NOT_USE_DISCREPANCY,
+          ValidationType.NOR, NOT_USE_DISCREPANCY,
+          ValidationType.OR, NOT_USE_DISCREPANCY,
+          ValidationType.LESS_THAN, USE_DISCREPANCY,
+          ValidationType.LESS_THAN_SPEED_LIMIT, USE_DISCREPANCY);
+
+
   private AttributeType attributeType;
-  private ValidationType operatorType;
+  private ValidationType validationType;
   private double discrepancy;
-  private RoadSystem roadSystem;
-  private ViolationManager violationManager;
+
 
   /**
-   * Constructor.
+   * Creates a new compatibility criterion with default settings.
    *
-   * @param roadSystem       The Roadsystem this Criterion applied to.
-   * @param violationManager manager to which violations will be added
+   * @param roadSystem the road system this criterion applies to. This may be {@code null} but it
+   *     must be set before this criterion is able to receive notifications.
+   * @param violationManager manager to which violations will be added. This may be {@code null} but
+   *     it must be set before this criterion is able to receive notifications.
    */
   public CompatibilityCriterion(RoadSystem roadSystem, ViolationManager violationManager) {
-    Objects.requireNonNull(violationManager);
-    this.name = "";
+    super(roadSystem, violationManager);
     this.discrepancy = 0;
-    this.segmentTypes = new HashSet<>();
-    this.violationManager = violationManager;
-    this.roadSystem = roadSystem;
-    this.elementViolationMap = new HashMap<>();
-  }
-
-  /**
-   * Sets the {@link RoadSystem} used by this CompatibilityCriterion.
-   * Checks do not work until this method has been called at least once with a valid roadSystem.
-   *
-   * @param roadSystem the roadSystem.
-   */
-  public void setRoadSystem(RoadSystem roadSystem) {
-    this.roadSystem = roadSystem;
   }
 
   /**
@@ -93,22 +84,22 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
   }
 
   /**
-   * Provides the type of Operator this Criterion is using.
+   * Provides the type of Validation this Criterion is using.
    *
-   * @return the type of Operator this Criterion is using.
+   * @return the type of Validation this Criterion is using.
    */
-  public ValidationType getOperatorType() {
-    return this.operatorType;
+  public ValidationType getValidationType() {
+    return this.validationType;
   }
 
   /**
-   * Sets the Type of Operator this Criterion is supposed to use.
+   * Sets the Type of Validation this Criterion is supposed to use.
    *
-   * @param operatorType the Type of Operator this Criterion is supposed to use.
+   * @param validationType the Type of Validation this Criterion is supposed to use.
    */
-  public void setOperatorType(ValidationType operatorType) {
-    if (this.operatorType != operatorType) {
-      this.operatorType = operatorType;
+  public void setValidationType(ValidationType validationType) {
+    if (this.validationType != validationType) {
+      this.validationType = validationType;
       checkAll();
       notifySubscribers();
     }
@@ -121,9 +112,9 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
    *
    * @return containing all {@link ValidationType}s that are compatible with this criterion.
    */
-  public SortedBox<ValidationType> getCompatibleOperatorTypes() {
+  public SortedBox<ValidationType> getCompatibleValidationTypes() {
     return new RoseSortedBox<>(Arrays.stream(ValidationType.values()).filter(e -> e.getCompatible()
-            .contains(this.attributeType.getDataType())).collect(Collectors.toList()));
+            .contains(this.attributeType.getDataType())).toList());
   }
 
   /**
@@ -150,158 +141,27 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
     }
   }
 
-  @Override
-  public String getName() {
-    return this.name;
-  }
 
   @Override
-  public void setName(String name) {
-    if (!this.name.equals(name)) {
-      this.name = name;
-      notifySubscribers();
+  protected void checkCriterion(Segment segment) {
+    if (this.validationType != null) {
+      ValidationStrategy<?> strategy = TYPE_TO_STRATEGY_MAP.get(this.validationType);
+      Boolean useDiscrepancy = TYPE_TO_DISCREPANCY_MAP.get(this.validationType);
+      ArrayList<Segment> invalidSegments = getInvalidSegments(strategy, segment, useDiscrepancy);
+
+      updateViolations(invalidSegments, segment);
     }
-  }
-
-  @Override
-  public Box<SegmentType> getSegmentTypes() {
-    return new RoseBox<>(this.segmentTypes);
-  }
-
-  @Override
-  public PlausibilityCriterionType getType() {
-    return PlausibilityCriterionType.COMPATIBILITY;
-  }
-
-  @Override
-  public void setViolationManager(ViolationManager violationManager) {
-    if (this.violationManager != violationManager) {
-      SortedBox<Violation> violations = this.violationManager.getViolations();
-      for (var violation : violations) {
-        if (violation.violatedCriterion() == this) {
-          this.violationManager.removeViolation(violation);
-        }
-      }
-      this.violationManager = violationManager;
-      checkAll();
-    }
-  }
-
-  @Override
-  public void addSegmentType(SegmentType type) {
-    if (this.segmentTypes.add(type)) {
-      subscribers.forEach(s -> s.notifyAddition(type));
-      checkAll();
-      notifySubscribers();
-    }
-  }
-
-  @Override
-  public void removeSegmentType(SegmentType type) {
-    if (this.segmentTypes.remove(type)) {
-      subscribers.forEach(s -> s.notifyRemoval(type));
-      checkAll();
-      notifySubscribers();
-    }
-  }
-
-  @Override
-  public void notifyChange(Element unit) {
-    if (this.roadSystem == null) {
-      throw new IllegalStateException("can not check connections without set roadSystem.");
-    }
-    ArrayList<Segment> invalidSegments;
-    if (this.operatorType != null && !unit.isContainer()) {
-      ValidationStrategy<?> strategy;
-
-      switch (this.operatorType) {
-        case EQUALS -> {
-          strategy = new EqualsValidationStrategy<>();
-          invalidSegments = getInvalidSegments(strategy, (Segment) unit, NOT_USE_DISCREPANCY);
-        }
-        case LESS_THAN -> {
-          strategy = new LessThanValidationStrategy<>();
-          invalidSegments = getInvalidSegments(strategy, (Segment) unit, USE_DISCREPANCY);
-        }
-        case NOR -> {
-          strategy = new NorValidationStrategy();
-          invalidSegments = getInvalidSegments(strategy, (Segment) unit, NOT_USE_DISCREPANCY);
-        }
-        case NOT_EQUALS -> {
-          strategy = new NotEqualsValidationStrategy<>();
-          invalidSegments = getInvalidSegments(strategy, (Segment) unit, NOT_USE_DISCREPANCY);
-        }
-        case OR -> {
-          strategy = new OrValidationStrategy();
-          invalidSegments = getInvalidSegments(strategy, (Segment) unit, NOT_USE_DISCREPANCY);
-        }
-        default -> throw new IllegalArgumentException("invalid operator type");
-      }
-      if (!invalidSegments.isEmpty()
-              && this.segmentTypes.contains(((Segment) unit).getSegmentType())) {
-        if (!coveredByOtherSegments(invalidSegments, (Segment) unit)) {
-          if (this.elementViolationMap.containsKey(unit)) {
-            notifyRemoval(unit);
-          }
-          invalidSegments.add((Segment) unit);
-          Violation violation = new Violation(this, invalidSegments);
-          this.violationManager.addViolation(violation);
-          this.elementViolationMap.put(unit, violation);
-        }
-      } else if (elementViolationMap.containsKey(unit)) {
-        notifyRemoval(unit);
-      }
-    }
-  }
-
-
-  @Override
-  public void notifyAddition(Element unit) {
-    notifyChange(unit);
-  }
-
-  @Override
-  public void notifyRemoval(Element unit) {
-    this.violationManager.removeViolation(this.elementViolationMap.get(unit));
-    this.elementViolationMap.remove(unit);
-  }
-
-  @Override
-  public PlausibilityCriterion getThis() {
-    return this;
-  }
-
-  /**
-   * Checks if the segments, that the unit is not compatible with, did not already
-   * cause a violation where this unit is already invoked.
-   * Example: only 2 segments on the road. segment1 is not compatible with segment2.
-   * after the segment1 was checked a violation was created. When segment2 is being checked
-   * a new violation should not be created.
-   *
-   * @param invalidSegments the segments that are not compatible with the unit
-   * @param unit            the unit that is being checked
-   * @return true if the invalid segments already caused violation where the unit was invoked.
-   */
-  private boolean coveredByOtherSegments(ArrayList<Segment> invalidSegments, Segment unit) {
-    for (var segment : invalidSegments) {
-      if (!(elementViolationMap.containsKey(segment)
-              && elementViolationMap.get(segment).offendingSegments().contains(unit))) {
-        return false;
-      }
-    }
-    return true;
   }
 
   private ArrayList<Segment> getInvalidSegments(ValidationStrategy<?> strategy,
                                                 Segment segment, boolean useDiscrepancy) {
     ArrayList<Segment> invalidSegments = new ArrayList<>();
-    Box<Segment> adjacentSegments = this.roadSystem.getAdjacentSegments(segment);
+    Box<Segment> adjacentSegments = this.getRoadSystem().getAdjacentSegments(segment);
     AttributeAccessor<?> segmentAccessor =
             getAccessorOfType(segment.getAttributeAccessors(), this.attributeType);
 
-
     for (Segment adjacentSegment : adjacentSegments) {
-      if (this.segmentTypes.contains(adjacentSegment.getSegmentType())) {
+      if (this.getSegmentTypes().contains(adjacentSegment.getSegmentType())) {
         AttributeAccessor<?> adjacentAccessor =
                 getAccessorOfType(adjacentSegment.getAttributeAccessors(), this.attributeType);
         if (!checkValid(strategy, segmentAccessor, adjacentAccessor, useDiscrepancy)) {
@@ -346,9 +206,12 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
           useDiscrepancy));
       case FRACTIONAL -> (this.<Double>validateWithType(strategy, accessor1, accessor2,
           useDiscrepancy));
-      default -> throw new IllegalArgumentException("no such data type found");
+      case SPEED_LIMIT -> (this.<SpeedLimit>validateWithType(strategy, accessor1, accessor2,
+          useDiscrepancy));
     };
   }
+
+
 
   @SuppressWarnings("unchecked")
   private <T> boolean validateWithType(ValidationStrategy<?> strategy,
@@ -358,6 +221,12 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
     AttributeAccessor<T> auxAccessor1 = (AttributeAccessor<T>) accessor1;
     AttributeAccessor<T> auxAccessor2 = (AttributeAccessor<T>) accessor2;
     ValidationStrategy<T> auxStrategy = (ValidationStrategy<T>) strategy;
+
+    // ignore if either of the attribute values is unconfigured
+    if (auxAccessor1.getValue() == null || auxAccessor2.getValue() == null) {
+      return true;
+    }
+
     if (useDiscrepancy) {
       return auxStrategy.validate(auxAccessor1.getValue(),
               auxAccessor2.getValue(), this.discrepancy);
@@ -365,9 +234,15 @@ public class CompatibilityCriterion extends RoseSetObservable<SegmentType,
     return auxStrategy.validate(auxAccessor1.getValue(), auxAccessor2.getValue());
   }
 
-  private void checkAll() {
-    if (this.roadSystem != null && this.attributeType != null && this.operatorType != null) {
-      roadSystem.getElements().forEach(this::notifyChange);
+  @Override
+  protected void checkAll() {
+    if (this.getRoadSystem() != null && this.attributeType != null && this.validationType != null) {
+      this.getRoadSystem().getElements().forEach(this::notifyChange);
     }
+  }
+
+  @Override
+  public PlausibilityCriterionType getType() {
+    return PlausibilityCriterionType.COMPATIBILITY;
   }
 }

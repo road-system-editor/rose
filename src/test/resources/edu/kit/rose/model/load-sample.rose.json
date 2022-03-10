@@ -1,0 +1,87 @@
+{
+  "roadSystem" : {
+    "elements" : [ {
+      "elementType" : "BASE_SEGMENT",
+      "index" : 0,
+      "name" : "GWBFRStuttgart",
+      "comment" : null,
+      "length" : 3000,
+      "slope" : 0,
+      "laneCount" : 2,
+      "conurbation" : true,
+      "maxSpeed" : "NONE",
+      "centerPosition" : {
+        "coordinateX" : 12.0,
+        "coordinateY" : 34.0
+      },
+      "rotation" : 31,
+      "entranceConnectedSegmentId" : 2,
+      "exitConnectedSegmentId" : 1,
+      "entrancePosition" : {
+        "coordinateX" : 0.0,
+        "coordinateY" : 27.0
+      },
+      "exitPosition" : {
+        "coordinateX" : 0.0,
+        "coordinateY" : -33.0
+      }
+    }, {
+      "elementType" : "EXIT_SEGMENT",
+      "index" : 1,
+      "name" : "AusfahrtKarlsbadFRStuttgart",
+      "comment" : null,
+      "length" : 250,
+      "slope" : 2,
+      "laneCount" : 2,
+      "conurbation" : true,
+      "maxSpeed" : "NONE",
+      "centerPosition" : {
+        "coordinateX" : 56.0,
+        "coordinateY" : 78.0
+      },
+      "rotation" : 93,
+      "laneCountRamp" : 1,
+      "maxSpeedRamp" : "SBA",
+      "entranceConnectedSegmentId" : 0,
+      "exitConnectedSegmentId" : 2,
+      "rampConnectedSegmentId" : 2
+    }, {
+      "elementType" : "ENTRANCE_SEGMENT",
+      "index" : 2,
+      "name" : "EinfahrtKarlsbadFRStuttgart",
+      "comment" : null,
+      "length" : 250,
+      "slope" : 2,
+      "laneCount" : 2,
+      "conurbation" : true,
+      "maxSpeed" : "NONE",
+      "centerPosition" : {
+        "coordinateX" : 910.0,
+        "coordinateY" : 1112.0
+      },
+      "rotation" : 359,
+      "laneCountRamp" : 1,
+      "maxSpeedRamp" : "SBA",
+      "entranceConnectedSegmentId" : 1,
+      "exitConnectedSegmentId" : 0,
+      "rampConnectedSegmentId" : 1
+    }, {
+      "elementType" : "GROUP",
+      "index" : 3,
+      "name" : "Autobahnkreuz",
+      "comment" : null,
+      "childrenIndices" : [ 2, 1 ]
+    } ],
+    "timeSliceSetting" : {
+      "timeSliceLength" : 10,
+      "numberOfTimeSlices" : 15
+    }
+  },
+  "zoomSetting" : {
+    "center" : {
+      "coordinateX" : 420.0,
+      "coordinateY" : 69.0
+    },
+    "zoomLevel" : 10.0
+  }
+}

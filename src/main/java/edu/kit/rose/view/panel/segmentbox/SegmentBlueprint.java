@@ -27,9 +27,9 @@ public class SegmentBlueprint extends StackPane {
   private static final int WIDTH = 200;
   private static final int TRANSLATE_X = 10;
   private static final int DOUBLE_CLICK = 2;
-  private static final String BASE_IMAGE = "base_segment_raw.png";
-  private static final String EXIT_IMAGE = "exit_segment_raw.png";
-  private static final String ENTRANCE_IMAGE =  "entrance_segment_raw.png";
+  private static final String BASE_IMAGE = "base_segment_raw_arrow.png";
+  private static final String EXIT_IMAGE = "exit_segment_raw_arrows.png";
+  private static final String ENTRANCE_IMAGE =  "entrance_segment_raw_arrows.png";
   private static final String BLUEPRINT_STYLESHEET = "/edu/kit/rose/view/panel/segmentbox"
       + "/SegmentBoxListView.css";
   private static final String BLUEPRINT_STYLECLASS = "segment-blueprint";

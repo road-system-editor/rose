@@ -74,6 +74,17 @@ class CriterionFactory {
   }
 
   /**
+   * Creates the connector criterion.
+   *
+   * @return the connector criterion.
+   */
+  public ConnectorCriterion createConnectorCriterion() {
+    var criterion = new ConnectorCriterion(roadSystem, violationManager);
+    subscribeAndCheckSegmentsIfPossible(criterion);
+    return criterion;
+  }
+
+  /**
    * Creates a new CompatibilityCriterion.
    *
    * @return the new CompatibilityCriterion

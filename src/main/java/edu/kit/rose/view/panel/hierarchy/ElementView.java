@@ -16,14 +16,15 @@ abstract class ElementView<T extends Element> extends FxmlContainer
     implements SetObserver<Element, Element> {
 
   protected static final String DELETE_BUTTON_IMAGE_URL =
-          "/edu/kit/rose/view/panel/hierarchy/DeleteIcon.png";
+      "/edu/kit/rose/view/panel/hierarchy/DeleteIcon.png";
   protected static final String ELEMENT_VIEW_STYLE_CSS_FILE =
-          "/edu/kit/rose/view/panel/hierarchy/ElementViewStyle.css";
+      "/edu/kit/rose/view/panel/hierarchy/ElementViewStyle.css";
   protected static final String SELECTED_STYLE_CLASS = "elementViewSelected";
   protected static final String UNSELECTED_STYLE_CLASS = "elementViewUnselected";
 
-  private HierarchyController controller;
-  private T element;
+  private final HierarchyController controller;
+  private final T element;
+  private final LocalizedTextProvider translator;
 
   /**
    * Creates a new element view for a given {@code element}.
@@ -36,6 +37,7 @@ abstract class ElementView<T extends Element> extends FxmlContainer
   protected ElementView(LocalizedTextProvider translator, String fxmlResourceName, T element,
                         HierarchyController controller) {
     super(fxmlResourceName);
+    this.translator = translator;
     this.element = element;
     this.controller = controller;
 
@@ -49,6 +51,11 @@ abstract class ElementView<T extends Element> extends FxmlContainer
    */
   protected HierarchyController getController() {
     return this.controller;
+  }
+
+  @Override
+  public LocalizedTextProvider getTranslator() {
+    return this.translator;
   }
 
   /**

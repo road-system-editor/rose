@@ -19,6 +19,10 @@ import java.util.Set;
  * and makes it changeable.
  */
 public class CreateGroupCommand implements ChangeCommand {
+
+  private static final String GROUP_NAME_TEMPLATE = "Group %s";
+  private static int CREATED_GROUP_COUNT = 0;
+
   private final ReplacementLog replacementLog;
   private final Project project;
   private final Set<Element> elements;
@@ -28,9 +32,9 @@ public class CreateGroupCommand implements ChangeCommand {
   /**
    * Creates a {@link CreateGroupCommand} that creates a group out of a list of segments.
    *
-   * @param replacementLog  the log that stores the replacements of elements
-   * @param project         the model facade to execute the {@link CreateGroupCommand} on
-   * @param elements        the elements that will be in the group
+   * @param replacementLog the log that stores the replacements of elements
+   * @param project        the model facade to execute the {@link CreateGroupCommand} on
+   * @param elements       the elements that will be in the group
    */
   public CreateGroupCommand(ReplacementLog replacementLog,
                             Project project,
@@ -50,6 +54,10 @@ public class CreateGroupCommand implements ChangeCommand {
     this.group = this.project.getRoadSystem().createGroup(newElements);
     if (oldGroup != null) {
       this.replacementLog.replaceElement(oldGroup, this.group);
+      this.group.setName(oldGroup.getName());
+    } else {
+      CREATED_GROUP_COUNT++;
+      this.group.setName(String.format(GROUP_NAME_TEMPLATE, CREATED_GROUP_COUNT));
     }
   }
 
@@ -72,19 +80,27 @@ public class CreateGroupCommand implements ChangeCommand {
       for (Element roadElement : auxElements) {
         if (roadElement.isContainer()) {
           Group auxGroup = (Group) roadElement;
-          ArrayList<Element> child = new ArrayList<>();
-          for (Element element : this.elements) {
-            if (auxGroup.getElements().contains(element)) {
-              child.add(element);
-            }
-          }
-          if (!child.isEmpty()) {
-            this.parentMap.put(auxGroup, new ArrayList<>(child));
-          }
+          addGroupToChildrenMapping(auxGroup);
         }
       }
     }
+
+    Group auxGroup = this.project.getRoadSystem().getRootGroup();
+    addGroupToChildrenMapping(auxGroup);
   }
+
+  private void addGroupToChildrenMapping(Group auxGroup) {
+    ArrayList<Element> children = new ArrayList<>();
+    for (Element element : this.elements) {
+      if (auxGroup.getElements().contains(element)) {
+        children.add(element);
+      }
+    }
+    if (!children.isEmpty()) {
+      this.parentMap.put(auxGroup, new ArrayList<>(children));
+    }
+  }
+
 
   /**
    * Goes Throw the parentMap and adds elements back

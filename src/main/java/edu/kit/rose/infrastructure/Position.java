@@ -6,28 +6,27 @@ import java.util.Objects;
  * A Position in a two Dimensional Plane.
  */
 public class Position {
-
-  private double xcoordinate;
-  private double ycoordinate;
+  private double coordinateX;
+  private double coordinateY;
 
   /**
    * Standard Constructor.
    * Sets x and y Coordinate to 0.
    */
   public Position() {
-    this.xcoordinate = 0;
-    this.ycoordinate = 0;
+    this.coordinateX = 0;
+    this.coordinateY = 0;
   }
 
   /**
    * Constructor.
    *
-   * @param xcoordinate the x coordinate for this Position.
-   * @param ycoordinate the y coordinate for this Position.
+   * @param coordinateX the x coordinate for this Position.
+   * @param coordinateY the y coordinate for this Position.
    */
-  public Position(double xcoordinate, double ycoordinate) {
-    this.xcoordinate = xcoordinate;
-    this.ycoordinate = ycoordinate;
+  public Position(double coordinateX, double coordinateY) {
+    this.coordinateX = coordinateX;
+    this.coordinateY = coordinateY;
   }
 
   /**
@@ -36,7 +35,7 @@ public class Position {
    * @return The x axis value of the Position.
    */
   public double getX() {
-    return xcoordinate;
+    return coordinateX;
   }
 
   /**
@@ -45,7 +44,7 @@ public class Position {
    * @param x The x axis value of the Position.
    */
   public void setX(double x) {
-    this.xcoordinate = x;
+    this.coordinateX = x;
   }
 
   /**
@@ -54,7 +53,7 @@ public class Position {
    * @return The y axis value of the Position.
    */
   public double getY() {
-    return ycoordinate;
+    return coordinateY;
   }
 
   /**
@@ -63,7 +62,7 @@ public class Position {
    * @param y The x axis value of the Position.
    */
   public void setY(double y) {
-    this.ycoordinate = y;
+    this.coordinateY = y;
   }
 
   /**
@@ -86,8 +85,8 @@ public class Position {
    * @return the distance
    */
   public double distanceTo(Position position) {
-    var horizontalDistance = xcoordinate - position.getX();
-    var verticalDistance = ycoordinate - position.getY();
+    var horizontalDistance = coordinateX - position.getX();
+    var verticalDistance = coordinateY - position.getY();
     return Math.sqrt(Math.pow(horizontalDistance, 2) + Math.pow(verticalDistance, 2));
   }
 

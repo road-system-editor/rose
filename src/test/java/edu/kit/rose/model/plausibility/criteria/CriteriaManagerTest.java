@@ -4,10 +4,10 @@ import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.model.plausibility.criteria.validation.ValidationType;
 import edu.kit.rose.model.plausibility.violation.ViolationManager;
 import edu.kit.rose.model.roadsystem.GraphRoadSystem;
+import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.TimeSliceSetting;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.elements.HighwaySegment;
-import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,9 +20,10 @@ class CriteriaManagerTest {
   @BeforeEach
   public void setUp() {
     this.criteriaManager = new CriteriaManager();
+    RoadSystem roadSystem = new GraphRoadSystem(criteriaManager,
+        Mockito.mock(TimeSliceSetting.class));
+    this.criteriaManager.setRoadSystem(roadSystem);
     this.criteriaManager.setViolationManager(new ViolationManager());
-    this.criteriaManager.setRoadSystem(
-            new GraphRoadSystem(criteriaManager, Mockito.mock(TimeSliceSetting.class)));
   }
 
 
@@ -103,24 +104,26 @@ class CriteriaManagerTest {
   @Test
   void testSetRoadSystem() {
     CriteriaManager criteriaManager1 = new CriteriaManager();
-    GraphRoadSystem roadSystem =
-            new GraphRoadSystem(criteriaManager1, Mockito.mock(TimeSliceSetting.class));
-    HighwaySegment segment1 = (HighwaySegment) roadSystem.createSegment(SegmentType.BASE);
-    HighwaySegment segment2 = (HighwaySegment) roadSystem.createSegment(SegmentType.BASE);
-    roadSystem.connectConnectors(segment1.getConnectors().iterator().next(),
-            segment2.getConnectors().iterator().next());
-    segment1.setLength(3);
-    segment2.setLength(1);
-    criteriaManager1.setRoadSystem(roadSystem);
     ViolationManager violationManager = new ViolationManager();
     criteriaManager1.setViolationManager(violationManager);
+    GraphRoadSystem roadSystem =
+            new GraphRoadSystem(criteriaManager1, Mockito.mock(TimeSliceSetting.class));
+    criteriaManager1.setRoadSystem(roadSystem);
+
+    HighwaySegment segment1 = (HighwaySegment) roadSystem.createSegment(SegmentType.BASE);
+    HighwaySegment segment2 = (HighwaySegment) roadSystem.createSegment(SegmentType.BASE);
+    roadSystem.connectConnectors(segment1.getExit(),
+            segment2.getEntry());
+    segment1.setLength(3);
+    segment2.setLength(1);
+
     CompatibilityCriterion criterion = criteriaManager1.createCompatibilityCriterion();
     criterion.setLegalDiscrepancy(1);
     criterion.setAttributeType(AttributeType.LENGTH);
-    criterion.setOperatorType(ValidationType.LESS_THAN);
+    criterion.setValidationType(ValidationType.LESS_THAN);
     criterion.addSegmentType(SegmentType.BASE);
-    criteriaManager1.setRoadSystem(roadSystem);
 
-    Assertions.assertEquals(1, violationManager.getViolations().getSize());
+    // two completeness violations and one compatibility violation
+    Assertions.assertEquals(3, violationManager.getViolations().getSize());
   }
 }

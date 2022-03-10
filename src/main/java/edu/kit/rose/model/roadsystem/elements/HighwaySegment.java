@@ -41,15 +41,15 @@ public abstract class HighwaySegment
   private final AttributeAccessor<String> nameAccessor;
   private String comment;
   private final AttributeAccessor<String> commentAccessor;
-  private int length = INITIAL_EXIT_DISTANCE_TO_CENTER + INITIAL_ENTRY_DISTANCE_TO_CENTER;
+  private Integer length;
   private final AttributeAccessor<Integer> lengthAccessor;
-  private double pitch = 0.0;
+  private Double slope;
   private final AttributeAccessor<Double> slopeAccessor;
-  private int laneCount = 1;
+  private Integer laneCount;
   private final AttributeAccessor<Integer> laneCountAccessor;
-  private boolean conurbation = false;
+  private Boolean conurbation;
   private final AttributeAccessor<Boolean> conurbationAccessor;
-  private SpeedLimit speedLimit = SpeedLimit.NONE;
+  private SpeedLimit speedLimit;
   private final AttributeAccessor<SpeedLimit> speedLimitAccessor;
 
   private int rotation = 0;
@@ -159,10 +159,11 @@ public abstract class HighwaySegment
 
   @Override
   public int compareTo(Segment segment) {
-    if (segment instanceof HighwaySegment) {
-      return this.creationTime.compareTo(((HighwaySegment) segment).creationTime);
+    if (segment instanceof HighwaySegment highwaySegment) {
+      return this.creationTime.compareTo(highwaySegment.creationTime);
     } else {
-      return -segment.compareTo(this);
+      int reverseComparisonSignum = (int) Math.signum(segment.compareTo(this));
+      return -reverseComparisonSignum;
     }
   }
 
@@ -250,14 +251,14 @@ public abstract class HighwaySegment
    * Returns the {@link AttributeType#SLOPE} of this highway segment.
    */
   public Double getSlope() {
-    return this.pitch;
+    return this.slope;
   }
 
   /**
    * Sets the {@link AttributeType#SLOPE} of this highway segment to the given {@code slope}.
    */
   public void setSlope(Double slope) {
-    this.pitch = slope;
+    this.slope = slope;
 
     this.slopeAccessor.notifySubscribers();
     this.notifySubscribers();
@@ -266,14 +267,14 @@ public abstract class HighwaySegment
   /**
    * Returns the {@link AttributeType#LANE_COUNT} for the entry connector.
    */
-  public int getLaneCount() {
+  public Integer getLaneCount() {
     return this.laneCount;
   }
 
   /**
    * Sets the {@link AttributeType#LANE_COUNT} for the entry connector to the given value.
    */
-  public void setLaneCount(int laneCount) {
+  public void setLaneCount(Integer laneCount) {
     this.laneCount = laneCount;
 
     this.laneCountAccessor.notifySubscribers();
@@ -283,14 +284,14 @@ public abstract class HighwaySegment
   /**
    * Returns the {@link AttributeType#CONURBATION} of this highway segment.
    */
-  public boolean getConurbation() {
+  public Boolean getConurbation() {
     return this.conurbation;
   }
 
   /**
    * Sets the {@link AttributeType#CONURBATION} of this highway segment to the given value.
    */
-  public void setConurbation(boolean conurbation) {
+  public void setConurbation(Boolean conurbation) {
     this.conurbation = conurbation;
 
     this.conurbationAccessor.notifySubscribers();

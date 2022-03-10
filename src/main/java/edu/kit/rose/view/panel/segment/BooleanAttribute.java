@@ -5,6 +5,7 @@ import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.view.commons.EnumLocalizationUtility;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.BiConsumer;
 
 /**
  * This is the {@link EditableAttribute} implementation for the
@@ -18,8 +19,9 @@ class BooleanAttribute extends SelectableAttribute<Boolean> {
    * @param controller the controller that should handle attribute value updates.
    */
   BooleanAttribute(AttributeAccessor<Boolean> attribute,
-                   AttributeController controller) {
-    super(attribute, controller, List.of(true, false));
+                   AttributeController controller,
+                   BiConsumer<AttributeAccessor<Boolean>, Boolean> consumer) {
+    super(attribute, controller, List.of(true, false), consumer);
   }
 
   @Override

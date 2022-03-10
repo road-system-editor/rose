@@ -68,10 +68,22 @@ public class RoseAttributeController extends Controller implements AttributeCont
   }
 
   @Override
+  public <T> void setBulkAttribute(AttributeAccessor<T> accessor, T value) {
+    if (getStorageLock().isStorageLockAcquired()) {
+      return;
+    }
+
+    var command  = new SetBulkAttributeAccessorCommand<>(replacementLog, accessor,
+        value, selectionBuffer.getSelectedSegments());
+    changeCommandBuffer.addAndExecuteCommand(command);
+  }
+
+  @Override
   public void addShownAttributeType(AttributeType attributeType) {
     if (getStorageLock().isStorageLockAcquired()) {
       return;
     }
+
     this.applicationDataSystem.addShownAttributeType(attributeType);
   }
 
@@ -127,7 +139,7 @@ public class RoseAttributeController extends Controller implements AttributeCont
   }
 
   private static <T> T bulkGet(List<AttributeAccessor<T>> containedAccessors) {
-    T value = containedAccessors.stream().findAny().get().getValue();
+    T value = containedAccessors.stream().findAny().orElseThrow().getValue();
 
     for (var accessor : containedAccessors) {
       if (!Objects.equals(accessor.getValue(), value)) {

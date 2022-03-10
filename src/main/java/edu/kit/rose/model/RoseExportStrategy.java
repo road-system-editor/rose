@@ -8,12 +8,16 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import java.io.File;
 import java.io.IOException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Implements the export for the whole Project into the ROSE-Format.
  * This Format allows the Project to be reopened in the ROSE-Program.
  */
 class RoseExportStrategy extends ExportStrategy {
+  private static final Logger LOG = LoggerFactory.getLogger(RoseExportStrategy.class);
+
   private final Project project;
 
   RoseExportStrategy(Project project) {
@@ -30,7 +34,8 @@ class RoseExportStrategy extends ExportStrategy {
       mapper.writeValue(file, serialized);
       return true;
     } catch (IOException e) {
-      e.printStackTrace();
+      String message = String.format("Could not export project to file %s", file.toPath());
+      LOG.error(message, e);
       return false;
     }
   }
@@ -52,7 +57,8 @@ class RoseExportStrategy extends ExportStrategy {
     try {
       serialized = mapper.readValue(file, SerializedProject.class);
     } catch (IOException e) {
-      e.printStackTrace();
+      String message = String.format("Could not import project from file %s", file.toPath());
+      LOG.error(message, e);
       return false;
     }
 

@@ -8,7 +8,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import edu.kit.rose.controller.commons.RoseStorageLock;
-import edu.kit.rose.controller.commons.StorageLock;
 import edu.kit.rose.controller.navigation.ErrorType;
 import edu.kit.rose.controller.navigation.FileDialogType;
 import edu.kit.rose.controller.navigation.FileFormat;
@@ -98,7 +97,7 @@ class RosePlausibilityControllerTest {
         .thenReturn(INVALID_PATH);
 
     this.controller.importCompatibilityCriteria();
-    verify(this.navigator, times(1)).showErrorDialog(ErrorType.IMPORT_ERROR);
+    verify(this.navigator, times(1)).showErrorDialog(ErrorType.CRITERIA_IMPORT_ERROR);
   }
 
   @Test
@@ -124,7 +123,7 @@ class RosePlausibilityControllerTest {
         .thenReturn(INVALID_PATH);
 
     this.controller.exportCompatibilityCriteria();
-    verify(this.navigator, times(1)).showErrorDialog(ErrorType.EXPORT_ERROR);
+    verify(this.navigator, times(1)).showErrorDialog(ErrorType.CRITERIA_EXPORT_ERROR);
   }
 
   @Test
@@ -206,7 +205,7 @@ class RosePlausibilityControllerTest {
     CompatibilityCriterion criterion = new CompatibilityCriterion(
             roadSystem, violationManager);
     controller.setCompatibilityCriterionValidationType(criterion, ValidationType.EQUALS);
-    Assertions.assertEquals(ValidationType.EQUALS, criterion.getOperatorType());
+    Assertions.assertEquals(ValidationType.EQUALS, criterion.getValidationType());
   }
 
   @Test

@@ -11,11 +11,13 @@ import edu.kit.rose.model.roadsystem.elements.Entrance;
 import edu.kit.rose.model.roadsystem.elements.Exit;
 import edu.kit.rose.model.roadsystem.elements.HighwaySegment;
 import edu.kit.rose.model.roadsystem.elements.Segment;
+import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -28,6 +30,9 @@ import java.util.stream.Collectors;
  *     {@link JsonProperty} annotations to match the format specification.
  */
 class YamlProject {
+  @JsonIgnore
+  private final Map<SegmentType, Function<Segment, YamlSegment>> yamlSegmentCreators;
+
   /**
    * The road system is stored to access the source data model within the population process.
    */
@@ -50,6 +55,12 @@ class YamlProject {
    * @param project the data source for this export.
    */
   YamlProject(Project project) {
+    this.yamlSegmentCreators = Map.of(
+        SegmentType.BASE, base -> new YamlBaseSegment(this, (Base) base),
+        SegmentType.ENTRANCE, entrance -> new YamlEntranceSegment(this, (Entrance) entrance),
+        SegmentType.EXIT, exit -> new YamlExitSegment(this, (Exit) exit)
+    );
+
     this.roadSystem = project.getRoadSystem();
 
     this.segments = new HashMap<>();
@@ -89,11 +100,8 @@ class YamlProject {
   }
 
   private YamlSegment createYamlSegment(Segment segment) {
-    return switch (segment.getSegmentType()) {
-      case ENTRANCE -> new YamlEntranceSegment(this, (Entrance) segment);
-      case BASE -> new YamlBaseSegment(this, (Base) segment);
-      case EXIT -> new YamlExitSegment(this, (Exit) segment);
-    };
+    Function<Segment, YamlSegment> creator = yamlSegmentCreators.get(segment.getSegmentType());
+    return creator.apply(segment);
   }
 
   /**
@@ -197,15 +205,10 @@ class YamlProject {
       }
       var otherConnector = connection.getOther(connector);
 
-      for (var adjacent : yamlProject.roadSystem.getAdjacentSegments(this.segment)) {
-        for (var adjConnector : adjacent.getConnectors()) {
-          if (adjConnector == otherConnector) {
-            return adjacent;
-          }
-        }
-      }
-
-      throw new RuntimeException("couldn't find adjacent segment");
+      return this.yamlProject.roadSystem.getAdjacentSegments(this.segment).stream()
+          .filter(adjacent -> adjacent.getConnectors().contains(otherConnector))
+          .findFirst()
+          .orElseThrow();
     }
 
     static String convertConurbation(boolean attributeValue) {

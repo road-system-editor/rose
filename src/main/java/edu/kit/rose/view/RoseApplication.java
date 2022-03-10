@@ -30,13 +30,14 @@ import edu.kit.rose.view.window.ShortCutHelpWindow;
 import edu.kit.rose.view.window.WindowState;
 import java.io.File;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import javafx.application.Application;
 import javafx.scene.control.Alert;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class is the entry point to the ROSE application.
@@ -46,6 +47,7 @@ import javafx.stage.Stage;
  * {@link edu.kit.rose.model} packages.
  */
 public class RoseApplication extends Application implements Navigator {
+  private static final Logger LOG = LoggerFactory.getLogger(RoseApplication.class);
   private static final Path CONFIG_PATH = Path.of("./rose-config.json");
 
   private static final String ROSE_EXTENSION_FILTER_NAME = "ROSE";
@@ -170,10 +172,14 @@ public class RoseApplication extends Application implements Navigator {
           translator.getLocalizedText("view.roseapplication.error.save"));
       case LOAD_ERROR -> alertDialog.setContentText(
           translator.getLocalizedText("view.roseapplication.error.load"));
-      case IMPORT_ERROR -> alertDialog.setContentText(
-          translator.getLocalizedText("view.roseapplication.error.import"));
-      case EXPORT_ERROR -> alertDialog.setContentText(
-          translator.getLocalizedText("view.roseapplication.error.export"));
+      case PROJECT_IMPORT_ERROR -> alertDialog.setContentText(
+          translator.getLocalizedText("view.roseapplication.error.project.import"));
+      case PROJECT_EXPORT_ERROR -> alertDialog.setContentText(
+          translator.getLocalizedText("view.roseapplication.error.project.export"));
+      case CRITERIA_IMPORT_ERROR -> alertDialog.setContentText(
+          translator.getLocalizedText("view.roseapplication.error.criteria.import"));
+      case CRITERIA_EXPORT_ERROR -> alertDialog.setContentText(
+          translator.getLocalizedText("view.roseapplication.error.criteria.export"));
       default -> throw new IllegalStateException(errorType.toString());
     }
 
@@ -203,7 +209,14 @@ public class RoseApplication extends Application implements Navigator {
    * @param args an array of command line arguments provided by the caller.
    */
   public static void main(String[] args) {
+    Thread.setDefaultUncaughtExceptionHandler(RoseApplication::logUncaughtException);
+    LOG.info("Launching ROSE...");
     launch(args);
+  }
+
+  private static void logUncaughtException(Thread thread, Throwable exception) {
+    String message = String.format("Uncaught exception in thread %s", thread);
+    LOG.error(message, exception);
   }
 
   /**

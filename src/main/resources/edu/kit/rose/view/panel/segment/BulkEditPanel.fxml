@@ -1,0 +1,18 @@
+<?import javafx.scene.layout.Pane?>
+
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Label?>
+<fx:root xmlns="http://javafx.com/javafx"
+         xmlns:fx="http://javafx.com/fxml" type="Pane"
+         fx:id="parentContainer"
+         styleClass="segmentEditorPanel" prefWidth="250">
+        <VBox>
+            <Label fx:id="label"
+                   prefWidth="${parentContainer.width}"
+                   styleClass="headerLabel"/>
+            <VBox fx:id="attributeList"
+                  prefWidth="${parentContainer.width}"
+                  styleClass="attributeList"/>
+        </VBox>
+
+</fx:root>

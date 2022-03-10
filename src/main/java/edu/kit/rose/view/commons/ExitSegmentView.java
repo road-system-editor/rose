@@ -9,8 +9,8 @@ import edu.kit.rose.model.roadsystem.elements.Exit;
  */
 public class ExitSegmentView extends RampSegmentView<Exit> {
 
-  private static final String IMAGE_RESOURCE_DEFAULT = "exit_segment_raw.png";
-  private static final String IMAGE_RESOURCE_SELECTED = "exit_segment_raw_selected.png";
+  private static final String IMAGE_RESOURCE_DEFAULT = "exit_segment_raw_arrows.png";
+  private static final String IMAGE_RESOURCE_SELECTED = "exit_segment_raw_arrows_selected.png";
   private static final int IMAGE_WIDTH = 60;
   private static final int IMAGE_HEIGHT = 70;
   private static final double IMAGE_POS_OFFSET_X = -20.5;

@@ -28,5 +28,6 @@ public enum DataType {
   /**
    * Speed limit. i.e. None, T80, T100, T120, SBA, Tunnel
    */
-  SPEED_LIMIT
+  SPEED_LIMIT,
+
 }

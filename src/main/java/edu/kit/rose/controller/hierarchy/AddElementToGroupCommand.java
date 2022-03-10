@@ -41,22 +41,20 @@ public class AddElementToGroupCommand implements ChangeCommand {
     var currentElement = this.replacementLog.getCurrentVersion(this.element);
 
     // find parent and remove element
-    Box<Element> elements = this.project.getRoadSystem().getElements();
-    if (elements != null) {
-      for (Element auxElement : elements) {
-        if (auxElement.isContainer()) {
-          Group auxGroup = (Group) auxElement;
-          if (auxGroup.getElements().contains(currentElement)) {
-            auxGroup.removeElement(currentElement);
-            this.parent = auxGroup;
-          }
-        }
-      }
-    }
+    this.parent = getParentGroup(currentElement);
+    this.parent.removeElement(currentElement);
 
     // add element to new group
     var currentGroup = this.replacementLog.getCurrentVersion(this.group);
     currentGroup.addElement(currentElement);
+  }
+
+  private Group getParentGroup(Element currentElement) {
+    return (Group) this.project.getRoadSystem().getElements()
+        .stream()
+        .filter(element1 -> element1.isContainer() && ((Group) element1).contains(currentElement))
+        .findFirst()
+        .orElse(this.project.getRoadSystem().getRootGroup());
   }
 
   @Override

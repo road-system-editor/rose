@@ -46,6 +46,8 @@ class CompatibilityCriterionPanel
       + ".compatibilityCriterionPanel.notEqualsExplanation";
   private static final String LESS_THAN_TRANSLATION_KEY = "view.panel.criterion"
       + ".compatibilityCriterionPanel.lessThanExplanation";
+  private static final String LESS_THAN_SPEEDLIMIT_TRANSLATION_KEY = "view.panel.criterion"
+      + ".compatibilityCriterionPanel.lessThanSpeedlimitExplanation";
 
   private static final String VALUE_REGEX = "[0-9]{1,13}(\\.[0-9]+)?";
   private static final String VALID_VALUE_STYLE = "-fx-text-fill: black;";
@@ -160,8 +162,8 @@ class CompatibilityCriterionPanel
         clearValidationSelector();
 
         this.validationSelector.getItems().removeIf(type ->
-            !getCriterion().getCompatibleOperatorTypes().contains(type));
-        for (var validationType : getCriterion().getCompatibleOperatorTypes()) {
+            !getCriterion().getCompatibleValidationTypes().contains(type));
+        for (var validationType : getCriterion().getCompatibleValidationTypes()) {
           if (!validationSelector.getItems().contains(validationType)) {
             this.validationSelector.getItems().add(validationType);
           }
@@ -171,7 +173,7 @@ class CompatibilityCriterionPanel
   }
 
   private void clearValidationSelector() {
-    SortedBox<ValidationType> compatibleTypes = getCriterion().getCompatibleOperatorTypes();
+    SortedBox<ValidationType> compatibleTypes = getCriterion().getCompatibleValidationTypes();
     ValidationType selectedType = validationSelector.getSelectionModel().getSelectedItem();
 
     if (!compatibleTypes.contains(selectedType)) {
@@ -247,7 +249,7 @@ class CompatibilityCriterionPanel
   public void notifyChange(PlausibilityCriterion unit) {
     this.nameField.setText(getCriterion().getName());
     this.attributeSelector.getSelectionModel().select(getCriterion().getAttributeType());
-    this.validationSelector.getSelectionModel().select(getCriterion().getOperatorType());
+    this.validationSelector.getSelectionModel().select(getCriterion().getValidationType());
     this.valueField.setText(valueFormat.format(getCriterion().getLegalDiscrepancy()));
     this.valueField.setStyle(VALID_VALUE_STYLE);
   }
@@ -321,6 +323,7 @@ class CompatibilityCriterionPanel
             case EQUALS -> tooltipKey = EQUALS_TRANSLATION_KEY;
             case LESS_THAN -> tooltipKey = LESS_THAN_TRANSLATION_KEY;
             case NOT_EQUALS -> tooltipKey = NOT_EQUALS_TRANSLATION_KEY;
+            case LESS_THAN_SPEED_LIMIT -> tooltipKey = LESS_THAN_SPEEDLIMIT_TRANSLATION_KEY;
             default -> throw new IllegalArgumentException("unknown Item");
           }
           Tooltip tooltip = new Tooltip();

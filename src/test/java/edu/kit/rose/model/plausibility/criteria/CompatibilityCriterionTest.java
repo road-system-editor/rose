@@ -10,6 +10,8 @@ import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.elements.Base;
 import edu.kit.rose.model.roadsystem.elements.HighwaySegment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
+import edu.kit.rose.util.MockingUtility;
+import edu.kit.rose.util.RoadSystemUtility;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,7 +27,8 @@ class CompatibilityCriterionTest {
 
   @BeforeEach
   public void setUp() {
-    this.roadSystem = new GraphRoadSystem(new CriteriaManager(),
+    CriteriaManager criteriaManager = MockingUtility.mockCriteriaManager();
+    this.roadSystem = new GraphRoadSystem(criteriaManager,
             Mockito.mock(TimeSliceSetting.class));
     this.violationManager = new ViolationManager();
     this.criterion = new CompatibilityCriterion(null, this.violationManager);
@@ -41,16 +44,16 @@ class CompatibilityCriterionTest {
 
 
   @Test
-  void testGetAndSetOperatorType() {
-    criterion.setOperatorType(ValidationType.EQUALS);
+  void testGetAndSetValidationType() {
+    criterion.setValidationType(ValidationType.EQUALS);
 
-    Assertions.assertEquals(ValidationType.EQUALS, this.criterion.getOperatorType());
+    Assertions.assertEquals(ValidationType.EQUALS, this.criterion.getValidationType());
   }
 
   @Test
-  void testGetCompatibleOperatorTypes() {
+  void testGetCompatibleValidationTypes() {
     criterion.setAttributeType(AttributeType.NAME);
-    SortedBox<ValidationType> box = criterion.getCompatibleOperatorTypes();
+    SortedBox<ValidationType> box = criterion.getCompatibleValidationTypes();
 
     Assertions.assertTrue(box.contains(ValidationType.EQUALS));
     Assertions.assertTrue(box.contains(ValidationType.NOT_EQUALS));
@@ -99,16 +102,16 @@ class CompatibilityCriterionTest {
 
   @Test
   void testNotifyChange() {
-    HighwaySegment segment1 = (HighwaySegment) roadSystem.createSegment(SegmentType.BASE);
-    HighwaySegment segment2 = (HighwaySegment) roadSystem.createSegment(SegmentType.BASE);
+    HighwaySegment segment1 = RoadSystemUtility.createDefaultBase(this.roadSystem);
+    HighwaySegment segment2 = RoadSystemUtility.createDefaultBase(this.roadSystem);
 
-    roadSystem.connectConnectors(segment1.getConnectors().iterator().next(),
-            segment2.getConnectors().iterator().next());
+    roadSystem.connectConnectors(segment1.getEntry(),
+            segment2.getExit());
 
     segment1.setName("str");
     segment2.setName("str");
 
-    this.criterion.setOperatorType(ValidationType.EQUALS);
+    this.criterion.setValidationType(ValidationType.EQUALS);
     this.criterion.setAttributeType(AttributeType.NAME);
     this.criterion.addSegmentType(SegmentType.BASE);
 
@@ -118,7 +121,7 @@ class CompatibilityCriterionTest {
     segment2.setLength(1);
     this.criterion.setLegalDiscrepancy(1);
     this.criterion.setAttributeType(AttributeType.LENGTH);
-    this.criterion.setOperatorType(ValidationType.LESS_THAN);
+    this.criterion.setValidationType(ValidationType.LESS_THAN);
 
 
     Assertions.assertEquals(1, this.violationManager.getViolations().getSize());
@@ -132,20 +135,20 @@ class CompatibilityCriterionTest {
 
   @Test
   void testNotifyRemoval() {
-    HighwaySegment segment1 = (HighwaySegment) roadSystem.createSegment(SegmentType.BASE);
-    HighwaySegment segment2 = (HighwaySegment) roadSystem.createSegment(SegmentType.BASE);
+    HighwaySegment segment1 = RoadSystemUtility.createDefaultBase(this.roadSystem);
+    HighwaySegment segment2 = RoadSystemUtility.createDefaultBase(this.roadSystem);
 
-    roadSystem.connectConnectors(segment1.getConnectors().iterator().next(),
-            segment2.getConnectors().iterator().next());
-
+    roadSystem.connectConnectors(segment1.getEntry(),
+            segment2.getExit());
 
     segment1.setSlope(3.0);
     segment2.setSlope(3.0);
     this.criterion.setAttributeType(AttributeType.SLOPE);
-    this.criterion.setOperatorType(ValidationType.NOT_EQUALS);
+    this.criterion.setValidationType(ValidationType.NOT_EQUALS);
     this.criterion.addSegmentType(SegmentType.BASE);
 
-    this.criterion.notifyRemoval(segment1);
+    this.roadSystem.removeElement(segment1);
+    this.criterion.notifyChange(segment1);
 
     // all violations removed after the segment is removed
     Assertions.assertEquals(0, this.violationManager.getViolations().getSize());
@@ -153,16 +156,17 @@ class CompatibilityCriterionTest {
 
   @Test
   void testNotifyAddition() {
-    this.criterion.setOperatorType(ValidationType.NOR);
+    this.criterion.setValidationType(ValidationType.NOR);
     this.criterion.setAttributeType(AttributeType.CONURBATION);
     this.criterion.addSegmentType(SegmentType.BASE);
-    HighwaySegment segment1 = (HighwaySegment) roadSystem.createSegment(SegmentType.BASE);
-    HighwaySegment segment2 = (HighwaySegment) roadSystem.createSegment(SegmentType.BASE);
-    roadSystem.connectConnectors(segment1.getConnectors().iterator().next(),
-            segment2.getConnectors().iterator().next());
+    HighwaySegment segment1 = RoadSystemUtility.createDefaultBase(this.roadSystem);
+    HighwaySegment segment2 = RoadSystemUtility.createDefaultBase(this.roadSystem);
+    roadSystem.connectConnectors(segment1.getExit(),
+            segment2.getEntry());
     segment1.setConurbation(true);
     segment2.setConurbation(true);
-    this.criterion.notifyAddition(segment1);
+    //this.criterion.notifyAddition(segment1);
+    this.criterion.notifyChange(segment1);
 
     Assertions.assertEquals(1, this.violationManager.getViolations().getSize());
   }
@@ -183,7 +187,7 @@ class CompatibilityCriterionTest {
 
     this.criterion.setAttributeType(AttributeType.CONURBATION);
     this.criterion.addSegmentType(SegmentType.BASE);
-    this.criterion.setOperatorType(ValidationType.OR);
+    this.criterion.setValidationType(ValidationType.OR);
     Assertions.assertEquals(1, violationManager2.getViolations().getSize());
   }
 
@@ -191,7 +195,27 @@ class CompatibilityCriterionTest {
   void testThrowsException() {
     this.criterion = new CompatibilityCriterion(null, this.violationManager);
 
+    Base someBase = new Base();
     Assertions.assertThrows(IllegalStateException.class,
-            () -> this.criterion.notifyChange(new Base()));
+            () -> this.criterion.notifyChange(someBase));
+  }
+
+  @Test
+  void testIgnoresAttributesWithoutValues() {
+    HighwaySegment segment1 = (HighwaySegment) this.roadSystem.createSegment(SegmentType.BASE);
+    HighwaySegment segment2 = (HighwaySegment) this.roadSystem.createSegment(SegmentType.BASE);
+
+    roadSystem.connectConnectors(segment1.getEntry(),
+        segment2.getExit());
+
+    segment1.setName(null);
+    segment2.setName("str");
+
+    this.criterion.setValidationType(ValidationType.EQUALS);
+    this.criterion.setAttributeType(AttributeType.NAME);
+    this.criterion.addSegmentType(SegmentType.BASE);
+
+    // there should be no violation since the name of segment 1 is unconfigured
+    Assertions.assertEquals(0, this.violationManager.getViolations().getSize());
   }
 }

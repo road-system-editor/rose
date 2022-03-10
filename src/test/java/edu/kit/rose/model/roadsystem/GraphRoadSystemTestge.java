@@ -6,8 +6,6 @@ import static org.mockito.Mockito.verify;
 import edu.kit.rose.infrastructure.DualSetObserver;
 import edu.kit.rose.infrastructure.Movement;
 import edu.kit.rose.infrastructure.Position;
-import edu.kit.rose.infrastructure.RoseSortedBox;
-import edu.kit.rose.model.plausibility.criteria.CriteriaManager;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.elements.Base;
@@ -16,6 +14,7 @@ import edu.kit.rose.model.roadsystem.elements.Connector;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
+import edu.kit.rose.util.MockingUtility;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -29,7 +28,7 @@ import org.mockito.Mockito;
 /**
  * Tests the {@link GraphRoadSystem}.
  */
-public class GraphRoadSystemTestge {
+class GraphRoadSystemTestge {
 
   private RoadSystem testRoadSystem;
   private TimeSliceSetting timeSliceSetting;
@@ -46,11 +45,9 @@ public class GraphRoadSystemTestge {
     connectionArgumentCaptorAddition = ArgumentCaptor.forClass(Connection.class);
     elementArgumentCaptorRemoval = ArgumentCaptor.forClass(Element.class);
     connectionArgumentCaptorRemoval = ArgumentCaptor.forClass(Connection.class);
-    var criteriaManager = Mockito.mock(CriteriaManager.class);
     timeSliceSetting = Mockito.mock(TimeSliceSetting.class);
     DualSetObserver<Element, Connection, RoadSystem> observer = Mockito.mock(DualSetObserver.class);
     //Mockito method setup
-    Mockito.when(criteriaManager.getCriteria()).thenReturn(new RoseSortedBox<>());
     Mockito.doAnswer(invocation -> null)
         .when(observer).notifyAddition(elementArgumentCaptorAddition.capture());
     Mockito.doAnswer(invocation -> null)
@@ -60,8 +57,9 @@ public class GraphRoadSystemTestge {
     Mockito.doAnswer(invocation -> null)
         .when(observer).notifyRemovalSecond(connectionArgumentCaptorRemoval.capture());
     //other classes setup
+    var criteriaManager = MockingUtility.mockCriteriaManager();
     testRoadSystem = new GraphRoadSystem(criteriaManager, timeSliceSetting);
-    initialSegment = createSegmentWithName(SegmentType.BASE, "PSEge");
+    initialSegment = createSegmentWithName(SegmentType.EXIT, "PSEge");
     //setup observation
     testRoadSystem.addSubscriber(observer);
     //reset calls counters
@@ -186,9 +184,12 @@ public class GraphRoadSystemTestge {
   @Test
   void getRootElementsTest() {
     var entrance = testRoadSystem.createSegment(SegmentType.ENTRANCE);
+    // Remove from root group, because it can only in one group at the same time.
+    testRoadSystem.getRootGroup().removeElement(entrance);
     var group = testRoadSystem.createGroup(Set.of(entrance));
+
     var roots = new LinkedList<Element>();
-    testRoadSystem.getRootElements().forEach(roots::add);
+    testRoadSystem.getRootGroup().getElements().forEach(roots::add);
     Assertions.assertEquals(List.of(initialSegment, group), roots);
   }
 

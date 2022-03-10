@@ -15,6 +15,3 @@ public abstract class GuiTest extends ApplicationTest {
     stage.show();
   }
 }
-=======
-}
->>>>>>> 4d0e9f4b (added CriterionGuiTest class)

@@ -75,19 +75,14 @@ public class DeleteStreetSegmentCommand implements ChangeCommand {
   }
 
   private void saveParentGroupForSegment(Segment segment) {
-    Optional<Element> parentGroup = this.project.getRoadSystem().getElements()
+    Group parentGroup = (Group) this.project.getRoadSystem().getElements()
         .stream()
         .filter(element -> element.isContainer() && ((Group) element).contains(segment))
-        .findFirst();
+        .findFirst()
+        .orElse(this.project.getRoadSystem().getRootGroup());
 
-
-    if (parentGroup.isPresent()) {
-      Group group = (Group) parentGroup.get();
-      this.segmentParentGroups.put(segment, group);
-      group.removeElement(segment);
-    } else {
-      this.segmentParentGroups.put(segment, null);
-    }
+    this.segmentParentGroups.put(segment, parentGroup);
+    parentGroup.removeElement(segment);
   }
 
   @Override

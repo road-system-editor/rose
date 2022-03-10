@@ -88,13 +88,6 @@ public interface RoadSystem
   Box<Segment> getAdjacentSegments(Segment segment);
 
   /**
-   * Returns a {@link Box} of {@link Element}s that are the uppermost in the element hierarchy.
-   *
-   * @return the uppermost groups.
-   */
-  Box<Element> getRootElements();
-
-  /**
    * Returns the {@link Connection} a given {@link Connector} is involved in.
    *
    * @param connector the {@link Connector} to look for the {@link Connection}.
@@ -151,4 +144,12 @@ public interface RoadSystem
    * Clears the RoadSystem. Resets {@link TimeSliceSetting}.
    */
   void clear();
+
+  /**
+   * Returns the root {@link Group} that contains
+   * all {@link Group}s and {@link Segment}s indirectly.
+   *
+   * @return the root {@link Group}
+   */
+  Group getRootGroup();
 }

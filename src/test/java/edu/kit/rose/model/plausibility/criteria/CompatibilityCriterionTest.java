@@ -211,7 +211,7 @@ class CompatibilityCriterionTest {
     segment1.setName(null);
     segment2.setName("str");
 
-    this.criterion.setOperatorType(ValidationType.EQUALS);
+    this.criterion.setValidationType(ValidationType.EQUALS);
     this.criterion.setAttributeType(AttributeType.NAME);
     this.criterion.addSegmentType(SegmentType.BASE);
 

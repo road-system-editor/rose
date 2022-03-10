@@ -25,7 +25,7 @@ public class DragStreetSegmentsCommand implements ChangeCommand {
   private final Connector dragConnector;
   private final Movement movement;
 
-  private Set<Connection> previouslyExistingConnections;
+  private final Set<Connection> previouslyExistingConnections;
   private Connection connectionCreatedAfterDragging;
   private boolean isExecuteFirstCall = true;
 
@@ -50,8 +50,13 @@ public class DragStreetSegmentsCommand implements ChangeCommand {
     this.segments = Objects.requireNonNull(segments);
     this.movement = Objects.requireNonNull(movement);
     this.dragConnector = dragConnector;
-    this.previouslyExistingConnections = new HashSet<>(
-        Objects.requireNonNull(previouslyExistingConnections));
+
+    if (previouslyExistingConnections != null) {
+      this.previouslyExistingConnections = new HashSet<>(
+          Objects.requireNonNull(previouslyExistingConnections));
+    } else { //Prevent error that previouslyExistingConnections has not been initialized
+      this.previouslyExistingConnections = null;
+    }
   }
 
   @Override
@@ -61,7 +66,7 @@ public class DragStreetSegmentsCommand implements ChangeCommand {
       this.connectionCreatedAfterDragging = ConnectionBuilder.buildConnection(
           this.project.getRoadSystem(), this.dragConnector);
       isExecuteFirstCall = false;
-    } else {
+    } else  if (this.previouslyExistingConnections != null) {
       if (this.segments.size() == 1 && this.dragConnector != null) {
         ConnectionCopier copier = new ConnectionCopier(
             this.replacementLog, this.project.getRoadSystem());
@@ -81,10 +86,12 @@ public class DragStreetSegmentsCommand implements ChangeCommand {
   }
 
   private void restoreConnections() {
-    ConnectionCopier copier
-        = new ConnectionCopier(this.replacementLog, this.project.getRoadSystem());
-    for (Connection connection : this.previouslyExistingConnections) {
-      copier.copyConnection(connection);
+    if (previouslyExistingConnections != null) {
+      ConnectionCopier copier
+          = new ConnectionCopier(this.replacementLog, this.project.getRoadSystem());
+      for (Connection connection : this.previouslyExistingConnections) {
+        copier.copyConnection(connection);
+      }
     }
   }
 

@@ -59,8 +59,8 @@ public interface PlausibilityController {
   /**
    * Sets the {@link ValidationType} of an {@link CompatibilityCriterion}.
    *
-   * @param criterion    the criterion to set the operator type
-   * @param validationType the new operator type
+   * @param criterion    the criterion to set the validation type
+   * @param validationType the new validation type
    */
   void setCompatibilityCriterionValidationType(CompatibilityCriterion criterion,
                                              ValidationType validationType);

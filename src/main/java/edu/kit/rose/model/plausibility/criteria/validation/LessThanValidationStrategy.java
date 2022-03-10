@@ -1,7 +1,7 @@
 package edu.kit.rose.model.plausibility.criteria.validation;
 
 /**
- * Describes a LessThan Operator for numerical values. "<"
+ * Describes a LessThan Validation Strategy  for numerical values. "<"
  *
  * @param <T> The Type that this ValidationStrategy is applied to.
  */

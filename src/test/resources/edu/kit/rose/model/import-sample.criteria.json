@@ -4,14 +4,14 @@
     "name" : "Exits must have a low slope variation",
     "segmentTypes" : [ "EXIT" ],
     "attributeType" : "SLOPE",
-    "operatorType" : "EQUALS",
+    "validationType" : "EQUALS",
     "legalDiscrepancy" : 1.5
   }, {
     "type" : "COMPATIBILITY",
     "name" : "Entrances and exits must have the same amount of lanes",
     "segmentTypes" : [ "ENTRANCE", "EXIT" ],
     "attributeType" : "LANE_COUNT",
-    "operatorType" : "EQUALS",
+    "validationType" : "EQUALS",
     "legalDiscrepancy" : 0
   } ]
 }

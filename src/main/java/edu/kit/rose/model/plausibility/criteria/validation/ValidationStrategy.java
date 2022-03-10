@@ -6,7 +6,7 @@ package edu.kit.rose.model.plausibility.criteria.validation;
  * Then it will subtract the given values and check, if the absolute difference is smaller than
  * the legalDiscrepancy.
  *
- * @param <T> The Type of value this Operator uses.
+ * @param <T> The Type of value this validation strategy uses.
  */
 public abstract class ValidationStrategy<T> {
 

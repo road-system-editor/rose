@@ -205,7 +205,7 @@ class RosePlausibilityControllerTest {
     CompatibilityCriterion criterion = new CompatibilityCriterion(
             roadSystem, violationManager);
     controller.setCompatibilityCriterionValidationType(criterion, ValidationType.EQUALS);
-    Assertions.assertEquals(ValidationType.EQUALS, criterion.getOperatorType());
+    Assertions.assertEquals(ValidationType.EQUALS, criterion.getValidationType());
   }
 
   @Test

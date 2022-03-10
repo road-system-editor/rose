@@ -42,8 +42,8 @@ class DuplicateStreetSegmentCommandTest {
     command.execute();
     Assertions.assertEquals(1, this.roadSystem.getElements().getSize());
     Segment segment = (Segment)  this.roadSystem.getElements().iterator().next();
-    Assertions.assertEquals(1, segment.getCenter().getX());
-    Assertions.assertEquals(1, segment.getCenter().getY());
+    Assertions.assertEquals(50, segment.getCenter().getX());
+    Assertions.assertEquals(50, segment.getCenter().getY());
   }
 
   @Test

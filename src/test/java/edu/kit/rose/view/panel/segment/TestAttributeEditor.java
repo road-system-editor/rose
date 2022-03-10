@@ -33,8 +33,8 @@ public class TestAttributeEditor extends GuiTest {
             .lookup((Node node) -> node.getParent() instanceof SegmentBoxListCell)
             .<SegmentBlueprint>queryAll().stream().toList();
     Grid grid = lookup((Node node) -> node instanceof Grid).query();
-    doubleClickOn(segmentBoxListCell.get(0));
     doubleClickOn(segmentBoxListCell.get(1));
+    doubleClickOn(segmentBoxListCell.get(2));
     segmentViewList = grid.getChildren()
             .stream().filter(e -> e instanceof SegmentView).map(SegmentView.class::cast).toList();
     drag(segmentViewList.get(1)).interact(() -> dropBy(0, 100));
@@ -69,5 +69,32 @@ public class TestAttributeEditor extends GuiTest {
             ((HBox) nameAttribute2.getChildren().get(0)).getChildren().get(1)).getText());
     Assertions.assertEquals("1", ((TextField)
             ((HBox) lengthAttribute2.getChildren().get(0)).getChildren().get(1)).getText());
+  }
+
+  /**
+   * Represents T19.
+   */
+  @EnabledOnOs(OS.WINDOWS)
+  @Test
+  void testBulkEdit() {
+    clickOn(segmentViewList.get(0));
+    press(KeyCode.CONTROL).clickOn(segmentViewList.get(1))
+            .doubleClickOn(segmentViewList.get(0)).release(KeyCode.CONTROL);
+    VBox attributeList = lookup("#attributeList").query();
+    EditableAttribute lanesAttribute = (EditableAttribute) attributeList.getChildren().get(2);
+    ((TextField) ((HBox) lanesAttribute.getChildren().get(0)).getChildren().get(1)).setText("3");
+
+    doubleClickOn(segmentViewList.get(1));
+    attributeList = lookup("#attributeList").query();
+    lanesAttribute = (EditableAttribute) attributeList.getChildren().get(4);
+    Assertions.assertEquals("3", ((TextField)
+            ((HBox) lanesAttribute.getChildren().get(0)).getChildren().get(1)).getText());
+
+    moveBy(-100, 0).press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
+    doubleClickOn(segmentViewList.get(0));
+    attributeList = lookup("#attributeList").query();
+    lanesAttribute = (EditableAttribute) attributeList.getChildren().get(4);
+    Assertions.assertEquals("3", ((TextField)
+            ((HBox) lanesAttribute.getChildren().get(0)).getChildren().get(1)).getText());
   }
 }

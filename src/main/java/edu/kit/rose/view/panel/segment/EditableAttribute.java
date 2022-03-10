@@ -22,7 +22,7 @@ import javafx.scene.layout.HBox;
  *
  * @param <T> the java type of the attribute value.
  */
-abstract class EditableAttribute<T> extends FxmlContainer
+public abstract class EditableAttribute<T> extends FxmlContainer
     implements UnitObserver<AttributeAccessor<T>> {
   private static final String ATTRIBUTE_PANEL_STYLE =
       "/edu/kit/rose/view/panel/segment/AttributePanel.css";

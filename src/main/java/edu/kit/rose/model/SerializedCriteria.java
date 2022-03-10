@@ -135,8 +135,8 @@ class SerializedCriteria {
       extends SerializedPlausibilityCriterion<CompatibilityCriterion> {
     @JsonProperty("attributeType")
     private AttributeType attributeType;
-    @JsonProperty("operatorType")
-    private ValidationType operatorType;
+    @JsonProperty("validationType")
+    private ValidationType validationType;
     @JsonProperty("legalDiscrepancy")
     private double legalDiscrepancy;
 
@@ -147,7 +147,7 @@ class SerializedCriteria {
       super(source);
 
       this.attributeType = source.getAttributeType();
-      this.operatorType = source.getValidationType();
+      this.validationType = source.getValidationType();
       this.legalDiscrepancy = source.getLegalDiscrepancy();
     }
 
@@ -164,7 +164,7 @@ class SerializedCriteria {
       super.populateCriterion(criterion);
 
       criterion.setAttributeType(this.attributeType);
-      criterion.setValidationType(this.operatorType);
+      criterion.setValidationType(this.validationType);
       criterion.setLegalDiscrepancy(this.legalDiscrepancy);
     }
 

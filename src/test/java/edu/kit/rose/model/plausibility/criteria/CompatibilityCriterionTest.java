@@ -44,14 +44,14 @@ class CompatibilityCriterionTest {
 
 
   @Test
-  void testGetAndSetOperatorType() {
+  void testGetAndSetValidationType() {
     criterion.setValidationType(ValidationType.EQUALS);
 
     Assertions.assertEquals(ValidationType.EQUALS, this.criterion.getValidationType());
   }
 
   @Test
-  void testGetCompatibleOperatorTypes() {
+  void testGetCompatibleValidationTypes() {
     criterion.setAttributeType(AttributeType.NAME);
     SortedBox<ValidationType> box = criterion.getCompatibleValidationTypes();
 

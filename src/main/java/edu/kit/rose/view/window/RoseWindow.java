@@ -67,7 +67,9 @@ public abstract class RoseWindow {
    */
   public void show() {
     if (state == WindowState.INITIALIZED || state == WindowState.VISIBLE) {
+
       this.stage.show();
+      stage.toFront();
       state = WindowState.VISIBLE;
     }
   }

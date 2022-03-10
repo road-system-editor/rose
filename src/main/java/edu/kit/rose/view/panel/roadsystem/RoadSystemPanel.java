@@ -9,6 +9,7 @@ import edu.kit.rose.controller.roadsystem.RoadSystemController;
 import edu.kit.rose.infrastructure.DualSetObserver;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.model.Project;
+import edu.kit.rose.model.ZoomSetting;
 import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.elements.Connection;
 import edu.kit.rose.model.roadsystem.elements.Connector;
@@ -203,5 +204,14 @@ public class RoadSystemPanel extends FxmlContainer
       case D -> keyEvent.isControlDown() ? roadSystemController::duplicateStreetSegment : () -> {};
       default -> () -> {};
     };
+  }
+
+  /**
+   * Getter for The ZoomSetting of the project.
+   *
+   * @return the ZoomSetting of the project.
+   */
+  public ZoomSetting getZoomSetting() {
+    return this.project.getZoomSetting();
   }
 }

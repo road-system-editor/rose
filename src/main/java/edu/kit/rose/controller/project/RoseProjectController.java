@@ -110,7 +110,7 @@ public class RoseProjectController extends Controller implements ProjectControll
       if (targetFilePath != null) {
         boolean exportSucceeded = project.exportToFile(targetFormat, targetFilePath);
         if (!exportSucceeded) {
-          getNavigator().showErrorDialog(ErrorType.EXPORT_ERROR);
+          getNavigator().showErrorDialog(ErrorType.PROJECT_EXPORT_ERROR);
         }
       }
       this.onProjectIoActionEndCallbacks.forEach(Runnable::run);

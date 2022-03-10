@@ -117,7 +117,7 @@ public class RosePlausibilityController extends Controller implements Plausibili
       if (importPath != null) {
         boolean success = this.applicationDataSystem.importCriteriaFromFile(importPath);
         if (!success) {
-          this.navigator.showErrorDialog(ErrorType.IMPORT_ERROR);
+          this.navigator.showErrorDialog(ErrorType.CRITERIA_IMPORT_ERROR);
         }
       }
       this.onDoneSubscribers.forEach(Runnable::run);
@@ -134,7 +134,7 @@ public class RosePlausibilityController extends Controller implements Plausibili
       if (exportPath != null) {
         boolean success = this.applicationDataSystem.exportCriteriaToFile(exportPath);
         if (!success) {
-          this.navigator.showErrorDialog(ErrorType.EXPORT_ERROR);
+          this.navigator.showErrorDialog(ErrorType.CRITERIA_EXPORT_ERROR);
         }
       }
       this.onDoneSubscribers.forEach(Runnable::run);

@@ -6,11 +6,13 @@ import edu.kit.rose.controller.commons.ReplacementLog;
 import edu.kit.rose.controller.commons.StorageLock;
 import edu.kit.rose.controller.navigation.Navigator;
 import edu.kit.rose.controller.selection.SelectionBuffer;
+import edu.kit.rose.infrastructure.Box;
 import edu.kit.rose.infrastructure.Movement;
 import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.infrastructure.SetObserver;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.roadsystem.RoadSystem;
+import edu.kit.rose.model.roadsystem.elements.Connection;
 import edu.kit.rose.model.roadsystem.elements.Connector;
 import edu.kit.rose.model.roadsystem.elements.MovableConnector;
 import edu.kit.rose.model.roadsystem.elements.Segment;
@@ -33,7 +35,6 @@ public class RoseRoadSystemController extends Controller
     SetObserver<Segment, SelectionBuffer> {
 
   private static final int SEGMENTS_ROTATION_ALLOWED_AMOUNT = 1;
-  private static final double INTERSECTION_DISTANCE = 30;
 
   /**
    * The container for selected segments.
@@ -56,6 +57,7 @@ public class RoseRoadSystemController extends Controller
   private Position initialSegmentDragPosition;
   private Connector dragConnector;
   private Position initialConnectorDragPosition;
+  private Set<Connection> draggedSegmentConnections;
 
 
   private final Set<SetObserver<Segment, RoadSystemController>> observers;
@@ -81,7 +83,7 @@ public class RoseRoadSystemController extends Controller
     this.project = project;
     this.roadSystem = project.getRoadSystem();
     this.replacementLog = replacementLog;
-
+    this.draggedSegmentConnections = new HashSet<>();
 
     observers = new HashSet<>();
   }
@@ -143,6 +145,18 @@ public class RoseRoadSystemController extends Controller
   @Override
   public void beginDragStreetSegment(Position segmentPosition) {
     this.initialSegmentDragPosition = segmentPosition;
+
+    saveSelectedSegmentsConnections();
+  }
+
+  private void saveSelectedSegmentsConnections() {
+    for (Segment segment : this.selectionBuffer.getSelectedSegments()) {
+      for (Segment adjacentSegment : this.project.getRoadSystem().getAdjacentSegments(segment)) {
+        Box<Connection> connections
+            = this.project.getRoadSystem().getConnections(segment, adjacentSegment);
+        connections.forEach(connection -> this.draggedSegmentConnections.add(connection));
+      }
+    }
   }
 
   @Override
@@ -152,7 +166,11 @@ public class RoseRoadSystemController extends Controller
 
   @Override
   public void endDragStreetSegment(Position segmentPosition) {
+    endDragStreetSegment(segmentPosition, null);
+  }
 
+  @Override
+  public void endDragStreetSegment(Position segmentPosition, Connector draggedConnector) {
     if (initialSegmentDragPosition == null) {
       //TODO: remove after implementing hit box event translucency
       return;
@@ -166,18 +184,15 @@ public class RoseRoadSystemController extends Controller
         this.replacementLog,
         this.project,
         this.selectionBuffer.getSelectedSegments(),
-        draggingTransition);
+        draggingTransition,
+        this.draggedSegmentConnections,
+        draggedConnector);
 
     dragStreetSegmentsCommand.unexecute();
     changeCommandBuffer.addAndExecuteCommand(dragStreetSegmentsCommand);
 
-    initialSegmentDragPosition = null;
-  }
-
-  @Override
-  public void endDragStreetSegment(Position segmentPosition, Connector draggedConnector) {
-    endDragStreetSegment(segmentPosition);
-    buildConnection(draggedConnector);
+    this.initialSegmentDragPosition = null;
+    this.draggedSegmentConnections.clear();
   }
 
   @Override
@@ -262,13 +277,12 @@ public class RoseRoadSystemController extends Controller
         connectorEndPosition.getX() - initialConnectorDragPosition.getX(),
         connectorEndPosition.getY() - initialConnectorDragPosition.getY());
 
-    DragSegmentEndCommand dragSegmentEndCommand = new DragSegmentEndCommand(this.replacementLog,
-        (MovableConnector) dragConnector, draggingTransition);
+    DragSegmentEndCommand dragSegmentEndCommand = new DragSegmentEndCommand(
+        this.roadSystem, this.replacementLog, (MovableConnector) dragConnector, draggingTransition);
 
     // makes sure that the position is first reset to the state before the drag
     dragSegmentEndCommand.unexecute();
     changeCommandBuffer.addAndExecuteCommand(dragSegmentEndCommand);
-    buildConnection(dragConnector);
 
     dragConnector = null;
     initialConnectorDragPosition = null;
@@ -283,7 +297,7 @@ public class RoseRoadSystemController extends Controller
 
   @Override
   public double getIntersectionDistance() {
-    return INTERSECTION_DISTANCE;
+    return ConnectionBuilder.INTERSECTION_DISTANCE;
   }
 
 
@@ -322,59 +336,5 @@ public class RoseRoadSystemController extends Controller
     notifySubscribers();
   }
 
-  private void buildConnection(Connector draggedConnector) {
-    var connectorSegmentMap = getConnectorSegmentMap();
-    var draggedConnectorPos = connectorSegmentMap.get(draggedConnector)
-        .getAbsoluteConnectorPosition(draggedConnector);
-    var intersectingConnectors =
-        getIntersectingConnectors(draggedConnectorPos, connectorSegmentMap);
-    intersectingConnectors.remove(draggedConnector);
-    if (!intersectingConnectors.isEmpty()) {
-      var closestConnector =
-          getClosestConnectorToPoint(intersectingConnectors, draggedConnectorPos,
-              connectorSegmentMap);
-      this.roadSystem.connectConnectors(draggedConnector, closestConnector);
-    }
-  }
 
-  private Connector getClosestConnectorToPoint(List<Connector> connectors, Position position,
-                                     Map<Connector, Segment> connectorSegmentMap) {
-    var connectorList = new LinkedList<>(connectors);
-    connectorList.sort((connector1, connector2) -> {
-      Double distance1 = getDistanceFromConnectorToPosition(connector1,
-          position, connectorSegmentMap);
-      Double distance2 = getDistanceFromConnectorToPosition(connector2,
-          position, connectorSegmentMap);
-      return distance1.compareTo(distance2);
-    });
-    return connectorList.get(0);
-  }
-
-  private List<Connector> getIntersectingConnectors(Position draggedConnectorPos,
-                            Map<Connector, Segment> connectorSegmentMap) {
-    return connectorSegmentMap.keySet().stream()
-        .filter(connector -> {
-          var connectorPos = connectorSegmentMap.get(connector)
-              .getAbsoluteConnectorPosition(connector);
-          return draggedConnectorPos.distanceTo(connectorPos) <= INTERSECTION_DISTANCE;
-        }).collect(Collectors.toList());
-  }
-
-  private Map<Connector, Segment> getConnectorSegmentMap() {
-    var connectorSegmentMap = new HashMap<Connector, Segment>();
-    roadSystem.getElements().stream()
-        .filter(element -> !element.isContainer())
-        .map(element -> (Segment) element)
-        .forEach(segment -> {
-          var segmentConnectors = segment.getConnectors();
-          segmentConnectors.forEach(c -> connectorSegmentMap.put(c, segment));
-        });
-    return connectorSegmentMap;
-  }
-
-  private double getDistanceFromConnectorToPosition(Connector connector, Position position,
-                                                 Map<Connector, Segment> connectorSegmentMap) {
-    return connectorSegmentMap.get(connector).getAbsoluteConnectorPosition(connector)
-        .distanceTo(position);
-  }
 }

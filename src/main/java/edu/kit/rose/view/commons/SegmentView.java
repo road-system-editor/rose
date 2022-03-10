@@ -63,6 +63,7 @@ public abstract class SegmentView<T extends Segment> extends Pane
   private Position initialPos;
   private Point2D startPoint;
 
+  private boolean isInDraggingProcess = false;
 
   /**
    * Creates a new segment view that acts as visual representation of a given segment.
@@ -174,13 +175,22 @@ public abstract class SegmentView<T extends Segment> extends Pane
     }
   }
 
+
+
   protected void onDragDetected(MouseEvent mouseEvent) {
     onDragged.run();
     controller.beginDragStreetSegment(this.initialPos);
+    this.isInDraggingProcess = true;
     startFullDrag();
   }
 
   protected void onMouseDragged(MouseEvent mouseEvent) {
+    if (!isInDraggingProcess) {
+      // Enforce correct call order of RoadSystemController.beginDragStreetSegment
+      // and RoadSystemController.dragStreetSegments, because JavaFx calls onMouseDragged
+      // sometimes before onDragDetected.
+      return;
+    }
     var currentPos = localToParent(mouseEvent.getX(), mouseEvent.getY());
     var movement = new Movement(currentPos.getX() - startPoint.getX(),
         currentPos.getY() - startPoint.getY());
@@ -208,6 +218,7 @@ public abstract class SegmentView<T extends Segment> extends Pane
       controller.endDragStreetSegment(releasePosition);
     }
     this.draggedConnectorView = null;
+    this.isInDraggingProcess = false;
     onDragEnd.run();
   }
 

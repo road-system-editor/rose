@@ -13,7 +13,7 @@ import org.mockito.Mockito;
 /**
  * Contains unit test for the {@link HierarchyCopier} class.
  */
-public class HierarchyCopierTest {
+class HierarchyCopierTest {
 
   private static final double DOUBLE_COMPARE_THRESHOLD = 0.005;
 
@@ -27,7 +27,7 @@ public class HierarchyCopierTest {
    * Sets up the {@link HierarchyCopier} and the {@link Base}.
    */
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     this.sourceSegment = new Base();
     sourceSegment.getExit().move(new Movement(100, 200));
     sourceSegment.getEntry().move(new Movement(-100, -200));
@@ -41,7 +41,7 @@ public class HierarchyCopierTest {
   }
 
   @Test
-  public void testCopyBaseSegmentPositionData() {
+  void testCopyBaseSegmentPositionData() {
     Base baseCopy = (Base) this.hierarchyCopier.copySegment(this.sourceSegment);
 
     Assertions.assertTrue(Math.abs(baseCopy.getCenter().getX()

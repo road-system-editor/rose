@@ -15,7 +15,7 @@ class EntranceTest {
   private static final int yStartCenter = 0;
 
   @BeforeEach
-  public void initialize() {
+  void initialize() {
     testEntrance = new Entrance("testEntrance");
   }
 

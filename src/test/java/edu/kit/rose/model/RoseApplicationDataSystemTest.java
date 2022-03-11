@@ -38,7 +38,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Unit tests for {@link RoseApplicationDataSystem}.
  */
-public class RoseApplicationDataSystemTest {
+class RoseApplicationDataSystemTest {
   static final Path CONFIG_FILE = Path.of("build/tmp/config.json");
   static final Path CRITERIA_EXPORT_FILE = Path.of("build/tmp/criteria-export.criteria.json");
   static final URL CRITERIA_IMPORT_URL =

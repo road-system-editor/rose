@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Tests for the Equals Validation Strategies.
  */
-public class EqualsValidationTest {
+class EqualsValidationTest {
 
   private static final int legalDiscrepancy = 10;
   private static ValidationStrategy<String> notEqualsValidationStrategy;
@@ -17,13 +17,13 @@ public class EqualsValidationTest {
    * Initialize.
    */
   @BeforeEach
-  public void initialize() {
+  void initialize() {
     notEqualsValidationStrategy = new NotEqualsValidationStrategy<>();
     equalsValidationStrategy = new EqualsValidationStrategy<>();
   }
 
   @Test
-  public void testEqualsValidationStrategy() {
+  void testEqualsValidationStrategy() {
     String first = "first";
     String second = "second";
     Assertions.assertTrue(equalsValidationStrategy.validate(first, first));
@@ -39,7 +39,7 @@ public class EqualsValidationTest {
 
 
   @Test
-  public void testNotEqualsValidationStrategy() {
+  void testNotEqualsValidationStrategy() {
     String first = "first";
     String second = "second";
     Assertions.assertFalse(notEqualsValidationStrategy.validate(first, first));

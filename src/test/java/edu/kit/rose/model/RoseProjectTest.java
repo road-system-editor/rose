@@ -20,7 +20,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Unit tests for {@link RoseProject}.
  */
-public class RoseProjectTest {
+class RoseProjectTest {
   private static final Path EXPORT_PATH =
       Path.of("build/tmp/RoseProjectTest");
   private static final Path INVALID_EXPORT_PATH =

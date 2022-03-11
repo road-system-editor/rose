@@ -22,7 +22,7 @@ import org.mockito.Mockito;
  *
  * @see RoseAttributeControllerTest
  */
-public class RoseAttributeControllerBulkEditTest {
+class RoseAttributeControllerBulkEditTest {
   int lane1 = 3;
   int lane2 = 2;
   int lane3 = 2;
@@ -77,7 +77,7 @@ public class RoseAttributeControllerBulkEditTest {
   }
 
   @Test
-  public void testGetSharedAttributeAccessors() {
+  void testGetSharedAttributeAccessors() {
     var selectionBuffer = Mockito.mock(SelectionBuffer.class);
     Mockito.when(selectionBuffer.getSelectedSegments()).thenReturn(elements);
 

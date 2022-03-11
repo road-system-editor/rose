@@ -18,7 +18,7 @@ import org.junit.jupiter.api.condition.OS;
 /**
  * Tests the zoom and undo, redo functionality of the GUI.
  */
-public class TestRoadSystemTools extends GuiTest {
+class TestRoadSystemTools extends GuiTest {
   private Grid grid;
 
   /**

@@ -43,7 +43,7 @@ class DeleteGroupCommandTest {
   private DeleteGroupCommand command;
 
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     this.roadSystem = new GraphRoadSystem(
         MockingUtility.mockCriteriaManager(),
         mock(TimeSliceSetting.class)

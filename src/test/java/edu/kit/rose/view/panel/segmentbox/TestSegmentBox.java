@@ -17,7 +17,7 @@ import org.junit.jupiter.api.condition.OS;
 /**
  * Tests the SegmentBox Component of the GUI.
  */
-public class TestSegmentBox extends GuiTest {
+class TestSegmentBox extends GuiTest {
   private List<SegmentBlueprint> listCell;
   private Grid grid;
 
@@ -32,7 +32,7 @@ public class TestSegmentBox extends GuiTest {
 
   @EnabledOnOs(OS.WINDOWS)
   @Test
-  public void testSetStreetSegmentDoubleClick() {
+  void testSetStreetSegmentDoubleClick() {
     doubleClickOn(listCell.get(1));
     List<Node> segmentViewList = grid.getChildren()
             .stream().filter(e -> e instanceof SegmentView).toList();

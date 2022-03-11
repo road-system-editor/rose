@@ -28,7 +28,7 @@ import org.mockito.Mockito;
 /**
  * Tests the {@link GraphRoadSystem}.
  */
-class GraphRoadSystemTestge {
+class GraphRoadSystemTest2 {
 
   private RoadSystem testRoadSystem;
   private TimeSliceSetting timeSliceSetting;

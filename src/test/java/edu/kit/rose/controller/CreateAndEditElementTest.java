@@ -31,7 +31,7 @@ import org.junit.jupiter.api.Test;
  * Tests whether command sequences that involve creating and editing a segment can be redone
  * correctly.
  */
-public class CreateAndEditElementTest {
+class CreateAndEditElementTest {
   private static final Path CONFIG_FILE = Path.of("build/tmp/config.json");
   private static final String SEGMENT_NAME = "the vanishing segment";
 

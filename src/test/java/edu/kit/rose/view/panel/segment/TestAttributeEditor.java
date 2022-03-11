@@ -23,7 +23,7 @@ import org.junit.jupiter.api.condition.OS;
 /**
  * Tests the attribute/bulk editor of the GUI.
  */
-public class TestAttributeEditor extends GuiTest {
+class TestAttributeEditor extends GuiTest {
   private List<? extends SegmentView<?>> segmentViewList;
 
   @BeforeEach

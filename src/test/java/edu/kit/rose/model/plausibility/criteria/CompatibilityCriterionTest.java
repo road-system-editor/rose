@@ -26,7 +26,7 @@ class CompatibilityCriterionTest {
   private ViolationManager violationManager;
 
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     CriteriaManager criteriaManager = MockingUtility.mockCriteriaManager();
     this.roadSystem = new GraphRoadSystem(criteriaManager,
             Mockito.mock(TimeSliceSetting.class));

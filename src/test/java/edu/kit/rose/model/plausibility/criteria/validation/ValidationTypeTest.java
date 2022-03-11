@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Test for the ValidationStrategy Class.
  */
-public class ValidationTypeTest {
+class ValidationTypeTest {
 
   private static ValidationStrategy<Boolean> norValidationStrategy;
   private static ValidationStrategy<Boolean> orValidationStrategy;
@@ -33,7 +33,7 @@ public class ValidationTypeTest {
 
 
   @Test
-  public void testValueCriterionNor() {
+  void testValueCriterionNor() {
     Collection<DataType> compatible =
         norValidationStrategy.getValidationType().getCompatible();
     Assertions.assertEquals(1, compatible.size());
@@ -41,7 +41,7 @@ public class ValidationTypeTest {
   }
 
   @Test
-  public void testValueCriterionOr() {
+  void testValueCriterionOr() {
     Collection<DataType> compatible =
         orValidationStrategy.getValidationType().getCompatible();
     Assertions.assertEquals(1, compatible.size());
@@ -49,7 +49,7 @@ public class ValidationTypeTest {
   }
 
   @Test
-  public void testValueCriterionEquals() {
+  void testValueCriterionEquals() {
     Collection<DataType> compatible =
         equalsValidationStrategy.getValidationType().getCompatible();
     Assertions.assertEquals(5, compatible.size());
@@ -61,7 +61,7 @@ public class ValidationTypeTest {
   }
 
   @Test
-  public void testValueCriterionNotEquals() {
+  void testValueCriterionNotEquals() {
     Collection<DataType> compatible =
         notEqualsValidationStrategy.getValidationType().getCompatible();
     Assertions.assertEquals(5, compatible.size());
@@ -73,7 +73,7 @@ public class ValidationTypeTest {
   }
 
   @Test
-  public void testValueCriterionLessThan() {
+  void testValueCriterionLessThan() {
     Collection<DataType> compatible =
         integerLessThanValidationStrategy.getValidationType().getCompatible();
     Assertions.assertTrue(compatible.contains(DataType.INTEGER));
@@ -86,7 +86,7 @@ public class ValidationTypeTest {
   }
 
   @Test
-  public void testHasDiscrepancy() {
+  void testHasDiscrepancy() {
     Assertions.assertTrue(integerLessThanValidationStrategy.validationType.hasDiscrepancy());
     Assertions.assertTrue(doubleLessThanValidationStrategy.validationType.hasDiscrepancy());
     Assertions.assertFalse(orValidationStrategy.validationType.hasDiscrepancy());

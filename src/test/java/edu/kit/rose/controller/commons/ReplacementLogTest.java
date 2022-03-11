@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Unit tests for the {@link ReplacementLog}.
  */
-public class ReplacementLogTest {
+class ReplacementLogTest {
   private ReplacementLog replacementLog;
   private Group group;
   private Group groupReplacement;

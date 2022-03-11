@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Unit Test for the RoseBox Class.
  */
-public class RoseBoxTest {
+class RoseBoxTest {
   static int numberOfElements = 10;
   static Collection<Integer> testArrayList;
 
@@ -31,12 +31,12 @@ public class RoseBoxTest {
   }
 
   @Test
-  public void testGetSize() {
+  void testGetSize() {
     assertEquals(numberOfElements, box.getSize());
   }
 
   @Test
-  public void testIterator() {
+  void testIterator() {
 
     Iterator<Integer> iterator = box.iterator();
     Collection<Integer> actualContent = new ArrayList<>();
@@ -50,13 +50,13 @@ public class RoseBoxTest {
   }
 
   @Test
-  public void testContains() {
+  void testContains() {
     testArrayList.forEach(i -> Assertions.assertTrue(box.contains(i)));
     Assertions.assertFalse(box.contains(numberOfElements));
   }
 
   @Test
-  public void testStream() {
+  void testStream() {
     List<Integer> expected = new ArrayList<>(List.of(0, 1, 4, 9, 16, 25, 36, 49, 64, 81));
     expected.removeAll(box.stream().map(x -> x * x).toList());
     assertTrue(expected.isEmpty());

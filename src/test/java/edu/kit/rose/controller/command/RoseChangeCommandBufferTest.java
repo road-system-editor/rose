@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Unit tests for {@link RoseChangeCommandBuffer}.
  */
-public class RoseChangeCommandBufferTest {
+class RoseChangeCommandBufferTest {
   private ChangeCommand command1;
   private ChangeCommand command2;
   private ChangeCommand command3;

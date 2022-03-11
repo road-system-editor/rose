@@ -8,7 +8,7 @@ import org.junit.jupiter.api.condition.OS;
 /**
  * Tests if the program starts.
  */
-public class TestProgramStart extends GuiTest {
+class TestProgramStart extends GuiTest {
 
   /**
    * Represents T1.

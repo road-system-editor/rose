@@ -31,7 +31,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Tests the {@link DeleteStreetSegmentCommand} class.
  */
-public class DeleteStreetSegmentCommandTest {
+class DeleteStreetSegmentCommandTest {
   private static final Path CONFIG_PATH = Path.of("build/tmp/no-config.json");
 
   private Project project;
@@ -60,7 +60,7 @@ public class DeleteStreetSegmentCommandTest {
   }
 
   @Test
-  public void testConstructor() {
+  void testConstructor() {
     assertThrows(NullPointerException.class, () -> new DeleteStreetSegmentCommand(
         null, this.project, List.of(this.segmentToDelete)));
     assertThrows(NullPointerException.class, () -> new DeleteStreetSegmentCommand(
@@ -72,7 +72,7 @@ public class DeleteStreetSegmentCommandTest {
   }
 
   @Test
-  public void testSegmentContainedInRoadSystem() {
+  void testSegmentContainedInRoadSystem() {
     assumeTrue(this.roadSystem.getElements().contains(segmentToDelete));
 
     command.execute();

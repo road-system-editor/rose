@@ -88,7 +88,6 @@ class RosePlausibilityControllerTest {
     verify(applicationDataSystem, times(1)).importCriteriaFromFile(any());
     Mockito.verify(onBegin, times(1)).run();
     Mockito.verify(onEnd, times(1)).run();
-    // TODO check if criteria have been imported
   }
 
   @Test

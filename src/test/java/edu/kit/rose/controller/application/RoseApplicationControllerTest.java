@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Unit tests for the {@link RoseApplicationController}.
  */
-public class RoseApplicationControllerTest {
+class RoseApplicationControllerTest {
   ChangeCommandBuffer changeCommandBuffer;
   StorageLock storageLock;
   Navigator navigator;

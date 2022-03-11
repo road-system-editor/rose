@@ -24,7 +24,7 @@ import org.junit.jupiter.api.condition.OS;
 /**
  * Tests if the Segments connect properly.
  */
-public class SegmentConnectTest extends GuiTest {
+class SegmentConnectTest extends GuiTest {
   private static final Color COLOR_HOVER = Color.rgb(162, 34, 35)
           .deriveColor(1, 1, 1, 0.5);
   private static final Color COLOR_CONNECT = Color.rgb(140, 182, 60)

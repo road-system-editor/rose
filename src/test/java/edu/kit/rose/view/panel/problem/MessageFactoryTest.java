@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Unit tests for the {@link MessageFactory} class.
  */
-public class MessageFactoryTest {
+class MessageFactoryTest {
   private Segment segment1;
   private Segment segment2;
   private MessageFactory messageFactory;

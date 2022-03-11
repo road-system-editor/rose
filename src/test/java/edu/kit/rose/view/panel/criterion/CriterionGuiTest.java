@@ -32,7 +32,7 @@ import org.testfx.api.FxRobotInterface;
 /**
  * Include test scenarios for criteria.
  */
-public class CriterionGuiTest extends GuiTest {
+class CriterionGuiTest extends GuiTest {
   private static final String CRITERION_NAME = "testCriterion";
   private static final Path FILE_PATH = Path.of("./build/tmp/TestCriterionTest.criteria.json");
   private static final String COMPATIBILITY_VIOLATION_MESSAGE = "B1ASE and B0ASE are incompatible";

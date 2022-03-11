@@ -18,7 +18,7 @@ class CriteriaManagerTest {
   private CriteriaManager criteriaManager;
 
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     this.criteriaManager = new CriteriaManager();
     RoadSystem roadSystem = new GraphRoadSystem(criteriaManager,
         Mockito.mock(TimeSliceSetting.class));

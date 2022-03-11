@@ -26,12 +26,12 @@ class ZoomSettingTest {
   }
 
   @Test
-  public void testConstructorChecksArguments() {
+  void testConstructorChecksArguments() {
     assertThrows(NullPointerException.class, () -> new ZoomSetting(null));
   }
 
   @Test
-  public void testConstructorCopiesArgument() {
+  void testConstructorCopiesArgument() {
     assertEquals(defaultCenterOfView, zoomSetting.getCenterOfView());
 
     // check whether zoom settings has actually copied the center of view
@@ -40,26 +40,26 @@ class ZoomSettingTest {
   }
 
   @Test
-  public void testSetCenterOfView() {
+  void testSetCenterOfView() {
     var position = new Position(103, -42);
     zoomSetting.setCenterOfView(position);
     assertEquals(position, zoomSetting.getCenterOfView());
   }
 
   @Test
-  public void testGetCenterOfView() {
+  void testGetCenterOfView() {
     zoomSetting.getCenterOfView().setX(-1);
     assertEquals(defaultCenterOfView, zoomSetting.getCenterOfView());
   }
 
   @Test
-  public void testSetZoomLevel() {
+  void testSetZoomLevel() {
     zoomSetting.setZoomLevel(7);
     assertEquals(7, zoomSetting.getZoomLevel());
   }
 
   @Test
-  public void testReset() {
+  void testReset() {
     zoomSetting.setCenterOfView(new Position(-3, 7));
     zoomSetting.setZoomLevel(10);
     zoomSetting.reset();

@@ -49,8 +49,14 @@ public class CriteriaManager extends RoseSetObservable<PlausibilityCriterion, Cr
   public void setRoadSystem(RoadSystem roadSystem) {
     this.roadSystem = roadSystem;
     if (violationManager != null && violationManager.getViolations() != null) {
-      Collection<Violation> violations = this.violationManager.getViolations().stream().toList();
-      for (Violation violation : this.violationManager.getViolations()) {
+      Collection<Violation> violations =
+          this.violationManager.getViolations().stream()
+              .filter(violation
+                  -> violation.violatedCriterion().getType()
+                  == PlausibilityCriterionType.COMPLETENESS
+                      || violation.violatedCriterion().getType() == PlausibilityCriterionType.VALUE)
+              .toList();
+      for (Violation violation : violations) {
         this.violationManager.removeViolation(violation);
       }
     }

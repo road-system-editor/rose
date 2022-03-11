@@ -28,6 +28,7 @@ class LoadProjectGlobalTestCase extends GuiTest {
 
   @BeforeEach
   void setUp() throws IOException {
+    Files.deleteIfExists(TMP_LOAD_PATH);
     Files.copy(RESOURCE_PATH, TMP_LOAD_PATH);
   }
 

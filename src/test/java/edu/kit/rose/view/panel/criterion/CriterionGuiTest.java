@@ -1,6 +1,5 @@
 package edu.kit.rose.view.panel.criterion;
 
-import edu.kit.rose.model.ZoomSetting;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import edu.kit.rose.view.GuiTest;
 import edu.kit.rose.view.commons.ConnectorView;

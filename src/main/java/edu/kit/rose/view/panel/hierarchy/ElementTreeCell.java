@@ -163,15 +163,43 @@ public class ElementTreeCell extends TreeCell<Element>
     TreeItem<Element> itemToPlaceOn = getTreeItem();
 
     if (itemToPlaceOn.getValue() != null && itemToPlaceOn.getValue().isContainer()) {
-      this.hierarchyController.addElementToGroup(
-          dragItem.getValue(),
-          (Group) itemToPlaceOn.getValue());
+
+      if (dragItem.getValue().isContainer()) {
+        if (!containsRecursive((Group) dragItem.getValue(), itemToPlaceOn.getValue())) {
+          this.hierarchyController.addElementToGroup(
+              dragItem.getValue(),
+              (Group) itemToPlaceOn.getValue());
+        }
+      } else {
+        this.hierarchyController.addElementToGroup(
+            dragItem.getValue(),
+            (Group) itemToPlaceOn.getValue());
+      }
+
+
     }
 
     dragItem = null;
 
     dragEvent.setDropCompleted(true);
     dragEvent.consume();
+  }
+
+  private boolean containsRecursive(Group targetGroup, Element elementToCheckFor) {
+    for (Element element : targetGroup.getElements()) {
+      boolean contains;
+      if (element.isContainer()) {
+        contains = (element == elementToCheckFor)
+            || containsRecursive((Group) element, elementToCheckFor);
+      } else {
+        contains = element == elementToCheckFor;
+      }
+      if (contains) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   private void onDragDone(DragEvent dragEvent) {
@@ -183,6 +211,7 @@ public class ElementTreeCell extends TreeCell<Element>
     Platform.runLater(() -> {
       ElementTreeItem itemToPlaceOn = (ElementTreeItem) getTreeItem();
       if (itemToPlaceOn != null) {
+
         TreeViewUtility.addElementToElementTreeItem(unit, itemToPlaceOn);
       }
     });

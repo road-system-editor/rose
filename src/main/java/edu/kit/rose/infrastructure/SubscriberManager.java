@@ -1,10 +1,12 @@
 package edu.kit.rose.infrastructure;
 
 
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * Default implementation of the observable subscriber management logic.
@@ -14,19 +16,17 @@ import java.util.Objects;
  */
 abstract class SubscriberManager<T extends UnitObserver<S>, S> implements Observable<T, S> {
 
-  protected final List<T> subscribers;
+  protected final Set<T> subscribers;
 
   public SubscriberManager() {
-    subscribers = new LinkedList<>();
+    subscribers = new HashSet<>();
   }
 
   @Override
   public void addSubscriber(T observer) {
     Objects.requireNonNull(observer, "observer may not be null");
 
-    if (!subscribers.contains(observer)) {
-      subscribers.add(observer);
-    }
+    subscribers.add(observer);
   }
 
   @Override
@@ -40,6 +40,6 @@ abstract class SubscriberManager<T extends UnitObserver<S>, S> implements Observ
   }
 
   protected Iterator<T> getSubscriberIterator() {
-    return this.subscribers.listIterator();
+    return this.subscribers.iterator();
   }
 }

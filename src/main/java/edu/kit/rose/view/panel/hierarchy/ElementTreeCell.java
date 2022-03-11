@@ -3,10 +3,12 @@ package edu.kit.rose.view.panel.hierarchy;
 import edu.kit.rose.controller.hierarchy.HierarchyController;
 import edu.kit.rose.controller.roadsystem.RoadSystemController;
 import edu.kit.rose.infrastructure.SetObserver;
+import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Group;
 import edu.kit.rose.model.roadsystem.elements.Segment;
+import java.util.Map;
 import javafx.application.Platform;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
@@ -38,6 +40,8 @@ public class ElementTreeCell extends TreeCell<Element>
 
   private ElementView<? extends Element> currentGraphicElementView;
 
+  private final Map<Element, ElementTreeCell> elementToElementTreeCellMapping;
+
   /**
    * Creates a new {@link ElementTreeCell}.
    *
@@ -46,10 +50,12 @@ public class ElementTreeCell extends TreeCell<Element>
    */
   public ElementTreeCell(
       RoadSystemController roadSystemController,
-      HierarchyController hierarchyController, LocalizedTextProvider translator) {
+      HierarchyController hierarchyController, LocalizedTextProvider translator,
+      Map<Element, ElementTreeCell> elementToElementTreeCellMapping) {
     this.roadSystemController = roadSystemController;
     this.hierarchyController = hierarchyController;
     this.translator = translator;
+    this.elementToElementTreeCellMapping = elementToElementTreeCellMapping;
 
     this.setOnDragDetected(this::onDragDetected);
     this.setOnDragOver(this::onDragOver);
@@ -80,6 +86,9 @@ public class ElementTreeCell extends TreeCell<Element>
     this.element = element;
     this.element.addSubscriber(this);
 
+    //Necessary, because javaFx reuses TreeCells
+    removeOldElementTreeCellSubscriberFromElement(element);
+
     if (this.currentGraphicElementView != null) {
       this.currentGraphicElementView.onUnmount();
     }
@@ -87,6 +96,15 @@ public class ElementTreeCell extends TreeCell<Element>
     this.currentGraphicElementView
             = new GroupView(translator, (Group) element, hierarchyController);
     setGraphic(this.currentGraphicElementView);
+  }
+
+  private void removeOldElementTreeCellSubscriberFromElement(Element element) {
+    ElementTreeCell currentlyMappedToElement
+        = elementToElementTreeCellMapping.getOrDefault(element, null);
+    if (currentlyMappedToElement != this) {
+      element.removeSubscriber(currentlyMappedToElement);
+      elementToElementTreeCellMapping.put(element, this);
+    }
   }
 
   private void updateSegment(Element element) {
@@ -145,15 +163,43 @@ public class ElementTreeCell extends TreeCell<Element>
     TreeItem<Element> itemToPlaceOn = getTreeItem();
 
     if (itemToPlaceOn.getValue() != null && itemToPlaceOn.getValue().isContainer()) {
-      this.hierarchyController.addElementToGroup(
-          dragItem.getValue(),
-          (Group) itemToPlaceOn.getValue());
+
+      if (dragItem.getValue().isContainer()) {
+        if (!containsRecursive((Group) dragItem.getValue(), itemToPlaceOn.getValue())) {
+          this.hierarchyController.addElementToGroup(
+              dragItem.getValue(),
+              (Group) itemToPlaceOn.getValue());
+        }
+      } else {
+        this.hierarchyController.addElementToGroup(
+            dragItem.getValue(),
+            (Group) itemToPlaceOn.getValue());
+      }
+
+
     }
 
     dragItem = null;
 
     dragEvent.setDropCompleted(true);
     dragEvent.consume();
+  }
+
+  private boolean containsRecursive(Group targetGroup, Element elementToCheckFor) {
+    for (Element element : targetGroup.getElements()) {
+      boolean contains;
+      if (element.isContainer()) {
+        contains = (element == elementToCheckFor)
+            || containsRecursive((Group) element, elementToCheckFor);
+      } else {
+        contains = element == elementToCheckFor;
+      }
+      if (contains) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   private void onDragDone(DragEvent dragEvent) {
@@ -165,11 +211,11 @@ public class ElementTreeCell extends TreeCell<Element>
     Platform.runLater(() -> {
       ElementTreeItem itemToPlaceOn = (ElementTreeItem) getTreeItem();
       if (itemToPlaceOn != null) {
-        itemToPlaceOn.getInternalChildren().add(new ElementTreeItem(unit));
+
+        TreeViewUtility.addElementToElementTreeItem(unit, itemToPlaceOn);
       }
     });
   }
-
 
   @Override
   public void notifyRemoval(Element unit) {
@@ -177,7 +223,6 @@ public class ElementTreeCell extends TreeCell<Element>
       ElementTreeItem treeItem = (ElementTreeItem) getTreeItem();
       if (treeItem != null) {
         treeItem.getInternalChildren().removeIf(child -> child.getValue() == unit);
-        unit.removeSubscriber(this);
       }
     });
   }

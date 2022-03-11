@@ -16,7 +16,9 @@ import edu.kit.rose.model.roadsystem.elements.Group;
 import edu.kit.rose.view.commons.FxmlContainer;
 import edu.kit.rose.view.commons.SearchBar;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -52,6 +54,8 @@ public class HierarchyPanel extends FxmlContainer
 
   private final ElementTreeItem rootItem;
 
+  private final Map<Element, ElementTreeCell> elementToElementTreeCellMapping;
+
   /**
    * Creates an empty hierarchy view.
    */
@@ -61,6 +65,7 @@ public class HierarchyPanel extends FxmlContainer
     DisabledSelectionModel dsm = new DisabledSelectionModel();
     this.elementsTreeView.setSelectionModel(dsm);
     rootItem = new ElementTreeItem(null);
+    this.elementToElementTreeCellMapping = new HashMap<>();
 
     setUp();
   }
@@ -72,7 +77,8 @@ public class HierarchyPanel extends FxmlContainer
 
     elementsTreeView
         .setCellFactory(elementsTree -> new ElementTreeCell(
-            roadSystemController, hierarchyController, getTranslator()));
+            roadSystemController, hierarchyController, getTranslator(),
+            elementToElementTreeCellMapping));
     elementsTreeView.setShowRoot(false);
     elementsTreeView.setRoot(rootItem);
 
@@ -133,31 +139,8 @@ public class HierarchyPanel extends FxmlContainer
   @Override
   public void notifyAddition(Element unit) {
     Platform.runLater(() -> {
-      if (unit.isContainer()) {
-        SortedBox<Element> elements = ((Group) unit).getElements();
-
-        deleteTreeItemsForElementsRecursive(rootItem, elements);
-
-        ElementTreeItem groupRootItem = new ElementTreeItem(unit);
-        elements.forEach(element ->
-            groupRootItem.getInternalChildren().add(new ElementTreeItem(element)));
-
-        rootItem.getInternalChildren().add(groupRootItem);
-      } else {
-        ElementTreeItem treeItem = new ElementTreeItem(unit);
-        rootItem.getInternalChildren().add(treeItem);
-      }
+      TreeViewUtility.addElementToElementTreeItem(unit, rootItem);
     });
-  }
-
-  private void deleteTreeItemsForElementsRecursive(
-      ElementTreeItem currentTreeItem,
-      SortedBox<Element> elements) {
-    currentTreeItem.getInternalChildren().removeIf(child -> elements.contains(child.getValue()));
-
-    for (TreeItem<Element> treeItem : currentTreeItem.getChildren()) {
-      deleteTreeItemsForElementsRecursive((ElementTreeItem) treeItem, elements);
-    }
   }
 
   @Override
@@ -166,7 +149,6 @@ public class HierarchyPanel extends FxmlContainer
       rootItem.getInternalChildren().removeIf(child -> child.getValue() == unit);
     });
   }
-
 
   @Override
   public void notifyChange(Element unit) {

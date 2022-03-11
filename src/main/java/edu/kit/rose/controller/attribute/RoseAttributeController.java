@@ -105,7 +105,7 @@ public class RoseAttributeController extends Controller implements AttributeCont
     } else {
       // O(#types)
       List<AttributeType> types = new ArrayList<>();
-      for (var accessor : elements.stream().findAny().get().getAttributeAccessors()) {
+      for (var accessor : elements.stream().findAny().orElseThrow().getAttributeAccessors()) {
         types.add(accessor.getAttributeType());
       }
 

@@ -37,13 +37,13 @@ abstract class SelectableAttribute<T> extends EditableAttribute<T> {
   SelectableAttribute(AttributeAccessor<T> attribute, AttributeController controller,
                       Collection<T> options, BiConsumer<AttributeAccessor<T>, T> consumer) {
     super(attribute, controller, consumer);
-    setupView();
+    setupStyle();
     this.inputField.getItems().addAll(Objects.requireNonNull(options));
 
     selectWithoutListener(attribute.getValue());
   }
 
-  private void setupView() {
+  private void setupStyle() {
     String attributeStyleSheetUrl =
         Objects.requireNonNull(getClass().getResource(ATTRIBUTE_PANEL_STYLE)).toExternalForm();
     this.getStylesheets().add(attributeStyleSheetUrl);

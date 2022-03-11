@@ -31,7 +31,7 @@ public class TestSegmentManipulation extends GuiTest {
   private static final String NAME = "test";
   private static final String LENGTH = "600.0";
   private Grid grid;
-  private List<SegmentView> segmentViewList;
+  private List<? extends SegmentView<?>> segmentViewList;
   private List<SegmentBlueprint> segmentBoxListCell;
 
   @BeforeEach
@@ -57,8 +57,10 @@ public class TestSegmentManipulation extends GuiTest {
   void testDuplicateSegment() {
     doubleClickOn(segmentViewList.get(0));
     VBox attributeList = lookup("#attributeList").query();
-    EditableAttribute nameAttribute1 = (EditableAttribute) attributeList.getChildren().get(0);
-    EditableAttribute lengthAttribute1 = (EditableAttribute) attributeList.getChildren().get(3);
+    EditableAttribute<?> nameAttribute1 =
+            (EditableAttribute<?>) attributeList.getChildren().get(0);
+    EditableAttribute<?> lengthAttribute1 =
+            (EditableAttribute<?>) attributeList.getChildren().get(3);
     interact(() -> ((TextField)
             ((HBox) nameAttribute1.getChildren().get(0)).getChildren().get(1)).setText(NAME));
     interact(() -> ((TextField)
@@ -77,8 +79,10 @@ public class TestSegmentManipulation extends GuiTest {
 
     doubleClickOn(segmentViewList.get(2));
     attributeList = lookup("#attributeList").query();
-    EditableAttribute nameAttribute2 = (EditableAttribute) attributeList.getChildren().get(0);
-    EditableAttribute lengthAttribute2 = (EditableAttribute) attributeList.getChildren().get(3);
+    EditableAttribute<?> nameAttribute2 =
+            (EditableAttribute<?>) attributeList.getChildren().get(0);
+    EditableAttribute<?> lengthAttribute2 =
+            (EditableAttribute<?>) attributeList.getChildren().get(3);
 
     Assertions.assertEquals(NAME, ((TextField)
             ((HBox) nameAttribute2.getChildren().get(0)).getChildren().get(1)).getText());
@@ -92,7 +96,7 @@ public class TestSegmentManipulation extends GuiTest {
             .<RoadSystemPanel>query().getRoadSystem().getConnections(
                     segmentViewList.get(2).getSegment()).iterator().next()
             .getConnectors().contains(
-                    segmentViewList.get(3).getSegment().getConnectors().stream().toList().get(0)));
+                    segmentViewList.get(3).getSegment().getConnectors().stream().toList().get(1)));
   }
 
   /**
@@ -119,29 +123,30 @@ public class TestSegmentManipulation extends GuiTest {
     moveTo(grid).moveBy(-50, -130);
     press(KeyCode.CONTROL).press(MouseButton.PRIMARY).moveBy(90, 170)
             .release(MouseButton.PRIMARY).release(KeyCode.CONTROL);
-    Position initialPosition1 = new Position(segmentViewList.get(0).getSegment().getCenter().getX(),
+    final Position initialPosition1 =
+            new Position(segmentViewList.get(0).getSegment().getCenter().getX(),
             segmentViewList.get(0).getSegment().getCenter().getY());
-    Position initialPosition2 = new Position(segmentViewList.get(1).getSegment().getCenter().getX(),
+    final Position initialPosition2 =
+            new Position(segmentViewList.get(1).getSegment().getCenter().getX(),
             segmentViewList.get(1).getSegment().getCenter().getY());
-    Position initialPosition3 = new Position(segmentViewList.get(2).getSegment().getCenter().getX(),
+    final Position initialPosition3 =
+            new Position(segmentViewList.get(2).getSegment().getCenter().getX(),
             segmentViewList.get(2).getSegment().getCenter().getY());
 
     drag(segmentViewList.get(2)).interact(() -> dropBy(10, 30));
     segmentViewList = getSegmentViewList();
-    Position auxInitialPosition2 = initialPosition2; // fix weird checkstyle warning
-    Position auxInitialPosition3 = initialPosition3; // fix weird checkstyle warning
 
     Assertions.assertEquals(initialPosition1.getX(),
             segmentViewList.get(0).getSegment().getCenter().getX());
     Assertions.assertEquals(initialPosition1.getY(),
             segmentViewList.get(0).getSegment().getCenter().getY());
-    Assertions.assertEquals(auxInitialPosition2.getX() + 10,
+    Assertions.assertEquals(initialPosition2.getX() + 10,
             segmentViewList.get(1).getSegment().getCenter().getX());
-    Assertions.assertEquals(auxInitialPosition2.getY() + 30,
+    Assertions.assertEquals(initialPosition2.getY() + 30,
             segmentViewList.get(1).getSegment().getCenter().getY());
-    Assertions.assertEquals(auxInitialPosition3.getX() + 10,
+    Assertions.assertEquals(initialPosition3.getX() + 10,
             segmentViewList.get(2).getSegment().getCenter().getX());
-    Assertions.assertEquals(auxInitialPosition3.getY() + 30,
+    Assertions.assertEquals(initialPosition3.getY() + 30,
             segmentViewList.get(2).getSegment().getCenter().getY());
   }
 
@@ -167,8 +172,9 @@ public class TestSegmentManipulation extends GuiTest {
                     connectorViewList.get(1).getBoundsInLocal()).getCenterY());
   }
 
-  private List<SegmentView> getSegmentViewList() {
+  private List<? extends SegmentView<?>> getSegmentViewList() {
     return grid.getChildren()
-            .stream().filter(e -> e instanceof SegmentView).map(SegmentView.class::cast).toList();
+            .stream().filter(e -> e instanceof SegmentView)
+            .map(node -> (SegmentView<?>) node).toList();
   }
 }

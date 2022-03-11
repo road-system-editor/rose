@@ -267,8 +267,8 @@ public class RoseProjectController extends Controller implements ProjectControll
   public Box<Path> getBackupPaths() {
     if (ensureBackupDirectoryExists()) {
       List<Path> backupPaths = new LinkedList<>();
-      try {
-        Files.newDirectoryStream(this.backupDirectoryPath).forEach(backupPaths::add);
+      try (var stream = Files.newDirectoryStream(this.backupDirectoryPath)) {
+        stream.forEach(backupPaths::add);
       } catch (IOException e) {
         logger.error("Could not create backup path list", e);
         return new RoseBox<>();

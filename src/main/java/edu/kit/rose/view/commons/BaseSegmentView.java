@@ -82,7 +82,7 @@ public class BaseSegmentView extends SegmentView<Base> {
     this.curve = new QuadCurve();
     curve.setFill(Color.TRANSPARENT);
     curve.setStroke(Color.BLACK);
-    curve.setStrokeWidth(MAIN_STREET_RADIUS * 2);
+    curve.setStrokeWidth(MAIN_STREET_RADIUS * 2d);
   }
 
   private void setupEffectCurve() {

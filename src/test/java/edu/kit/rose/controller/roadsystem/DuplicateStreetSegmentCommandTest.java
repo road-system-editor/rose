@@ -7,8 +7,8 @@ import edu.kit.rose.model.Project;
 import edu.kit.rose.model.roadsystem.GraphRoadSystem;
 import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.TimeSliceSetting;
-import edu.kit.rose.model.roadsystem.elements.Base;
 import edu.kit.rose.model.roadsystem.elements.Segment;
+import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import edu.kit.rose.util.MockingUtility;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
@@ -20,6 +20,8 @@ class DuplicateStreetSegmentCommandTest {
   private RoadSystem roadSystem;
   private ReplacementLog replacementLog;
   private DuplicateStreetSegmentCommand command;
+  private Segment segment1;
+  private Segment segment2;
 
   @BeforeEach
   void setUp() {
@@ -27,23 +29,31 @@ class DuplicateStreetSegmentCommandTest {
         MockingUtility.mockCriteriaManager(),
         Mockito.mock(TimeSliceSetting.class)
     );
-    Project project = Mockito.mock(Project.class);
     this.replacementLog = new ReplacementLog();
-    Segment segment = new Base();
-
+    segment1 = roadSystem.createSegment(SegmentType.BASE);
+    segment2 = roadSystem.createSegment(SegmentType.BASE);
+    roadSystem.connectConnectors(segment1.getConnectors().iterator().next(),
+            segment2.getConnectors().iterator().next());
+    Project project = Mockito.mock(Project.class);
     when(project.getRoadSystem()).thenReturn(this.roadSystem);
 
     this.command = new DuplicateStreetSegmentCommand(this.replacementLog, project,
-            List.of(segment));
+            List.of(segment1, segment2));
   }
 
   @Test
   void testExecute() {
     command.execute();
-    Assertions.assertEquals(1, this.roadSystem.getElements().getSize());
-    Segment segment = (Segment)  this.roadSystem.getElements().iterator().next();
-    Assertions.assertEquals(50, segment.getCenter().getX());
-    Assertions.assertEquals(50, segment.getCenter().getY());
+    Assertions.assertEquals(4, this.roadSystem.getElements().getSize());
+    Assertions.assertTrue(roadSystem.getConnections(segment1)
+            .iterator().next().getConnectors()
+            .contains(segment1.getConnectors().iterator().next()));
+    Assertions.assertTrue(roadSystem.getConnections(segment1)
+            .iterator().next().getConnectors()
+            .contains(segment2.getConnectors().iterator().next()));
+    List<Segment> elements = roadSystem.getElements().stream().map(Segment.class::cast).toList();
+    Assertions.assertEquals(50, elements.get(2).getCenter().getX());
+    Assertions.assertEquals(50, elements.get(2).getCenter().getY());
   }
 
   @Test
@@ -51,13 +61,13 @@ class DuplicateStreetSegmentCommandTest {
     command.execute();
     command.unexecute();
 
-    Assertions.assertEquals(0, this.roadSystem.getElements().getSize());
+    Assertions.assertEquals(2, this.roadSystem.getElements().getSize());
   }
 
   @Test
   void testReplacement() {
     command.execute();
-    Segment segment = (Segment) this.roadSystem.getElements().iterator().next();
+    Segment segment = roadSystem.getElements().stream().map(Segment.class::cast).toList().get(2);
     command.unexecute();
     command.execute();
     Assertions.assertNotEquals(segment, this.replacementLog.getCurrentVersion(segment));

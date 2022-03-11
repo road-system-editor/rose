@@ -10,9 +10,8 @@ import edu.kit.rose.view.panel.segment.EditableAttribute;
 import edu.kit.rose.view.panel.segmentbox.SegmentBlueprint;
 import edu.kit.rose.view.panel.segmentbox.SegmentBoxListCell;
 import edu.kit.rose.view.panel.violation.ViolationHandle;
-import java.awt.Toolkit;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
+import edu.kit.rose.view.window.FileChooserTestUtility;
+import java.nio.file.Path;
 import java.util.List;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -28,13 +27,14 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.OS;
+import org.testfx.api.FxRobotInterface;
 
 /**
  * Include test scenarios for criteria.
  */
 public class CriterionGuiTest extends GuiTest {
   private static final String CRITERION_NAME = "testCriterion";
-  private static final String FILE_NAME = "tesCriteriaConfiguration";
+  private static final Path FILE_PATH = Path.of("./build/tmp/TestCriterionTest.criteria.json");
   private static final String COMPATIBILITY_VIOLATION_MESSAGE = "B1ASE and B0ASE are incompatible";
   private static final String COMPLETENESS_VIOLATION_MESSAGE = "BASE is incomplete";
   private Grid grid;
@@ -54,15 +54,16 @@ public class CriterionGuiTest extends GuiTest {
     enterNameOfCriterion(criteriaListCell, 1);
     enterNameOfCriterion(criteriaListCell, 2);
     enterNameOfCriterion(criteriaListCell, 3);
-    clickOn("#exportButton");
-    selectTestConfiguration();
+    FxRobotInterface robot = clickOn("#exportButton");
+    FileChooserTestUtility.enterPathToFileChooser(robot, FILE_PATH);
+    // Handles file replace
     push(KeyCode.LEFT);
     push(KeyCode.ENTER);
     clickOn("#deleteAllButton");
     criteriaListCell = getCriteriaListCell();
     Assertions.assertEquals(0, criteriaListCell.size());
     clickOn("#importButton");
-    selectTestConfiguration();
+    FileChooserTestUtility.enterPathToFileChooser(robot, FILE_PATH);
     criteriaListCell = getCriteriaListCell();
     Assertions.assertEquals(5, criteriaListCell.size());
     clickOn(criteriaListCell.get(0));
@@ -290,14 +291,6 @@ public class CriterionGuiTest extends GuiTest {
     clickOn(lookup("#attributeList").<VBox>query().getChildren().get(0));
     type(KeyCode.DIGIT0);
     clickOn(grid);
-  }
-
-  private void selectTestConfiguration() {
-    Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-    StringSelection stringSelection = new StringSelection(FILE_NAME);
-    clipboard.setContents(stringSelection, stringSelection);
-    press(KeyCode.CONTROL).press(KeyCode.V).release(KeyCode.V).release(KeyCode.CONTROL);
-    push(KeyCode.ENTER);
   }
 
   private List<Node> getCriteriaListCell() {

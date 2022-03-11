@@ -33,7 +33,7 @@ class LoadProjectGlobalTestCase extends GuiTest {
 
   @Test
   @EnabledOnOs(OS.WINDOWS)
-  void testExportProjectToFreevalYaml() {
+  void testLoadProject() {
     clickOn("#project");
     FxRobotInterface robot = clickOn("#loadProject");
 

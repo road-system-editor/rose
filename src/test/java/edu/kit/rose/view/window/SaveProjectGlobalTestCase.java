@@ -38,7 +38,7 @@ class SaveProjectGlobalTestCase extends GuiTest {
     doubleClickOn(segmentBoxListCell.get(0));
 
     // make sure file does not exist yet
-    Files.delete(TEST_SAVE_PATH);
+    Files.deleteIfExists(TEST_SAVE_PATH);
   }
 
   @Test

@@ -5,6 +5,7 @@ import edu.kit.rose.view.GuiTest;
 import edu.kit.rose.view.commons.ConnectorView;
 import edu.kit.rose.view.commons.SegmentView;
 import edu.kit.rose.view.panel.roadsystem.Grid;
+import edu.kit.rose.view.panel.segment.EditableAttribute;
 import edu.kit.rose.view.panel.segmentbox.SegmentBlueprint;
 import edu.kit.rose.view.panel.segmentbox.SegmentBoxListCell;
 import edu.kit.rose.view.panel.violation.ViolationHandle;
@@ -18,6 +19,8 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseButton;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -86,8 +89,9 @@ public class CriterionGuiTest extends GuiTest {
     List<ViolationHandle> violationHandleList = getViolationHandleList();
 
     Assertions.assertEquals(1, violationHandleList.size());
-    Assertions.assertEquals(COMPATIBILITY_VIOLATION_MESSAGE, from(violationHandleList.get(0)).lookup((Node node)
-            -> node instanceof Label).<Label>queryAll().stream().toList().get(1).getText());
+    Assertions.assertEquals(COMPATIBILITY_VIOLATION_MESSAGE,
+            from(violationHandleList.get(0)).lookup((Node node)
+                -> node instanceof Label).<Label>queryAll().stream().toList().get(1).getText());
 
     drag(connectorViewList.get(5)).interact(()
             -> moveTo(connectorViewList.get(7)).moveBy(16, -13).drop());
@@ -112,9 +116,33 @@ public class CriterionGuiTest extends GuiTest {
     List<ViolationHandle> violationHandleList = getViolationHandleList();
 
     Assertions.assertEquals(1, violationHandleList.size());
-    Assertions.assertEquals(COMPLETENESS_VIOLATION_MESSAGE, from(violationHandleList.get(0)).lookup((Node node)
-            -> node instanceof Label).<Label>queryAll().stream().toList().get(1).getText());
+    Assertions.assertEquals(COMPLETENESS_VIOLATION_MESSAGE,
+            from(violationHandleList.get(0)).lookup((Node node)
+                -> node instanceof Label).<Label>queryAll().stream().toList().get(1).getText());
 
+    Grid grid = lookup((Node node) -> node instanceof Grid).query();
+    List<SegmentView> segmentViewList = grid.getChildren()
+            .stream().filter(e -> e instanceof SegmentView).map(SegmentView.class::cast).toList();
+    moveTo(segmentViewList.get(0))
+            .moveBy(10, 3).press(MouseButton.PRIMARY).release(MouseButton.PRIMARY)
+            .press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
+    VBox attributeList = lookup("#attributeList").query();
+    EditableAttribute lengthAttribute = (EditableAttribute) attributeList.getChildren().get(2);
+    ((TextField) ((HBox) lengthAttribute.getChildren().get(0)).getChildren().get(1)).setText("3");
+    EditableAttribute slopeAttribute = (EditableAttribute) attributeList.getChildren().get(3);
+    ((TextField) ((HBox) slopeAttribute.getChildren().get(0)).getChildren().get(1)).setText("3");
+    EditableAttribute lanesAttribute = (EditableAttribute) attributeList.getChildren().get(4);
+    ((TextField) ((HBox) lanesAttribute.getChildren().get(0)).getChildren().get(1)).setText("3");
+    EditableAttribute conurbationAttribute = (EditableAttribute) attributeList.getChildren().get(5);
+    moveTo(conurbationAttribute).moveBy(100, 0)
+            .press(MouseButton.PRIMARY).release(MouseButton.PRIMARY)
+            .moveBy(0, 20).press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
+    EditableAttribute speedAttribute = (EditableAttribute) attributeList.getChildren().get(6);
+    moveTo(speedAttribute).moveBy(100, 0).press(MouseButton.PRIMARY).release(MouseButton.PRIMARY)
+            .moveBy(0, 20).press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
+
+    violationHandleList = getViolationHandleList();
+    Assertions.assertEquals(0, violationHandleList.size());
   }
 
   /**
@@ -136,8 +164,9 @@ public class CriterionGuiTest extends GuiTest {
                     .stream().filter(e -> !((ListCell) e.getParent()).isEmpty()).toList();
 
     Assertions.assertEquals(1, violationHandleList.size());
-    Assertions.assertEquals(COMPATIBILITY_VIOLATION_MESSAGE, from(violationHandleList.get(0)).lookup((Node node)
-            -> node instanceof Label).<Label>queryAll().stream().toList().get(1).getText());
+    Assertions.assertEquals(COMPATIBILITY_VIOLATION_MESSAGE,
+            from(violationHandleList.get(0)).lookup((Node node)
+                -> node instanceof Label).<Label>queryAll().stream().toList().get(1).getText());
 
     clickOn("#validation");
     clickOn("#criteria");

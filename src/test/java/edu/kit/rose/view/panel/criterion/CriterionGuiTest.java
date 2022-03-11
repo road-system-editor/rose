@@ -1,10 +1,12 @@
 package edu.kit.rose.view.panel.criterion;
 
+import edu.kit.rose.model.ZoomSetting;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import edu.kit.rose.view.GuiTest;
 import edu.kit.rose.view.commons.ConnectorView;
 import edu.kit.rose.view.commons.SegmentView;
 import edu.kit.rose.view.panel.roadsystem.Grid;
+import edu.kit.rose.view.panel.roadsystem.RoadSystemPanel;
 import edu.kit.rose.view.panel.segment.EditableAttribute;
 import edu.kit.rose.view.panel.segmentbox.SegmentBlueprint;
 import edu.kit.rose.view.panel.segmentbox.SegmentBoxListCell;
@@ -108,11 +110,7 @@ public class CriterionGuiTest extends GuiTest {
   @EnabledOnOs(OS.WINDOWS)
   @Test
   void testValidateCompletenessCriterion() {
-    ListView<SegmentType> listView = lookup("#blueprintListView").queryListView();
-    List<SegmentBlueprint> segmentBoxListCell = from(listView)
-            .lookup((Node node) -> node.getParent() instanceof SegmentBoxListCell)
-            .<SegmentBlueprint>queryAll().stream().toList();
-    doubleClickOn(segmentBoxListCell.get(0));
+    putOneSegmentOnGrid();
     List<ViolationHandle> violationHandleList = getViolationHandleList();
 
     Assertions.assertEquals(1, violationHandleList.size());
@@ -179,10 +177,43 @@ public class CriterionGuiTest extends GuiTest {
     Assertions.assertEquals(0, violationHandleList.size());
   }
 
+  /**
+   * Represents T25.
+   */
+  @EnabledOnOs(OS.WINDOWS)
+  @Test
+  void testJumpToViolation() {
+    putOneSegmentOnGrid();
+    List<ViolationHandle> violationHandleList = getViolationHandleList();
+
+    Assertions.assertEquals(1, violationHandleList.size());
+
+    grid = lookup((Node node) -> node instanceof Grid).query();
+    moveTo(grid).moveBy(-60, 0)
+            .press(MouseButton.PRIMARY).moveBy(32, 103).release(MouseButton.PRIMARY);
+    doubleClickOn(violationHandleList.get(0));
+
+    Assertions.assertEquals(14999.900390625, lookup("#roadSystemPanel")
+            .<RoadSystemPanel>query().getZoomSetting().getCenterOfView().getX());
+    Assertions.assertEquals(14999.7001953125, lookup("#roadSystemPanel")
+            .<RoadSystemPanel>query().getZoomSetting().getCenterOfView().getY());
+    List<SegmentView> segmentViewList = grid.getChildren()
+            .stream().filter(e -> e instanceof SegmentView).map(SegmentView.class::cast).toList();
+    Assertions.assertTrue(segmentViewList.get(0).getDrawAsSelected());
+  }
+
   private List<ViolationHandle> getViolationHandleList() {
     return from(lookup("#violationList").queryListView()).lookup((Node node) ->
                     node instanceof ViolationHandle).<ViolationHandle>queryAll()
             .stream().filter(e -> !((ListCell) e.getParent()).isEmpty()).toList();
+  }
+
+  private void putOneSegmentOnGrid() {
+    ListView<SegmentType> listView = lookup("#blueprintListView").queryListView();
+    List<SegmentBlueprint> segmentBoxListCell = from(listView)
+            .lookup((Node node) -> node.getParent() instanceof SegmentBoxListCell)
+            .<SegmentBlueprint>queryAll().stream().toList();
+    doubleClickOn(segmentBoxListCell.get(0));
   }
 
   private void putSegmentsOnGrid() {

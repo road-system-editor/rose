@@ -83,7 +83,7 @@ jacocoTestReport {
     afterEvaluate {
         classDirectories.setFrom(files(classDirectories.files.collect {
             fileTree(it)
-                    //.exclude("edu/kit/rose/view")
+                    .exclude("edu/kit/rose/view")
                     .exclude("edu/kit/rose/controller/measurement")
                     .exclude("edu/kit/rose/model/roadsystem/measurements")
         }))

@@ -267,6 +267,7 @@ public class CriterionGuiTest extends GuiTest {
             .queryAll().stream().toList();
     clickOn(typeCell.get(0));
     clickOn("#attributeSelector");
+    // Chooses the right attribute
     for (int i = 0; i < 3; i++) {
       type(KeyCode.DOWN);
     }

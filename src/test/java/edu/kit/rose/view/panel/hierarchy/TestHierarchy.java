@@ -1,9 +1,9 @@
 package edu.kit.rose.view.panel.hierarchy;
 
-import edu.kit.rose.model.roadsystem.elements.Base;
+import edu.kit.rose.model.roadsystem.elements.Element;
+import edu.kit.rose.model.roadsystem.elements.Entrance;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import edu.kit.rose.view.GuiTest;
-import edu.kit.rose.view.commons.ConnectorView;
 import edu.kit.rose.view.commons.SearchBar;
 import edu.kit.rose.view.commons.SegmentView;
 import edu.kit.rose.view.panel.roadsystem.Grid;
@@ -56,23 +56,18 @@ public class TestHierarchy extends GuiTest {
   @EnabledOnOs(OS.WINDOWS)
   @Test
   void testGroupStreetSegments() {
-    drag(segmentBoxListCell.get(1)).interact(() -> dropTo(grid));
-    drag(segmentBoxListCell.get(0)).interact(() -> dropTo(grid));
-    drag(segmentBoxListCell.get(0)).interact(() -> dropTo(grid));
-
+    doubleClickOn(segmentBoxListCell.get(1));
     List<SegmentView> segmentViewList = grid.getChildren()
             .stream().filter(e -> e instanceof SegmentView).map(SegmentView.class::cast).toList();
-
-    drag(segmentViewList.get(2)).interact(() -> dropBy(0, 100));
-    drag(segmentViewList.get(1)).interact(() -> dropBy(0, -100));
-
-
-    List<Node> connectorViewList = lookup((Node node) ->
-            node instanceof ConnectorView).queryAll().stream().toList();
-    drag(connectorViewList.get(3)).interact(()
-            -> moveTo(connectorViewList.get(0)).moveBy(3, -25).drop());
-    drag(connectorViewList.get(6)).interact(()
-            -> moveTo(connectorViewList.get(1)).moveBy(-3, 25).drop());
+    drag(segmentViewList.get(0)).interact(() -> dropBy(0, 100));
+    doubleClickOn(segmentBoxListCell.get(2));
+    segmentViewList = grid.getChildren()
+            .stream().filter(e -> e instanceof SegmentView).map(SegmentView.class::cast).toList();
+    moveTo(segmentViewList.get(1));
+    drag(segmentViewList.get(1)).sleep(100).interact(() -> dropBy(0, -40));
+    doubleClickOn(segmentBoxListCell.get(1));
+    segmentViewList = grid.getChildren()
+            .stream().filter(e -> e instanceof SegmentView).map(SegmentView.class::cast).toList();
 
     clickOn(segmentViewList.get(0));
     clickOn("#createGroupButton");
@@ -96,11 +91,16 @@ public class TestHierarchy extends GuiTest {
   @EnabledOnOs(OS.WINDOWS)
   @Test
   void testMoveElementsToGroup() {
-    drag(segmentBoxListCell.get(0)).interact(() -> dropTo(grid));
-    drag(segmentBoxListCell.get(0)).interact(() -> dropTo(grid));
-    List<SegmentView> segmentViewList = grid.getChildren()
-            .stream().filter(e -> e instanceof SegmentView).map(SegmentView.class::cast).toList();
+    drag(segmentBoxListCell.get(1)).interact(() -> dropTo(grid));
+    List<? extends SegmentView<?>> segmentViewList = grid.getChildren()
+            .stream().filter(e -> e instanceof SegmentView)
+            .map(node -> (SegmentView<?>) node).toList();
     drag(segmentViewList.get(0)).interact(() -> dropBy(0, 100));
+    drag(segmentBoxListCell.get(1)).interact(() -> dropTo(grid));
+
+    segmentViewList = grid.getChildren()
+            .stream().filter(e -> e instanceof SegmentView)
+            .map(node -> (SegmentView<?>) node).toList();
 
     clickOn(segmentViewList.get(0));
     clickOn("#createGroupButton");
@@ -108,7 +108,7 @@ public class TestHierarchy extends GuiTest {
     clickOn(segmentViewList.get(1));
     clickOn("#createGroupButton");
 
-    TreeView treeView = lookup("#elementsTreeView").query();
+    TreeView<ElementTreeCell> treeView = lookup("#elementsTreeView").query();
     treeView.getTreeItem(0).setExpanded(true);
     treeView.getTreeItem(2).setExpanded(true);
     List<ElementTreeCell> groupListCells = getGroupListCells();
@@ -116,8 +116,8 @@ public class TestHierarchy extends GuiTest {
     press(MouseButton.PRIMARY)
             .interact(() -> moveTo(groupListCells.get(0)).release(MouseButton.PRIMARY));
     Assertions.assertEquals(2, countChildren(treeView.getTreeItem(0)));
-    Assertions.assertEquals("Base", treeView.getTreeItem(1).getValue());
-    Assertions.assertEquals("Base", treeView.getTreeItem(2).getValue());
+    Assertions.assertEquals("ENTRANCE", ((Element) treeView.getTreeItem(1).getValue()).getName());
+    Assertions.assertEquals("ENTRANCE", ((Element) treeView.getTreeItem(2).getValue()).getName());
   }
 
   /**
@@ -126,30 +126,35 @@ public class TestHierarchy extends GuiTest {
   @EnabledOnOs(OS.WINDOWS)
   @Test
   void testElementSearch() {
-    drag(segmentBoxListCell.get(0)).interact(() -> dropTo(grid));
-    drag(segmentBoxListCell.get(0)).interact(() -> dropTo(grid));
-    List<SegmentView> segmentViewList = grid.getChildren()
-            .stream().filter(e -> e instanceof SegmentView).map(SegmentView.class::cast).toList();
+    drag(segmentBoxListCell.get(1)).interact(() -> dropTo(grid));
+    List<? extends SegmentView<?>> segmentViewList = grid.getChildren()
+            .stream().filter(e -> e instanceof SegmentView)
+            .map(node -> (SegmentView<?>) node).toList();
     drag(segmentViewList.get(0)).interact(() -> dropBy(0, 100));
+    drag(segmentBoxListCell.get(1)).interact(() -> dropTo(grid));
+    segmentViewList = grid.getChildren()
+            .stream().filter(e -> e instanceof SegmentView)
+            .map(node -> (SegmentView<?>) node).toList();
 
     doubleClickOn(segmentViewList.get(0));
     VBox attributeList = lookup("#attributeList").query();
-    EditableAttribute nameAttribute1 = (EditableAttribute) attributeList.getChildren().get(0);
+    EditableAttribute<?> nameAttribute1 = (EditableAttribute<?>) attributeList.getChildren().get(0);
     interact(() -> ((TextField)
             ((HBox) nameAttribute1.getChildren().get(0)).getChildren().get(1)).setText(STREET_1));
 
-    clickOn(segmentBoxListCell.get(0)).doubleClickOn(segmentViewList.get(1));
+    moveBy(-70, 0).press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
+    doubleClickOn(segmentViewList.get(1));
     attributeList = lookup("#attributeList").query();
-    EditableAttribute nameAttribute2 = (EditableAttribute) attributeList.getChildren().get(0);
+    EditableAttribute<?> nameAttribute2 = (EditableAttribute<?>) attributeList.getChildren().get(0);
     interact(() -> ((TextField)
             ((HBox) nameAttribute2.getChildren().get(0)).getChildren().get(1)).setText(STREET_2));
     SearchBar searchBar = (SearchBar) lookup("#hierarchyLayout")
             .<BorderPane>query().getChildren().get(0);
     clickOn(searchBar);
     enterStreetName();
-    TreeView treeView = lookup("#elementsTreeView").query();
+    TreeView<?> treeView = lookup("#elementsTreeView").query();
     Assertions.assertEquals(1, treeView.getExpandedItemCount());
-    Assertions.assertEquals(STREET_1, ((Base) treeView.getTreeItem(0).getValue()).getName());
+    Assertions.assertEquals(STREET_1, ((Entrance) treeView.getTreeItem(0).getValue()).getName());
   }
 
   private List<ElementTreeCell> getGroupListCells() {

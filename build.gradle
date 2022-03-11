@@ -68,8 +68,8 @@ test {
             '--add-exports', "$moduleName/edu.kit.rose.model.roadsystem.attributes" +
                     "=org.junit.platform.engine"
     ]
-    minHeapSize="4g"
-    maxHeapSize="4g"
+    //minHeapSize="4g"
+    //maxHeapSize="4g"
     finalizedBy jacocoTestReport
 }
 

@@ -7,8 +7,8 @@
 <fx:root xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml"
          type="Pane"
-         fx:id="parentContainer">
-    <AnchorPane prefWidth="${parentContainer.width}" prefHeight="${parentContainer.height}">
+         fx:id="roadSystemPanel">
+    <AnchorPane prefWidth="${roadSystemPanel.width}" prefHeight="${roadSystemPanel.height}">
         <ZoomableScrollPane AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" fx:id="zoomContainer"/>
         <ChangeButtonPanel AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" fx:id="changeButtonPanel"/>
         <NavigatorView AnchorPane.rightAnchor="15.0" AnchorPane.bottomAnchor="15.0" fx:id="navigator"/>

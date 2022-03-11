@@ -37,7 +37,7 @@ public class TestSegmentBox extends GuiTest {
     List<Node> segmentViewList = grid.getChildren()
             .stream().filter(e -> e instanceof SegmentView).toList();
     Assertions.assertEquals(1, segmentViewList.size());
-    SegmentView segmentView = (SegmentView) segmentViewList.get(0);
+    SegmentView<?> segmentView = (SegmentView<?>) segmentViewList.get(0);
     Assertions.assertEquals(SegmentType.ENTRANCE, segmentView.getSegment().getSegmentType());
   }
 
@@ -48,7 +48,7 @@ public class TestSegmentBox extends GuiTest {
     List<Node> segmentViewList = grid.getChildren()
             .stream().filter(e -> e instanceof SegmentView).toList();
     Assertions.assertEquals(1, segmentViewList.size());
-    SegmentView segmentView = (SegmentView) segmentViewList.get(0);
+    SegmentView<?> segmentView = (SegmentView<?>) segmentViewList.get(0);
     Assertions.assertEquals(SegmentType.EXIT, segmentView.getSegment().getSegmentType());
   }
 }

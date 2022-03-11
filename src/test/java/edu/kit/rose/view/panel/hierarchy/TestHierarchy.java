@@ -57,17 +57,20 @@ public class TestHierarchy extends GuiTest {
   @Test
   void testGroupStreetSegments() {
     doubleClickOn(segmentBoxListCell.get(1));
-    List<SegmentView> segmentViewList = grid.getChildren()
-            .stream().filter(e -> e instanceof SegmentView).map(SegmentView.class::cast).toList();
+    List<? extends SegmentView<?>> segmentViewList = grid.getChildren()
+            .stream().filter(e -> e instanceof SegmentView)
+            .map(node -> (SegmentView<?>) node).toList();
     drag(segmentViewList.get(0)).interact(() -> dropBy(0, 100));
     doubleClickOn(segmentBoxListCell.get(2));
     segmentViewList = grid.getChildren()
-            .stream().filter(e -> e instanceof SegmentView).map(SegmentView.class::cast).toList();
+            .stream().filter(e -> e instanceof SegmentView)
+            .map(node -> (SegmentView<?>) node).toList();
     moveTo(segmentViewList.get(1));
     drag(segmentViewList.get(1)).sleep(100).interact(() -> dropBy(0, -40));
     doubleClickOn(segmentBoxListCell.get(1));
     segmentViewList = grid.getChildren()
-            .stream().filter(e -> e instanceof SegmentView).map(SegmentView.class::cast).toList();
+            .stream().filter(e -> e instanceof SegmentView)
+            .map(node -> (SegmentView<?>) node).toList();
 
     clickOn(segmentViewList.get(0));
     clickOn("#createGroupButton");
@@ -158,20 +161,20 @@ public class TestHierarchy extends GuiTest {
   }
 
   private List<ElementTreeCell> getGroupListCells() {
-    return from(lookup("#elementsTreeView").<TreeView>query())
+    return from(lookup("#elementsTreeView").<TreeView<?>>query())
             .lookup((Node node) -> node instanceof TreeCell)
             .<ElementTreeCell>queryAll().stream()
             .filter(e -> !e.isEmpty()).toList();
   }
 
-  private int countChildren(TreeItem treeItem) {
+  private int countChildren(TreeItem<?> treeItem) {
     int count = 0;
 
     if (treeItem != null) {
-      ObservableList<TreeItem> children = treeItem.getChildren();
+      ObservableList<? extends TreeItem<?>> children = treeItem.getChildren();
       if (children != null) {
         count += children.size();
-        for (TreeItem child : children) {
+        for (TreeItem<?> child : children) {
           count += countChildren(child);
         }
       }

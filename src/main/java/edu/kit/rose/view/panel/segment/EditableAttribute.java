@@ -6,7 +6,6 @@ import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.view.commons.EnumLocalizationUtility;
 import edu.kit.rose.view.commons.FxmlContainer;
-import edu.kit.rose.view.commons.UnmountUtility;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 import javafx.fxml.FXML;

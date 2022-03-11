@@ -1,16 +1,13 @@
 package edu.kit.rose.controller.attribute;
 
-import com.google.common.util.concurrent.UncheckedExecutionException;
 import edu.kit.rose.controller.command.ChangeCommand;
 import edu.kit.rose.controller.commons.ReplacementLog;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
-import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 
 /**
  * Encapsulates the functionality of setting an attribute accessors value in bulk

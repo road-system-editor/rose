@@ -7,7 +7,6 @@ import edu.kit.rose.controller.commons.ReplacementLog;
 import edu.kit.rose.infrastructure.Box;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.roadsystem.elements.Connection;
-import edu.kit.rose.model.roadsystem.elements.Connector;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Group;
 import edu.kit.rose.model.roadsystem.elements.Segment;

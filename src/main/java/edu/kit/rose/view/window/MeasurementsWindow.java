@@ -3,7 +3,6 @@ package edu.kit.rose.view.window;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import edu.kit.rose.controller.measurement.MeasurementController;
-import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.model.Project;
 import edu.kit.rose.model.roadsystem.measurements.MeasurementType;
 import edu.kit.rose.view.commons.EnumLocalizationUtility;

@@ -16,7 +16,6 @@ import edu.kit.rose.model.roadsystem.elements.Connector;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.view.commons.ConnectionView;
-import edu.kit.rose.view.commons.ConnectorView;
 import edu.kit.rose.view.commons.FxmlContainer;
 import edu.kit.rose.view.commons.SegmentView;
 import edu.kit.rose.view.commons.SegmentViewFactory;

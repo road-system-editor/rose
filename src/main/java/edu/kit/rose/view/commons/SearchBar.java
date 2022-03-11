@@ -1,13 +1,8 @@
 package edu.kit.rose.view.commons;
 
-import edu.kit.rose.infrastructure.UnitObservable;
-import edu.kit.rose.infrastructure.UnitObserver;
 import edu.kit.rose.infrastructure.language.Language;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 import javafx.beans.property.StringProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 

@@ -1,10 +1,9 @@
-<?import javafx.scene.layout.Pane?>
-
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.layout.BorderPane?>
 <?import edu.kit.rose.view.commons.SearchBar?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.TreeView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Pane?>
 <fx:root xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml" type="Pane"
          fx:id="parentContainer"

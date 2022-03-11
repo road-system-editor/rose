@@ -9,7 +9,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
 import javafx.scene.control.ListView;
 
 

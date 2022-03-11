@@ -2,8 +2,6 @@ package edu.kit.rose.controller.hierarchy;
 
 import edu.kit.rose.controller.command.ChangeCommand;
 import edu.kit.rose.controller.commons.ReplacementLog;
-import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
-import edu.kit.rose.model.roadsystem.attributes.AttributeType;
 import edu.kit.rose.model.roadsystem.elements.Group;
 
 /**

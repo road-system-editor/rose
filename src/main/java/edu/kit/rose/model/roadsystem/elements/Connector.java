@@ -7,8 +7,6 @@ import edu.kit.rose.infrastructure.RoseUnitObservable;
 import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.infrastructure.UnitObservable;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**

@@ -2,7 +2,6 @@ package edu.kit.rose.controller.plausibility;
 
 
 import edu.kit.rose.model.plausibility.criteria.CompatibilityCriterion;
-import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterionType;
 import edu.kit.rose.model.plausibility.criteria.validation.ValidationType;
 import edu.kit.rose.model.plausibility.violation.Violation;
 import edu.kit.rose.model.roadsystem.attributes.AttributeType;

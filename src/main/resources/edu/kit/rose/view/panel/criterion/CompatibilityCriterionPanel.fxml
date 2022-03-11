@@ -1,10 +1,9 @@
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.VBox?>
+<?import edu.kit.rose.view.commons.LocalizedComboBox?>
+<?import edu.kit.rose.view.panel.criterion.ApplicableSegmentsSelector?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.ComboBox?>
-<?import edu.kit.rose.view.panel.criterion.ApplicableSegmentsSelector?>
-<?import edu.kit.rose.view.commons.LocalizedComboBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
 <fx:root fx:id="parentContainer"
          xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml" type="Pane">

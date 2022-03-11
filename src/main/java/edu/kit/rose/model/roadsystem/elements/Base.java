@@ -3,10 +3,7 @@ package edu.kit.rose.model.roadsystem.elements;
 import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.infrastructure.UnitObserver;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Represents a one way road. (as in part of a freeway)

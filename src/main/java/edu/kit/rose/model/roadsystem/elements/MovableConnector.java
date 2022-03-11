@@ -3,7 +3,6 @@ package edu.kit.rose.model.roadsystem.elements;
 import edu.kit.rose.infrastructure.Movement;
 import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
-import java.util.Collection;
 import java.util.List;
 
 /**

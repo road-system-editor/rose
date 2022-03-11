@@ -1,8 +1,8 @@
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.Tab?>
 <?import edu.kit.rose.view.panel.segment.AttributePanel?>
 <?import edu.kit.rose.view.panel.segment.MeasurementPanel?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.Pane?>
 <fx:root xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml" type="Pane"
          styleClass="segmentEditorPanel">

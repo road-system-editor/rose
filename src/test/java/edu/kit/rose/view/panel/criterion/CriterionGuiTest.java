@@ -30,7 +30,8 @@ import org.junit.jupiter.api.condition.OS;
 public class CriterionGuiTest extends GuiTest {
   private static final String CRITERION_NAME = "testCriterion";
   private static final String FILE_NAME = "tesCriteriaConfiguration";
-  private static final String VIOLATION_MESSAGE = "B1ASE and B0ASE are incompatible";
+  private static final String COMPATIBILITY_VIOLATION_MESSAGE = "B1ASE and B0ASE are incompatible";
+  private static final String COMPLETENESS_VIOLATION_MESSAGE = "BASE is incomplete";
   private Grid grid;
   private List<Node> segmentViewList;
 
@@ -82,13 +83,10 @@ public class CriterionGuiTest extends GuiTest {
     configureAttributes();
     drag(connectorViewList.get(0)).interact(()
             -> moveTo(connectorViewList.get(2)).moveBy(16, 13).drop());
-    List<ViolationHandle> violationHandleList =
-            from(lookup("#violationList").queryListView()).lookup((Node node) ->
-            node instanceof ViolationHandle).<ViolationHandle>queryAll()
-                    .stream().filter(e -> !((ListCell) e.getParent()).isEmpty()).toList();
+    List<ViolationHandle> violationHandleList = getViolationHandleList();
 
     Assertions.assertEquals(1, violationHandleList.size());
-    Assertions.assertEquals(VIOLATION_MESSAGE, from(violationHandleList.get(0)).lookup((Node node)
+    Assertions.assertEquals(COMPATIBILITY_VIOLATION_MESSAGE, from(violationHandleList.get(0)).lookup((Node node)
             -> node instanceof Label).<Label>queryAll().stream().toList().get(1).getText());
 
     drag(connectorViewList.get(5)).interact(()
@@ -98,6 +96,25 @@ public class CriterionGuiTest extends GuiTest {
             .stream().filter(e -> !((ListCell) e.getParent()).isEmpty()).toList();
 
     Assertions.assertEquals(1, violationHandleList.size());
+  }
+
+  /**
+   * Represents T16.
+   */
+  @EnabledOnOs(OS.WINDOWS)
+  @Test
+  void testValidateCompletenessCriterion() {
+    ListView<SegmentType> listView = lookup("#blueprintListView").queryListView();
+    List<SegmentBlueprint> segmentBoxListCell = from(listView)
+            .lookup((Node node) -> node.getParent() instanceof SegmentBoxListCell)
+            .<SegmentBlueprint>queryAll().stream().toList();
+    doubleClickOn(segmentBoxListCell.get(0));
+    List<ViolationHandle> violationHandleList = getViolationHandleList();
+
+    Assertions.assertEquals(1, violationHandleList.size());
+    Assertions.assertEquals(COMPLETENESS_VIOLATION_MESSAGE, from(violationHandleList.get(0)).lookup((Node node)
+            -> node instanceof Label).<Label>queryAll().stream().toList().get(1).getText());
+
   }
 
   /**
@@ -119,7 +136,7 @@ public class CriterionGuiTest extends GuiTest {
                     .stream().filter(e -> !((ListCell) e.getParent()).isEmpty()).toList();
 
     Assertions.assertEquals(1, violationHandleList.size());
-    Assertions.assertEquals(VIOLATION_MESSAGE, from(violationHandleList.get(0)).lookup((Node node)
+    Assertions.assertEquals(COMPATIBILITY_VIOLATION_MESSAGE, from(violationHandleList.get(0)).lookup((Node node)
             -> node instanceof Label).<Label>queryAll().stream().toList().get(1).getText());
 
     clickOn("#validation");
@@ -131,6 +148,12 @@ public class CriterionGuiTest extends GuiTest {
                             node instanceof ViolationHandle).<ViolationHandle>queryAll()
                     .stream().filter(e -> !((ListCell) e.getParent()).isEmpty()).toList();
     Assertions.assertEquals(0, violationHandleList.size());
+  }
+
+  private List<ViolationHandle> getViolationHandleList() {
+    return from(lookup("#violationList").queryListView()).lookup((Node node) ->
+                    node instanceof ViolationHandle).<ViolationHandle>queryAll()
+            .stream().filter(e -> !((ListCell) e.getParent()).isEmpty()).toList();
   }
 
   private void putSegmentsOnGrid() {

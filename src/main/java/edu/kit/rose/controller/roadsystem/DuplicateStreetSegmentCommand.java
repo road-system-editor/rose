@@ -18,7 +18,7 @@ import java.util.List;
  * Encapsulates the functionality of creating a copy of a segment.
  */
 public class DuplicateStreetSegmentCommand implements ChangeCommand {
-  private static final int DISTANCE_FROM_ORIGIN_SEGMENT = 1;
+  private static final int DISTANCE_FROM_ORIGIN_SEGMENT = 50;
 
   private final Project project;
   private final List<Segment> segmentsToDuplicate;

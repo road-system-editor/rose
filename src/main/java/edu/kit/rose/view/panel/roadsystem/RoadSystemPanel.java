@@ -206,6 +206,15 @@ public class RoadSystemPanel extends FxmlContainer
     };
   }
 
+  /**
+   * Getter for The RoadSystem of the project.
+   *
+   * @return the RoadSystem of the project.
+   */
+  public RoadSystem getRoadSystem() {
+    return this.project.getRoadSystem();
+  }
+
 
   /**
    * Getter for The ZoomSetting of the project.

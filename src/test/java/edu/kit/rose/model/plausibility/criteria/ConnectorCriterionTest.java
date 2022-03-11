@@ -22,7 +22,7 @@ class ConnectorCriterionTest {
    * setup.
    */
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     CriteriaManager criteriaManager = new CriteriaManager();
     this.roadSystem = new GraphRoadSystem(criteriaManager,
         Mockito.mock(TimeSliceSetting.class));

@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Unit tests for {@link Connection}.
  */
-public class ConnectionTest {
+class ConnectionTest {
   private Connector connector1;
   private Connector connector2;
   private Connector connector3;

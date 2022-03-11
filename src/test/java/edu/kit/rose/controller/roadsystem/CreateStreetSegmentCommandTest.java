@@ -23,7 +23,7 @@ import org.mockito.Mockito;
 /**
  * Tests the {@link CreateStreetSegmentCommand} class.
  */
-public class CreateStreetSegmentCommandTest {
+class CreateStreetSegmentCommandTest {
   private RoadSystem roadSystem;
   private Project project;
   private ReplacementLog replacementLog;
@@ -34,7 +34,7 @@ public class CreateStreetSegmentCommandTest {
    * Sets up all mock objects.
    */
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     this.roadSystem = Mockito.mock(RoadSystem.class);
     this.project = Mockito.mock(Project.class);
     ZoomSetting zoomSetting = Mockito.mock(ZoomSetting.class);
@@ -62,13 +62,13 @@ public class CreateStreetSegmentCommandTest {
   }
 
   @Test
-  public void testExecute() {
+  void testExecute() {
     command.execute();
     verify(roadSystem, times(1)).createSegment(SegmentType.BASE);
   }
 
   @Test
-  public void testUnExecute() {
+  void testUnExecute() {
     command.execute();
     command.unexecute();
 
@@ -77,7 +77,7 @@ public class CreateStreetSegmentCommandTest {
   }
 
   @Test
-  public void testReplacement() {
+  void testReplacement() {
     command.execute();
     command.unexecute();
     command.execute();

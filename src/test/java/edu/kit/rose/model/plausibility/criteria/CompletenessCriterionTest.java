@@ -19,7 +19,7 @@ class CompletenessCriterionTest {
   private ViolationManager violationManager;
 
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     this.violationManager = new ViolationManager();
     this.criterion = new CompletenessCriterion(this.violationManager);
   }

@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Tests the {@link DragStreetSegmentsCommand} class.
  */
-public class DragStreetSegmentsCommandTest {
+class DragStreetSegmentsCommandTest {
   private static final Movement MOVEMENT = new Movement(10, 20);
   private static final Movement REVERSE_MOVEMENT = new Movement(-10, -20);
   private RoadSystem roadSystem;
@@ -43,7 +43,7 @@ public class DragStreetSegmentsCommandTest {
    * Sets up the mocking objects.
    */
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     var project = mock(Project.class);
     this.roadSystem = mock(RoadSystem.class);
     when(project.getRoadSystem()).thenReturn(this.roadSystem);
@@ -61,7 +61,7 @@ public class DragStreetSegmentsCommandTest {
   }
 
   @Test
-  public void testCallsMoveSegments() {
+  void testCallsMoveSegments() {
     command.execute();
     verify(roadSystem, times(1))
         .moveSegments(eq(this.segments), eq(MOVEMENT));
@@ -72,7 +72,7 @@ public class DragStreetSegmentsCommandTest {
   }
 
   @Test
-  public void testConsidersReplacements() {
+  void testConsidersReplacements() {
     // replace exit before execution
     Exit exitReplacement = new Exit();
     this.replacementLog.replaceElement(exit, exitReplacement);

@@ -23,7 +23,7 @@ class CriterionFactoryTest {
   private CriterionFactory factory;
 
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     RoadSystem roadSystem = mock(RoadSystem.class);
     Element element = new Base();
     when(roadSystem.getElements()).thenReturn(new RoseSortedBox<>(List.of(element)));

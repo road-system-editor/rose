@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Tests {@link Range}.
  */
-public class RangeTest {
+class RangeTest {
 
   private Range<Double> testRange;
 

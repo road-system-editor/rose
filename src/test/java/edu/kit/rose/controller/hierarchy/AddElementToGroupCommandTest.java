@@ -32,7 +32,7 @@ class AddElementToGroupCommandTest {
   private AddElementToGroupCommand command;
 
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     this.replacementLog = new ReplacementLog();
     this.element = new Base();
     this.toGroup = new Group();

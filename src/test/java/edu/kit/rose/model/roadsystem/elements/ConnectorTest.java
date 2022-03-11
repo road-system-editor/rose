@@ -37,17 +37,17 @@ class ConnectorTest {
   }
 
   @Test
-  public void getAttributeAccessors() {
+  void getAttributeAccessors() {
     Assertions.assertIterableEquals(accessors, this.connector.getAttributeAccessors());
   }
 
   @Test
-  public void getType() {
+  void getType() {
     Assertions.assertEquals(ConnectorType.ENTRY, this.connector.getType());
   }
 
   @Test
-  public void move() {
+  void move() {
     Movement move = new Movement(X, Y);
 
     Assertions.assertEquals(X, this.connector.getPosition().getX());
@@ -60,7 +60,7 @@ class ConnectorTest {
   }
 
   @Test
-  public void moveMovableConnector() {
+  void moveMovableConnector() {
     Movement move = new Movement(X, Y);
 
     Assertions.assertEquals(X, this.movableConnector.getPosition().getX());

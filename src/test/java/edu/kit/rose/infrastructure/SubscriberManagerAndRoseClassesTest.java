@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
  * Tests {@link RoseUnitObservable}, {@link RoseSetObservable} and
  * {@link RoseDualSetObservable}. Thus testing the SubscriberManager class as well.
  */
-public class SubscriberManagerAndRoseClassesTest {
+class SubscriberManagerAndRoseClassesTest {
   @Test
   void testAddSameSubscriberIsIgnored() {
     var unitObservable = new TestUnitObservable();
@@ -42,7 +42,7 @@ public class SubscriberManagerAndRoseClassesTest {
   }
 
   @Test
-  public void singleSubscriberSubscribeTestRoseUnitObservable() {
+  void singleSubscriberSubscribeTestRoseUnitObservable() {
     var unitObservable = new TestUnitObservable();
     UnitObserver<TestUnitObservable> unitObserver = mockUnitObserver();
 
@@ -63,7 +63,7 @@ public class SubscriberManagerAndRoseClassesTest {
   }
 
   @Test
-  public void multipleSubscribersSubscribeTestRoseUnitObservable() {
+  void multipleSubscribersSubscribeTestRoseUnitObservable() {
     var unitObservable = new TestUnitObservable();
     UnitObserver<TestUnitObservable> unitObserver1 = mockUnitObserver();
     UnitObserver<TestUnitObservable> unitObserver2 = mockUnitObserver();
@@ -81,7 +81,7 @@ public class SubscriberManagerAndRoseClassesTest {
   }
 
   @Test
-  public void singleSubscriberSubscribeTestRoseSetObservable() {
+  void singleSubscriberSubscribeTestRoseSetObservable() {
     var setObservable = new TestSetObservable();
     var setObserver = new TestSetObserver();
 
@@ -101,7 +101,7 @@ public class SubscriberManagerAndRoseClassesTest {
   }
 
   @Test
-  public void multipleSubscribersSubscribeTestRoseSetObservable() {
+  void multipleSubscribersSubscribeTestRoseSetObservable() {
     var setObservable = new TestSetObservable();
     var setObserver1 = new TestSetObserver();
     var setObserver2 = new TestSetObserver();
@@ -117,7 +117,7 @@ public class SubscriberManagerAndRoseClassesTest {
   }
 
   @Test
-  public void singleSubscriberSubscribeTestRoseDualSetObservable() {
+  void singleSubscriberSubscribeTestRoseDualSetObservable() {
     var dualSetObservable = new TestDualSetObservable();
     var dualSetObserver = new TestDualSetObserver();
 
@@ -137,7 +137,7 @@ public class SubscriberManagerAndRoseClassesTest {
   }
 
   @Test
-  public void multipleSubscribersSubscribeTestRoseDualSetObservable() {
+  void multipleSubscribersSubscribeTestRoseDualSetObservable() {
     var dualSetObservable = new TestDualSetObservable();
     var dualSetObserver1 = new TestDualSetObserver();
     var dualSetObserver2 = new TestDualSetObserver();

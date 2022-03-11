@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Unit tests for {@link SegmentFactory}.
  */
-public class SegmentFactoryTest {
+class SegmentFactoryTest {
   @Test
   void testConstructorThrows() {
     assertThrows(UnsupportedOperationException.class, SegmentFactory::new);

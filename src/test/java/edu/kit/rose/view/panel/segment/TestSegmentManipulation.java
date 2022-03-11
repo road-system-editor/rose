@@ -28,7 +28,7 @@ import org.junit.jupiter.api.condition.OS;
  * Tests the duplicate, delete, drag and drop,
  * and rotation of street segments.
  */
-public class TestSegmentManipulation extends GuiTest {
+class TestSegmentManipulation extends GuiTest {
   private static final String NAME = "test";
   private static final String LENGTH = "600.0";
   private Grid grid;

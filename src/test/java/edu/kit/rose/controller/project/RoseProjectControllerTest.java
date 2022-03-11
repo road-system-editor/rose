@@ -34,7 +34,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Unit tests for {@link RoseProjectController}.
  */
-public class RoseProjectControllerTest {
+class RoseProjectControllerTest {
   private static final Path INVALID_PATH =
       Path.of("build", "tmp", "invalid-directory", "invalid-file.rose.json");
   private static final Path VALID_PATH =

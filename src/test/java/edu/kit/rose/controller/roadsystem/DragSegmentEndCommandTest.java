@@ -19,7 +19,7 @@ import org.mockito.Mockito;
 /**
  * Tests the {@link DragSegmentEndCommand} class.
  */
-public class DragSegmentEndCommandTest {
+class DragSegmentEndCommandTest {
   private static final Position ORIGINAL_POSITION = new Position(10, 20);
   private static final Position TARGET_POSITION = new Position(20, 30);
   private static final Movement MOVEMENT = new Movement(10, 10);
@@ -34,7 +34,7 @@ public class DragSegmentEndCommandTest {
    * Sets up all mock objects.
    */
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     this.segment = new Base();
 
     connector = this.segment.getEntry();
@@ -50,7 +50,7 @@ public class DragSegmentEndCommandTest {
   }
 
   @Test
-  public void testPositionChanges() {
+  void testPositionChanges() {
     assumeTrue(ORIGINAL_POSITION.equals(connector.getPosition()));
     command.execute();
     assertEquals(TARGET_POSITION, connector.getPosition());
@@ -60,7 +60,7 @@ public class DragSegmentEndCommandTest {
 
   @Disabled("need to adjust to relative coordinates")
   @Test
-  public void testConsidersReplacements() {
+  void testConsidersReplacements() {
     // simulate first replacement before execution
     Base firstReplacement = new Base();
     MovableConnector firstReplacementConnector = firstReplacement.getEntry();

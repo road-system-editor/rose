@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Test for the Or and NOR Validation Strategies.
  */
-public class LessThanValidationTest {
+class LessThanValidationTest {
   private static final Integer smallInteger = 10;
   private static final Integer largeInteger = 99999999;
   private static final Double smallDouble = 10.0;
@@ -16,13 +16,13 @@ public class LessThanValidationTest {
   private ValidationStrategy<Double> doubleLessThanValidationaStrategy;
 
   @BeforeEach
-  public void initialize() {
+  void initialize() {
     integerLessThanValidationaStrategy = new LessThanValidationStrategy<>();
     doubleLessThanValidationaStrategy = new LessThanValidationStrategy<>();
   }
 
   @Test
-  public void testWithoutDiscrepancy() {
+  void testWithoutDiscrepancy() {
     Assertions.assertFalse(integerLessThanValidationaStrategy.validate(smallInteger, largeInteger));
     Assertions.assertFalse(doubleLessThanValidationaStrategy.validate(smallDouble, largeDouble));
     Assertions.assertTrue(integerLessThanValidationaStrategy.validate(smallInteger, smallInteger));
@@ -33,13 +33,13 @@ public class LessThanValidationTest {
    * Same test as above (that used small and large) just switched small and large.
    */
   @Test
-  public void testWithoutDiscrepancyNewOrder() {
+  void testWithoutDiscrepancyNewOrder() {
     Assertions.assertFalse(integerLessThanValidationaStrategy.validate(largeInteger, smallInteger));
     Assertions.assertFalse(doubleLessThanValidationaStrategy.validate(largeDouble, smallDouble));
   }
 
   @Test
-  public void testDiscrepancy() {
+  void testDiscrepancy() {
     Assertions.assertTrue(integerLessThanValidationaStrategy.validate(smallInteger, largeInteger,
         largeDouble));
     Assertions.assertTrue(doubleLessThanValidationaStrategy.validate(smallDouble, largeDouble,
@@ -58,7 +58,7 @@ public class LessThanValidationTest {
    * Same test as above (that used small and large) just switched small and large.
    */
   @Test
-  public void testDiscrepancyNewOrder() {
+  void testDiscrepancyNewOrder() {
     Assertions.assertTrue(integerLessThanValidationaStrategy.validate(largeInteger, smallInteger,
         largeDouble));
     Assertions.assertTrue(doubleLessThanValidationaStrategy.validate(largeDouble, smallDouble,

@@ -37,7 +37,7 @@ import org.mockito.Mockito;
 /**
  * Test the {@link RoseRoadSystemController} class.
  */
-public class RoseRoadSystemControllerTest {
+class RoseRoadSystemControllerTest {
 
   private SelectionBuffer selectionBuffer;
   private Project project;
@@ -72,7 +72,7 @@ public class RoseRoadSystemControllerTest {
   }
 
   @Test
-  public void testSetZoomLevel() {
+  void testSetZoomLevel() {
     roadSystemController.setZoomLevel(10.0);
     Assertions.assertEquals(10, zoomSetting.getZoomLevel());
     roadSystemController.setZoomLevel(11.0);
@@ -80,7 +80,7 @@ public class RoseRoadSystemControllerTest {
   }
 
   @Test
-  public void testSetEditorPosition() {
+  void testSetEditorPosition() {
     Position targetPosition = new Position(0, 0);
 
     roadSystemController.setEditorPosition(targetPosition);
@@ -88,7 +88,7 @@ public class RoseRoadSystemControllerTest {
   }
 
   @Test
-  public void testCreateStreetSegment() {
+  void testCreateStreetSegment() {
     RoadSystem roadSystem = mock(RoadSystem.class);
     Mockito.when(project.getRoadSystem()).thenReturn(roadSystem);
     Mockito.when(roadSystem.createSegment(SegmentType.BASE)).thenReturn(new Base());
@@ -99,7 +99,7 @@ public class RoseRoadSystemControllerTest {
   }
 
   @Test
-  public void testDuplicateStreetSegment() {
+  void testDuplicateStreetSegment() {
     ChangeCommandBuffer changeCommandBuffer = mock(ChangeCommandBuffer.class);
     StorageLock storageLock = mock(StorageLock.class);
     Navigator navigator = mock(Navigator.class);
@@ -117,7 +117,7 @@ public class RoseRoadSystemControllerTest {
   }
 
   @Test
-  public void testDeleteStreetSegment() {
+  void testDeleteStreetSegment() {
     Segment segment = roadSystem.createSegment(SegmentType.BASE);
     roadSystemController.deleteStreetSegment(segment);
     Assertions.assertEquals(0, roadSystem.getElements().getSize());
@@ -125,7 +125,7 @@ public class RoseRoadSystemControllerTest {
 
 
   @Test
-  public void testStreetSegmentDragging() {
+  void testStreetSegmentDragging() {
     Segment segment = roadSystem.createSegment(SegmentType.BASE);
     Position position = new Position(10, 10);
     selectionBuffer.addSegmentSelection(segment);
@@ -137,7 +137,7 @@ public class RoseRoadSystemControllerTest {
 
   @SuppressWarnings("checkstyle:VariableDeclarationUsageDistance")
   @Test
-  public void testStreetSegmentDraggingWithConnection() {
+  void testStreetSegmentDraggingWithConnection() {
     Base segment1 = (Base) roadSystem.createSegment(SegmentType.BASE);
     selectionBuffer.addSegmentSelection(segment1);
     roadSystemController.beginDragStreetSegment(segment1.getCenter());
@@ -149,7 +149,7 @@ public class RoseRoadSystemControllerTest {
   }
 
   @Test
-  public void testToggleSegmentSelection() {
+  void testToggleSegmentSelection() {
     Segment segment = new Base();
     roadSystemController.toggleSegmentSelection(segment);
     Assertions.assertTrue(selectionBuffer.isSegmentSelected(segment));
@@ -158,14 +158,14 @@ public class RoseRoadSystemControllerTest {
   }
 
   @Test
-  public void testAddSegmentSelection() {
+  void testAddSegmentSelection() {
     Segment segment = new Base();
     roadSystemController.addSegmentSelection(segment);
     Assertions.assertTrue(selectionBuffer.isSegmentSelected(segment));
   }
 
   @Test
-  public void testRemoveSegmentSelection() {
+  void testRemoveSegmentSelection() {
     Segment segment = new Base();
     roadSystemController.addSegmentSelection(segment);
     Assertions.assertTrue(selectionBuffer.isSegmentSelected(segment));
@@ -174,7 +174,7 @@ public class RoseRoadSystemControllerTest {
   }
 
   @Test
-  public void clearSegmentSelection() {
+  void clearSegmentSelection() {
     Segment segment1 = new Base();
     Segment segment2 = new Base();
     roadSystemController.addSegmentSelection(segment1);
@@ -184,7 +184,7 @@ public class RoseRoadSystemControllerTest {
   }
 
   @Test
-  public void testPutSegmentSelection() {
+  void testPutSegmentSelection() {
     Segment segment1 = new Base();
     Segment segment2 = new Base();
     Segment segment3 = new Base();
@@ -196,7 +196,7 @@ public class RoseRoadSystemControllerTest {
   }
 
   @Test
-  public void testSelectSegmentsInRectangle() {
+  void testSelectSegmentsInRectangle() {
     Base segmentInRange = (Base) roadSystem.createSegment(SegmentType.BASE);
     roadSystem.createGroup(Set.of(segmentInRange));
     segmentInRange.move(new Movement(10, 0));
@@ -210,7 +210,7 @@ public class RoseRoadSystemControllerTest {
   }
 
   @Test
-  public void testDeleteStreetSegments() {
+  void testDeleteStreetSegments() {
     Segment segmentInRange = roadSystem.createSegment(SegmentType.BASE);
     selectionBuffer.addSegmentSelection(segmentInRange);
     roadSystemController.deleteStreetSegments();
@@ -219,7 +219,7 @@ public class RoseRoadSystemControllerTest {
 
   @Disabled("need to adjust to relative coordinates")
   @Test
-  public void testDragSegmentEnd() {
+  void testDragSegmentEnd() {
     Base segment1 = (Base) roadSystem.createSegment(SegmentType.BASE);
     Base segment2 = (Base) roadSystem.createSegment(SegmentType.BASE);
     System.out.println(segment1.getEntry().getPosition().getX());
@@ -241,7 +241,7 @@ public class RoseRoadSystemControllerTest {
   }
 
   @Test
-  public void testNotifies() {
+  void testNotifies() {
     SetObserver<Segment, RoadSystemController> observer = mockObserver();
     roadSystemController.addSubscriber(observer);
     roadSystemController.notifySubscribers();
@@ -261,17 +261,17 @@ public class RoseRoadSystemControllerTest {
 
 
   @Test
-  public void testGetThis() {
+  void testGetThis() {
     Assertions.assertSame(roadSystemController, roadSystemController.getThis());
   }
 
   @Test
-  public void testGetIntersectionDistance() {
+  void testGetIntersectionDistance() {
     Assertions.assertEquals(30, roadSystemController.getIntersectionDistance());
   }
 
   @Test
-  public void testRotateSegment() {
+  void testRotateSegment() {
     Segment segment = roadSystem.createSegment(SegmentType.ENTRANCE);
     roadSystemController.addSegmentSelection(segment);
     roadSystemController.rotateSegment();

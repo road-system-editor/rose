@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Unit tests for {@link AttributeAccessor}.
  */
-public class AttributeAccessorTest {
+class AttributeAccessorTest {
   private static final AttributeType TYPE = AttributeType.COMMENT;
 
   private int targetValue;
@@ -19,7 +19,7 @@ public class AttributeAccessorTest {
   private AttributeAccessor<Integer> accessor;
 
   @BeforeEach
-  public void beforeEach() {
+  void beforeEach() {
     targetValue = 0;
     accessor = new AttributeAccessor<>(TYPE, getter, setter);
   }
@@ -29,7 +29,7 @@ public class AttributeAccessorTest {
    * values is {@code null}.
    */
   @Test
-  public void testConstructor() {
+  void testConstructor() {
     Assertions.assertThrows(NullPointerException.class,
         () -> new AttributeAccessor<>(null, getter, setter));
 
@@ -44,7 +44,7 @@ public class AttributeAccessorTest {
    * Tests whether the attribute accessor returns the correct attribute type and name.
    */
   @Test
-  public void testAttributeType() {
+  void testAttributeType() {
     Assertions.assertEquals(TYPE, accessor.getAttributeType());
   }
 
@@ -52,7 +52,7 @@ public class AttributeAccessorTest {
    * Tests whether the getter gets the correct value.
    */
   @Test
-  public void testGetter() {
+  void testGetter() {
     targetValue = 1;
     Assertions.assertEquals(targetValue, accessor.getValue());
 
@@ -64,7 +64,7 @@ public class AttributeAccessorTest {
    * Tests whether the setter sets the correct value.
    */
   @Test
-  public void testSetter() {
+  void testSetter() {
     accessor.setValue(1);
     Assertions.assertEquals(1, targetValue);
 
@@ -73,7 +73,7 @@ public class AttributeAccessorTest {
   }
 
   @Test
-  public void testGetThis() {
+  void testGetThis() {
     Assertions.assertSame(accessor, accessor.getThis());
   }
 }

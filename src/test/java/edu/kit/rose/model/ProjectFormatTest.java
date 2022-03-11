@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Unit tests for {@link ProjectFormat}.
  */
-public class ProjectFormatTest {
+class ProjectFormatTest {
   @Test
   void testEnumValuesAreDifferent() {
     assertNotSame(ProjectFormat.ROSE, ProjectFormat.SUMO);

@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Unit tests for the {@link FileFormat} class.
  */
-public class FileFormatTest {
+class FileFormatTest {
   @Test
   void testFileExtensionsValid() {
     for (var format : FileFormat.values()) {

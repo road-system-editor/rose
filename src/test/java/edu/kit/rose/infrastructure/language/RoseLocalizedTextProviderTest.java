@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Test;
 /**
  * Unit tests for {@link RoseLocalizedTextProvider}.
  */
-public class RoseLocalizedTextProviderTest {
+class RoseLocalizedTextProviderTest {
   @Test
-  public void testSetLanguage() {
+  void testSetLanguage() {
     var translator = new RoseLocalizedTextProvider();
 
     translator.setSelectedLanguage(Language.GERMAN);
@@ -21,7 +21,7 @@ public class RoseLocalizedTextProviderTest {
   }
 
   @Test
-  public void testSubscription() {
+  void testSubscription() {
     var translator = new RoseLocalizedTextProvider();
 
     AtomicInteger subscriberCalls = new AtomicInteger();
@@ -46,7 +46,7 @@ public class RoseLocalizedTextProviderTest {
   }
 
   @Test
-  public void testSubscriptionOnlyFiresOnLanguageChange() {
+  void testSubscriptionOnlyFiresOnLanguageChange() {
     var translator = new RoseLocalizedTextProvider();
     translator.setSelectedLanguage(Language.ENGLISH);
 
@@ -71,7 +71,7 @@ public class RoseLocalizedTextProviderTest {
   }
 
   @Test
-  public void testTitleTranslation() {
+  void testTitleTranslation() {
     var translator = new RoseLocalizedTextProvider();
 
     translator.setSelectedLanguage(Language.ENGLISH);

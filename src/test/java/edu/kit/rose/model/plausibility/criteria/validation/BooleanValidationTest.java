@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Tests for the Validation Strategies.
  */
-public class BooleanValidationTest {
+class BooleanValidationTest {
 
   private static final int legalDiscrepancy = 10;
   private static ValidationStrategy<Boolean> norValidationStrategy;
@@ -20,13 +20,13 @@ public class BooleanValidationTest {
    * Initialize.
    */
   @BeforeEach
-  public void initialize() {
+  void initialize() {
     norValidationStrategy = new NorValidationStrategy();
     orValidationStrategy = new OrValidationStrategy();
   }
 
   @Test
-  public void testNorValidationStrategy() {
+  void testNorValidationStrategy() {
     Assertions.assertFalse(norValidationStrategy.validate(TRUE, TRUE));
     Assertions.assertFalse(norValidationStrategy.validate(FALSE, TRUE));
     Assertions.assertFalse(norValidationStrategy.validate(TRUE, FALSE));
@@ -39,7 +39,7 @@ public class BooleanValidationTest {
   }
 
   @Test
-  public void testOrValidationStrategy() {
+  void testOrValidationStrategy() {
     Assertions.assertTrue(orValidationStrategy.validate(TRUE, TRUE));
     Assertions.assertTrue(orValidationStrategy.validate(FALSE, TRUE));
     Assertions.assertTrue(orValidationStrategy.validate(TRUE, FALSE));

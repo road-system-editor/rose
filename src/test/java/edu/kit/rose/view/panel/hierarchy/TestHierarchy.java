@@ -35,7 +35,7 @@ import org.junit.jupiter.api.condition.OS;
 /**
  * Tests the GUI functionality of hierarchy.
  */
-public class TestHierarchy extends GuiTest {
+class TestHierarchy extends GuiTest {
   private static final String STREET_1 = "Lieblingsstrasse";
   private static final String STREET_2 = "Strasse 2";
   private List<SegmentBlueprint> segmentBoxListCell;

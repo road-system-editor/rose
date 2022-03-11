@@ -20,7 +20,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Tests the {@link Group} class.
  */
-public class GroupTest {
+class GroupTest {
   private Element element;
   private Segment segment;
 
@@ -31,7 +31,7 @@ public class GroupTest {
   }
 
   @Test()
-  public void testAddElement() {
+  void testAddElement() {
     Group g = new Group();
 
     g.addElement(element);
@@ -46,7 +46,7 @@ public class GroupTest {
   }
 
   @Test
-  public void testRemoveElement() {
+  void testRemoveElement() {
     Group group = new Group();
 
     group.addElement(element);
@@ -61,7 +61,7 @@ public class GroupTest {
   }
 
   @Test
-  public void testGetElements() {
+  void testGetElements() {
     Group group = new Group();
     Group groupToAdd = new Group();
 
@@ -76,7 +76,7 @@ public class GroupTest {
   }
 
   @Test
-  public void testContains() {
+  void testContains() {
     Group group = new Group();
     Group groupToAdd = new Group();
 
@@ -90,21 +90,21 @@ public class GroupTest {
   }
 
   @Test
-  public void testIsContainer() {
+  void testIsContainer() {
     Group group = new Group();
 
     assertTrue(group.isContainer());
   }
 
   @Test
-  public void testGetThis() {
+  void testGetThis() {
     Group group = new Group();
 
     Assertions.assertSame(group, group.getThis());
   }
 
   @Test
-  public void testGetAttributeAccessors() {
+  void testGetAttributeAccessors() {
     Group group = new Group();
 
     SortedBox<AttributeAccessor<?>> attributeAccessors = group.getAttributeAccessors();

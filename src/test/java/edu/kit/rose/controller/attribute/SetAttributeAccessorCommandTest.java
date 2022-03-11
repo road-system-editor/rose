@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Tests the {@link SetAttributeAccessorCommand} class.
  */
-public class SetAttributeAccessorCommandTest {
+class SetAttributeAccessorCommandTest {
   private static final int INITIAL_VALUE = 0;
   private static final int SET_VALUE = 1;
 

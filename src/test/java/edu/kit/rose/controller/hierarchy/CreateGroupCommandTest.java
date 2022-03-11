@@ -134,7 +134,7 @@ class CreateGroupCommandTest {
    * previous parents and checks if the group is removed from the roadsystem.
    */
   @Test
-  public void testUnexecuteTest() {
+  void testUnexecuteTest() {
     command.execute();
     command.unexecute();
 
@@ -148,7 +148,7 @@ class CreateGroupCommandTest {
    * Tests whether the command logs the group replacement to the replacement log on a redo action.
    */
   @Test
-  public void testRedoReplacement() {
+  void testRedoReplacement() {
     command.execute();
     command.unexecute();
     command.execute();
@@ -161,7 +161,7 @@ class CreateGroupCommandTest {
    * parent.
    */
   @Test
-  public void testConsidersReplacements() {
+  void testConsidersReplacements() {
     // simulate that parent1 has been replaced with parentReplacement1
     var parentReplacement1 = new Group();
     parentReplacement1.addElement(element1);

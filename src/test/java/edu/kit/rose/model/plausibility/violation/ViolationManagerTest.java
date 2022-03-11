@@ -18,7 +18,7 @@ import org.mockito.Mockito;
 /**
  * Tests for the ViolationManager.
  */
-public class ViolationManagerTest {
+class ViolationManagerTest {
   private PlausibilityCriterion compatibilityCriterion;
   private PlausibilityCriterion valueCriterion;
   private Collection<Segment> twoOffendingSegments;
@@ -48,7 +48,7 @@ public class ViolationManagerTest {
   }
 
   @Test
-  public void testAddAndGetViolation() {
+  void testAddAndGetViolation() {
     Assertions.assertEquals(0, violationManager.getViolations().getSize());
     violationManager.addViolation(compatibilityViolation);
     SortedBox<Violation> violations = violationManager.getViolations();
@@ -63,7 +63,7 @@ public class ViolationManagerTest {
   }
 
   @Test
-  public void testRemoveViolation() {
+  void testRemoveViolation() {
     violationManager.addViolation(compatibilityViolation);
     violationManager.addViolation(valueViolation);
     violationManager.removeViolation(compatibilityViolation);
@@ -74,7 +74,7 @@ public class ViolationManagerTest {
   }
 
   @Test
-  public void testGetViolation() {
+  void testGetViolation() {
     Violation violationsNoSegments = new Violation(compatibilityCriterion, emptyOffendingSegments);
     violationManager.addViolation(violationsNoSegments);
     violationManager.addViolation(compatibilityViolation);
@@ -89,7 +89,7 @@ public class ViolationManagerTest {
   }
 
   @Test
-  public void testGetViolationNoResult() {
+  void testGetViolationNoResult() {
     Violation violationsNoSegments = new Violation(compatibilityCriterion, emptyOffendingSegments);
     violationManager.addViolation(violationsNoSegments);
     violationManager.addViolation(valueViolation);
@@ -103,7 +103,7 @@ public class ViolationManagerTest {
 
 
   @Test
-  public void testIteratorImmutable() {
+  void testIteratorImmutable() {
     violationManager.addViolation(compatibilityViolation);
     violationManager.addViolation(valueViolation);
     Iterator<Violation> iterator = violationManager.iterator();
@@ -112,7 +112,7 @@ public class ViolationManagerTest {
   }
 
   @Test
-  public void testGetThis() {
+  void testGetThis() {
     Assertions.assertSame(violationManager, violationManager.getThis());
   }
 

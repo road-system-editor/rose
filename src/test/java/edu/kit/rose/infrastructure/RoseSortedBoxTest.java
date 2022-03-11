@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Unit Test for the RoseBox Class.
  */
-public class RoseSortedBoxTest {
+class RoseSortedBoxTest {
   static int numberOfElements = 10;
   static List<Integer> testArrayList;
 
@@ -30,12 +30,12 @@ public class RoseSortedBoxTest {
   }
 
   @Test
-  public void testGetSize() {
+  void testGetSize() {
     Assertions.assertEquals(numberOfElements, sortedBox.getSize());
   }
 
   @Test
-  public void testIterator() {
+  void testIterator() {
     Iterator<Integer> iterator = sortedBox.iterator();
 
     for (int i = 0; i < numberOfElements; i++) {
@@ -51,7 +51,7 @@ public class RoseSortedBoxTest {
   }
 
   @Test
-  public void testGet() {
+  void testGet() {
     for (int i = 0; i < numberOfElements; i++) {
       Assertions.assertEquals(i, sortedBox.get(i));
     }
@@ -59,13 +59,13 @@ public class RoseSortedBoxTest {
   }
 
   @Test
-  public void testContains() {
+  void testContains() {
     testArrayList.forEach(i -> Assertions.assertTrue(sortedBox.contains(i)));
     Assertions.assertFalse(sortedBox.contains(numberOfElements));
   }
 
   @Test
-  public void testStream() {
+  void testStream() {
     List<Integer> expected = List.of(0, 1, 4, 9, 16, 25, 36, 49, 64, 81);
     List<Integer> actual = sortedBox.stream().map(x -> x * x).toList();
     assertEquals(expected, actual);

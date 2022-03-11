@@ -22,7 +22,7 @@ class SetGroupNameCommandTest {
   private SetGroupNameCommand command;
 
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     this.group = new Group();
     this.group.setName(UNSET);
 

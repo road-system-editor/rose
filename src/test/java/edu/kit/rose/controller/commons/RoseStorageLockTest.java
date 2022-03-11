@@ -6,10 +6,10 @@ import org.junit.jupiter.api.Test;
 /**
  * Tests the {@link RoseStorageLock}.
  */
-public class RoseStorageLockTest {
+class RoseStorageLockTest {
 
   @Test
-  public void testAcquiring() {
+  void testAcquiring() {
     RoseStorageLock storageLock = new RoseStorageLock();
 
     Assertions.assertFalse(storageLock.isStorageLockAcquired());

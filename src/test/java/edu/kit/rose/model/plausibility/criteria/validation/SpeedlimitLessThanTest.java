@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Unit tests for the {@link SpeedLessThanValidationStrategy} Class.
  */
-public class SpeedlimitLessThanTest {
+class SpeedlimitLessThanTest {
   private ValidationStrategy<SpeedLimit> speedLimitStrategy;
 
 

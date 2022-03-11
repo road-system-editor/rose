@@ -14,6 +14,7 @@ import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.elements.Base;
 import edu.kit.rose.model.roadsystem.elements.Entrance;
 import edu.kit.rose.model.roadsystem.elements.Exit;
+import edu.kit.rose.model.roadsystem.elements.Group;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import edu.kit.rose.model.roadsystem.elements.SegmentType;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,6 +28,7 @@ public class CreateStreetSegmentCommandTest {
   private RoadSystem roadSystem;
   private Project project;
   private ReplacementLog replacementLog;
+  private Group rootGroup;
 
   private CreateStreetSegmentCommand command;
 
@@ -37,6 +39,7 @@ public class CreateStreetSegmentCommandTest {
   public void setUp() {
     this.roadSystem = Mockito.mock(RoadSystem.class);
     this.project = Mockito.mock(Project.class);
+    this.rootGroup = new Group();
     ZoomSetting zoomSetting = Mockito.mock(ZoomSetting.class);
     this.replacementLog = Mockito.mock(ReplacementLog.class);
 
@@ -45,6 +48,7 @@ public class CreateStreetSegmentCommandTest {
     when(project.getRoadSystem()).thenReturn(roadSystem);
     when(roadSystem.getElements()).thenReturn(new RoseBox<>());
     when(project.getZoomSetting()).thenReturn(zoomSetting);
+    when(project.getRoadSystem().getRootGroup()).thenReturn(rootGroup);
 
     when(roadSystem.createSegment(any(SegmentType.class)))
         .thenAnswer(invocation -> createSegment(invocation.getArgument(0)));

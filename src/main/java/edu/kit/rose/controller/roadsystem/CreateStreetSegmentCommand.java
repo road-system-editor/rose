@@ -66,7 +66,9 @@ public class CreateStreetSegmentCommand implements ChangeCommand {
 
   @Override
   public void unexecute() {
-    this.project.getRoadSystem()
-        .removeElement(this.replacementLog.getCurrentVersion(this.segment));
+    Segment segmentToRemove = this.replacementLog.getCurrentVersion(this.segment);
+    // Removing from root group should be done in RoadSystem, but that crashes
+    this.project.getRoadSystem().getRootGroup().removeElement(segmentToRemove);
+    this.project.getRoadSystem().removeElement(segmentToRemove);
   }
 }

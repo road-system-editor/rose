@@ -1,15 +1,8 @@
 package edu.kit.rose.model.roadsystem.elements;
 
-import edu.kit.rose.infrastructure.Box;
-import edu.kit.rose.infrastructure.Movement;
 import edu.kit.rose.infrastructure.Position;
-import edu.kit.rose.infrastructure.SortedBox;
-import edu.kit.rose.infrastructure.UnitObserver;
 import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
-import edu.kit.rose.model.roadsystem.measurements.Measurement;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Represents a freeway entrance.

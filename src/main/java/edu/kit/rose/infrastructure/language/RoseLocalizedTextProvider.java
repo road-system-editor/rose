@@ -2,7 +2,6 @@ package edu.kit.rose.infrastructure.language;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 

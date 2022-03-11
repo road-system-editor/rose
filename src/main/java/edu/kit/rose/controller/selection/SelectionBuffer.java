@@ -1,7 +1,6 @@
 package edu.kit.rose.controller.selection;
 
 import edu.kit.rose.infrastructure.SetObservable;
-import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import java.util.List;
 

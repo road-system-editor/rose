@@ -11,7 +11,6 @@ import edu.kit.rose.infrastructure.RoseSortedBox;
 import edu.kit.rose.model.plausibility.violation.ViolationManager;
 import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.elements.Base;
-import edu.kit.rose.model.roadsystem.elements.Connection;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;

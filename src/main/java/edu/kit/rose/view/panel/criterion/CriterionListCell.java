@@ -2,7 +2,6 @@ package edu.kit.rose.view.panel.criterion;
 
 import edu.kit.rose.controller.plausibility.PlausibilityController;
 import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterion;
-import java.util.function.Consumer;
 import javafx.scene.control.ListCell;
 
 /**

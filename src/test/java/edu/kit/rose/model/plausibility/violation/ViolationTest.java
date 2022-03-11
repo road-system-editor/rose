@@ -1,7 +1,6 @@
 package edu.kit.rose.model.plausibility.violation;
 
 import edu.kit.rose.model.plausibility.criteria.PlausibilityCriterion;
-import edu.kit.rose.model.plausibility.violation.Violation;
 import edu.kit.rose.model.roadsystem.elements.Segment;
 import java.util.ArrayList;
 import java.util.Collection;

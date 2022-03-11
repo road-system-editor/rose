@@ -3,7 +3,6 @@ package edu.kit.rose.view.panel.hierarchy;
 import edu.kit.rose.controller.hierarchy.HierarchyController;
 import edu.kit.rose.controller.roadsystem.RoadSystemController;
 import edu.kit.rose.infrastructure.SetObserver;
-import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.Group;

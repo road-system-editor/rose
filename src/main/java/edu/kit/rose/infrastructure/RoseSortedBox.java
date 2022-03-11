@@ -1,6 +1,5 @@
 package edu.kit.rose.infrastructure;
 
-import java.util.Iterator;
 import java.util.List;
 
 /**

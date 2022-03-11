@@ -1,6 +1,5 @@
 package edu.kit.rose.view.commons;
 
-import edu.kit.rose.infrastructure.Movement;
 import edu.kit.rose.infrastructure.UnitObserver;
 import edu.kit.rose.model.roadsystem.elements.Connector;
 import edu.kit.rose.model.roadsystem.elements.Segment;

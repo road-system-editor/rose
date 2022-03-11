@@ -1,11 +1,11 @@
-<?import javafx.scene.layout.BorderPane?>
+<?import edu.kit.rose.view.panel.hierarchy.HierarchyPanel?>
 <?import edu.kit.rose.view.panel.roadsystem.RoadSystemPanel?>
 <?import edu.kit.rose.view.panel.segmentbox.SegmentBoxPanel?>
 <?import edu.kit.rose.view.panel.violation.ViolationOverviewPanel?>
-<?import edu.kit.rose.view.panel.hierarchy.HierarchyPanel?>
 <?import edu.kit.rose.view.window.RoseMenuBar?>
-<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml">

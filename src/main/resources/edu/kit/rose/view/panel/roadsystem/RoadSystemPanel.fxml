@@ -1,9 +1,8 @@
-<?import javafx.scene.layout.Pane?>
-
-<?import edu.kit.rose.view.panel.roadsystem.NavigatorView?>
 <?import edu.kit.rose.view.panel.roadsystem.ChangeButtonPanel?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import edu.kit.rose.view.panel.roadsystem.NavigatorView?>
 <?import edu.kit.rose.view.panel.roadsystem.ZoomableScrollPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
 <fx:root xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml"
          type="Pane"

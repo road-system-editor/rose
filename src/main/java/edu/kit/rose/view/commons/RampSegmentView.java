@@ -1,14 +1,11 @@
 package edu.kit.rose.view.commons;
 
 import edu.kit.rose.controller.roadsystem.RoadSystemController;
-import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.infrastructure.language.LocalizedTextProvider;
 import edu.kit.rose.model.roadsystem.elements.Element;
 import edu.kit.rose.model.roadsystem.elements.RampSegment;
 import java.util.LinkedList;
 import java.util.List;
-import javafx.event.Event;
-import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.transform.Rotate;

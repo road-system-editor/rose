@@ -5,7 +5,6 @@ import edu.kit.rose.model.roadsystem.attributes.AttributeAccessor;
 import edu.kit.rose.model.roadsystem.attributes.SpeedLimit;
 import edu.kit.rose.view.commons.EnumLocalizationUtility;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 

@@ -2,13 +2,10 @@ package edu.kit.rose.view.panel.roadsystem;
 
 import com.google.inject.Inject;
 import edu.kit.rose.controller.roadsystem.RoadSystemController;
-import edu.kit.rose.infrastructure.Position;
 import edu.kit.rose.infrastructure.language.Language;
 import edu.kit.rose.model.Project;
-import edu.kit.rose.model.ZoomSetting;
 import edu.kit.rose.view.commons.FxmlContainer;
 import java.util.Collection;
-import java.util.List;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;

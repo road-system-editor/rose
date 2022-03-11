@@ -1,8 +1,5 @@
 package edu.kit.rose.model.plausibility.criteria.validation;
 
-import edu.kit.rose.model.roadsystem.DataType;
-import java.util.ArrayList;
-import java.util.Collection;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

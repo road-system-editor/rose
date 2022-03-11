@@ -104,27 +104,28 @@ public class TestRoadSystemTools extends GuiTest {
   /**
    * Represents T31.
    */
-  @Disabled("fails because the plus button does not zoomIn")
   @EnabledOnOs(OS.WINDOWS)
   @Test
   void testZoom() {
     ZoomSetting zoomSetting = lookup("#roadSystemPanel").<RoadSystemPanel>query().getZoomSetting();
+    grid = lookup((Node node) -> node instanceof Grid).query();
+    clickOn(grid);
     double level0 = zoomSetting.getZoomLevel();
-    push(KeyCode.PLUS);
+    clickOn("#zoomInButton");
     double level1 = zoomSetting.getZoomLevel();
-    Assertions.assertTrue(level1 < level0);
+    Assertions.assertTrue(level1 > level0);
 
-    push(KeyCode.PLUS);
+    clickOn("#zoomInButton");
     double level2 = zoomSetting.getZoomLevel();
-    Assertions.assertTrue(level2 < level1);
+    Assertions.assertTrue(level2 > level1);
 
-    push(KeyCode.MINUS);
+    clickOn("#zoomOutButton");
     double level3 = zoomSetting.getZoomLevel();
     Assertions.assertEquals(level1, level3);
 
-    push(KeyCode.MINUS);
+    clickOn("#zoomOutButton");
     double level4 = zoomSetting.getZoomLevel();
-    Assertions.assertEquals(level0, level4);
+    Assertions.assertEquals(level0, level4, 0.1);
   }
 
   private List<Node> getSegmentViewList() {

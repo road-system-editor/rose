@@ -58,6 +58,8 @@ public class CriterionGuiTest extends GuiTest {
     push(KeyCode.LEFT);
     push(KeyCode.ENTER);
     clickOn("#deleteAllButton");
+    criteriaListCell = getCriteriaListCell();
+    Assertions.assertEquals(0, criteriaListCell.size());
     clickOn("#importButton");
     selectTestConfiguration();
     criteriaListCell = getCriteriaListCell();
@@ -98,7 +100,7 @@ public class CriterionGuiTest extends GuiTest {
             -> moveTo(connectorViewList.get(7)).moveBy(16, -13).drop());
     violationHandleList = from(lookup("#violationList").queryListView()).lookup((Node node) ->
             node instanceof ViolationHandle).<ViolationHandle>queryAll()
-            .stream().filter(e -> !((ListCell) e.getParent()).isEmpty()).toList();
+            .stream().filter(e -> !((ListCell<?>) e.getParent()).isEmpty()).toList();
 
     Assertions.assertEquals(1, violationHandleList.size());
   }
@@ -118,23 +120,26 @@ public class CriterionGuiTest extends GuiTest {
                 -> node instanceof Label).<Label>queryAll().stream().toList().get(1).getText());
 
     Grid grid = lookup((Node node) -> node instanceof Grid).query();
-    List<SegmentView> segmentViewList = grid.getChildren()
-            .stream().filter(e -> e instanceof SegmentView).map(SegmentView.class::cast).toList();
+    List<? extends SegmentView<?>> segmentViewList = grid.getChildren()
+            .stream().filter(e -> e instanceof SegmentView)
+            .map(node -> (SegmentView<?>) node).toList();
     moveTo(segmentViewList.get(0))
             .moveBy(10, 3).press(MouseButton.PRIMARY).release(MouseButton.PRIMARY)
             .press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
     VBox attributeList = lookup("#attributeList").query();
-    EditableAttribute lengthAttribute = (EditableAttribute) attributeList.getChildren().get(2);
+    EditableAttribute<?> lengthAttribute =
+            (EditableAttribute<?>) attributeList.getChildren().get(2);
     ((TextField) ((HBox) lengthAttribute.getChildren().get(0)).getChildren().get(1)).setText("3");
-    EditableAttribute slopeAttribute = (EditableAttribute) attributeList.getChildren().get(3);
+    EditableAttribute<?> slopeAttribute = (EditableAttribute<?>) attributeList.getChildren().get(3);
     ((TextField) ((HBox) slopeAttribute.getChildren().get(0)).getChildren().get(1)).setText("3");
-    EditableAttribute lanesAttribute = (EditableAttribute) attributeList.getChildren().get(4);
+    EditableAttribute<?> lanesAttribute = (EditableAttribute<?>) attributeList.getChildren().get(4);
     ((TextField) ((HBox) lanesAttribute.getChildren().get(0)).getChildren().get(1)).setText("3");
-    EditableAttribute conurbationAttribute = (EditableAttribute) attributeList.getChildren().get(5);
+    EditableAttribute<?> conurbationAttribute =
+            (EditableAttribute<?>) attributeList.getChildren().get(5);
     moveTo(conurbationAttribute).moveBy(100, 0)
             .press(MouseButton.PRIMARY).release(MouseButton.PRIMARY)
             .moveBy(0, 20).press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
-    EditableAttribute speedAttribute = (EditableAttribute) attributeList.getChildren().get(6);
+    EditableAttribute<?> speedAttribute = (EditableAttribute<?>) attributeList.getChildren().get(6);
     moveTo(speedAttribute).moveBy(100, 0).press(MouseButton.PRIMARY).release(MouseButton.PRIMARY)
             .moveBy(0, 20).press(MouseButton.PRIMARY).release(MouseButton.PRIMARY);
 
@@ -158,7 +163,7 @@ public class CriterionGuiTest extends GuiTest {
     List<ViolationHandle> violationHandleList =
             from(lookup("#violationList").queryListView()).lookup((Node node) ->
                             node instanceof ViolationHandle).<ViolationHandle>queryAll()
-                    .stream().filter(e -> !((ListCell) e.getParent()).isEmpty()).toList();
+                    .stream().filter(e -> !((ListCell<?>) e.getParent()).isEmpty()).toList();
 
     Assertions.assertEquals(1, violationHandleList.size());
     Assertions.assertEquals(COMPATIBILITY_VIOLATION_MESSAGE,
@@ -172,7 +177,7 @@ public class CriterionGuiTest extends GuiTest {
     violationHandleList =
             from(lookup("#violationList").queryListView()).lookup((Node node) ->
                             node instanceof ViolationHandle).<ViolationHandle>queryAll()
-                    .stream().filter(e -> !((ListCell) e.getParent()).isEmpty()).toList();
+                    .stream().filter(e -> !((ListCell<?>) e.getParent()).isEmpty()).toList();
     Assertions.assertEquals(0, violationHandleList.size());
   }
 
@@ -192,19 +197,20 @@ public class CriterionGuiTest extends GuiTest {
             .press(MouseButton.PRIMARY).moveBy(32, 103).release(MouseButton.PRIMARY);
     doubleClickOn(violationHandleList.get(0));
 
-    Assertions.assertEquals(14999.900390625, lookup("#roadSystemPanel")
-            .<RoadSystemPanel>query().getZoomSetting().getCenterOfView().getX());
-    Assertions.assertEquals(14999.7001953125, lookup("#roadSystemPanel")
-            .<RoadSystemPanel>query().getZoomSetting().getCenterOfView().getY());
-    List<SegmentView> segmentViewList = grid.getChildren()
-            .stream().filter(e -> e instanceof SegmentView).map(SegmentView.class::cast).toList();
+    Assertions.assertEquals(15000, lookup("#roadSystemPanel")
+            .<RoadSystemPanel>query().getZoomSetting().getCenterOfView().getX(), 0.5);
+    Assertions.assertEquals(15000, lookup("#roadSystemPanel")
+            .<RoadSystemPanel>query().getZoomSetting().getCenterOfView().getY(), 0.5);
+    List<? extends SegmentView<?>> segmentViewList = grid.getChildren()
+            .stream().filter(e -> e instanceof SegmentView)
+            .map(node -> (SegmentView<?>) node).toList();
     Assertions.assertTrue(segmentViewList.get(0).getDrawAsSelected());
   }
 
   private List<ViolationHandle> getViolationHandleList() {
     return from(lookup("#violationList").queryListView()).lookup((Node node) ->
                     node instanceof ViolationHandle).<ViolationHandle>queryAll()
-            .stream().filter(e -> !((ListCell) e.getParent()).isEmpty()).toList();
+            .stream().filter(e -> !((ListCell<?>) e.getParent()).isEmpty()).toList();
   }
 
   private void putOneSegmentOnGrid() {
@@ -249,7 +255,7 @@ public class CriterionGuiTest extends GuiTest {
             from(lookup("#criteriaList").queryListView()).lookup((Node node)
                             -> node.getParent() instanceof CriterionListCell)
                     .queryAll().stream()
-                    .filter(e -> !((ListCell) e.getParent()).isEmpty()).toList();
+                    .filter(e -> !((ListCell<?>) e.getParent()).isEmpty()).toList();
     clickOn(criteriaListCell.get(0));
     lookup("#nameField").<TextField>query().setText(CRITERION_NAME + 4);
     List<Node> typeCell = from(lookup("#typeSelector").queryListView()).lookup((Node node)
@@ -295,7 +301,7 @@ public class CriterionGuiTest extends GuiTest {
     return from(lookup("#criteriaList").queryListView()).lookup((Node node)
                             -> node.getParent() instanceof CriterionListCell)
                     .queryAll().stream()
-                    .filter(e -> !((ListCell) e.getParent()).isEmpty()).toList();
+                    .filter(e -> !((ListCell<?>) e.getParent()).isEmpty()).toList();
   }
 
   private void enterNameOfCriterion(List<Node> criteriaListCell, int id) {

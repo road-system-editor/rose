@@ -1,6 +1,8 @@
 package edu.kit.rose.view;
 
+import java.util.concurrent.TimeoutException;
 import javafx.stage.Stage;
+import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit5.ApplicationTest;
 
 /**
@@ -9,9 +11,9 @@ import org.testfx.framework.junit5.ApplicationTest;
 public abstract class GuiTest extends ApplicationTest {
 
   @Override
-  public void start(Stage stage) {
+  public void start(Stage stage) throws TimeoutException {
     RoseApplication application = new RoseApplication();
     application.start(stage);
-    stage.show();
+    FxToolkit.showStage();
   }
 }

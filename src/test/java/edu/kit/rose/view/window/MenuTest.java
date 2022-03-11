@@ -1,22 +1,20 @@
 package edu.kit.rose.view.window;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+
 import edu.kit.rose.view.GuiTest;
 import javafx.scene.control.TableView;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.OS;
 import org.testfx.api.FxAssert;
 import org.testfx.matcher.control.LabeledMatchers;
-
-
+import org.testfx.matcher.control.TableViewMatchers;
 
 /**
  * Test the menu of Rose.
  */
-public class MenuTest extends GuiTest {
-
+class MenuTest extends GuiTest {
   /**
    * Represents T15.
    */
@@ -36,7 +34,12 @@ public class MenuTest extends GuiTest {
   @Test
   void testShortcutsDisplay() {
     clickOn("#help").clickOn("#shortcuts");
-    TableView tableView = lookup("#shortCutTable").query();
-    Assertions.assertEquals(12, tableView.getItems().size());
+    TableView<?> tableView = lookup("#shortCutTable").query();
+
+    assertThat(tableView, TableViewMatchers.hasNumRows(13));
+
+    // check if some shortcuts are contained in the table
+    assertThat(tableView, TableViewMatchers.containsRow("Ctrl+O", "Open Project"));
+    assertThat(tableView, TableViewMatchers.containsRow("Ctrl+Z", "Undo"));
   }
 }

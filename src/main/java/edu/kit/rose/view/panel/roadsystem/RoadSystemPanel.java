@@ -206,7 +206,6 @@ public class RoadSystemPanel extends FxmlContainer
     };
   }
 
-
   /**
    * Getter for The ZoomSetting of the project.
    *

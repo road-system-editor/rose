@@ -5,6 +5,7 @@ import edu.kit.rose.infrastructure.RoseSortedBox;
 import edu.kit.rose.infrastructure.SetObservable;
 import edu.kit.rose.infrastructure.SortedBox;
 import edu.kit.rose.infrastructure.UnitObserver;
+import edu.kit.rose.model.plausibility.violation.Violation;
 import edu.kit.rose.model.plausibility.violation.ViolationManager;
 import edu.kit.rose.model.roadsystem.RoadSystem;
 import edu.kit.rose.model.roadsystem.elements.Segment;
@@ -47,6 +48,12 @@ public class CriteriaManager extends RoseSetObservable<PlausibilityCriterion, Cr
    */
   public void setRoadSystem(RoadSystem roadSystem) {
     this.roadSystem = roadSystem;
+    if (violationManager != null && violationManager.getViolations() != null) {
+      Collection<Violation> violations = this.violationManager.getViolations().stream().toList();
+      for (Violation violation : this.violationManager.getViolations()) {
+        this.violationManager.removeViolation(violation);
+      }
+    }
     this.criterionFactory.setRoadSystem(roadSystem);
     this.criteria.stream()
         .filter(c -> c.getType() == PlausibilityCriterionType.COMPATIBILITY

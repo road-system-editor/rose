@@ -1,6 +1,7 @@
 # ROSE
 
-Graphical street system editor.
+ROSE is a graphical **ro**ad **s**ystem **e**ditor used to set up highway networks that can be 
+exported to traffic simulation software.
 
 ## File structure
 * [`config/`](./config) contains configuration data for development tooling
@@ -33,3 +34,19 @@ Graphical street system editor.
     [`build/jpackage/ROSE`](./build/jpackage/ROSE)
   * the installer that is generated in [`build/jpackage`](./build/jpackage) has not been tested 
     and is not recommended to use
+
+## Further resources
+ROSE was created as a group project in the "Praxis der Softwareentwicklung" course at the 
+Karlsruhe Institute of Technology.
+You can find the documents we submitted to our supervisors in
+[a separate repository](https://github.com/road-system-editor/pse-documents).
+Please note that these documents are mostly written in German.
+
+## License
+(c) 2022 Cristian Gorun, Jannes Wagner, Max Schweikart, Philipp Seidel and Yannik Sproll
+
+ROSE is licensed under the GNU General Public License v3.
+The license text can be found in [`./LICENSE`](./LICENSE).
+
+If you have used ROSE or its source code for something cool,
+[we would love to hear about it](mailto:hello@maxschweik.art)!

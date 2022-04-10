@@ -49,4 +49,5 @@ ROSE is licensed under the GNU General Public License v3.
 The license text can be found in [`./LICENSE`](./LICENSE).
 
 If you have used ROSE or its source code for something cool,
-[we would love to hear about it](mailto:hello@maxschweik.art)!
+[we would love to hear about it](mailto:hello@maxschweik.art,contact@philipp-seidel.de?subject=[ROSE]%20I%20used%20ROSE%20for%20something%20cool!)!
+

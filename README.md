@@ -1,4 +1,4 @@
-# ROSE
+# ![](https://avatars.githubusercontent.com/u/102614006?s=20&v=4) ROSE
 
 ROSE is a graphical **ro**ad **s**ystem **e**ditor used to set up highway networks that can be 
 exported to traffic simulation software.
@@ -49,5 +49,5 @@ ROSE is licensed under the GNU General Public License v3.
 The license text can be found in [`./LICENSE`](./LICENSE).
 
 If you have used ROSE or its source code for something cool,
-[we would love to hear about it](mailto:hello@maxschweik.art,contact@philipp-seidel.de?subject=[ROSE]%20I%20used%20ROSE%20for%20something%20cool!)!
+[we would love to hear about it](mailto:hello@maxschweik.art,contact@philipp-seidel.de?subject=I%20used%20ROSE%20for%20something%20cool!)!
 

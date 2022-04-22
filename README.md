@@ -5,8 +5,8 @@ exported to traffic simulation software.
 
 ## File structure
 * [`config/`](./config) contains configuration data for development tooling
-* [`gradle/wrapper`](./gradle/wrapper) contains the [Gradle wrapper](https://docs.gradle.
-  org/current/userguide/gradle_wrapper.html)
+* [`gradle/wrapper`](./gradle/wrapper) contains the
+  [Gradle wrapper](https://docs.gradle.org/current/userguide/gradle_wrapper.html)
 * [`src/main/`](./src/main) contains the source code of the application, including code and data 
   assets
 * [`src/test/`](./src/test) contains unit tests and GUI tests as well as the required test data
